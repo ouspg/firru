@@ -1,0 +1,16 @@
+Netid State  Recv-Q Send-Q          Local Address:Port Peer Address:PortProcess                                                                                                                   
+udp   UNCONN 0      0                  127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=594,fd=16)) uid:992 ino:6748 sk:1 cgroup:/system.slice/systemd-resolved.service <->        
+udp   UNCONN 0      0               127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=594,fd=14)) uid:992 ino:6746 sk:2 cgroup:/system.slice/systemd-resolved.service <->        
+udp   UNCONN 0      0      192.168.150.128%enp1s0:68        0.0.0.0:*    users:(("systemd-network",pid=826,fd=22)) uid:998 ino:8391 sk:3 cgroup:/system.slice/systemd-networkd.service <->        
+tcp   LISTEN 0      4096            127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=594,fd=15)) uid:992 ino:6747 sk:4 cgroup:/system.slice/systemd-resolved.service <->        
+tcp   LISTEN 0      4096               127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=594,fd=17)) uid:992 ino:6749 sk:5 cgroup:/system.slice/systemd-resolved.service <->        
+tcp   LISTEN 0      100                   0.0.0.0:995       0.0.0.0:*    users:(("dovecot",pid=853,fd=24)) ino:8520 sk:6 cgroup:/system.slice/dovecot.service <->                                 
+tcp   LISTEN 0      100                   0.0.0.0:993       0.0.0.0:*    users:(("dovecot",pid=853,fd=41)) ino:8535 sk:7 cgroup:/system.slice/dovecot.service <->                                 
+tcp   LISTEN 0      100                   0.0.0.0:143       0.0.0.0:*    users:(("dovecot",pid=853,fd=39)) ino:8533 sk:8 cgroup:/system.slice/dovecot.service <->                                 
+tcp   LISTEN 0      100                   0.0.0.0:25        0.0.0.0:*    users:(("master",pid=1372,fd=13)) ino:11403 sk:e cgroup:/system.slice/system-postfix.slice/postfix@-.service <->         
+tcp   LISTEN 0      100                   0.0.0.0:110       0.0.0.0:*    users:(("dovecot",pid=853,fd=22)) ino:8518 sk:9 cgroup:/system.slice/dovecot.service <->                                 
+tcp   LISTEN 0      100                      [::]:995          [::]:*    users:(("dovecot",pid=853,fd=25)) ino:8521 sk:a cgroup:/system.slice/dovecot.service v6only:1 <->                        
+tcp   LISTEN 0      100                      [::]:993          [::]:*    users:(("dovecot",pid=853,fd=42)) ino:8536 sk:b cgroup:/system.slice/dovecot.service v6only:1 <->                        
+tcp   LISTEN 0      100                      [::]:143          [::]:*    users:(("dovecot",pid=853,fd=40)) ino:8534 sk:c cgroup:/system.slice/dovecot.service v6only:1 <->                        
+tcp   LISTEN 0      100                      [::]:25           [::]:*    users:(("master",pid=1372,fd=14)) ino:11404 sk:f cgroup:/system.slice/system-postfix.slice/postfix@-.service v6only:1 <->
+tcp   LISTEN 0      100                      [::]:110          [::]:*    users:(("dovecot",pid=853,fd=23)) ino:8519 sk:d cgroup:/system.slice/dovecot.service v6only:1 <->                        

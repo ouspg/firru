@@ -1,0 +1,13 @@
+Netid State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                                                                                                                    
+udp   UNCONN 0      0          127.0.0.1:323       0.0.0.0:*    users:(("chronyd",pid=946,fd=4))          ino:15858 sk:b cgroup:/system.slice/chronyd.service <->                         
+udp   UNCONN 0      0            0.0.0.0:5353      0.0.0.0:*    users:(("avahi-daemon",pid=944,fd=12))    uid:70 ino:12583 sk:1 cgroup:/system.slice/avahi-daemon.service <->             
+udp   UNCONN 0      0            0.0.0.0:5355      0.0.0.0:*    users:(("systemd-resolve",pid=781,fd=12)) uid:193 ino:8626 sk:2 cgroup:/system.slice/systemd-resolved.service <->         
+udp   UNCONN 0      0         127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=781,fd=20)) uid:193 ino:8643 sk:3 cgroup:/system.slice/systemd-resolved.service <->         
+udp   UNCONN 0      0      127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=781,fd=18)) uid:193 ino:8641 sk:4 cgroup:/system.slice/systemd-resolved.service <->         
+udp   UNCONN 0      0              [::1]:323          [::]:*    users:(("chronyd",pid=946,fd=5))          ino:15859 sk:c cgroup:/system.slice/chronyd.service v6only:1 <->                
+udp   UNCONN 0      0               [::]:5353         [::]:*    users:(("avahi-daemon",pid=944,fd=13))    uid:70 ino:12584 sk:5 cgroup:/system.slice/avahi-daemon.service v6only:1 <->    
+udp   UNCONN 0      0               [::]:5355         [::]:*    users:(("systemd-resolve",pid=781,fd=14)) uid:193 ino:8635 sk:6 cgroup:/system.slice/systemd-resolved.service v6only:1 <->
+tcp   LISTEN 0      4096         0.0.0.0:5355      0.0.0.0:*    users:(("systemd-resolve",pid=781,fd=13)) uid:193 ino:8628 sk:7 cgroup:/system.slice/systemd-resolved.service <->         
+tcp   LISTEN 0      4096   127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=781,fd=19)) uid:193 ino:8642 sk:8 cgroup:/system.slice/systemd-resolved.service <->         
+tcp   LISTEN 0      4096      127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=781,fd=21)) uid:193 ino:8644 sk:9 cgroup:/system.slice/systemd-resolved.service <->         
+tcp   LISTEN 0      4096            [::]:5355         [::]:*    users:(("systemd-resolve",pid=781,fd=15)) uid:193 ino:8636 sk:a cgroup:/system.slice/systemd-resolved.service v6only:1 <->

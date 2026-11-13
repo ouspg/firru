@@ -1,0 +1,5 @@
+Netid State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                                                                                          
+udp   UNCONN 0      0          127.0.0.1:323       0.0.0.0:*    users:(("chronyd",pid=968,fd=4)) ino:9220 sk:1 cgroup:/system.slice/chronyd.service <->         
+udp   UNCONN 0      0              [::1]:323          [::]:*    users:(("chronyd",pid=968,fd=5)) ino:9221 sk:2 cgroup:/system.slice/chronyd.service v6only:1 <->
+tcp   LISTEN 0      128          0.0.0.0:22        0.0.0.0:*    users:(("sshd",pid=1171,fd=7))   ino:11742 sk:1001 cgroup:/system.slice/sshd.service <->        
+tcp   LISTEN 0      128             [::]:22           [::]:*    users:(("sshd",pid=1171,fd=8))   ino:9759 sk:1002 cgroup:/system.slice/sshd.service v6only:1 <->

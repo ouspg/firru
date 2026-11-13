@@ -2,9 +2,8 @@
 # Python firru supports, from a regular install of the dependencies (the
 # Aerleon fork comes from git).
 #
-# The examples' expected outputs (examples/check.sh) are not checked here: they
-# need a firru-os-baselines checkout, which this job cannot read while that
-# repository is private. Run check.sh locally before merging an output change.
+# A second job rebuilds the fleet examples from the runs in examples/baselines/
+# and compares them with examples/*/expected/ (examples/check.sh).
 
 name: tests
 
@@ -28,3 +27,15 @@ jobs:
         run: pip install '.[test]'
       - name: Test
         run: pytest -q
+
+  examples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: pip install .
+      - name: Rebuild the examples
+        run: examples/check.sh

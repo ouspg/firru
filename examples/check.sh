@@ -2,16 +2,16 @@
 # Rebuild each example in an empty directory and compare what it produces
 # with the copy committed under examples/<name>/expected/. A difference is a
 # change in firru's output: review it, then refresh the copy with --update.
-#   BASELINES=~/firru-os-baselines examples/check.sh [--update] [EXAMPLE ...]
+#   examples/check.sh [--update] [EXAMPLE ...]
 set -euo pipefail
-: "${BASELINES:?a clone of firru-os-baselines}"
 FIRRU=$(cd "$(dirname "$0")/.." && pwd)
+BASELINES=${BASELINES:-$FIRRU/examples/baselines}
 UPDATE=
 [ "${1:-}" = --update ] && { UPDATE=1; shift; }
 [ $# -eq 0 ] && set -- fleet fleet-zones
 
-# What each example keeps: its outputs, not its inputs (loot stays in
-# firru-os-baselines, flows are generated).
+# What each example keeps: its outputs, not its inputs (loot is in
+# examples/baselines/, flows are generated).
 declare -A KEEP=(
   [fleet]="review.sh policies/staged policies/tightened policies/pol policies/block-early out"
   [fleet-zones]="policies/pol zones/pol out"
@@ -31,7 +31,7 @@ for ex in "$@"; do
   done
   # The transcript, with this machine's paths taken out. A regular install
   # carries the stock def/ inside the package; an editable one reads $FIRRU/def.
-  sed -e "s#$work#.#g" -e "s#$FIRRU#\$FIRRU#g" -e "s#$BASELINES#\$BASELINES#g" \
+  sed -e "s#$work#.#g" -e "s#$BASELINES#\$BASELINES#g" -e "s#$FIRRU#\$FIRRU#g" \
       -e "s#[^ ]*/firru/_stock_def#\$FIRRU/def#g" \
     "$work/run.log" > "$got/transcript.txt"
   want=$FIRRU/examples/$ex/expected

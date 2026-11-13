@@ -1,0 +1,38 @@
+[
+    {
+        "ifindex":  3,
+        "ifname":  "Ethernet",
+        "addr_info":  [
+                          {
+                              "family":  "inet6",
+                              "local":  "fe80::3929:408a:2c5f:2344",
+                              "prefixlen":  64,
+                              "origin":  "WellKnown"
+                          },
+                          {
+                              "family":  "inet",
+                              "local":  "192.168.150.149",
+                              "prefixlen":  24,
+                              "origin":  "Dhcp"
+                          }
+                      ]
+    },
+    {
+        "ifindex":  1,
+        "ifname":  "Loopback Pseudo-Interface 1",
+        "addr_info":  [
+                          {
+                              "family":  "inet6",
+                              "local":  "::1",
+                              "prefixlen":  128,
+                              "origin":  "WellKnown"
+                          },
+                          {
+                              "family":  "inet",
+                              "local":  "127.0.0.1",
+                              "prefixlen":  8,
+                              "origin":  "WellKnown"
+                          }
+                      ]
+    }
+]

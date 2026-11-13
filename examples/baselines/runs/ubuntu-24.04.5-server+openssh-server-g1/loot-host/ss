@@ -1,0 +1,8 @@
+Netid State  Recv-Q Send-Q          Local Address:Port Peer Address:PortProcess                                                                                                           
+udp   UNCONN 0      0                  127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=591,fd=16)) uid:992 ino:6829 sk:1 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0               127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=591,fd=14)) uid:992 ino:6827 sk:2 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0      192.168.150.184%enp1s0:68        0.0.0.0:*    users:(("systemd-network",pid=819,fd=22)) uid:998 ino:8168 sk:3 cgroup:/system.slice/systemd-networkd.service <->
+tcp   LISTEN 0      4096               127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=591,fd=17)) uid:992 ino:6830 sk:4 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096            127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=591,fd=15)) uid:992 ino:6828 sk:5 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096                  0.0.0.0:22        0.0.0.0:*    users:(("systemd",pid=1,fd=60)) ino:9243 sk:6 cgroup:/system.slice/ssh.socket <->                                
+tcp   LISTEN 0      4096                     [::]:22           [::]:*    users:(("systemd",pid=1,fd=61)) ino:9245 sk:7 cgroup:/system.slice/ssh.socket v6only:1 <->                       

@@ -1,12 +1,12 @@
 # A zoned fleet from stock installs
 
 Twelve hosts from [firru-os-baselines](https://github.com/ouspg/firru-os-baselines)
-in four zones (DMZ, SERVERS, CLIENTS, MGMT), taken from host policy to one
+(copied into `examples/baselines/`) in four zones (DMZ, SERVERS, CLIENTS, MGMT), taken from host policy to one
 policy per zone for the firewall between them:
 
 ```sh
 mkdir /tmp/fleet-zones && cd /tmp/fleet-zones
-BASELINES=~/firru-os-baselines FIRRU=~/firru bash ~/firru/examples/fleet-zones/run.sh
+FIRRU=~/firru bash ~/firru/examples/fleet-zones/run.sh
 ```
 
 | file | what it stands for |

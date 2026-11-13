@@ -1,17 +1,19 @@
 #!/bin/bash
 # The fleet walk-through of docs/fleet.md, end to end, on four stock hosts
-# from firru-os-baselines with one change each. Run from an empty directory:
-#   BASELINES=~/firru-os-baselines FIRRU=~/firru bash $FIRRU/examples/fleet/run.sh
+# from firru-os-baselines with one change each. The runs it uses are copied
+# into examples/baselines/. Run from an empty directory:
+#   FIRRU=~/firru bash $FIRRU/examples/fleet/run.sh
 # Needs firru installed (pip install FIRRU) and aclgen (Aerleon, which firru
 # depends on) on PATH.
 set -euo pipefail
-: "${BASELINES:?a clone of firru-os-baselines}" "${FIRRU:?a clone of firru (for def/ and this example)}"
+: "${FIRRU:?a clone of firru (for def/ and this example)}"
+BASELINES=${BASELINES:-$FIRRU/examples/baselines}   # or a firru-os-baselines clone
 export FIRRU_BASELINES=$BASELINES   # loot-diff and audit pick baselines from these runs only
 R=$BASELINES/runs
 step() { printf '\n== %s\n' "$*"; }
 
 step "1. collect: one loot-host directory per host (here: copied from the baselines)"
-take() { mkdir -p "$1/$2" && cp -a "$R/$3/loot-host" "$1/$2/"; }   # -a: the collection time is the files'
+take() { mkdir -p "$1/$2" && cp -r "$R/$3/loot-host" "$1/$2/"; }
 take hosts web1 ubuntu-24.04.5-server+lamp-server-g1      # Ubuntu + Apache
 take hosts mon1 ubuntu-24.04.5-server+munin-node-d3       # Ubuntu + munin-node
 take hosts win1 win2022-std-desktop-ssh-g1                # Server 2022 + OpenSSH

@@ -1,0 +1,189 @@
+      1 root     systemd         /sbin/init splash
+      2 root     kthreadd        [kthreadd]
+      3 root     pool_workqueue_ [pool_workqueue_release]
+      4 root     kworker/R-rcu_g [kworker/R-rcu_gp]
+      5 root     kworker/R-sync_ [kworker/R-sync_wq]
+      6 root     kworker/R-kvfre [kworker/R-kvfree_rcu_reclaim]
+      7 root     kworker/R-slub_ [kworker/R-slub_flushwq]
+      8 root     kworker/R-netns [kworker/R-netns]
+      9 root     kworker/0:0-cgr [kworker/0:0-cgroup_release]
+     10 root     kworker/0:0H-kb [kworker/0:0H-kblockd]
+     12 root     kworker/u8:0-ef [kworker/u8:0-efi_rts_wq]
+     13 root     kworker/R-mm_pe [kworker/R-mm_percpu_wq]
+     14 root     ksoftirqd/0     [ksoftirqd/0]
+     15 root     rcu_preempt     [rcu_preempt]
+     16 root     rcu_exp_par_gp_ [rcu_exp_par_gp_kthread_worker/0]
+     17 root     rcu_exp_gp_kthr [rcu_exp_gp_kthread_worker]
+     18 root     migration/0     [migration/0]
+     19 root     kprobe-optimize [kprobe-optimizer]
+     20 root     idle_inject/0   [idle_inject/0]
+     21 root     cpuhp/0         [cpuhp/0]
+     22 root     cpuhp/1         [cpuhp/1]
+     23 root     idle_inject/1   [idle_inject/1]
+     24 root     migration/1     [migration/1]
+     25 root     ksoftirqd/1     [ksoftirqd/1]
+     29 root     kworker/u10:0-f [kworker/u10:0-flush-253:0]
+     30 root     kdevtmpfs       [kdevtmpfs]
+     31 root     kworker/R-inet_ [kworker/R-inet_frag_wq]
+     32 root     rcu_tasks_kthre [rcu_tasks_kthread]
+     33 root     rcu_tasks_rude_ [rcu_tasks_rude_kthread]
+     34 root     kauditd         [kauditd]
+     35 root     khungtaskd      [khungtaskd]
+     36 root     oom_reaper      [oom_reaper]
+     37 root     kworker/u9:1-ev [kworker/u9:1-events_unbound]
+     38 root     kworker/R-write [kworker/R-writeback]
+     40 root     kcompactd0      [kcompactd0]
+     41 root     ksmd            [ksmd]
+     42 root     khugepaged      [khugepaged]
+     43 root     kworker/R-kbloc [kworker/R-kblockd]
+     44 root     kworker/R-blkcg [kworker/R-blkcg_punt_bio]
+     45 root     kworker/R-kinte [kworker/R-kintegrityd]
+     46 root     irq/9-acpi      [irq/9-acpi]
+     47 root     kworker/1:1-eve [kworker/1:1-events]
+     48 root     kworker/R-tpm_d [kworker/R-tpm_dev_wq]
+     49 root     kworker/R-ata_s [kworker/R-ata_sff]
+     50 root     kworker/R-md_bi [kworker/R-md_bitmap]
+     51 root     kworker/R-md_ll [kworker/R-md_llbitmap_io]
+     52 root     kworker/R-md_ll [kworker/R-md_llbitmap_unplug]
+     53 root     kworker/R-edac- [kworker/R-edac-poller]
+     54 root     kworker/u8:1-ip [kworker/u8:1-ipv6_addrconf]
+     55 root     kworker/R-devfr [kworker/R-devfreq_wq]
+     56 root     watchdogd       [watchdogd]
+     57 root     kworker/R-quota [kworker/R-quota_events_unbound]
+     59 root     kswapd0         [kswapd0]
+     60 root     ecryptfs-kthrea [ecryptfs-kthread]
+     61 root     kworker/R-kthro [kworker/R-kthrotld]
+     62 root     irq/24-aerdrv   [irq/24-aerdrv]
+     63 root     irq/25-aerdrv   [irq/25-aerdrv]
+     64 root     irq/26-aerdrv   [irq/26-aerdrv]
+     65 root     irq/27-aerdrv   [irq/27-aerdrv]
+     66 root     irq/28-aerdrv   [irq/28-aerdrv]
+     67 root     irq/29-aerdrv   [irq/29-aerdrv]
+     68 root     irq/30-aerdrv   [irq/30-aerdrv]
+     69 root     irq/31-aerdrv   [irq/31-aerdrv]
+     70 root     irq/32-aerdrv   [irq/32-aerdrv]
+     71 root     irq/33-aerdrv   [irq/33-aerdrv]
+     72 root     irq/34-aerdrv   [irq/34-aerdrv]
+     73 root     irq/35-aerdrv   [irq/35-aerdrv]
+     74 root     irq/36-aerdrv   [irq/36-aerdrv]
+     75 root     irq/37-aerdrv   [irq/37-aerdrv]
+     76 root     kworker/R-acpi_ [kworker/R-acpi_thermal_pm]
+     79 root     hwrng           [hwrng]
+     80 root     kworker/R-mld   [kworker/R-mld]
+     81 root     kworker/R-ipv6_ [kworker/R-ipv6_addrconf]
+     82 root     kworker/R-kstrp [kworker/R-kstrp]
+     84 root     kworker/u11:0   [kworker/u11:0]
+     85 root     kworker/u12:0   [kworker/u12:0]
+     86 root     kworker/u13:0   [kworker/u13:0]
+     97 root     kworker/R-charg [kworker/R-charger_manager]
+    159 root     kworker/1:2-cgr [kworker/1:2-cgroup_free]
+    165 root     scsi_eh_0       [scsi_eh_0]
+    167 root     kworker/R-scsi_ [kworker/R-scsi_tmf_0]
+    168 root     scsi_eh_1       [scsi_eh_1]
+    169 root     kworker/R-scsi_ [kworker/R-scsi_tmf_1]
+    170 root     scsi_eh_2       [scsi_eh_2]
+    171 root     kworker/R-scsi_ [kworker/R-scsi_tmf_2]
+    172 root     scsi_eh_3       [scsi_eh_3]
+    173 root     kworker/R-scsi_ [kworker/R-scsi_tmf_3]
+    174 root     scsi_eh_4       [scsi_eh_4]
+    175 root     kworker/R-scsi_ [kworker/R-scsi_tmf_4]
+    176 root     card1-crtc0     [card1-crtc0]
+    177 root     scsi_eh_5       [scsi_eh_5]
+    178 root     kworker/R-scsi_ [kworker/R-scsi_tmf_5]
+    179 root     kworker/u9:3-ev [kworker/u9:3-events_freezable_pwr_efficient]
+    180 root     kworker/u9:4-ev [kworker/u9:4-events_unbound]
+    181 root     kworker/u9:5-ev [kworker/u9:5-events_unbound]
+    254 root     kworker/1:1H-kb [kworker/1:1H-kblockd]
+    255 root     kworker/0:1H-kb [kworker/0:1H-kblockd]
+    256 root     kworker/1:2H-kb [kworker/1:2H-kblockd]
+    264 root     kworker/u10:2-p [kworker/u10:2-pm]
+    304 root     jbd2/vda2-8     [jbd2/vda2-8]
+    305 root     kworker/R-ext4- [kworker/R-ext4-rsv-conversion]
+    358 root     systemd-journal /usr/lib/systemd/systemd-journald
+    403 root     kworker/0:4-eve [kworker/0:4-events]
+    435 root     systemd-udevd   /usr/lib/systemd/systemd-udevd
+    447 root     psimon          [psimon]
+    583 systemd+ systemd-oomd    /usr/lib/systemd/systemd-oomd
+    586 systemd+ systemd-resolve /usr/lib/systemd/systemd-resolved
+    595 systemd+ systemd-timesyn /usr/lib/systemd/systemd-timesyncd
+    750 root     kworker/u10:4-e [kworker/u10:4-events_power_efficient]
+    813 root     bpftrace        /run/bl-tools/bpftrace.d/AppRun -f json -o /var/lib/firru/conn-audit.jsonl /var/lib/firru/conn-audit.bt
+    849 root     bash            /bin/bash /run/bl-tools/collect.sh
+    918 root     anacron         /usr/sbin/anacron -d -q -s
+    920 avahi    avahi-daemon    avahi-daemon: running [baseline-ubuntu.local]
+    921 message+ dbus-daemon     @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+    924 gnome-r+ gnome-remote-de /usr/libexec/gnome-remote-desktop-daemon --system
+    927 polkitd  polkitd         /usr/lib/polkit-1/polkitd --no-debug
+    928 root     power-profiles- /usr/libexec/power-profiles-daemon
+    937 root     snapd           /usr/lib/snapd/snapd
+    947 root     accounts-daemon /usr/libexec/accounts-daemon
+    953 root     cron            /usr/sbin/cron -f -P
+    954 root     switcheroo-cont /usr/libexec/switcheroo-control
+    966 root     systemd-logind  /usr/lib/systemd/systemd-logind
+    967 root     udisksd         /usr/libexec/udisks2/udisksd
+    989 avahi    avahi-daemon    avahi-daemon: chroot helper
+   1000 root     wpa_supplicant  /usr/sbin/wpa_supplicant -u -s -O DIR=/run/wpa_supplicant GROUP=netdev
+   1010 syslog   rsyslogd        /usr/sbin/rsyslogd -n -iNONE
+   1075 root     ModemManager    /usr/sbin/ModemManager
+   1203 root     cupsd           /usr/sbin/cupsd -l
+   1205 root     unattended-upgr /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+   1330 root     NetworkManager  /usr/sbin/NetworkManager --no-daemon
+   1446 cups-br+ cups-browsed    /usr/sbin/cups-browsed
+   1451 kernoops kerneloops      /usr/sbin/kerneloops --test
+   1454 kernoops kerneloops      /usr/sbin/kerneloops
+   1528 root     gdm3            /usr/sbin/gdm3
+   1540 root     gdm-session-wor gdm-session-worker [pam/gdm-launch-environment]
+   1548 gdm      systemd         /usr/lib/systemd/systemd --user
+   1550 gdm      (sd-pam)        (sd-pam)
+   1567 gdm      pipewire        /usr/bin/pipewire
+   1568 gdm      pipewire        /usr/bin/pipewire -c filter-chain.conf
+   1573 gdm      wireplumber     /usr/bin/wireplumber
+   1575 gdm      pipewire-pulse  /usr/bin/pipewire-pulse
+   1576 gdm      gdm-wayland-ses /usr/libexec/gdm-wayland-session dbus-run-session -- gnome-session --autostart /usr/share/gdm/greeter/autostart
+   1579 gdm      dbus-daemon     /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+   1587 gdm      dbus-run-sessio dbus-run-session -- gnome-session --autostart /usr/share/gdm/greeter/autostart
+   1589 gdm      dbus-daemon     dbus-daemon --nofork --print-address 4 --session
+   1591 gdm      gnome-session-b /usr/libexec/gnome-session-binary --autostart /usr/share/gdm/greeter/autostart
+   1595 rtkit    rtkit-daemon    /usr/libexec/rtkit-daemon
+   1665 gdm      gnome-shell     /usr/bin/gnome-shell
+   1687 gdm      at-spi-bus-laun /usr/libexec/at-spi-bus-launcher
+   1693 gdm      dbus-daemon     /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 11 --address=unix:path=/run/user/120/at-spi/bus
+   1694 gdm      Xwayland        /usr/bin/Xwayland :1024 -rootless -noreset -accessx -core -auth /run/user/120/.mutter-Xwaylandauth.Q9C8W3 -listenfd 4 -listenfd 5 -displayfd 6 -initfd 7 -byteswappedclients
+   1696 gdm      at-spi2-registr /usr/libexec/at-spi2-registryd --use-gnome-session
+   1697 colord   colord          /usr/libexec/colord
+   1725 gdm      xdg-permission- /usr/libexec/xdg-permission-store
+   1736 gdm      gjs             /usr/bin/gjs -m /usr/share/gnome-shell/org.gnome.Shell.Notifications
+   1737 root     upowerd         /usr/libexec/upowerd
+   1739 gdm      gsd-sharing     /usr/libexec/gsd-sharing
+   1746 gdm      gsd-wacom       /usr/libexec/gsd-wacom
+   1751 gdm      gsd-color       /usr/libexec/gsd-color
+   1754 gdm      gsd-keyboard    /usr/libexec/gsd-keyboard
+   1756 gdm      gsd-print-notif /usr/libexec/gsd-print-notifications
+   1765 gdm      gsd-rfkill      /usr/libexec/gsd-rfkill
+   1768 gdm      gsd-smartcard   /usr/libexec/gsd-smartcard
+   1771 gdm      gsd-datetime    /usr/libexec/gsd-datetime
+   1776 gdm      gsd-media-keys  /usr/libexec/gsd-media-keys
+   1786 gdm      gsd-screensaver /usr/libexec/gsd-screensaver-proxy
+   1791 gdm      gsd-sound       /usr/libexec/gsd-sound
+   1808 gdm      gsd-a11y-settin /usr/libexec/gsd-a11y-settings
+   1811 gdm      gsd-housekeepin /usr/libexec/gsd-housekeeping
+   1819 gdm      gsd-power       /usr/libexec/gsd-power
+   1820 gdm      ibus-daemon     ibus-daemon --panel disable
+   1914 gdm      gsd-printer     /usr/libexec/gsd-printer
+   1951 gdm      mutter-x11-fram /usr/libexec/mutter-x11-frames
+   1955 gdm      ibus-daemon     ibus-daemon --panel disable -r --xim
+   2016 gdm      ibus-dconf      /usr/libexec/ibus-dconf
+   2019 gdm      ibus-x11        /usr/libexec/ibus-x11 --kill-daemon
+   2027 gdm      ibus-portal     /usr/libexec/ibus-portal
+   2064 gdm      ibus-engine-sim /usr/libexec/ibus-engine-simple
+   2070 gdm      gjs             /usr/bin/gjs -m /usr/share/gnome-shell/org.gnome.ScreenSaver
+   2213 root     psimon          [psimon]
+   2256 gdm      xdg-document-po /usr/libexec/xdg-document-portal
+   2260 gdm      xdg-permission- /usr/libexec/xdg-permission-store
+   2267 root     fusermount3     fusermount3 -o rw,nosuid,nodev,fsname=portal,auto_unmount,subtype=portal -- /run/user/120/doc
+   2559 root     kworker/u9:0-ev [kworker/u9:0-events_freezable_pwr_efficient]
+   2579 root     kworker/u10:1   [kworker/u10:1]
+   2616 root     kworker/0:1-cgr [kworker/0:1-cgroup_free]
+   2785 root     bash            bash /run/bl-tools/loot-host.sh /var/tmp/baseline/loot-host
+   2792 root     (udev-worker)   (udev-worker)
+   2795 root     ps              ps -eo pid,user,comm,args --no-headers

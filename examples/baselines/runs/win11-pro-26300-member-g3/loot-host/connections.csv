@@ -1,0 +1,45 @@
+"Protocol","LocalAddress","LocalPort","State","OwningProcess","ProcessName","ProcessPath","CommandLine"
+"TCP","0.0.0.0","135","Listen","568","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k RPCSS -p"
+"TCP","0.0.0.0","445","Listen","4","System",,
+"TCP","0.0.0.0","5040","Listen","872","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalService -p -s CDPSvc"
+"TCP","0.0.0.0","49664","Listen","844","lsass",,
+"TCP","0.0.0.0","49665","Listen","676","wininit",,
+"TCP","0.0.0.0","49668","Listen","1772","svchost","C:\WINDOWS\System32\svchost.exe","C:\WINDOWS\System32\svchost.exe -k LocalServiceNetworkRestricted -p -s EventLog"
+"TCP","0.0.0.0","49669","Listen","2368","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k netsvcs -p -s Schedule"
+"TCP","0.0.0.0","49670","Listen","2972","spoolsv","C:\WINDOWS\System32\spoolsv.exe","C:\WINDOWS\System32\spoolsv.exe"
+"TCP","0.0.0.0","49671","Listen","844","lsass",,
+"TCP","0.0.0.0","49697","Listen","824","services",,
+"TCP","192.168.150.174","139","Listen","4","System",,
+"TCP","::","135","Listen","568","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k RPCSS -p"
+"TCP","::","445","Listen","4","System",,
+"TCP","::","49664","Listen","844","lsass",,
+"TCP","::","49665","Listen","676","wininit",,
+"TCP","::","49668","Listen","1772","svchost","C:\WINDOWS\System32\svchost.exe","C:\WINDOWS\System32\svchost.exe -k LocalServiceNetworkRestricted -p -s EventLog"
+"TCP","::","49669","Listen","2368","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k netsvcs -p -s Schedule"
+"TCP","::","49670","Listen","2972","spoolsv","C:\WINDOWS\System32\spoolsv.exe","C:\WINDOWS\System32\spoolsv.exe"
+"TCP","::","49671","Listen","844","lsass",,
+"TCP","::","49697","Listen","824","services",,
+"UDP","0.0.0.0","123","","1232","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalService -s W32Time"
+"UDP","0.0.0.0","5050","","872","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalService -p -s CDPSvc"
+"UDP","0.0.0.0","5353","","1424","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k NetworkService -p"
+"UDP","0.0.0.0","5355","","1424","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k NetworkService -p"
+"UDP","0.0.0.0","59473","","1424","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k NetworkService -p"
+"UDP","127.0.0.1","1900","","1004","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalServiceAndNoImpersonationRedirectionGuard -p -s SSDPSRV"
+"UDP","127.0.0.1","50462","","2736","taskhostw","C:\WINDOWS\system32\taskhostw.exe","taskhostw.exe ExploitGuardPolicy"
+"UDP","127.0.0.1","54609","","2148","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k GPSvcGroup"
+"UDP","127.0.0.1","63149","","2780","svchost","C:\WINDOWS\System32\svchost.exe","C:\WINDOWS\System32\svchost.exe -k NetSvcs -p -s iphlpsvc"
+"UDP","127.0.0.1","63150","","844","lsass",,
+"UDP","127.0.0.1","64521","","1536","svchost","C:\WINDOWS\System32\svchost.exe","C:\WINDOWS\System32\svchost.exe -k netprofm -p -s netprofm"
+"UDP","127.0.0.1","65198","","1004","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalServiceAndNoImpersonationRedirectionGuard -p -s SSDPSRV"
+"UDP","192.168.150.174","137","","4","System",,
+"UDP","192.168.150.174","138","","4","System",,
+"UDP","192.168.150.174","1900","","1004","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalServiceAndNoImpersonationRedirectionGuard -p -s SSDPSRV"
+"UDP","192.168.150.174","65197","","1004","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalServiceAndNoImpersonationRedirectionGuard -p -s SSDPSRV"
+"UDP","::","123","","1232","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalService -s W32Time"
+"UDP","::","5353","","1424","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k NetworkService -p"
+"UDP","::","5355","","1424","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k NetworkService -p"
+"UDP","::","59473","","1424","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k NetworkService -p"
+"UDP","::1","1900","","1004","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalServiceAndNoImpersonationRedirectionGuard -p -s SSDPSRV"
+"UDP","::1","65196","","1004","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalServiceAndNoImpersonationRedirectionGuard -p -s SSDPSRV"
+"UDP","fe80::20bc:fb4d:fbe9:6cc3%6","1900","","1004","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalServiceAndNoImpersonationRedirectionGuard -p -s SSDPSRV"
+"UDP","fe80::20bc:fb4d:fbe9:6cc3%6","65195","","1004","svchost","C:\WINDOWS\system32\svchost.exe","C:\WINDOWS\system32\svchost.exe -k LocalServiceAndNoImpersonationRedirectionGuard -p -s SSDPSRV"

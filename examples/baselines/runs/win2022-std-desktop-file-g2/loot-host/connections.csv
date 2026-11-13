@@ -1,0 +1,31 @@
+"Protocol","LocalAddress","LocalPort","State","OwningProcess","ProcessName","ProcessPath","CommandLine"
+"TCP","0.0.0.0","135","Listen","848","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k RPCSS -p"
+"TCP","0.0.0.0","445","Listen","4","System",,
+"TCP","0.0.0.0","5985","Listen","4","System",,
+"TCP","0.0.0.0","47001","Listen","4","System",,
+"TCP","0.0.0.0","49664","Listen","636","lsass","C:\Windows\system32\lsass.exe","C:\Windows\system32\lsass.exe"
+"TCP","0.0.0.0","49665","Listen","500","wininit",,
+"TCP","0.0.0.0","49666","Listen","868","svchost","C:\Windows\System32\svchost.exe","C:\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted -p -s EventLog"
+"TCP","0.0.0.0","49667","Listen","1460","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k netsvcs -p -s Schedule"
+"TCP","0.0.0.0","49668","Listen","2148","spoolsv","C:\Windows\System32\spoolsv.exe","C:\Windows\System32\spoolsv.exe"
+"TCP","0.0.0.0","49669","Listen","624","services",,
+"TCP","192.168.150.157","139","Listen","4","System",,
+"TCP","::","135","Listen","848","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k RPCSS -p"
+"TCP","::","445","Listen","4","System",,
+"TCP","::","5985","Listen","4","System",,
+"TCP","::","47001","Listen","4","System",,
+"TCP","::","49664","Listen","636","lsass","C:\Windows\system32\lsass.exe","C:\Windows\system32\lsass.exe"
+"TCP","::","49665","Listen","500","wininit",,
+"TCP","::","49666","Listen","868","svchost","C:\Windows\System32\svchost.exe","C:\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted -p -s EventLog"
+"TCP","::","49667","Listen","1460","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k netsvcs -p -s Schedule"
+"TCP","::","49668","Listen","2148","spoolsv","C:\Windows\System32\spoolsv.exe","C:\Windows\System32\spoolsv.exe"
+"TCP","::","49669","Listen","624","services",,
+"UDP","0.0.0.0","123","","2376","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k LocalService -s W32Time"
+"UDP","0.0.0.0","5353","","1640","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k NetworkService -p -s Dnscache"
+"UDP","0.0.0.0","5355","","1640","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k NetworkService -p -s Dnscache"
+"UDP","127.0.0.1","64452","","2212","svchost","C:\Windows\System32\svchost.exe","C:\Windows\System32\svchost.exe -k NetSvcs -p -s iphlpsvc"
+"UDP","192.168.150.157","137","","4","System",,
+"UDP","192.168.150.157","138","","4","System",,
+"UDP","::","123","","2376","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k LocalService -s W32Time"
+"UDP","::","5353","","1640","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k NetworkService -p -s Dnscache"
+"UDP","::","5355","","1640","svchost","C:\Windows\system32\svchost.exe","C:\Windows\system32\svchost.exe -k NetworkService -p -s Dnscache"
