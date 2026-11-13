@@ -11,7 +11,7 @@
   win2022-std-desktop-public-g2: 29 ports → baselines/win2022-std-desktop-public-g2.json
 
 == 3. what the fleet runs beyond stock
-firru: no ./def/, using the stock definitions in $FIRRU/def (--defs DIR for a project's own)
+firru: no ./def/, using the stock definitions in /home/pp/firru-dev/def (--defs DIR for a project's own)
 # firru edit-services add def/funny.yml TCP_4949 4949/tcp  # unnamed: munin-nodex1; 1 host(s)
 # + HTTP 80/tcp  (apache2; 1 host(s)) beyond the baseline
 # + SSH 22/tcp  (sshd; 1 host(s)) beyond the baseline
@@ -34,9 +34,9 @@ Source policy: ./def/heuristics.py
 
 == 6. traffic, and what it says about the sources
 Reading flows from flows.jsonl (single pass, 4 hosts) …
-  738 flows in 43 conversations, 738 involving a known host
+  1053 flows in 67 conversations, 1053 involving a known host
 Host: dc1  IPs: ['192.168.150.194']
-  ingress: 0 flows across 0 service buckets
+  ingress: 315 flows across 8 service buckets
   egress:  0 flows across 0 service buckets
 Host: mon1  IPs: ['192.168.150.169']
   ingress: 288 flows across 1 service buckets
@@ -46,8 +46,8 @@ Host: web1  IPs: ['192.168.150.126']
   egress:  0 flows across 0 service buckets
 Host: win1  IPs: ['192.168.150.184']
   ingress: 16 flows across 1 service buckets
-  egress:  0 flows across 0 service buckets
-Written: policies/tightened/dc1.yml  (0 changed, 2 dead, 0 group suggestions)
+  egress:  105 flows across 8 service buckets
+Written: policies/tightened/dc1.yml  (8 changed, 2 dead, 0 group suggestions)
 Written: policies/tightened/dc1.dead.yml  (2 dead-rule candidates)
 Written: policies/tightened/mon1.yml  (1 changed, 0 dead, 0 group suggestions)
 Written: policies/tightened/web1.yml  (0 changed, 0 dead, 0 group suggestions)
@@ -60,16 +60,53 @@ mon1:
     # allow-tcp-MUNIN          tcp/4949               v4+v6 -> v4
   postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
 win1:
+  added (8) — new relations, safe to apply:
+    + allow-tcp-KERBEROS-TCP   out tcp/88             dest dc1
+    + allow-tcp-LDAP-TCP       out tcp/389            dest dc1
+    + allow-tcp-WINDOWS-RPC-ENDPOI out tcp/135            dest dc1
+    + allow-tcp-WINDOWS-SMB    out tcp/445            dest dc1
+    + allow-udp-DNS-UDP        out udp/53             dest dc1
+    + allow-udp-KERBEROS-UDP   out udp/88             dest dc1
+    + allow-udp-LDAP-UDP       out udp/389            dest dc1
+    + allow-udp-NTP            out udp/123            dest dc1
   narrowed (1) — fewer peers, safe to apply (--narrow):
     > allow-tcp-SSH            tcp/22                 source ANY -> ADMIN  observed (16 flows)
   address family (1) — coverage changed:
     # allow-tcp-SSH            tcp/22                 v4+v6 -> v4
   postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
 web1: no surface changes
+dc1:
+  narrowed (8) — fewer peers, safe to apply (--narrow):
+    > allow-tcp-KERBEROS-TCP   tcp/88                 source ANY -> [ADMIN, win1]  observed (36 flows)
+    > allow-tcp-LDAP-TCP       tcp/389                source ANY -> [ADMIN, win1]  observed (30 flows)
+    > allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135                source ANY -> [ADMIN, win1]  observed (9 flows)
+    > allow-tcp-WINDOWS-SMB    tcp/445                source ANY -> [ADMIN, win1]  observed (18 flows)
+    > allow-udp-DNS-UDP        udp/53                 source ANY -> [ADMIN, win1]  observed (120 flows)
+    > allow-udp-KERBEROS-UDP   udp/88                 source ANY -> [ADMIN, win1]  observed (12 flows)
+    > allow-udp-LDAP-UDP       udp/389                source ANY -> [ADMIN, win1]  observed (18 flows)
+    > allow-udp-NTP            udp/123                source ANY -> [ADMIN, win1]  observed (72 flows)
+  address family (8) — coverage changed:
+    # allow-tcp-KERBEROS-TCP   tcp/88                 v4+v6 -> v4
+    # allow-tcp-LDAP-TCP       tcp/389                v4+v6 -> v4
+    # allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135                v4+v6 -> v4
+    # allow-tcp-WINDOWS-SMB    tcp/445                v4+v6 -> v4
+    # allow-udp-DNS-UDP        udp/53                 v4+v6 -> v4
+    # allow-udp-KERBEROS-UDP   udp/88                 v4+v6 -> v4
+    # allow-udp-LDAP-UDP       udp/389                v4+v6 -> v4
+    # allow-udp-NTP            udp/123                v4+v6 -> v4
+  postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
 
 == 7. apply the narrowings you accept
 policies/pol/mon1.yml: allow-tcp-MUNIN source -> MONITORING
 policies/pol/win1.yml: allow-tcp-SSH source -> ADMIN
+policies/pol/dc1.yml: allow-tcp-KERBEROS-TCP source -> [ADMIN, win1]
+policies/pol/dc1.yml: allow-tcp-LDAP-TCP source -> [ADMIN, win1]
+policies/pol/dc1.yml: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER source -> [ADMIN, win1]
+policies/pol/dc1.yml: allow-tcp-WINDOWS-SMB source -> [ADMIN, win1]
+policies/pol/dc1.yml: allow-udp-DNS-UDP source -> [ADMIN, win1]
+policies/pol/dc1.yml: allow-udp-KERBEROS-UDP source -> [ADMIN, win1]
+policies/pol/dc1.yml: allow-udp-LDAP-UDP source -> [ADMIN, win1]
+policies/pol/dc1.yml: allow-udp-NTP source -> [ADMIN, win1]
 
 == 8. compile
 dc1.bat
@@ -117,7 +154,7 @@ baseline: against win2022-std-desktop-dc-g2
 firewall rules vs stock (win2022-std-desktop-dc-g2):
   same as stock
 policy: firru diff policies/pol/dc1.yml loot/dc1.json
-dc1: no surface changes
+dc1: no surface changes (reviewed sources kept on 8 term(s))
   dynamic range: 7525 listener(s) in loot/dc1.json left out, as synthesis leaves them; loot-diff --baseline compares them by owner
 drift: firru diff policies/pol/dc1.yml hosts/dc1/loot-host/firewall.json
 reading enforced state: 'removed' = committed but not running (stale or never reloaded); 'widened' = the host grants more than the policy (hand-patched or generated wider); 'added' = running but never committed.
@@ -131,32 +168,41 @@ hosts/dc1/loot-host/firewall.json:
     + FileServer-ServerManager-Winmgmt-TCP-In tcp/49152-65535        source ANY
     + NVS-FrameServer-In-TCP-NoScope tcp/554, tcp/8554-8558 source ANY
     + NVS-FrameServer-In-UDP-NoScope udp/5000-5020          source ANY
-  widened (2) — grants new peers, REVIEW:
+  widened (10) — grants new peers, REVIEW:
+    ! ADDS-Kerberos-TCP-In     tcp/88                 source [ADMIN, win1] -> ANY
+    ! ADDS-Kerberos-UDP-In     udp/88                 source [ADMIN, win1] -> ANY
+    ! ADDS-LDAP-TCP-In         tcp/389                source [ADMIN, win1] -> ANY
+    ! ADDS-LDAP-UDP-In         udp/389                source [ADMIN, win1] -> ANY
+    ! DNSSrv-DNS-UDP-In        udp/53                 source [ADMIN, win1] -> ANY
     ! FPS-LLMNR-In-UDP         udp/5355               source [LLMNR_SOURCES_V4, LLMNR_SOURCES_V6] -> ANY
+    ! FileServer-ServerManager-DCOM-TCP-In tcp/135                source [ADMIN, win1] -> ANY
+    ! FileServer-ServerManager-SMB-TCP-In tcp/445                source [ADMIN, win1] -> ANY
+    ! W32Time-NTP-UDP-In       udp/123                source [ADMIN, win1] -> ANY
     ! {04616BE5-1A90-4D46-BECB-D5E5CDC18CAE} udp/5353               source [MDNS_SOURCES_V4, MDNS_SOURCES_V6] -> ANY
+  address family (8) — coverage changed:
+    # ADDS-Kerberos-TCP-In     tcp/88                 v4 -> v4+v6
+    # ADDS-Kerberos-UDP-In     udp/88                 v4 -> v4+v6
+    # ADDS-LDAP-TCP-In         tcp/389                v4 -> v4+v6
+    # ADDS-LDAP-UDP-In         udp/389                v4 -> v4+v6
+    # DNSSrv-DNS-UDP-In        udp/53                 v4 -> v4+v6
+    # FileServer-ServerManager-DCOM-TCP-In tcp/135                v4 -> v4+v6
+    # FileServer-ServerManager-SMB-TCP-In tcp/445                v4 -> v4+v6
+    # W32Time-NTP-UDP-In       udp/123                v4 -> v4+v6
   removed (3) — no longer observed, advisory (scoring vetoes):
     - allow-tcp-WINDOWS-RPC-HTTPS tcp/593
     - allow-tcp-WINDOWS-WINRM-UNCONFIGURED tcp/47001
     - allow-udp-LLMNR          tcp/5355
-  cosmetic (19) — rename/regroup, same enforcement:
+  cosmetic (11) — rename/regroup, same enforcement:
     ~ ADDS-Kerberos-Password-TCP-In tcp/464
     ~ ADDS-Kerberos-Password-UDP-In udp/464
-    ~ ADDS-Kerberos-TCP-In     tcp/88
-    ~ ADDS-Kerberos-UDP-In     udp/88
-    ~ ADDS-LDAP-TCP-In         tcp/389
-    ~ ADDS-LDAP-UDP-In         udp/389
     ~ ADDS-LDAPGC-TCP-In       tcp/3268
     ~ ADDS-LDAPGCSEC-TCP-In    tcp/3269
     ~ ADDS-LDAPSEC-TCP-In      tcp/636
     ~ ADDS-NB-Datagram-UDP-In  udp/138
     ~ ADWS-TCP-In              tcp/9389
     ~ DNSSrv-DNS-TCP-In        tcp/53
-    ~ DNSSrv-DNS-UDP-In        udp/53
     ~ FPS-NB_Name-In-UDP       udp/137
     ~ FPS-NB_Session-In-TCP    tcp/139
-    ~ FileServer-ServerManager-DCOM-TCP-In tcp/135
-    ~ FileServer-ServerManager-SMB-TCP-In tcp/445
-    ~ W32Time-NTP-UDP-In       udp/123
     ~ WINRM-HTTP-In-TCP-PUBLIC tcp/5985
 
 hosts/win1/loot-host/firewall.json: 24 term(s) parsed PARTIALLY (ignored: ICMP type, program, protocol 2, protocol 41, remote keyword, service) — each reads WIDER than the rule it came from, so a widening reported here may be the parser, not the host
@@ -233,10 +279,11 @@ Snapshot: 4 host policies.
 Zones: 0 (0 prefixes).
 Variant block-early: 4 host policies (policies/block-early).
 Loaded 2 prefixes (2 v4, 0 v6).
-Annotated 990 flows.
+Annotated 1310 flows.
 host    port flows  reviewed  block-early
-dc1      389     6  allow     deny
-dc1      445     4  allow     deny
+dc1      389     6  deny      deny
+dc1      445     4  deny      deny
+dc1     5985     5  allow     deny
 mon1    4949     3  deny      deny
 web1      21     1  deny      deny
 web1      22     1  deny      deny
@@ -255,4 +302,34 @@ mon1:
     > allow-tcp-MUNIN          tcp/4949               source ANY -> [MONITORING, web1]
   address family (1) — coverage changed:
     # allow-tcp-MUNIN          tcp/4949               v4+v6 -> v4
-win1: no surface changes
+win1:
+  added (8) — new relations, safe to apply:
+    + allow-tcp-KERBEROS-TCP   out tcp/88             dest dc1
+    + allow-tcp-LDAP-TCP       out tcp/389            dest dc1
+    + allow-tcp-WINDOWS-RPC-ENDPOI out tcp/135            dest dc1
+    + allow-tcp-WINDOWS-SMB    out tcp/445            dest dc1
+    + allow-udp-DNS-UDP        out udp/53             dest dc1
+    + allow-udp-KERBEROS-UDP   out udp/88             dest dc1
+    + allow-udp-LDAP-UDP       out udp/389            dest dc1
+    + allow-udp-NTP            out udp/123            dest dc1
+dc1:
+  narrowed (9) — fewer peers, safe to apply (--narrow):
+    > allow-tcp-KERBEROS-TCP   tcp/88                 source ANY -> [ADMIN, win1]
+    > allow-tcp-LDAP-TCP       tcp/389                source ANY -> [ADMIN, web1, win1]
+    > allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135                source ANY -> [ADMIN, win1]
+    > allow-tcp-WINDOWS-SMB    tcp/445                source ANY -> [ADMIN, web1, win1]
+    > allow-tcp-WINRM-HTTP     tcp/5985               source ANY -> web1
+    > allow-udp-DNS-UDP        udp/53                 source ANY -> [ADMIN, win1]
+    > allow-udp-KERBEROS-UDP   udp/88                 source ANY -> [ADMIN, win1]
+    > allow-udp-LDAP-UDP       udp/389                source ANY -> [ADMIN, win1]
+    > allow-udp-NTP            udp/123                source ANY -> [ADMIN, win1]
+  address family (9) — coverage changed:
+    # allow-tcp-KERBEROS-TCP   tcp/88                 v4+v6 -> v4
+    # allow-tcp-LDAP-TCP       tcp/389                v4+v6 -> v4
+    # allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135                v4+v6 -> v4
+    # allow-tcp-WINDOWS-SMB    tcp/445                v4+v6 -> v4
+    # allow-tcp-WINRM-HTTP     tcp/5985               v4+v6 -> v4
+    # allow-udp-DNS-UDP        udp/53                 v4+v6 -> v4
+    # allow-udp-KERBEROS-UDP   udp/88                 v4+v6 -> v4
+    # allow-udp-LDAP-UDP       udp/389                v4+v6 -> v4
+    # allow-udp-NTP            udp/123                v4+v6 -> v4

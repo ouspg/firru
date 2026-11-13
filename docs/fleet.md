@@ -130,7 +130,9 @@ Policies from sockets say what may be reached, not from where. Flows from
 Zeek (`zeek-to-flows`), Arkime (`loot-flows`) or conntrack (`loot-conntrack`)
 say who did reach it (`docs/flow-record.md`). The walk-through uses made-up
 flows (`examples/fleet/make-flows.py`): munin polled by the monitoring host,
-SSH from two admin workstations, HTTP from 40 scattered clients.
+SSH from two admin workstations, HTTP from 40 scattered clients, and the
+domain at work: win1 and the admin workstations using dc1's DNS, Kerberos,
+LDAP, SMB, RPC and time.
 
 ```sh
 firru tighten --policy policies/pol/*.yml --defs def --flows-file flows.jsonl --outdir policies/tightened
@@ -145,8 +147,12 @@ mon1:
     # allow-tcp-MUNIN          tcp/4949               v4+v6 -> v4
 ```
 
-win1's SSH narrows to `ADMIN` the same way. web1 does not change: 40 unrelated
-clients have no common source to name, and `ANY` is the honest answer there.
+win1's SSH narrows to `ADMIN` the same way, and dc1's eight used services to
+`[ADMIN, win1]`, the domain's members. web1 is not joined, so it is not among
+them. web1 itself does not change: 40 unrelated clients have no common source
+to name, and `ANY` is the accurate answer there. For win1, tighten also
+proposes outbound terms to dc1 (`added`), since win1 started those
+connections; the walk-through leaves egress open and does not apply them.
 The proposal is written beside the policy, never into it. Note the second line:
 both groups are IPv4 only, so the narrowed term no longer admits IPv6.
 
@@ -157,8 +163,8 @@ firru diff policies/pol/mon1.yml policies/tightened/mon1.yml --defs def -o sh
 # firru set-source policies/pol/mon1.yml allow-tcp-MUNIN MONITORING --defs def  # narrowed
 ```
 
-Each change is one command; keep the ones you accept (`| grep narrowed | sh`)
-and commit. `firru diff` exits 1 when there are changes, like `diff`.
+Each change is one command; keep the ones you accept (`| grep narrowed | sh`,
+for mon1, win1 and dc1) and commit. `firru diff` exits 1 when there are changes, like `diff`.
 
 ## 8. Compile and deploy
 
@@ -205,7 +211,8 @@ nothing is applied without a person.
 The next day the same traffic comes back, and with it an attacker
 (`make-flows.py 2`). From 203.0.113.99 it scans web1, tries passwords on
 win1's SSH and sends requests to web1's web server; then, from web1, it
-reaches for mon1's munin port and the domain controller. `flow-verdict`
+reaches for mon1's munin port and the domain controller: LDAP and SMB,
+which the domain uses, and WinRM, which nobody does. `flow-verdict`
 scores each flow against the policy in force, and against a second one: the
 same policy with every term day 1 never used removed (`firru diff
 --zero-evidence`, the block-early posture).
@@ -219,21 +226,27 @@ The attacker's flows (`rt_src`), counted:
 
 ```
 host    port flows  reviewed  block-early
-dc1      389     6  allow     deny
-dc1      445     4  allow     deny
+dc1      389     6  deny      deny
+dc1      445     4  deny      deny
+dc1     5985     5  allow     deny
 mon1    4949     3  deny      deny
 web1     80    30  allow     allow
 web1     ...         (the scan: eight ports, each deny)
 win1      22   200  deny      deny
 ```
 
-The narrowing did its job: the passwords never reach win1's SSH, and munin
-answers only the monitoring host. web1's web server answers the attacker as
-it answers everyone; that is what it is for. The difference between the two
-postures is dc1. Nobody used LDAP or SMB on day 1, so the reviewed policy
-still has them open from anywhere, and the attacker on web1 gets in.
-Block-early would have refused them, and would also refuse the first
-legitimate client that needs them, which the learning window did not see.
+The narrowing did its job: the passwords never reach win1's SSH, munin
+answers only the monitoring host, and dc1's LDAP and SMB answer only the
+domain's members, so web1 is refused. web1's web server answers the
+attacker as it answers everyone; that is what it is for.
+
+The two postures differ on what day 1 never used. Nobody reached dc1's
+WinRM, so tightening had no peers to narrow it to, and the reviewed policy
+still admits it from anywhere. Block-early dropped it with the other unused
+directory services, and refuses the attacker. It would also refuse the first
+administrator who needs WinRM, which the learning window did not see.
+Narrowing removes peers that never used a service; block-early removes the
+services nobody used.
 
 ## 11. Had day 2 been the learning window
 
@@ -252,6 +265,8 @@ mon1:
 Tightening learns whatever the window holds. With the attacker in it, the
 compromised web1 becomes a legitimate munin client, and win1's SSH cannot
 narrow at all: an internet address was among its peers, so it stays `ANY`.
+On dc1 (same command, `dc1.yml`), web1 joins the domain's members on LDAP
+and SMB, and WinRM narrows to web1 alone, the one peer that ever used it.
 Learn from a window you have reason to trust, and read what tightening
 proposes before you accept it.
 

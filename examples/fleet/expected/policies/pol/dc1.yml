@@ -22,13 +22,17 @@ filters:
         protocol: tcp
         destination-port: KERBEROS-TCP
         action: accept
-        source-address: ANY
+        source-address:
+          - ADMIN
+          - win1
 # [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs)
       - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
         protocol: tcp
         destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
         action: accept
-        source-address: ANY
+        source-address:
+          - ADMIN
+          - win1
 # [auto] IPv4 192.168.150.194/32 (System)
       - name: allow-tcp-NETBIOS-SSN-LEGACY
         protocol: tcp
@@ -40,13 +44,17 @@ filters:
         protocol: tcp
         destination-port: LDAP-TCP
         action: accept
-        source-address: ANY
+        source-address:
+          - ADMIN
+          - win1
 # [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
       - name: allow-tcp-WINDOWS-SMB
         protocol: tcp
         destination-port: WINDOWS-SMB
         action: accept
-        source-address: ANY
+        source-address:
+          - ADMIN
+          - win1
 # [auto] IPv4 0.0.0.0/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 ::/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
       - name: allow-tcp-KERBEROS-KPASSWD-TCP
         protocol: tcp
@@ -100,19 +108,25 @@ filters:
         protocol: udp
         destination-port: DNS-UDP
         action: accept
-        source-address: ANY
+        source-address:
+          - ADMIN
+          - win1
 # [auto] IPv4 192.168.150.194/32 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
       - name: allow-udp-KERBEROS-UDP
         protocol: udp
         destination-port: KERBEROS-UDP
         action: accept
-        source-address: ANY
+        source-address:
+          - ADMIN
+          - win1
 # [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe W32Time) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe W32Time)
       - name: allow-udp-NTP
         protocol: udp
         destination-port: NTP
         action: accept
-        source-address: ANY
+        source-address:
+          - ADMIN
+          - win1
 # [auto] IPv4 192.168.150.194/32 (System)
       - name: allow-udp-NETBIOS-NS-LEGACY
         protocol: udp
@@ -130,7 +144,9 @@ filters:
         protocol: udp
         destination-port: LDAP-UDP
         action: accept
-        source-address: ANY
+        source-address:
+          - ADMIN
+          - win1
 # [auto] IPv4 192.168.150.194/32 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
       - name: allow-udp-KERBEROS-KPASSWD-UDP
         protocol: udp
