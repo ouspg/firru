@@ -259,7 +259,9 @@ def iter_flow_groups(path, host_ips=None):
     faster than it was -- just uniform.
 
     Rows carry `n`; a consumer that ignores it counts conversations rather than
-    flows, which is why `_bucket_flow` takes a weight.
+    flows, which is why `_bucket_flow` takes a weight. They also carry
+    `unanswered`: how many of the `n` say `responded` false. A flow without
+    `responded` is not counted, so `unanswered == n` means every flow said so.
     """
     if is_parquet(path):
         yield from _group_parquet(path, host_ips)
@@ -267,10 +269,13 @@ def iter_flow_groups(path, host_ips=None):
         groups = {}
         for flow in _iter_jsonl(path, host_ips, False):
             key = tuple(flow.get(c) for c in _CORE)
-            groups[key] = groups.get(key, 0) + 1
-        for key, n in groups.items():
+            g = groups.setdefault(key, [0, 0])
+            g[0] += 1
+            g[1] += flow.get("responded") is False
+        for key, (n, unanswered) in groups.items():
             d = dict(zip(_CORE, key))
             d["n"] = n
+            d["unanswered"] = unanswered
             yield d
 
 
@@ -285,10 +290,13 @@ def _group_parquet(path, host_ips):
         where = f" WHERE src_ip IN ({ph}) OR dst_ip IN ({ph})"
         params = ips + ips
     cols = ", ".join(_CORE)
-    q = (f"SELECT {cols}, count(*) AS n FROM {rel}"
+    have = {r[0] for r in duckdb.sql(f"DESCRIBE SELECT * FROM {rel}").fetchall()}
+    unanswered = ("count(*) FILTER (WHERE responded = false)"
+                  if "responded" in have else "0")
+    q = (f"SELECT {cols}, count(*) AS n, {unanswered} AS unanswered FROM {rel}"
          f"{where} GROUP BY {cols}")
     res = duckdb.execute(q, params) if params else duckdb.execute(q)
-    names = _CORE + ("n",)
+    names = _CORE + ("n", "unanswered")
     while True:
         batch = res.fetchmany(10000)
         if not batch:

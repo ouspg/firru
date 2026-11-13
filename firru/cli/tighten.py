@@ -311,6 +311,7 @@ def summarise_annotations(ip_counter, annotator):
     """
     token_groups = defaultdict(lambda: {"hits": 0, "ips": []})  # token → {hits, ips}
     raw_ips = {}
+    unanswered = getattr(ip_counter, "unanswered", {})
 
     for ip, count in ip_counter.items():
         ann = annotator.annotate_ip(ip)
@@ -342,21 +343,29 @@ def summarise_annotations(ip_counter, annotator):
         except ValueError:
             return (-ip_counter[ip], 9, 0, ip)
 
+    def _refused(hits, ips):
+        """Say so when a group's flows went unanswered: all of them, or some."""
+        n = sum(unanswered.get(ip, 0) for ip in ips)
+        if not n:
+            return ""
+        return " [never answered]" if n == hits else f" [{n} unanswered]"
+
     parts = []
     for tok, data in sorted(token_groups.items(), key=lambda x: (-x[1]["hits"], x[0])):
         hits = data["hits"]
         ips = sorted(data["ips"], key=_ip_key)
+        tag = _refused(hits, ips)
         if tok == "EXTERNAL":
             sample = ", ".join(ips[:COMMENT_IP_LIMIT])
             extra = f" and {len(ips) - COMMENT_IP_LIMIT} more" if len(ips) > COMMENT_IP_LIMIT else ""
-            parts.append(f"{hits} hits: EXTERNAL ({sample}{extra})")
+            parts.append(f"{hits} hits: EXTERNAL ({sample}{extra}){tag}")
         elif tok.startswith("raw:"):
             ip = ips[0]
-            parts.append(f"{hits} hits: {ip} (unresolved)")
+            parts.append(f"{hits} hits: {ip} (unresolved){tag}")
         else:
             sample = ", ".join(ips[:COMMENT_IP_LIMIT])
             extra = f" and {len(ips) - COMMENT_IP_LIMIT} more" if len(ips) > COMMENT_IP_LIMIT else ""
-            parts.append(f"{hits} hits: {tok} ({sample}{extra})")
+            parts.append(f"{hits} hits: {tok} ({sample}{extra}){tag}")
 
     annotations = [annotator.annotate_ip(ip) for ip in ip_counter]
     return " | ".join(parts), annotations, raw_ips
@@ -393,6 +402,30 @@ def _is_broadcast_or_multicast(ip_str):
         return False
 
 
+class Hits(Counter):
+    """Flows per peer, and in `unanswered` how many of them went unanswered.
+
+    A peer whose every flow went unanswered never used the service: the policy
+    in force refused it, or nothing listened. Tightening still counts it, since
+    the window need not have run under the policy being tightened, and the
+    comment says which peers those were.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.unanswered = Counter()
+
+    def merge(self, other):
+        self.update(other)
+        self.unanswered.update(getattr(other, "unanswered", {}))
+
+
+def _count(bucket, peer, n, unanswered):
+    bucket[peer] += n
+    if unanswered and isinstance(bucket, Hits):   # a plain Counter keeps hits only
+        bucket.unanswered[peer] += unanswered
+
+
 def _bucket_flow(flow, host_ips_set, defs, ingress, egress, ingress_ports, egress_ports):
     """Sort one normalised flow dict into ingress/egress counters.
 
@@ -403,6 +436,7 @@ def _bucket_flow(flow, host_ips_set, defs, ingress, egress, ingress_ports, egres
     proto    = flow["protocol"]
     dst_port = flow["dst_port"]
     n        = flow.get("n", 1)
+    unanswered = flow.get("unanswered", n if flow.get("responded") is False else 0)
 
     if _is_broadcast_or_multicast(flow["src_ip"]) or _is_broadcast_or_multicast(flow["dst_ip"]):
         return
@@ -418,11 +452,11 @@ def _bucket_flow(flow, host_ips_set, defs, ingress, egress, ingress_ports, egres
             svc = f"unknown-{proto}-{dst_port}"
 
     if flow["dst_ip"] in host_ips_set:
-        ingress[(proto, svc)][flow["src_ip"]] += n
+        _count(ingress[(proto, svc)], flow["src_ip"], n, unanswered)
         if dst_port:
             ingress_ports[(proto, svc)][dst_port] += n
     elif flow["src_ip"] in host_ips_set:
-        egress[(proto, svc)][flow["dst_ip"]] += n
+        _count(egress[(proto, svc)], flow["dst_ip"], n, unanswered)
         if dst_port:
             egress_ports[(proto, svc)][dst_port] += n
 
@@ -434,8 +468,8 @@ def collect_flows_from_file(flows_file, host_ips, defs):
     """
     from firru.flows import iter_flow_groups
     host_ips_set = set(host_ips)
-    ingress       = defaultdict(Counter)
-    egress        = defaultdict(Counter)
+    ingress       = defaultdict(Hits)
+    egress        = defaultdict(Hits)
     ingress_ports = defaultdict(Counter)
     egress_ports  = defaultdict(Counter)
 
@@ -476,7 +510,7 @@ def collect_flows_multi(flows_file, host_ips_by_token, defs):
 
     host_ip_sets = {t: set(ips) for t, ips in host_ips_by_token.items()}
     buckets = {
-        t: (defaultdict(Counter), defaultdict(Counter),
+        t: (defaultdict(Hits), defaultdict(Hits),
             defaultdict(Counter), defaultdict(Counter))
         for t in host_ips_by_token
     }
@@ -511,8 +545,8 @@ def collect_flows(arkime, host_ips, defs, date="48", start_time=None, stop_time=
         egress:  {(proto, svc_token): Counter({dst_ip: hit_count})}
     """
     host_ips_set  = set(host_ips)
-    ingress       = defaultdict(Counter)
-    egress        = defaultdict(Counter)
+    ingress       = defaultdict(Hits)
+    egress        = defaultdict(Hits)
     ingress_ports = defaultdict(Counter)
     egress_ports  = defaultdict(Counter)
 
@@ -731,14 +765,14 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
 
         def _resolve_flows(proto, svc):
             """Returns (Counter, port_summary_str) or (None, None)."""
-            merged = Counter()
+            merged = Hits()
             seen_svcs = []
 
             # Direct hit: flows already bucketed under this token (e.g. RPC dynamic
             # ports land under WINDOWS-DC-BASE because it's first in GetPortParents).
             if (proto, svc) in ingress_flows:
                 ip_ctr = ingress_flows[(proto, svc)]
-                merged.update(ip_ctr)
+                merged.merge(ip_ctr)
                 port_ctr = (ingress_ports or {}).get((proto, svc), {})
                 ports_str = ",".join(str(p) for p in sorted(port_ctr, key=lambda x: (-port_ctr[x], x))[:5])
                 label = _svc_label(svc, proto or "", ports_str or "direct", ip_ctr)
@@ -766,7 +800,7 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
                             continue
                         try:
                             if entry in defs.GetService(fsvc):
-                                merged.update(ip_ctr)
+                                merged.merge(ip_ctr)
                                 label = _svc_label(fsvc, entry_proto, port_part, ip_ctr)
                                 if label not in seen_svcs:
                                     seen_svcs.append(label)
@@ -783,7 +817,7 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
                         continue  # already counted in direct hit above
                     if (entry_proto, member_svc) in ingress_flows:
                         ip_ctr = ingress_flows[(entry_proto, member_svc)]
-                        merged.update(ip_ctr)
+                        merged.merge(ip_ctr)
                         label = _svc_label(member_svc, entry_proto, port_part, ip_ctr)
                         if label not in seen_svcs:
                             seen_svcs.append(label)
@@ -1341,7 +1375,7 @@ Examples:
           print(f"Reading flows from {flows_file} …", file=sys.stderr)
           ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(str(flows_file), host_ips, defs)
       elif prescanned is not None:
-          empty = (defaultdict(Counter), defaultdict(Counter),
+          empty = (defaultdict(Hits), defaultdict(Hits),
                    defaultdict(Counter), defaultdict(Counter))
           ingress_flows, egress_flows, ingress_ports, egress_ports = \
               prescanned.get(host_token, empty)

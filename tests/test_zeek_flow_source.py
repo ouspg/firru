@@ -110,6 +110,11 @@ class TestItReadsAsAFlowStore:
         got = list(flows.iter_flows(str(zeek / "conn"), host_ips={"8.8.8.8"}))
         assert [f["dst_port"] for f in got] == [53]
 
+    def test_grouping_counts_the_unanswered(self, zeek):
+        """tcp/443 got no handshake, so its one flow went unanswered."""
+        got = {g["dst_port"]: g["unanswered"] for g in flows.iter_flow_groups(str(zeek / "conn"))}
+        assert got == {22: 0, 53: 0, 443: 1}
+
     def test_grouping_agrees_with_the_derived_store(self, zeek, derived):
         key = lambda gs: sorted((g["protocol"], g["src_ip"], g["dst_ip"],
                                  g["dst_port"], g["n"]) for g in gs)
