@@ -11,7 +11,7 @@
   win2022-std-desktop-public-g2: 29 ports → baselines/win2022-std-desktop-public-g2.json
 
 == 3. what the fleet runs beyond stock
-firru: no ./def/, using the stock definitions in /home/pp/firru-dev/def (--defs DIR for a project's own)
+firru: no ./def/, using the stock definitions in $FIRRU/def (--defs DIR for a project's own)
 # firru edit-services add def/funny.yml TCP_4949 4949/tcp  # unnamed: munin-nodex1; 1 host(s)
 # + HTTP 80/tcp  (apache2; 1 host(s)) beyond the baseline
 # + SSH 22/tcp  (sshd; 1 host(s)) beyond the baseline
