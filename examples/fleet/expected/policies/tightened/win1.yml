@@ -1,0 +1,121 @@
+# firru tighten output — review and copy changes to policies/pol/win1.yml
+# Source suggestions changed: 1 | Dead rules: 2 | Group suggestions: 0
+metadata:
+  host: win1
+filters:
+  - header:
+      targets:
+        windows_advfirewall: in mixed block
+    terms:
+
+# [auto] 16 flows total | 16 hits: ADMIN (192.168.150.3, 192.168.150.9) | via: SSH/tcp/22
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address: ADMIN  # was: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+        protocol: tcp
+        destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-NETBIOS-SSN-LEGACY
+        protocol: tcp
+        destination-port: NETBIOS-SSN-LEGACY
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINDOWS-SMB
+        protocol: tcp
+        destination-port: WINDOWS-SMB
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINRM-HTTP
+        protocol: tcp
+        destination-port: WINRM-HTTP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
+        protocol: tcp
+        destination-port: WINDOWS-WINRM-UNCONFIGURED
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-NETBIOS-NS-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-NS-LEGACY
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-NETBIOS-DGM-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-DGM-LEGACY
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-LLMNR
+        protocol: udp
+        destination-port: LLMNR
+        action: accept
+        source-address:
+          - LLMNR_SOURCES_V4
+          - LLMNR_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        platform-exclude:
+          - windows_advfirewall
+
+  - header:
+      targets:
+        windows_advfirewall: out mixed
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] no egress flows observed — placeholder kept
+      - name: allow-ANY
+        action: accept

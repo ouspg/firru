@@ -1,0 +1,49 @@
+# firru tighten output — review and copy changes to policies/pol/siem-server.yml
+# Source suggestions changed: 0 | Dead rules: 1 | Group suggestions: 0
+metadata:
+  host: siem-server
+  zone: core
+  variant: 'r4-block-early (learn file: night.jsonl) — services with no observed client
+    are removed, not merely narrowed'
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-loopback
+    source-address: LOOPBACK
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmp
+    protocol: icmp
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmpv6
+    protocol: icmpv6
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: drop-ANY
+    action: deny
+    counter: drop-ANY
+
+- header:
+    targets:
+      nftables: mixed output
+  terms:
+  - name: allow-loopback
+    action: accept
+    source-address: LOOPBACK
+  - name: allow-icmp
+    action: accept
+    protocol: icmp
+  - name: allow-icmpv6
+    action: accept
+    protocol: icmpv6
+# [auto] no egress flows observed — placeholder kept
+  - name: allow-ANY
+    action: accept

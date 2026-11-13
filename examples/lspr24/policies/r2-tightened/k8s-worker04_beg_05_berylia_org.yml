@@ -1,0 +1,185 @@
+# firru tighten output — review and copy changes to policies/pol/k8s-worker04_beg_05_berylia_org.yml
+# Source suggestions changed: 5 | Dead rules: 0 | Group suggestions: 0
+metadata:
+  host: k8s-worker04
+  zone: beg
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+
+# [auto] 1800 flows total | 1800 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address: BEG_GT_OTHER  # was: BEG_GT
+
+# [auto] 1549 flows total | 403 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31) | 393 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32) | 379 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33) | 374 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30) | via: DOCKER-SWARM/tcp/7946
+      - name: allow-tcp-METALLB-MEMBERLIST
+        protocol: tcp
+        destination-port: METALLB-MEMBERLIST
+        action: accept
+        source-address:  # was: ANY_V4
+          - k8s-worker01
+          - k8s-worker03
+          - k8s-worker02
+          - k8s-control-plane
+
+# [auto] 298 flows total | 298 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32) | via: NODE-EXPORTER/tcp/9100
+      - name: allow-tcp-NODE-EXPORTER
+        protocol: tcp
+        destination-port: NODE-EXPORTER
+        action: accept
+        source-address: k8s-worker02_beg_05_berylia_org  # was: ANY_V6
+
+# [auto] 481 flows total | 481 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32) | via: K8S-KUBELET/tcp/10250
+      - name: allow-tcp-K8S-KUBELET
+        protocol: tcp
+        destination-port: K8S-KUBELET
+        action: accept
+        source-address: k8s-worker02_beg_05_berylia_org  # was: ANY_V6
+
+# [auto] 855 flows total | 303 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32) | 195 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33) | 183 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31) | 174 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30) | via: DOCKER-SWARM/udp/7946
+      - name: allow-udp-METALLB-MEMBERLIST
+        protocol: udp
+        destination-port: METALLB-MEMBERLIST
+        action: accept
+        source-address:  # was: ANY_V4
+          - k8s-worker01
+          - k8s-worker03
+          - k8s-worker02
+          - k8s-control-plane
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-BGP
+        protocol: tcp
+        destination-port: BGP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-METALLB-METRICS
+        protocol: tcp
+        destination-port: METALLB-METRICS
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-K8S-KUBE-PROXY
+        protocol: tcp
+        destination-port: K8S-KUBE-PROXY
+        action: accept
+        source-address: ANY_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] 384 hits: k8s-worker02_beg_05_berylia_org (2a07:1182:5:20::32, fe80::250:56ff:fe89:82f3) | 370 hits: k8s-worker03_beg_05_berylia_org (2a07:1182:5:20::33, fe80::250:56ff:fe89:3811) | 349 hits: k8s-worker01_beg_05_berylia_org (2a07:1182:5:20::31, fe80::250:56ff:fe89:2819) | 33 hits: beg (2a07:1182:5:20::1) | 22 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11)
+      - name: allow-icmpv6-ICMPV6
+        protocol: icmpv6
+        destination-address:
+          - k8s-worker01
+          - k8s-worker03
+          - k8s-worker02
+          - fw1-beg
+          - beg
+        action: accept
+# [auto] 398 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30, 2a07:1182:5:20::30) | 369 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32, 2a07:1182:5:20::32) | 368 hits: k8s-worker03_beg_05_berylia_org (2a07:1182:5:20::33, 100.97.5.33) | 313 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31, 2a07:1182:5:20::31)
+      - name: allow-tcp-BGP
+        protocol: tcp
+        destination-port: BGP
+        destination-address:
+          - k8s-worker01
+          - k8s-worker03
+          - k8s-worker02
+          - k8s-control-plane
+        action: accept
+# [auto] 416 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32) | 395 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33) | 375 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30) | 374 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31)
+      - name: allow-tcp-DOCKER-SWARM
+        protocol: tcp
+        destination-port: DOCKER-SWARM
+        destination-address:
+          - k8s-worker01
+          - k8s-worker03
+          - k8s-worker02
+          - k8s-control-plane
+        action: accept
+# [auto] 7886 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30, 2a07:1182:5:20::30)
+      - name: allow-tcp-K8S-API-SERVER
+        protocol: tcp
+        destination-port: K8S-API-SERVER
+        destination-address: k8s-control-plane_beg_05_berylia_org
+        action: accept
+# [auto] 230 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32)
+      - name: allow-tcp-K8S-NODEPORT
+        protocol: tcp
+        destination-port: K8S-NODEPORT
+        destination-address: k8s-worker02_beg_05_berylia_org
+        action: accept
+# [auto] 283 hits: EXTERNAL (100.100.108.30)
+      - name: allow-tcp-TCP_1514
+        protocol: tcp
+        destination-port: TCP_1514
+        comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+          (283 hits) -- a single destination: name it or deny it, ANY is not the answer
+          either way'
+        action: accept
+# [auto] 56 hits: EXTERNAL (100.100.108.30)
+      - name: allow-tcp-TCP_1515
+        protocol: tcp
+        destination-port: TCP_1515
+        comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+          (56 hits) -- a single destination: name it or deny it, ANY is not the answer
+          either way'
+        action: accept
+# [auto] 2409 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        comment: 'ANY covers 2 unresolved dst: 2 addresses in 2 blocks, widest /32:
+          2a07:1181:95:95::4/128 (1213 hits), 100.95.95.4/32 (1196 hits) -- 1 of 2
+          sit in one group, so a named group would cover most of this'
+        action: accept
+# [auto] 211 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30) | 202 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31) | 191 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33) | 82 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32)
+      - name: allow-udp-DOCKER-SWARM
+        protocol: udp
+        destination-port: DOCKER-SWARM
+        destination-address:
+          - k8s-worker01
+          - k8s-worker03
+          - k8s-worker02
+          - k8s-control-plane
+        action: accept
+# [auto] review terms above, then replace with deny-ANY when ready; unnamed ports only this allows: tcp/34503 (79 hits, 1 dst), tcp/45225 (294 hits, 1 dst), tcp/9893 (142 hits, 1 dst) -- name them (firru edit-services add) to get terms
+      - name: allow-ANY
+        action: accept

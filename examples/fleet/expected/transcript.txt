@@ -1,0 +1,258 @@
+
+== 1. collect: one loot-host directory per host (here: copied from the baselines)
+
+== 2. normalize
+  dc1: 7568 ports → loot/dc1.json
+  mon1: 3 ports → loot/mon1.json
+  web1: 3 ports → loot/web1.json
+  win1: 31 ports → loot/win1.json
+  ubuntu-24.04.5-server-g1: 1 ports → baselines/ubuntu-24.04.5-server-g1.json
+  win2022-std-desktop-dc-g2: 7568 ports → baselines/win2022-std-desktop-dc-g2.json
+  win2022-std-desktop-public-g2: 29 ports → baselines/win2022-std-desktop-public-g2.json
+
+== 3. what the fleet runs beyond stock
+firru: no ./def/, using the stock definitions in $FIRRU/def (--defs DIR for a project's own)
+# firru edit-services add def/funny.yml TCP_4949 4949/tcp  # unnamed: munin-nodex1; 1 host(s)
+# + HTTP 80/tcp  (apache2; 1 host(s)) beyond the baseline
+# + SSH 22/tcp  (sshd; 1 host(s)) beyond the baseline
+firru synth --input loot/ --output policies/staged --defs def --overwrite
+firru diff policies/pol/mon1.yml policies/staged/mon1.yml --defs def
+firru diff policies/pol/web1.yml policies/staged/web1.yml --defs def
+firru diff policies/pol/win1.yml policies/staged/win1.yml --defs def
+
+== 4. definitions: firru's own, then the site's names and networks
+def/servers.yml: created, added MUNIN = 4949/tcp
+  (run 'firru annotate-services' to fill in its [auto] evidence)
+
+== 5. synthesize, review, accept
+Source policy: ./def/heuristics.py
+  dc1: 23 terms
+  mon1: 2 terms
+  web1: 2 terms
+  win1: 11 terms
+# No unknown services found.
+
+== 6. traffic, and what it says about the sources
+Reading flows from flows.jsonl (single pass, 4 hosts) …
+  738 flows in 43 conversations, 738 involving a known host
+Host: dc1  IPs: ['192.168.150.194']
+  ingress: 0 flows across 0 service buckets
+  egress:  0 flows across 0 service buckets
+Host: mon1  IPs: ['192.168.150.169']
+  ingress: 288 flows across 1 service buckets
+  egress:  0 flows across 0 service buckets
+Host: web1  IPs: ['192.168.150.126']
+  ingress: 434 flows across 1 service buckets
+  egress:  0 flows across 0 service buckets
+Host: win1  IPs: ['192.168.150.184']
+  ingress: 16 flows across 1 service buckets
+  egress:  0 flows across 0 service buckets
+Written: policies/tightened/dc1.yml  (0 changed, 2 dead, 0 group suggestions)
+Written: policies/tightened/dc1.dead.yml  (2 dead-rule candidates)
+Written: policies/tightened/mon1.yml  (1 changed, 0 dead, 0 group suggestions)
+Written: policies/tightened/web1.yml  (0 changed, 0 dead, 0 group suggestions)
+Written: policies/tightened/win1.yml  (1 changed, 2 dead, 0 group suggestions)
+Written: policies/tightened/win1.dead.yml  (2 dead-rule candidates)
+mon1:
+  narrowed (1) — fewer peers, safe to apply (--narrow):
+    > allow-tcp-MUNIN          tcp/4949               source ANY -> MONITORING  observed (288 flows)
+  address family (1) — coverage changed:
+    # allow-tcp-MUNIN          tcp/4949               v4+v6 -> v4
+  postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
+win1:
+  narrowed (1) — fewer peers, safe to apply (--narrow):
+    > allow-tcp-SSH            tcp/22                 source ANY -> ADMIN  observed (16 flows)
+  address family (1) — coverage changed:
+    # allow-tcp-SSH            tcp/22                 v4+v6 -> v4
+  postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
+web1: no surface changes
+
+== 7. apply the narrowings you accept
+policies/pol/mon1.yml: allow-tcp-MUNIN source -> MONITORING
+policies/pol/win1.yml: allow-tcp-SSH source -> ADMIN
+
+== 8. compile
+dc1.bat
+mon1.nft
+web1.nft
+win1.bat
+
+== 9. and keep checking: each host against its running firewall
+hosts/dc1/loot-host/firewall.json: 71 term(s) parsed PARTIALLY (ignored: ICMP type, RPC keyword (read as the dynamic range), program, protocol 2, protocol 41, remote keyword, service) — each reads WIDER than the rule it came from, so a widening reported here may be the parser, not the host
+hosts/dc1/loot-host/firewall.json: 1 term(s) carry literal addresses no token names — they cannot compare equal to a tokenized policy, and will read as changed on names alone
+== dc1  (windows, profile Public)
+exposure: listeners against the running firewall (hosts/dc1/loot-host/firewall.json)
+  open     tcp/53     dns                DNSSrv-DNS-TCP-In
+  open     tcp/88     lsass              ADDS-Kerberos-TCP-In
+  open     tcp/135    svchost            WMI-RPCSS-In-TCP (8 rules)
+  open     tcp/139    System             FPS-NB_Session-In-TCP
+  open     tcp/389    lsass              ADDS-LDAP-TCP-In
+  open     tcp/445    System             FPS-SMB-In-TCP (4 rules)
+  open     tcp/464    lsass              ADDS-Kerberos-Password-TCP-In
+  open     tcp/636    lsass              ADDS-LDAPSEC-TCP-In
+  open     tcp/3268   lsass              ADDS-LDAPGC-TCP-In
+  open     tcp/3269   lsass              ADDS-LDAPGCSEC-TCP-In
+  open     tcp/9389   Microsoft.ActiveDirectory.WebServices ADWS-TCP-In
+  open     udp/53     dns                DNSSrv-DNS-UDP-In
+  open     udp/88     lsass              ADDS-Kerberos-UDP-In
+  open     udp/123    svchost            W32Time-NTP-UDP-In
+  open     udp/137    System             FPS-NB_Name-In-UDP
+  open     udp/138    System             FPS-NB_Datagram-In-UDP (2 rules)
+  open     udp/389    lsass              ADDS-LDAP-UDP-In
+  open     udp/464    lsass              ADDS-Kerberos-Password-UDP-In
+  open     tcp/dyn    dfsrs              1 dynamic port(s) 64088: DFSR-DFSRSvc-In-TCP
+  open     tcp/dyn    dns                1 dynamic port(s) 49696: DNSSrv-RPC-TCP-In
+  open     tcp/dyn    lsass              3 dynamic port(s) 49664,49668,49674: ADDS-RPC-TCP-In
+  open     tcp/dyn    spoolsv            1 dynamic port(s) 49675: FPS-SpoolSvc-In-TCP
+  scoped   tcp/5985   System (HTTP.sys: svchost.exe /WSMAN/) WINRM-HTTP-In-TCP-PUBLIC from LocalSubnet
+  scoped   udp/5353   svchost            MDNS-In-UDP-Public-Active from LocalSubnet
+  scoped   udp/5355   svchost            FPS-LLMNR-In-UDP from LocalSubnet
+  blocked  2: tcp/593 svchost, tcp/47001 System (HTTP.sys: svchost.exe /WSMAN/); plus 5007 dynamic-range socket(s)
+  stale    9 allow rule(s) with nothing listening: 1 open to an admin through HTTP.sys (System), 8 for one program or service
+           udp/445 ADDS-NP-UDP-In from Any (HTTP.sys)
+baseline: against win2022-std-desktop-dc-g2
+    dc1  (baseline win2022-std-desktop-dc-g2, 23 stock listeners matched)
+      = dynamic ports of 9 stock processes: dfsrs/tcp, dns/tcp, dns/udp, lsass/tcp, services/tcp, spoolsv/tcp, svchost/tcp, svchost/udp, wininit/tcp
+  0 added, 0 widened, 0 other process, 0 missing, across 1 hosts
+firewall rules vs stock (win2022-std-desktop-dc-g2):
+  same as stock
+policy: firru diff policies/pol/dc1.yml loot/dc1.json
+dc1: no surface changes
+  dynamic range: 7525 listener(s) in loot/dc1.json left out, as synthesis leaves them; loot-diff --baseline compares them by owner
+drift: firru diff policies/pol/dc1.yml hosts/dc1/loot-host/firewall.json
+reading enforced state: 'removed' = committed but not running (stale or never reloaded); 'widened' = the host grants more than the policy (hand-patched or generated wider); 'added' = running but never committed.
+hosts/dc1/loot-host/firewall.json:
+  added (8) — new listeners, safe to apply:
+    + ADDS-NP-UDP-In           udp/445                source ANY
+    + CoreNet-DHCP-In          udp/68                 source ANY
+    + CoreNet-DHCPV6-In        udp/546                source ANY
+    + DeliveryOptimization-TCP-In tcp/7680               source ANY
+    + DeliveryOptimization-UDP-In udp/7680               source ANY
+    + FileServer-ServerManager-Winmgmt-TCP-In tcp/49152-65535        source ANY
+    + NVS-FrameServer-In-TCP-NoScope tcp/554, tcp/8554-8558 source ANY
+    + NVS-FrameServer-In-UDP-NoScope udp/5000-5020          source ANY
+  widened (2) — grants new peers, REVIEW:
+    ! FPS-LLMNR-In-UDP         udp/5355               source [LLMNR_SOURCES_V4, LLMNR_SOURCES_V6] -> ANY
+    ! {04616BE5-1A90-4D46-BECB-D5E5CDC18CAE} udp/5353               source [MDNS_SOURCES_V4, MDNS_SOURCES_V6] -> ANY
+  removed (3) — no longer observed, advisory (scoring vetoes):
+    - allow-tcp-WINDOWS-RPC-HTTPS tcp/593
+    - allow-tcp-WINDOWS-WINRM-UNCONFIGURED tcp/47001
+    - allow-udp-LLMNR          tcp/5355
+  cosmetic (19) — rename/regroup, same enforcement:
+    ~ ADDS-Kerberos-Password-TCP-In tcp/464
+    ~ ADDS-Kerberos-Password-UDP-In udp/464
+    ~ ADDS-Kerberos-TCP-In     tcp/88
+    ~ ADDS-Kerberos-UDP-In     udp/88
+    ~ ADDS-LDAP-TCP-In         tcp/389
+    ~ ADDS-LDAP-UDP-In         udp/389
+    ~ ADDS-LDAPGC-TCP-In       tcp/3268
+    ~ ADDS-LDAPGCSEC-TCP-In    tcp/3269
+    ~ ADDS-LDAPSEC-TCP-In      tcp/636
+    ~ ADDS-NB-Datagram-UDP-In  udp/138
+    ~ ADWS-TCP-In              tcp/9389
+    ~ DNSSrv-DNS-TCP-In        tcp/53
+    ~ DNSSrv-DNS-UDP-In        udp/53
+    ~ FPS-NB_Name-In-UDP       udp/137
+    ~ FPS-NB_Session-In-TCP    tcp/139
+    ~ FileServer-ServerManager-DCOM-TCP-In tcp/135
+    ~ FileServer-ServerManager-SMB-TCP-In tcp/445
+    ~ W32Time-NTP-UDP-In       udp/123
+    ~ WINRM-HTTP-In-TCP-PUBLIC tcp/5985
+
+hosts/win1/loot-host/firewall.json: 24 term(s) parsed PARTIALLY (ignored: ICMP type, program, protocol 2, protocol 41, remote keyword, service) — each reads WIDER than the rule it came from, so a widening reported here may be the parser, not the host
+hosts/win1/loot-host/firewall.json: 1 term(s) carry literal addresses no token names — they cannot compare equal to a tokenized policy, and will read as changed on names alone
+== win1  (windows, profile Public)
+exposure: listeners against the running firewall (hosts/win1/loot-host/firewall.json)
+  scoped   tcp/5985   System             WINRM-HTTP-In-TCP-PUBLIC from LocalSubnet
+  scoped   udp/5353   svchost            MDNS-In-UDP-Public-Active from LocalSubnet
+  blocked  9: tcp/22 sshd, tcp/135 svchost, tcp/139 System, tcp/445 System, tcp/47001 System, udp/123 svchost, udp/137 System, udp/138 System, udp/5355 svchost; plus 6 dynamic-range socket(s)
+  stale    7 allow rule(s) with nothing listening: 7 for one program or service
+baseline: against win2022-std-desktop-public-g2
+    win1  (baseline win2022-std-desktop-public-g2, 10 stock listeners matched)
+      + tcp/22  sshd  [world-listen]
+      = dynamic ports of 5 stock processes: lsass/tcp, services/tcp, spoolsv/tcp, svchost/tcp, wininit/tcp
+  1 added, 0 widened, 0 other process, 0 missing, across 1 hosts
+firewall rules vs stock (win2022-std-desktop-public-g2):
+  added (1):
+    on  Inb Allow TCP port=22 from=Any prof=Private prog=c:\program files\openssh\sshd.exe  'OpenSSH SSH Server Preview (sshd)'
+policy: firru diff policies/pol/win1.yml loot/win1.json
+win1: no surface changes (reviewed sources kept on 1 term(s))
+  dynamic range: 12 listener(s) in loot/win1.json left out, as synthesis leaves them; loot-diff --baseline compares them by owner
+drift: firru diff policies/pol/win1.yml hosts/win1/loot-host/firewall.json
+reading enforced state: 'removed' = committed but not running (stale or never reloaded); 'widened' = the host grants more than the policy (hand-patched or generated wider); 'added' = running but never committed.
+hosts/win1/loot-host/firewall.json:
+  added (6) — new listeners, safe to apply:
+    + CoreNet-DHCP-In          udp/68                 source ANY
+    + CoreNet-DHCPV6-In        udp/546                source ANY
+    + DeliveryOptimization-TCP-In tcp/7680               source ANY
+    + DeliveryOptimization-UDP-In udp/7680               source ANY
+    + NVS-FrameServer-In-TCP-NoScope tcp/554, tcp/8554-8558 source ANY
+    + NVS-FrameServer-In-UDP-NoScope udp/5000-5020          source ANY
+  widened (1) — grants new peers, REVIEW:
+    ! {0F3D1B78-933E-42BE-9548-AFDEC12D0013} udp/5353               source [MDNS_SOURCES_V4, MDNS_SOURCES_V6] -> ANY
+  removed (9) — no longer observed, advisory (scoring vetoes):
+    - allow-tcp-NETBIOS-SSN-LEGACY tcp/139
+    - allow-tcp-SSH            tcp/22
+    - allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135
+    - allow-tcp-WINDOWS-SMB    tcp/445
+    - allow-tcp-WINDOWS-WINRM-UNCONFIGURED tcp/47001
+    - allow-udp-LLMNR          tcp/5355, udp/5355
+    - allow-udp-NETBIOS-DGM-LEGACY udp/138
+    - allow-udp-NETBIOS-NS-LEGACY udp/137
+    - allow-udp-NTP            udp/123
+  cosmetic (1) — rename/regroup, same enforcement:
+    ~ WINRM-HTTP-In-TCP-PUBLIC tcp/5985
+
+== mon1  (linux)
+exposure: listeners against the running firewall (hosts/mon1/loot-host/nft.json)
+  open     tcp/4949   munin-node         no input-hook chain: nothing filters inbound
+  open     udp/68     systemd-network    no input-hook chain: nothing filters inbound
+baseline: against ubuntu-24.04.5-server-g1
+    mon1  (baseline ubuntu-24.04.5-server-g1, 1 stock listeners matched)
+      + tcp/4949  munin-node  [world-listen]
+  1 added, 0 widened, 0 other process, 0 missing, across 1 hosts
+policy: firru diff policies/pol/mon1.yml loot/mon1.json
+mon1: no surface changes (reviewed sources kept on 1 term(s))
+drift: firru diff policies/pol/mon1.yml hosts/mon1/loot-host/nft.json
+
+== web1  (linux)
+exposure: listeners against the running firewall (hosts/web1/loot-host/nft.json)
+  open     tcp/80     apache2            no input-hook chain: nothing filters inbound
+  open     udp/68     systemd-network    no input-hook chain: nothing filters inbound
+baseline: against ubuntu-24.04.5-server-g1
+    web1  (baseline ubuntu-24.04.5-server-g1, 1 stock listeners matched)
+      + tcp/80  apache2  [world-listen]
+  1 added, 0 widened, 0 other process, 0 missing, across 1 hosts
+policy: firru diff policies/pol/web1.yml loot/web1.json
+web1: no surface changes
+drift: firru diff policies/pol/web1.yml hosts/web1/loot-host/nft.json
+
+
+== 10. day 2: the policy against an attacker
+Snapshot: 4 host policies.
+Zones: 0 (0 prefixes).
+Variant block-early: 4 host policies (policies/block-early).
+Loaded 2 prefixes (2 v4, 0 v6).
+Annotated 990 flows.
+host    port flows  reviewed  block-early
+dc1      389     6  allow     deny
+dc1      445     4  allow     deny
+mon1    4949     3  deny      deny
+web1      21     1  deny      deny
+web1      22     1  deny      deny
+web1      23     1  deny      deny
+web1      25     1  deny      deny
+web1      80    30  allow     allow
+web1     443     1  deny      deny
+web1    3306     1  deny      deny
+web1    4949     1  deny      deny
+web1    8080     1  deny      deny
+win1      22   200  deny      deny
+
+== 11. and had day 2 been the learning window
+mon1:
+  narrowed (1) — fewer peers, safe to apply (--narrow):
+    > allow-tcp-MUNIN          tcp/4949               source ANY -> [MONITORING, web1]
+  address family (1) — coverage changed:
+    # allow-tcp-MUNIN          tcp/4949               v4+v6 -> v4
+win1: no surface changes

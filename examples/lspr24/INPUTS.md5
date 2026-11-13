@@ -1,0 +1,20 @@
+# LSPR24 inputs. Not vendored -- 2.6 GB and 4.7 GB -- so fetch your own copies:
+#
+#   Locked Shields Partners Run 24 (LSPR24): A Next-Generation Cybersecurity
+#   Dataset for Blue Team Automation
+#   https://doi.org/10.5281/zenodo.14900873          licensed CC0
+#
+# These are the publisher's own MD5 sums, copied from the Zenodo record rather
+# than computed here, so verifying is a check against the source of truth and
+# not against whatever happened to be on one laptop. Everything else in this
+# directory claims to regenerate from these files; a different revision of the
+# dataset would regenerate something different and say nothing about it, which
+# is what the pin exists to catch.
+#
+#   make verify-inputs      or      md5sum -c INPUTS.md5
+#
+# The record carries two further files this example does not use:
+#   eve.log                145,368,223 B  7706badbf6f5759be544d7bcaabcd235
+#   attack_narratives.json  11,275,823 B  4d9be4a2aea86b425dadcb446440752b
+a407011e9edbe615ce58a1e625c0a340  lspr24_v2.parquet
+46c4dd79e90ee26d40736996b52abd91  ossec-archive-host-logs.json

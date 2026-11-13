@@ -1,0 +1,231 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 595,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nginx",
+        "pid": 785,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nginx",
+        "pid": 785,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nginx",
+        "pid": 785,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nginx",
+        "pid": 785,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3306,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "mysqld",
+        "pid": 839,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 6379,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "redis-server",
+        "pid": 741,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 6379,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "redis-server",
+        "pid": 741,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 33060,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "mysqld",
+        "pid": 839,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 595,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "066",
+    "annotationfile": null,
+    "assumed": [
+      "dynamic_ranges"
+    ],
+    "collected_at": "2024-03-07T08:28:47",
+    "ephemeral": {
+      "tcp": [
+        32768,
+        60999
+      ],
+      "udp": [
+        32768,
+        60999
+      ]
+    },
+    "ephemeral_source": "assumed: firru-os-baselines, all 102 Linux runs",
+    "hostname": "inventory",
+    "ip": "100.97.5.4",
+    "listenfile": "ossec rootcheck netstat",
+    "os": "linux"
+  }
+}

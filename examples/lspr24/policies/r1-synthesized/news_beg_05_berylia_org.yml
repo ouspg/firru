@@ -1,0 +1,63 @@
+metadata:
+  host: news
+  zone: beg
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 | IPv6 ::/0
+# [auto] unexpected owner: SSH no process attribution; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BEG_GT
+# [auto] IPv4 0.0.0.0/0 (nginx) | IPv6 ::/0 (nginx) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
+      - name: allow-tcp-HTTP
+        protocol: tcp
+        destination-port: HTTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (nginx) | IPv6 ::/0 (nginx) | aliases: HTTPS,WINDOWS-HYPERV-REPLICA-HTTPS
+      - name: allow-tcp-HTTPS
+        protocol: tcp
+        destination-port: HTTPS
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (mariadbd)
+      - name: allow-tcp-MYSQL
+        protocol: tcp
+        destination-port: MYSQL
+        action: accept
+        source-address: ANY_V4
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

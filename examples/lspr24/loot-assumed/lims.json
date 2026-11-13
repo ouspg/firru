@@ -1,0 +1,163 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 631,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 846,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 846,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 8080,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "python",
+        "pid": 879,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 8888,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 846,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 631,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "081",
+    "annotationfile": null,
+    "assumed": [
+      "dynamic_ranges"
+    ],
+    "collected_at": "2024-03-07T08:30:44",
+    "ephemeral": {
+      "tcp": [
+        32768,
+        60999
+      ],
+      "udp": [
+        32768,
+        60999
+      ]
+    },
+    "ephemeral_source": "assumed: firru-os-baselines, all 102 Linux runs",
+    "hostname": "lims",
+    "ip": "100.98.5.7",
+    "listenfile": "ossec rootcheck netstat",
+    "os": "linux"
+  }
+}

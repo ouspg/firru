@@ -1,0 +1,85 @@
+metadata:
+  host: gas-historian
+  zone: beg
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 | IPv6 ::/0
+# [auto] unexpected owner: SSH no process attribution; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BEG_GT
+# [auto] IPv6 ::/0 (mysqld)
+      - name: allow-tcp-MYSQL
+        protocol: tcp
+        destination-port: MYSQL
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (xrdp)
+      - name: allow-tcp-RDP
+        protocol: tcp
+        destination-port: RDP
+        action: accept
+        source-address:
+          - BEG_GT
+# [auto] IPv4 10.5.17.100/32 (python3)
+# [auto] unexpected owner: HTTP-ALT served by python3 (a language runtime, not a named server); expected nginx, apache2, httpd, caddy, haproxy, traefik, +5 more
+      - name: allow-tcp-HTTP-ALT
+        protocol: tcp
+        destination-port: HTTP-ALT
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv6 ::/0 (mysqld)
+      - name: allow-tcp-MYSQL-X
+        protocol: tcp
+        destination-port: MYSQL-X
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv4 0.0.0.0/0 (cups-browsed)
+      - name: allow-udp-IPP
+        protocol: udp
+        destination-port: IPP
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv4 0.0.0.0/0 (avahi-daemon) | IPv6 ::/0 (avahi-daemon)
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

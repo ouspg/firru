@@ -1,0 +1,334 @@
+metadata:
+  host: baf_int
+  zone: baf_int
+  hosts:
+  - mail_int_baf_05_berylia_org
+  - ticketdesk_int_baf_05_berylia_org
+  - ws1-baf01_int_baf_05_berylia_org
+  - ws3-baf05_int_baf_05_berylia_org
+filters:
+- header:
+    targets:
+      nftables: mixed input
+  terms:
+  - name: allow-icmp-any-shared
+    protocol: icmp
+    action: accept
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: allow-icmpv6-any-shared
+    protocol: icmpv6
+    action: accept
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_81
+    protocol: tcp
+    destination-port: TCP_81
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER-shared
+    protocol: tcp
+    destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_444
+    protocol: tcp
+    destination-port: TCP_444
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_475
+    protocol: tcp
+    destination-port: TCP_475
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_476
+    protocol: tcp
+    destination-port: TCP_476
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_477
+    protocol: tcp
+    destination-port: TCP_477
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-WINDOWS-RPC-HTTPS
+    protocol: tcp
+    destination-port: WINDOWS-RPC-HTTPS
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_717
+    protocol: tcp
+    destination-port: TCP_717
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_808
+    protocol: tcp
+    destination-port: TCP_808
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_890
+    protocol: tcp
+    destination-port: TCP_890
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_2525
+    protocol: tcp
+    destination-port: TCP_2525
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3800
+    protocol: tcp
+    destination-port: TCP_3800
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3801
+    protocol: tcp
+    destination-port: TCP_3801
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3803
+    protocol: tcp
+    destination-port: TCP_3803
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3823
+    protocol: tcp
+    destination-port: TCP_3823
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3828
+    protocol: tcp
+    destination-port: TCP_3828
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3843
+    protocol: tcp
+    destination-port: TCP_3843
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3863
+    protocol: tcp
+    destination-port: TCP_3863
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3867
+    protocol: tcp
+    destination-port: TCP_3867
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3875
+    protocol: tcp
+    destination-port: TCP_3875
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_6001
+    protocol: tcp
+    destination-port: TCP_6001
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org
+  - name: allow-udp-NTP-shared
+    protocol: udp
+    destination-port: NTP
+    action: accept
+    source-address: ANY
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+      ws3-baf05_int_baf_05_berylia_org
+  - name: ws1-baf01_int_baf_05_berylia_org-allow-tcp-TCP_5040
+    protocol: tcp
+    destination-port: TCP_5040
+    action: accept
+    source-address: ANY_V4
+    destination-address: ws1-baf01_int_baf_05_berylia_org
+  - name: ws1-baf01_int_baf_05_berylia_org-allow-tcp-WINDOWS-WINRM-UNCONFIGURED
+    protocol: tcp
+    destination-port: WINDOWS-WINRM-UNCONFIGURED
+    action: accept
+    source-address: ANY
+    destination-address: ws1-baf01_int_baf_05_berylia_org
+  - name: ws1-baf01_int_baf_05_berylia_org-allow-udp-UDP_5050
+    protocol: udp
+    destination-port: UDP_5050
+    action: accept
+    source-address: ANY_V4
+    destination-address: ws1-baf01_int_baf_05_berylia_org
+  - name: ws3-baf05_int_baf_05_berylia_org-allow-udp-IPP
+    protocol: udp
+    destination-port: IPP
+    action: accept
+    source-address: ANY_V4
+    destination-address: ws3-baf05_int_baf_05_berylia_org
+  - name: deny-ext-tcp-HTTP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: HTTP
+  - name: deny-ext-tcp-HTTPS
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: HTTPS
+  - name: deny-ext-tcp-NETBIOS-SSN-LEGACY
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: NETBIOS-SSN-LEGACY
+  - name: deny-ext-tcp-RDP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+      ws3-baf05_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: RDP
+  - name: deny-ext-tcp-SMTP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SMTP
+  - name: deny-ext-tcp-SMTP-SUBMIT
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SMTP-SUBMIT
+  - name: deny-ext-tcp-SMTPS
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SMTPS
+  - name: deny-ext-tcp-SSH
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SSH
+  - name: deny-ext-tcp-WINDOWS-RPC-DYNAMIC
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: WINDOWS-RPC-DYNAMIC
+  - name: deny-ext-tcp-WINDOWS-SMB
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: WINDOWS-SMB
+  - name: deny-ext-tcp-WINRM-HTTP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: WINRM-HTTP
+  - name: deny-ext-udp-NETBIOS-DGM-LEGACY
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: NETBIOS-DGM-LEGACY
+  - name: deny-ext-udp-NETBIOS-NS-LEGACY
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: NETBIOS-NS-LEGACY
+  - name: deny-ext-udp-RDP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: RDP
+  - name: drop-ghost-hosts
+    action: deny
+    destination-address: baf_int
+    comment: 'Ghost host catch-all: drops traffic to IPs in baf_int not matched by
+      any allow term above.  All legitimate hosts should appear in policies/pol/ and
+      be covered by explicit allow terms.'
+  - name: log-accept-ANY
+    action: accept
+    logging: true
+    comment: 'INITIAL DEPLOYMENT: accept + log all unmatched traffic. Promote to log-drop
+      (--terminal log-drop) once rules are stable.'
+- header:
+    targets:
+      nftables: mixed output
+  terms:
+  - name: egress-TCP_1514-shared
+    protocol: tcp
+    destination-port: TCP_1514
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (1871 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+    source-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: egress-TCP_1515-shared
+    protocol: tcp
+    destination-port: TCP_1515
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (373 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+    source-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: ws1-baf01_int_baf_05_berylia_org-egress-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    comment: 'ANY covers 6 unresolved dst: 6 addresses in 6 blocks, widest /15: 1.0.0.0/15
+      (2 dst, 2 hits), 8.8.0.0/20 (2 dst, 2 hits), 9.9.9.9/32 (1 hit), 149.112.112.112/32
+      (1 hit) -- one group per address, so no summary narrows it and ANY is honest'
+    action: accept
+    source-address: ws1-baf01_int_baf_05_berylia_org
+  - name: ws3-baf05_int_baf_05_berylia_org-egress-NTP
+    protocol: udp
+    destination-port: NTP
+    comment: 'ANY covers 3 unresolved dst: 3 addresses in 3 blocks, widest /32: 193.40.134.137/32
+      (1 hit), 212.7.1.131/32 (1 hit), 2620:2d:4000:1::3f/128 (1 hit) -- one group
+      per address, so no summary narrows it and ANY is honest'
+    action: accept
+    source-address: ws3-baf05_int_baf_05_berylia_org
+  - name: log-accept-ANY-egress
+    action: accept
+    logging: true
+    comment: 'INITIAL DEPLOYMENT: accept + log all unmatched traffic. Promote to log-drop
+      (--terminal log-drop) once rules are stable.'

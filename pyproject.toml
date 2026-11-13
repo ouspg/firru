@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "firru"
+version = "1.0.0"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Pekka Pietikäinen" }]
+requires-python = ">=3.11"
+dependencies = [
+    # The fork is 1.18.0 plus fixes not yet merged upstream. Which ones firru
+    # relies on is pinned by tests/test_aerleon_upstream.py: when that file
+    # passes on a stock release, depend on the release instead.
+    "aerleon @ git+https://github.com/ppietikainen/aerleon@firru-1.0.0",
+    "jc>=1.26.1",            # conntrack parser
+    "requests",
+    "ruyaml",
+    "pyyaml",
+]
+
+[project.urls]
+Homepage = "https://github.com/ouspg/firru"
+Baselines = "https://github.com/ouspg/firru-os-baselines"
+
+[project.optional-dependencies]
+# jsonschema validates flow records against docs/flow-record.schema.json;
+# tests/test_flow_record.py checks the same records without it too, so a
+# venv lacking it still exercises the contract.
+test = ["pytest", "pyarrow", "duckdb>=1.1", "jsonschema"]
+# the parquet flow store: zeek-to-flows --out-parquet, and reading a store
+# anywhere flows are read
+parquet = ["duckdb>=1.1", "pyarrow"]
+# --asn grouping in tighten and address-summarizer (a MaxMind ASN database too)
+asn = ["geoip2"]
+# the LSPR24 case study: examples/lspr24 reads the dataset's parquet with
+# pyarrow and queries it with duckdb
+lspr24 = ["pyarrow", "duckdb>=1.1"]
+
+[project.scripts]
+# firru — the policy-YAML editing core (verbs: diff apply set-source rm
+# synth score tighten merge-zones); see firru.cli.dispatch
+firru                       = "firru.cli.dispatch:main"
+# acquisition (ss/pcap/live -> JSON)
+loot-listeners              = "firru.cli.loot_listeners:main"
+loot-diff                   = "firru.cli.loot_diff:main"
+loot-flows                  = "firru.cli.dump_flows:main"
+annotate-flows              = "firru.cli.annotate_flows:main"
+loot-conntrack              = "firru.cli.conntrack_flows:main"
+audit-services              = "firru.cli.unknown_services:main"
+suggest-services            = "firru.cli.suggest_services:main"
+ossec-to-loot               = "firru.cli.ossec_to_loot:main"
+resolve-identity            = "firru.cli.resolve_identity:main"
+# review affordances (a term's unresolvable addresses -> a comment)
+address-summarizer          = "firru.cli.address_summarizer:main"
+aerleon-to-bpf              = "firru.cli.aerleon_to_bpf:main"
+policy-to-nmap              = "firru.cli.policy_to_nmap:main"
+arkime-filter               = "firru.cli.arkime_filter:main"
+aerleon-to-nftables         = "firru.cli.aerleon_to_nftables:main"
+nft-to-aerleon              = "firru.cli.nft_to_aerleon:main"
+winfw-to-aerleon            = "firru.cli.winfw_to_aerleon:main"
+flow-verdict                = "firru.cli.flow_verdict:main"
+zeek-to-flows               = "firru.cli.zeek_to_flows:main"
+
+# The stock definitions and baseline records live beside the package in the
+# repo (def/, baseline/: data, not Python); a wheel carries them inside it, as
+# firru/_stock_def and firru/_stock_baseline, where firru.defs_dir finds them.
+[tool.setuptools]
+packages = ["firru", "firru.cli", "firru._stock_def", "firru._stock_baseline"]
+
+[tool.setuptools.package-dir]
+"firru._stock_def" = "def"
+"firru._stock_baseline" = "baseline"
+
+[tool.setuptools.package-data]
+"firru._stock_def" = ["*.yml"]
+"firru._stock_baseline" = ["*.json.gz", "index.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

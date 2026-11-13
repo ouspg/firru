@@ -1,0 +1,7 @@
+# ss-version: ss utility, iproute2-5.14.0
+# os: openSUSE Leap 15.5
+# flags: ss -tulnpe 
+Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                                                                      
+tcp   LISTEN 0      5            0.0.0.0:19002      0.0.0.0:*    users:(("my proc:x",pid=413,fd=3)) ino:2436143 sk:a001 cgroup:/ <-> cgroup:/
+tcp   LISTEN 0      5            0.0.0.0:19003      0.0.0.0:*    users:(("svc(1",pid=415,fd=3)) ino:2384571 sk:a002 cgroup:/ <-> cgroup:/    
+tcp   LISTEN 0      5            0.0.0.0:19001      0.0.0.0:*    users:(("plain",pid=411,fd=3)) ino:2436146 sk:a003 cgroup:/ <-> cgroup:/    

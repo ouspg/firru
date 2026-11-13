@@ -1,0 +1,216 @@
+# firru tighten output — review and copy changes to policies/pol/mcs_bgp_05_berylia_org.yml
+# Source suggestions changed: 2 | Dead rules: 0 | Group suggestions: 0
+metadata:
+  host: mcs
+  zone: bgp
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+
+# [auto] 3600 flows total | 2700 hits: BGP_GT_OTHER (10.5.20.250, 2a07:1182:5:f20::250) | 900 hits: BGP_INT_GT_OTHER (10.5.13.250) | via: SSH/tcp/22
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:  # was: BGP_GT
+          - BGP_GT_OTHER
+          - BGP_INT_GT_OTHER
+
+# [auto] 5398 flows total | 3599 hits: BGP_GT_OTHER (100.98.5.59, 2a07:1182:5:30::59, 2a07:1182:5:f20::250, 10.5.20.250) | 1799 hits: BGP_INT_GT_OTHER (10.5.13.250, 2a07:1182:5:13::250) | via: HTTPS/tcp/443
+      - name: allow-tcp-HTTPS
+        protocol: tcp
+        destination-port: HTTPS
+        action: accept
+        source-address:  # was: ANY
+          - BGP_GT_OTHER
+          - BGP_INT_GT_OTHER
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-HTTP
+        protocol: tcp
+        destination-port: HTTP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-DOCKER-SWARM
+        protocol: tcp
+        destination-port: DOCKER-SWARM
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_5050
+        protocol: tcp
+        destination-port: TCP_5050
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-POSTGRES
+        protocol: tcp
+        destination-port: POSTGRES
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-REDIS
+        protocol: tcp
+        destination-port: REDIS
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_8000
+        protocol: tcp
+        destination-port: TCP_8000
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_8086
+        protocol: tcp
+        destination-port: TCP_8086
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_8161
+        protocol: tcp
+        destination-port: TCP_8161
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_9000
+        protocol: tcp
+        destination-port: TCP_9000
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-DNP3
+        protocol: tcp
+        destination-port: DNP3
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_20260
+        protocol: tcp
+        destination-port: TCP_20260
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_20310
+        protocol: tcp
+        destination-port: TCP_20310
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINDOWS-RPC-DYNAMIC
+        protocol: tcp
+        destination-port: WINDOWS-RPC-DYNAMIC
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-VXLAN
+        protocol: udp
+        destination-port: VXLAN
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-DOCKER-SWARM
+        protocol: udp
+        destination-port: DOCKER-SWARM
+        action: accept
+        source-address: ANY_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] 319 hits: core (fe80::250:56ff:fe89:f32f) | 118 hits: bgp (2a07:1182:5:f20::1) | 37 hits: BGP_GT_OTHER (2a07:1182:5:f20::250)
+      - name: allow-icmpv6-ICMPV6
+        protocol: icmpv6
+        destination-address:
+          - BGP_GT_OTHER
+          - bgp
+          - core
+        action: accept
+# [auto] 4284 hits: EXTERNAL (100.100.108.30)
+      - name: allow-tcp-TCP_1514
+        protocol: tcp
+        destination-port: TCP_1514
+        comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+          (4284 hits) -- a single destination: name it or deny it, ANY is not the
+          answer either way'
+        action: accept
+# [auto] 858 hits: EXTERNAL (100.100.108.30)
+      - name: allow-tcp-TCP_1515
+        protocol: tcp
+        destination-port: TCP_1515
+        comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+          (858 hits) -- a single destination: name it or deny it, ANY is not the answer
+          either way'
+        action: accept
+# [auto] 123998 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4)
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        comment: 'ANY covers 2 unresolved dst: 2 addresses in 2 blocks, widest /32:
+          100.95.95.4/32 (65122 hits), 2a07:1181:95:95::4/128 (58876 hits) -- 1 of
+          2 sit in one group, so a named group would cover most of this'
+        action: accept
+# [auto] 501 hits: EXTERNAL (185.194.53.27, 193.40.133.134, 193.40.134.137, 212.7.1.131 and 3 more)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        comment: 'ANY covers 7 unresolved dst: 7 addresses in 6 blocks, widest /3:
+          192.0.0.0/3 (3 dst, 228 hits), 2001:1b28:1:5::130/126 (2 dst, 152 hits),
+          185.194.53.27/32 (76 hits), 2620:2d:4000:1::40/128 (45 hits) -- 7 addresses
+          spread over 6 groups, largest 2: too scattered to name, ANY is honest'
+        action: accept
+# [auto] review terms above, then replace with deny-ANY when ready
+      - name: allow-ANY
+        action: accept

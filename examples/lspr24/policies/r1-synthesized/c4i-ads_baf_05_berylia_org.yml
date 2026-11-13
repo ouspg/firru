@@ -1,0 +1,157 @@
+metadata:
+  host: c4i-ads
+  zone: baf
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 (sshd) | IPv6 ::/0 (sshd)
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BAF_GT
+# [auto] IPv4 192.168.122.1/32 (dnsmasq)
+      - name: allow-tcp-DNS-TCP
+        protocol: tcp
+        destination-port: DNS-TCP
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv4 0.0.0.0/0 (systemd) | IPv6 ::/0 (systemd)
+# [auto] unexpected owner: RPCBIND served by systemd; expected rpcbind, rpcbind.socket
+      - name: allow-tcp-RPCBIND
+        protocol: tcp
+        destination-port: RPCBIND
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (x0vncserver) | IPv6 ::/0 (x0vncserver)
+      - name: allow-tcp-VNC
+        protocol: tcp
+        destination-port: VNC
+        action: accept
+        source-address: ANY
+# [auto] IPv6 ::/0 (java)
+      - name: allow-tcp-CEPH-OSD
+        protocol: tcp
+        destination-port: CEPH-OSD
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (systemd) | aliases: COCKPIT,PROMETHEUS | ambiguous: COCKPIT/PROMETHEUS all claim this port and the owner (systemd) matches none of them; COCKPIT is a guess
+# [auto] unexpected owner: COCKPIT served by systemd; expected cockpit-ws, cockpit-tls, cockpit.socket
+      - name: allow-tcp-COCKPIT
+        protocol: tcp
+        destination-port: COCKPIT
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (python3)
+      - name: allow-tcp-TCP_9099
+        protocol: tcp
+        destination-port: TCP_9099
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv4 0.0.0.0/0 (sshd) | IPv6 ::/0 (sshd)
+      - name: allow-tcp-TCP_9536
+        protocol: tcp
+        destination-port: TCP_9536
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (sshd) | IPv6 ::/0 (sshd)
+      - name: allow-tcp-TCP_13075
+        protocol: tcp
+        destination-port: TCP_13075
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (sshd) | IPv6 ::/0 (sshd)
+      - name: allow-tcp-TCP_16567
+        protocol: tcp
+        destination-port: TCP_16567
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (sshd) | IPv6 ::/0 (sshd)
+      - name: allow-tcp-K8S-NODEPORT
+        protocol: tcp
+        destination-port: K8S-NODEPORT
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.122.1/32 (dnsmasq)
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv4 0.0.0.0/0 (dnsmasq)
+      - name: allow-udp-DHCP-SERVER
+        protocol: udp
+        destination-port: DHCP-SERVER
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv4 0.0.0.0/0 (systemd) | IPv6 ::/0 (systemd)
+# [auto] unexpected owner: RPCBIND served by systemd; expected rpcbind, rpcbind.socket
+      - name: allow-udp-RPCBIND
+        protocol: udp
+        destination-port: RPCBIND
+        action: accept
+        source-address: ANY
+# [auto] IPv6 ::/0 (java)
+      - name: allow-udp-UDP_5000
+        protocol: udp
+        destination-port: UDP_5000
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv4 10.5.15.32/32 (java)
+      - name: allow-udp-UDP_5101
+        protocol: udp
+        destination-port: UDP_5101
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv4 0.0.0.0/0 (avahi-daemon) | IPv6 ::/0 (avahi-daemon)
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+# [auto] IPv6 ::/0 (java)
+      - name: allow-udp-UDP_9001
+        protocol: udp
+        destination-port: UDP_9001
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (java)
+      - name: allow-udp-UDP_9101
+        protocol: udp
+        destination-port: UDP_9101
+        action: accept
+        source-address: ANY_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

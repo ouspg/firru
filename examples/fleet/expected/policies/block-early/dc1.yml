@@ -1,0 +1,32 @@
+metadata:
+  host: dc1
+filters:
+  - header:
+      targets:
+        windows_advfirewall: in mixed block
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 192.168.150.194/32 (dns C:\Windows\system32\dns.exe DNS) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (dns C:\Windows\system32\dns.exe DNS)
+      - name: drop-ANY
+        action: deny
+        platform-exclude:
+          - windows_advfirewall
+
+# egress
+  - header:
+      targets:
+        windows_advfirewall: out mixed
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

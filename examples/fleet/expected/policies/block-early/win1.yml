@@ -1,0 +1,38 @@
+metadata:
+  host: win1
+filters:
+  - header:
+      targets:
+        windows_advfirewall: in mixed block
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 (sshd C:\Program Files\OpenSSH\sshd.exe sshd) | IPv6 ::/0 (sshd C:\Program Files\OpenSSH\sshd.exe sshd)
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address: ADMIN
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs)
+      - name: drop-ANY
+        action: deny
+        platform-exclude:
+          - windows_advfirewall
+
+# egress
+  - header:
+      targets:
+        windows_advfirewall: out mixed
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

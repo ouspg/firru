@@ -1,0 +1,52 @@
+# firru tighten output — review and copy changes to policies/pol/fiveg-ue-bgp02_sac_bgp_05_berylia_org.yml
+# Source suggestions changed: 1 | Dead rules: 0 | Group suggestions: 0
+metadata:
+  host: fiveg-ue-bgp02
+  zone: bgp_sac
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+
+# [auto] 900 flows total | 900 hits: BGP_INT_GT_OTHER (10.5.13.250) | via: SSH/tcp/22
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address: BGP_INT_GT_OTHER  # was: BGP_SAC_GT
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] no egress flows observed — placeholder kept
+      - name: allow-ANY
+        action: accept

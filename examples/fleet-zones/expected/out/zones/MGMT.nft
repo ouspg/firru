@@ -1,0 +1,38 @@
+table inet filtering_policies {
+    chain jump1-allow-icmp {
+        ip daddr 10.20.9.10/32 ip protocol icmp ct state new accept
+        ip6 daddr 2001:db8:20:9::a/128 ip protocol icmp ct state new accept
+    }
+    chain jump1-allow-icmpv6 {
+        ip daddr 10.20.9.10/32 meta l4proto icmpv6 accept
+        ip6 daddr 2001:db8:20:9::a/128 meta l4proto icmpv6 accept
+    }
+    chain jump1-allow-udp-DHCP-CLIENT {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.9.10/32 udp dport 68 ct state new accept
+    }
+    chain deny-ext-tcp-SSH {
+        comment "intra-zone only — port is open on host(s) but no legitimate external traffic observed; host firewall handles intra-zone access"
+        ip daddr 10.20.9.10/32 tcp dport 22 drop
+        ip6 daddr 2001:db8:20:9::a/128 tcp dport 22 drop
+    }
+    chain drop-ghost-hosts {
+        comment "Ghost host catch-all: drops traffic to IPs in MGMT not matched by any allow term above.  All legitimate hosts should appear in policies/pol/ and be covered by explicit allow terms."
+        ip daddr 10.20.9.0/24 drop
+        ip6 daddr 2001:db8:20:9::/64 drop
+    }
+    chain log-drop-ANY {
+        comment "SETTLING: drop + log unmatched traffic to catch false positives. Promote to drop (--terminal drop) when the log has been quiet."
+        log prefix "log-drop-ANY" drop
+    }
+    chain root0 {
+        type filter hook input priority 0; policy drop;
+        ct state established,related accept
+        jump jump1-allow-icmp
+        jump jump1-allow-icmpv6
+        jump jump1-allow-udp-DHCP-CLIENT
+        jump deny-ext-tcp-SSH
+        jump drop-ghost-hosts
+        jump log-drop-ANY
+    }
+}
+

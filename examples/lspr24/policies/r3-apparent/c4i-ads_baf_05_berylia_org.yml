@@ -1,0 +1,53 @@
+metadata:
+  host: c4i-ads
+  zone: baf
+  provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: ANY
+    comment: 5 sources answered, 2 not
+  - name: allow-tcp-VNC
+    protocol: tcp
+    destination-port: VNC
+    action: accept
+    source-address: ANY
+    comment: every one of 2 sources was answered
+  - name: allow-tcp-COCKPIT
+    protocol: tcp
+    destination-port: COCKPIT
+    action: accept
+    source-address: ANY
+    comment: every one of 1 sources was answered
+  - name: allow-tcp-TCP_9099
+    protocol: tcp
+    destination-port: TCP_9099
+    action: accept
+    source-address: ANY
+    comment: 2 sources answered, 1 not
+  - name: allow-tcp-TCP_9536
+    protocol: tcp
+    destination-port: TCP_9536
+    action: accept
+    source-address: ANY
+    comment: every one of 1 sources was answered
+  - name: allow-tcp-TCP_13075
+    protocol: tcp
+    destination-port: TCP_13075
+    action: accept
+    source-address: ANY
+    comment: every one of 1 sources was answered
+  - name: allow-tcp-TCP_16567
+    protocol: tcp
+    destination-port: TCP_16567
+    action: accept
+    source-address: ANY
+    comment: every one of 1 sources was answered
+  - name: drop-ANY
+    action: deny

@@ -1,0 +1,200 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 616,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nginx",
+        "pid": 784,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nginx",
+        "pid": 784,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 3306,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "mysqld",
+        "pid": 828,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3333,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "salt-api",
+        "pid": 924,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 4505,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "salt-master",
+        "pid": 1105,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 4506,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "salt-master",
+        "pid": 1111,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 33060,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "mysqld",
+        "pid": 828,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 616,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "067",
+    "annotationfile": null,
+    "collected_at": "2024-03-07T08:28:46",
+    "hostname": "salt-master",
+    "ip": "100.97.5.37",
+    "listenfile": "ossec rootcheck netstat",
+    "os": "linux"
+  }
+}

@@ -1,0 +1,70 @@
+# firru tighten output — review and copy changes to policies/pol/ws5-m365.yml
+# Source suggestions changed: 0 | Dead rules: 3 | Group suggestions: 0
+metadata:
+  host: ws5-m365
+  zone: beg
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - MGMT_HOSTS
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-RDP
+        protocol: tcp
+        destination-port: RDP
+        action: accept
+        source-address:
+          - MGMT_HOSTS
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] no egress flows observed — placeholder kept
+      - name: allow-ANY
+        action: accept

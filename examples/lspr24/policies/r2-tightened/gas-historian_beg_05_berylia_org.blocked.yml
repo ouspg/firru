@@ -1,0 +1,8 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 151 hits | reason: port not in policy (41066)
+  - protocol: tcp
+    service: unknown-tcp-41066
+    src_ip: 100.97.5.37
+    src_token: salt-master_beg_05_berylia_org

@@ -1,0 +1,302 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "sshd.exe",
+        "pid": 3112,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "sshd.exe",
+        "pid": 3112,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3389,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 644,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3389,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 644,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5985,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "System",
+        "pid": 4,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5985,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "System",
+        "pid": 4,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 47001,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "System",
+        "pid": 4,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 47001,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "System",
+        "pid": 4,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49666,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 1364,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49666,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 1364,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49667,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 1692,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49667,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 1692,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49671,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 2336,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49671,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 2336,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 52429,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 3264,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 52429,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 3264,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 52914,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "owncloud.exe",
+        "pid": 10756,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "117",
+    "annotationfile": null,
+    "collected_at": "2024-03-07T14:07:27",
+    "hostname": "ws2-beg02",
+    "ip": "10.5.12.27",
+    "listenfile": "wazuh syscollector dbsync_ports (union, partial)",
+    "os": null
+  }
+}

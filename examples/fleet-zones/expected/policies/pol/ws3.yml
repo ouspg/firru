@@ -1,0 +1,61 @@
+metadata:
+  host: ws3
+  zone: CLIENTS
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 (systemd-resolve) | IPv6 ::/0 (systemd-resolve)
+      - name: allow-tcp-LLMNR
+        protocol: tcp
+        destination-port: LLMNR
+        action: accept
+        source-address:
+          - LLMNR_SOURCES_V4
+          - LLMNR_SOURCES_V6
+# [auto] IPv4 0.0.0.0/0 (avahi-daemon) | IPv6 ::/0 (avahi-daemon)
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+# [auto] IPv4 0.0.0.0/0 (systemd-resolve) | IPv6 ::/0 (systemd-resolve)
+      - name: allow-udp-LLMNR
+        protocol: udp
+        destination-port: LLMNR
+        action: accept
+        source-address:
+          - LLMNR_SOURCES_V4
+          - LLMNR_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

@@ -1,0 +1,149 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 628,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "docker-proxy",
+        "pid": 1240,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "docker-proxy",
+        "pid": 1246,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "docker-proxy",
+        "pid": 1220,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "docker-proxy",
+        "pid": 1226,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 628,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "098",
+    "annotationfile": null,
+    "collected_at": "2024-03-07T08:30:48",
+    "hostname": "whistleblowhub",
+    "ip": "100.98.5.5",
+    "listenfile": "ossec rootcheck netstat",
+    "os": "linux"
+  }
+}

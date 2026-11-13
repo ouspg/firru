@@ -1,0 +1,40 @@
+# Identities no evidence in the data decides.
+#
+# `resolve-identity` binds loot to the inventory by name where the label is
+# unique and by the host's own address where it is not. What lands here is what
+# neither settles -- and every entry has to say why, because an assertion that
+# does not carry its reasoning is indistinguishable from a guess a year later.
+#
+# Nothing here is required. Leaving a host unresolved is a legitimate outcome:
+# it yields a policy with no zone, which is narrower than a wrong zone.
+#
+#   <collector's name for the host>:
+#     token:  inventory token to bind to, if any
+#     zone:   zone to use when there is no inventory token
+#     role:   free-text label for the reader; nothing consumes it
+#     why:    the evidence and the reasoning, in prose
+
+identities:
+
+  siem-server:
+    zone: core
+    role: log-collector
+    why: >
+      The Wazuh manager, not an agent: it reports itself as agent id 000 and
+      carries no agent.ip, because the manager is the thing agents report to.
+      Its listening sockets say the same independently -- wazuh-remoted on
+      1514, wazuh-authd on 1515, rsyslog on 514 -- so two unrelated pieces of
+      raw data agree. It has no exercise asset record because it is blue-team
+      infrastructure rather than part of the estate being defended, which is
+      why no amount of inventory work would ever have named it. Placed in
+      `core` with the other hosts that are not in a team segment.
+
+  ws5-m365:
+    zone: beg
+    role: workstation
+    why: >
+      Reports agent.ip 100.100.5.15, an address that appears in no Expoid
+      record, so there is nothing to bind to. Its listening set is an
+      ordinary Linux desktop (xrdp, cups, avahi). Zone is inferred from the
+      100.100.5.0/24 range rather than from any record, and is the weakest
+      claim in this file.

@@ -1,0 +1,235 @@
+# firru tighten output — review and copy changes to policies/pol/dc2_int_beg_05_berylia_org.yml
+# Source suggestions changed: 11 | Dead rules: 6 | Group suggestions: 9
+metadata:
+  host: dc2
+  zone: beg_int
+  variant: 'r4-block-early (learn file: night.jsonl) — services with no observed client
+    are removed, not merely narrowed'
+filters:
+- header:
+    targets:
+      windows_advfirewall: in mixed block
+  terms:
+
+# [auto] 2700 flows total | 2700 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: BEG_INT_GT_OTHER      # was: BEG_INT_GT
+
+# [auto] 4019 flows total | 3709 hits: dc1_int_beg_05_berylia_org (10.5.12.2, 2a07:1182:5:12::2) | 43 hits: ws3-beg04_int_beg_05_berylia_org (10.5.12.34, 2a07:1182:5:12::34) | 32 hits: ws1-beg05_int_beg_05_berylia_org (10.5.12.25, 2a07:1182:5:12::25) | 30 hits: ws1-beg04_int_beg_05_berylia_org (10.5.12.24, 2a07:1182:5:12::24) | 28 hits: ws1-beg01_int_beg_05_berylia_org (10.5.12.21, 2a07:1182:5:12::21) | 28 hits: ws1-beg02_int_beg_05_berylia_org (10.5.12.22, 2a07:1182:5:12::22) | 28 hits: ws1-beg03_int_beg_05_berylia_org (10.5.12.23, 2a07:1182:5:12::23) | 28 hits: ws2-beg02_int_beg_05_berylia_org (10.5.12.27, 2a07:1182:5:12::27) | 27 hits: ws3-beg03_int_beg_05_berylia_org (10.5.12.33, 2a07:1182:5:12::33) | 22 hits: ws2-beg03_int_beg_05_berylia_org (10.5.12.28, 2a07:1182:5:12::28) | 16 hits: ws2-beg01_int_beg_05_berylia_org (10.5.12.26, 2a07:1182:5:12::26) | 12 hits: ws2-beg04_int_beg_05_berylia_org (10.5.12.29, 2a07:1182:5:12::29) | 10 hits: ws2-beg05_int_beg_05_berylia_org (10.5.12.30, 2a07:1182:5:12::2a) | 5 hits: ws3-beg05_int_beg_05_berylia_org (10.5.12.35) | 1 hits: mail_beg_05_berylia_org (100.97.5.5) | via: DNS-TCP/tcp/53
+# [auto] Note: BEG_INT_WS also permits: ws3-beg01_int_beg_05_berylia_org, ws3-beg02_int_beg_05_berylia_org, ws4-beg01_int_beg_05_berylia_org, ws4-beg02_int_beg_05_berylia_org, ws4-beg03_int_beg_05_berylia_org, ws4-beg04_int_beg_05_berylia_org, ws4-beg05_int_beg_05_berylia_org
+# [auto] seen in flows but outside existing groups — verify group membership or allow explicitly: dc1_int_beg_05_berylia_org, mail_beg_05_berylia_org
+  - name: allow-tcp-DNS-TCP
+    protocol: tcp
+    destination-port: DNS-TCP
+    action: accept
+    source-address:      # was: ANY
+    - BEG_INT_WS
+    - dc1_int_beg_05_berylia_org
+    - mail_beg_05_berylia_org
+
+# [auto] 2387 flows total | 1799 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250, 10.5.12.250) | 225 hits: beg-power-ws_int_beg_05_berylia_org (2a07:1182:5:22::20) | 69 hits: ws3-beg01_int_beg_05_berylia_org (10.5.12.31) | 56 hits: ws2-beg04_int_beg_05_berylia_org (2a07:1182:5:12::29) | 51 hits: ws3-beg03_int_beg_05_berylia_org (10.5.12.33) | 38 hits: ws1-beg03_int_beg_05_berylia_org (2a07:1182:5:12::23) | 37 hits: ws2-beg02_int_beg_05_berylia_org (2a07:1182:5:12::27) | 25 hits: ws2-beg03_int_beg_05_berylia_org (2a07:1182:5:12::28) | 21 hits: ws3-beg04_int_beg_05_berylia_org (10.5.12.34) | 21 hits: ws3-beg05_int_beg_05_berylia_org (10.5.12.35) | 17 hits: ws2-beg01_int_beg_05_berylia_org (2a07:1182:5:12::26) | 16 hits: ws2-beg05_int_beg_05_berylia_org (2a07:1182:5:12::2a) | 11 hits: ws1-beg04_int_beg_05_berylia_org (2a07:1182:5:12::24) | 1 hits: adcs-beg_int_beg_05_berylia_org (2a07:1182:5:12::18) | via: KERBEROS-TCP/tcp/88
+# [auto] Note: BEG_INT_WS also permits: ws1-beg01_int_beg_05_berylia_org, ws1-beg02_int_beg_05_berylia_org, ws1-beg05_int_beg_05_berylia_org, ws3-beg02_int_beg_05_berylia_org, ws4-beg01_int_beg_05_berylia_org, ws4-beg02_int_beg_05_berylia_org, ws4-beg03_int_beg_05_berylia_org, ws4-beg04_int_beg_05_berylia_org, ws4-beg05_int_beg_05_berylia_org
+# [auto] seen in flows but outside existing groups — verify group membership or allow explicitly: BEG_INT_GT_OTHER
+  - name: allow-tcp-KERBEROS-TCP
+    protocol: tcp
+    destination-port: KERBEROS-TCP
+    action: accept
+    source-address:      # was: ANY
+    - BEG_INT_WS
+    - beg-power-ws
+    - adcs-beg
+    - BEG_INT_GT_OTHER
+
+# [auto] 15 flows total | 15 hits: mail_beg_05_berylia_org (100.97.5.5) | via: NETBIOS-SSN-LEGACY/tcp/139
+  - name: allow-tcp-NETBIOS-SSN-LEGACY
+    protocol: tcp
+    destination-port: NETBIOS-SSN-LEGACY
+    action: accept
+    source-address: mail_beg_05_berylia_org      # was: BEG_INT_HOSTS
+
+# [auto] 6955 flows total | 4682 hits: mail_beg_05_berylia_org (100.97.5.5) | 1799 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | 73 hits: ws3-beg01_int_beg_05_berylia_org (10.5.12.31) | 58 hits: ws3-beg03_int_beg_05_berylia_org (10.5.12.33) | 52 hits: ws1-beg01_int_beg_05_berylia_org (2a07:1182:5:12::21) | 44 hits: beg-power-ws_int_beg_05_berylia_org (2a07:1182:5:22::20) | 36 hits: ws2-beg05_int_beg_05_berylia_org (2a07:1182:5:12::2a) | 33 hits: ws2-beg03_int_beg_05_berylia_org (2a07:1182:5:12::28) | 26 hits: ws3-beg04_int_beg_05_berylia_org (10.5.12.34) | 25 hits: adcs-beg_int_beg_05_berylia_org (2a07:1182:5:12::18) | 25 hits: ws3-beg05_int_beg_05_berylia_org (10.5.12.35) | 22 hits: ws1-beg03_int_beg_05_berylia_org (2a07:1182:5:12::23) | 20 hits: ws1-beg05_int_beg_05_berylia_org (2a07:1182:5:12::25) | 16 hits: ws1-beg02_int_beg_05_berylia_org (2a07:1182:5:12::22) | 16 hits: ws2-beg04_int_beg_05_berylia_org (2a07:1182:5:12::29) | 15 hits: ws1-beg04_int_beg_05_berylia_org (2a07:1182:5:12::24) | 13 hits: ws2-beg02_int_beg_05_berylia_org (2a07:1182:5:12::27) | via: LDAP-TCP/tcp/389
+# [auto] Note: BEG_INT_HOSTS also permits: BEG_INT_WS, dc1_int_beg_05_berylia_org, dc2_int_beg_05_berylia_org, ied_int_beg_05_berylia_org, lemonldapng_int_beg_05_berylia_org, rtu-host_int_beg_05_berylia_org, rtu_int_beg_05_berylia_org, sp7_int_beg_05_berylia_org, ws2-beg01_int_beg_05_berylia_org, ws3-beg02_int_beg_05_berylia_org, ws4-beg01_int_beg_05_berylia_org, ws4-beg02_int_beg_05_berylia_org, ws4-beg03_int_beg_05_berylia_org, ws4-beg04_int_beg_05_berylia_org, ws4-beg05_int_beg_05_berylia_org
+# [auto] seen in flows but outside existing groups — verify group membership or allow explicitly: mail_beg_05_berylia_org
+  - name: allow-tcp-LDAP-TCP
+    protocol: tcp
+    destination-port: LDAP-TCP
+    action: accept
+    source-address:      # was: ANY
+    - BEG_INT_HOSTS
+    - mail_beg_05_berylia_org
+
+# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: LDAPS/tcp/636
+  - name: allow-tcp-LDAPS
+    protocol: tcp
+    destination-port: LDAPS
+    action: accept
+    source-address: BEG_INT_GT_OTHER      # was: ANY
+
+# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: WINRM-HTTP/tcp/5985
+  - name: allow-tcp-WINRM-HTTP
+    protocol: tcp
+    destination-port: WINRM-HTTP
+    action: accept
+    source-address: BEG_INT_GT_OTHER      # was: BEG_INT_GT
+
+# [auto] 8994 flows total | 7194 hits: BEG_GT_OTHER (2a07:1182:5:20::60, 100.97.5.60) | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: WINDOWS-AD-ADWS/tcp/9389
+  - name: allow-tcp-WINDOWS-AD-ADWS
+    protocol: tcp
+    destination-port: WINDOWS-AD-ADWS
+    action: accept
+    source-address:      # was: BEG_INT_GT
+    - BEG_GT_OTHER
+    - BEG_INT_GT_OTHER
+
+# [auto] 201439 flows total | 29832 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | 20784 hits: mail_beg_05_berylia_org (100.97.5.5) | 16522 hits: ws2-beg04_int_beg_05_berylia_org (10.5.12.29, 2a07:1182:5:12::29) | 15152 hits: ws2-beg03_int_beg_05_berylia_org (10.5.12.28, 2a07:1182:5:12::28) | 14915 hits: ws2-beg05_int_beg_05_berylia_org (10.5.12.30, 2a07:1182:5:12::2a) | 14602 hits: ws2-beg02_int_beg_05_berylia_org (10.5.12.27, 2a07:1182:5:12::27) | 14509 hits: ws3-beg01_int_beg_05_berylia_org (10.5.12.31, 2a07:1182:5:12::31) | 14044 hits: ws2-beg01_int_beg_05_berylia_org (10.5.12.26, 2a07:1182:5:12::26) | 13317 hits: ws3-beg03_int_beg_05_berylia_org (2a07:1182:5:12::33, 10.5.12.33) | 9838 hits: beg-power-ws_int_beg_05_berylia_org (10.5.22.20, 2a07:1182:5:22::20) | 6618 hits: ws3-beg04_int_beg_05_berylia_org (2a07:1182:5:12::34, 10.5.12.34) | 5124 hits: dc1_int_beg_05_berylia_org (10.5.12.2, 2a07:1182:5:12::2) | 3686 hits: adcs-beg_int_beg_05_berylia_org (10.5.12.18, 2a07:1182:5:12::18) | 3400 hits: ws3-beg05_int_beg_05_berylia_org (2a07:1182:5:12::35, 10.5.12.35) | 3396 hits: ws1-beg03_int_beg_05_berylia_org (10.5.12.23, 2a07:1182:5:12::23) | 3360 hits: ws1-beg05_int_beg_05_berylia_org (10.5.12.25, 2a07:1182:5:12::25) | 3332 hits: ws1-beg02_int_beg_05_berylia_org (10.5.12.22, 2a07:1182:5:12::22) | 3217 hits: ws1-beg04_int_beg_05_berylia_org (10.5.12.24, 2a07:1182:5:12::24) | 3183 hits: ws1-beg01_int_beg_05_berylia_org (10.5.12.21, 2a07:1182:5:12::21) | 1800 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | 181 hits: lemonldapng_int_beg_05_berylia_org (10.5.12.42, 2a07:1182:5:12::42) | 120 hits: ws4-beg01_int_beg_05_berylia_org (10.5.12.36) | 120 hits: ws4-beg02_int_beg_05_berylia_org (10.5.12.37) | 120 hits: ws4-beg03_int_beg_05_berylia_org (10.5.12.38) | 120 hits: ws4-beg04_int_beg_05_berylia_org (10.5.12.39) | 120 hits: ws4-beg05_int_beg_05_berylia_org (10.5.12.40) | 27 hits: ws3-beg02_int_beg_05_berylia_org (10.5.12.32, 2a07:1182:5:12::32) | via: DNS-UDP/udp/53
+# [auto] Note: BEG_ALL_HOSTS also permits: BEG_HOSTS, BEG_INT_HOSTS, BEG_INT_WS, dc2_int_beg_05_berylia_org, fw1-beg_05_berylia_org, gas-historian_beg_05_berylia_org, gas-hmi_beg_05_berylia_org, gas-maintenance-terminal_beg_05_berylia_org, ied_int_beg_05_berylia_org, inventory_beg_05_berylia_org, k8s-control-plane_beg_05_berylia_org, k8s-worker01_beg_05_berylia_org, k8s-worker02_beg_05_berylia_org, k8s-worker03_beg_05_berylia_org, k8s-worker04_beg_05_berylia_org, maintenance_beg_05_berylia_org, news_beg_05_berylia_org, ns1_beg_05_berylia_org, ns2_beg_05_berylia_org, owncloud_beg_05_berylia_org, rtu-host_int_beg_05_berylia_org, rtu_int_beg_05_berylia_org, salt-master_beg_05_berylia_org, sp7_int_beg_05_berylia_org
+  - name: allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    action: accept
+    source-address: BEG_ALL_HOSTS      # was: ANY
+
+# [auto] 3871 flows total | 1800 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | 46 hits: adcs-beg_int_beg_05_berylia_org (2a07:1182:5:12::18) | 44 hits: ws4-beg01_int_beg_05_berylia_org (10.5.12.36) | 44 hits: ws4-beg02_int_beg_05_berylia_org (10.5.12.37) | 44 hits: ws4-beg03_int_beg_05_berylia_org (10.5.12.38) | 44 hits: ws4-beg04_int_beg_05_berylia_org (10.5.12.39) | 44 hits: ws4-beg05_int_beg_05_berylia_org (10.5.12.40) | 1 hits: ws1-beg03_int_beg_05_berylia_org (2a07:1182:5:12::23) | 1 hits: ws1-beg04_int_beg_05_berylia_org (2a07:1182:5:12::24) | 1 hits: ws2-beg01_int_beg_05_berylia_org (2a07:1182:5:12::26) | 1 hits: ws2-beg03_int_beg_05_berylia_org (2a07:1182:5:12::28) | 1 hits: ws2-beg05_int_beg_05_berylia_org (2a07:1182:5:12::2a) | via: NTP/udp/123
+# [auto] Note: BEG_INT_WS also permits: ws1-beg01_int_beg_05_berylia_org, ws1-beg02_int_beg_05_berylia_org, ws1-beg05_int_beg_05_berylia_org, ws2-beg02_int_beg_05_berylia_org, ws2-beg04_int_beg_05_berylia_org, ws3-beg01_int_beg_05_berylia_org, ws3-beg02_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org
+# [auto] seen in flows but outside existing groups — verify group membership or allow explicitly: BEG_GT_OTHER, BEG_INT_GT_OTHER
+  - name: allow-udp-NTP
+    protocol: udp
+    destination-port: NTP
+    action: accept
+    source-address:      # was: ANY
+    - BEG_INT_WS
+    - adcs-beg
+    - BEG_GT_OTHER
+    - BEG_INT_GT_OTHER
+
+# [auto] 3745 flows total | 2641 hits: beg-power-ws_int_beg_05_berylia_org (2a07:1182:5:22::20, 10.5.22.20) | 853 hits: mail_beg_05_berylia_org (100.97.5.5) | 44 hits: ws1-beg04_int_beg_05_berylia_org (2a07:1182:5:12::24) | 41 hits: ws2-beg03_int_beg_05_berylia_org (2a07:1182:5:12::28) | 37 hits: ws2-beg05_int_beg_05_berylia_org (2a07:1182:5:12::2a) | 33 hits: ws1-beg01_int_beg_05_berylia_org (2a07:1182:5:12::21) | 24 hits: ws2-beg04_int_beg_05_berylia_org (2a07:1182:5:12::29) | 20 hits: ws1-beg03_int_beg_05_berylia_org (2a07:1182:5:12::23) | 18 hits: adcs-beg_int_beg_05_berylia_org (2a07:1182:5:12::18) | 17 hits: ws1-beg02_int_beg_05_berylia_org (2a07:1182:5:12::22) | 11 hits: ws2-beg02_int_beg_05_berylia_org (2a07:1182:5:12::27) | 4 hits: ws2-beg01_int_beg_05_berylia_org (2a07:1182:5:12::26) | 2 hits: ws1-beg05_int_beg_05_berylia_org (2a07:1182:5:12::25) | via: LDAP-UDP/udp/389
+# [auto] Note: BEG_INT_WS also permits: ws3-beg01_int_beg_05_berylia_org, ws3-beg02_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org, ws4-beg01_int_beg_05_berylia_org, ws4-beg02_int_beg_05_berylia_org, ws4-beg03_int_beg_05_berylia_org, ws4-beg04_int_beg_05_berylia_org, ws4-beg05_int_beg_05_berylia_org
+# [auto] seen in flows but outside existing groups — verify group membership or allow explicitly: mail_beg_05_berylia_org
+  - name: allow-udp-LDAP-UDP
+    protocol: udp
+    destination-port: LDAP-UDP
+    action: accept
+    source-address:      # was: ANY
+    - BEG_INT_WS
+    - beg-power-ws
+    - adcs-beg
+    - mail_beg_05_berylia_org
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmp
+    protocol: icmp
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmpv6
+    protocol: icmpv6
+    action: accept
+
+# [auto] 4095 flows total | 1799 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250, 10.5.12.250) | 1799 hits: ws2-beg05_int_beg_05_berylia_org (2a07:1182:5:12::2a) | 396 hits: mail_beg_05_berylia_org (100.97.5.5) | 22 hits: ws1-beg04_int_beg_05_berylia_org (2a07:1182:5:12::24) | 19 hits: ws1-beg01_int_beg_05_berylia_org (2a07:1182:5:12::21) | 18 hits: ws1-beg02_int_beg_05_berylia_org (2a07:1182:5:12::22) | 17 hits: adcs-beg_int_beg_05_berylia_org (2a07:1182:5:12::18) | 14 hits: beg-power-ws_int_beg_05_berylia_org (2a07:1182:5:22::20) | 7 hits: ws2-beg03_int_beg_05_berylia_org (2a07:1182:5:12::28) | 4 hits: ws1-beg03_int_beg_05_berylia_org (2a07:1182:5:12::23) | via: WINDOWS-RPC-ENDPOINT-MAPPER/tcp/135
+  - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+    protocol: tcp
+    destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+    action: accept
+    source-address: ANY
+
+# [auto] 6164 flows total | 2700 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250, 10.5.12.250) | 1799 hits: BEG_GT_OTHER (2a07:1182:5:20::60, 100.97.5.60) | 379 hits: ws1-beg04_int_beg_05_berylia_org (2a07:1182:5:12::24) | 359 hits: ws1-beg02_int_beg_05_berylia_org (2a07:1182:5:12::22) | 350 hits: ws1-beg01_int_beg_05_berylia_org (2a07:1182:5:12::21) | 289 hits: mail_beg_05_berylia_org (100.97.5.5) | 109 hits: ws1-beg03_int_beg_05_berylia_org (2a07:1182:5:12::23) | 108 hits: adcs-beg_int_beg_05_berylia_org (2a07:1182:5:12::18) | 51 hits: beg-power-ws_int_beg_05_berylia_org (2a07:1182:5:22::20) | 13 hits: ws2-beg05_int_beg_05_berylia_org (2a07:1182:5:12::2a) | 7 hits: ws2-beg03_int_beg_05_berylia_org (2a07:1182:5:12::28) | via: WINDOWS-SMB/tcp/445
+  - name: allow-tcp-WINDOWS-SMB
+    protocol: tcp
+    destination-port: WINDOWS-SMB
+    action: accept
+    source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-tcp-LDAP-GC
+    protocol: tcp
+    destination-port: LDAP-GC
+    action: accept
+    source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+  - name: drop-ANY
+    action: deny
+    platform-exclude:
+    - windows_advfirewall
+
+- header:
+    targets:
+      windows_advfirewall: out mixed
+  terms:
+  - name: allow-loopback
+    action: accept
+    source-address: LOOPBACK
+  - name: allow-icmp
+    action: accept
+    protocol: icmp
+  - name: allow-icmpv6
+    action: accept
+    protocol: icmpv6
+# [auto] 205 hits: dc1_int_beg_05_berylia_org (10.5.12.2)
+  - name: allow-icmp-ICMP
+    protocol: icmp
+    destination-address: dc1_int_beg_05_berylia_org
+    action: accept
+# [auto] 315 hits: beg_int (2a07:1182:5:12::1) | 201 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2) | 156 hits: ws3-beg01_int_beg_05_berylia_org (fe80::250:56ff:fe89:e010, 2a07:1182:5:12::31) | 139 hits: ws3-beg03_int_beg_05_berylia_org (fe80::250:56ff:fe89:cd2e, 2a07:1182:5:12::33) | 85 hits: ws3-beg04_int_beg_05_berylia_org (fe80::250:56ff:fe89:bb36, 2a07:1182:5:12::34) | 71 hits: ws2-beg02_int_beg_05_berylia_org (2a07:1182:5:12::27) | 70 hits: ws3-beg05_int_beg_05_berylia_org (fe80::250:56ff:fe89:1705, 2a07:1182:5:12::35) | 47 hits: lemonldapng_int_beg_05_berylia_org (fe80::250:56ff:fe89:7135, 2a07:1182:5:12::42) | 9 hits: fw1-beg_05_berylia_org (2a07:1182:5:12::61) | 5 hits: adcs-beg_int_beg_05_berylia_org (2a07:1182:5:12::18) | 5 hits: ws1-beg01_int_beg_05_berylia_org (2a07:1182:5:12::21) | 3 hits: ws3-beg02_int_beg_05_berylia_org (fe80::250:56ff:fe89:99a6, 2a07:1182:5:12::32)
+  - name: allow-icmpv6-ICMPV6
+    protocol: icmpv6
+    action: accept
+# [auto] 3696 hits: dc1_int_beg_05_berylia_org (10.5.12.2, 2a07:1182:5:12::2)
+  - name: allow-tcp-DNS-TCP
+    protocol: tcp
+    destination-port: DNS-TCP
+    destination-address: dc1_int_beg_05_berylia_org
+    action: accept
+# [auto] 385 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2)
+  - name: allow-tcp-LDAP-TCP
+    protocol: tcp
+    destination-port: LDAP-TCP
+    destination-address: dc1_int_beg_05_berylia_org
+    action: accept
+# [auto] 1993 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2) | 13 hits: adcs-beg_int_beg_05_berylia_org (2a07:1182:5:12::18) | 1 hits: ws1-beg01_int_beg_05_berylia_org (2a07:1182:5:12::21)
+  - name: allow-tcp-WINDOWS-RPC-DYNAMI
+    protocol: tcp
+    destination-port: WINDOWS-RPC-DYNAMIC
+    destination-address:
+    - ws1-beg01
+    - adcs-beg
+    - dc1_int_beg_05_berylia_org
+    action: accept
+# [auto] 12 hits: adcs-beg_int_beg_05_berylia_org (2a07:1182:5:12::18)
+  - name: allow-tcp-WINDOWS-RPC-ENDPOI
+    protocol: tcp
+    destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+    destination-address: adcs-beg_int_beg_05_berylia_org
+    action: accept
+# [auto] 644 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2)
+  - name: allow-tcp-WINDOWS-SMB
+    protocol: tcp
+    destination-port: WINDOWS-SMB
+    destination-address: dc1_int_beg_05_berylia_org
+    action: accept
+# [auto] 177231 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4) | 6904 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2, 10.5.12.2)
+  - name: allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    comment: 'ANY covers 2 unresolved dst: 2 addresses in 2 blocks, widest /32: 100.95.95.4/32
+      (88646 hits), 2a07:1181:95:95::4/128 (88585 hits) -- 1 of 2 sit in one group,
+      so a named group would cover most of this'
+    action: accept
+# [auto] 65 hits: beg_int (10.5.12.255)
+  - name: allow-udp-NETBIOS-DGM-LEGACY
+    protocol: udp
+    destination-port: NETBIOS-DGM-LEGACY
+    destination-address: beg_int
+    action: accept
+# [auto] 2 hits: ws2-beg03_int_beg_05_berylia_org (10.5.12.28)
+  - name: allow-udp-WINDOWS-RPC-DYNAMI
+    protocol: udp
+    destination-port: WINDOWS-RPC-DYNAMIC
+    destination-address: ws2-beg03_int_beg_05_berylia_org
+    action: accept
+# [auto] review terms above, then replace with deny-ANY when ready
+  - name: allow-ANY
+    action: accept

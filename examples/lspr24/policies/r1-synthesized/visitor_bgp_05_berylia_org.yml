@@ -1,0 +1,65 @@
+metadata:
+  host: visitor
+  zone: bgp
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 | IPv6 ::/0
+# [auto] unexpected owner: SSH no process attribution; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BGP_GT
+# [auto] IPv4 0.0.0.0/0 (docker-proxy) | IPv6 ::/0 (docker-proxy) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
+# [auto] unexpected owner: HTTP forwarded by docker-proxy; the service is behind it; expected nginx, apache2, httpd, caddy, haproxy, traefik, +5 more
+      - name: allow-tcp-HTTP
+        protocol: tcp
+        destination-port: HTTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (docker-proxy) | IPv6 ::/0 (docker-proxy) | aliases: HTTPS,WINDOWS-HYPERV-REPLICA-HTTPS
+# [auto] unexpected owner: HTTPS forwarded by docker-proxy; the service is behind it; expected nginx, apache2, httpd, caddy, haproxy, traefik, +5 more
+      - name: allow-tcp-HTTPS
+        protocol: tcp
+        destination-port: HTTPS
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (docker-proxy) | IPv6 ::/0 (docker-proxy)
+      - name: allow-tcp-TCP_5000
+        protocol: tcp
+        destination-port: TCP_5000
+        action: accept
+        source-address: ANY
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

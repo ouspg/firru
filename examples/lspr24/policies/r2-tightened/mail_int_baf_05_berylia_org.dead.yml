@@ -1,0 +1,36 @@
+# Dead-rule candidates — NoPair(policy_term, traffic_in_window).
+# Each term below has a tightened source-address but zero observed traffic
+# in the lookback window.  Options: remove, widen window, or re-check host.
+dead_rules:
+  - name: allow-tcp-NETBIOS-SSN-LEGACY
+    protocol: tcp
+    service: NETBIOS-SSN-LEGACY
+    source:
+      - BAF_INT_HOSTS
+  - name: allow-udp-NETBIOS-NS-LEGACY
+    protocol: udp
+    service: NETBIOS-NS-LEGACY
+    source:
+      - BAF_INT_HOSTS
+  - name: allow-udp-NETBIOS-DGM-LEGACY
+    protocol: udp
+    service: NETBIOS-DGM-LEGACY
+    source:
+      - BAF_INT_HOSTS
+  - name: allow-udp-RDP
+    protocol: udp
+    service: RDP
+    source:
+      - BAF_INT_GT
+  - name: allow-udp-MDNS
+    protocol: udp
+    service: MDNS
+    source:
+      - MDNS_SOURCES_V4
+      - MDNS_SOURCES_V6
+  - name: allow-udp-LLMNR
+    protocol: udp
+    service: LLMNR
+    source:
+      - LLMNR_SOURCES_V4
+      - LLMNR_SOURCES_V6

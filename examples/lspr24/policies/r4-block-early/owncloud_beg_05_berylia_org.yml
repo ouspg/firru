@@ -1,0 +1,134 @@
+# firru tighten output — review and copy changes to policies/pol/owncloud_beg_05_berylia_org.yml
+# Source suggestions changed: 4 | Dead rules: 3 | Group suggestions: 0
+metadata:
+  host: owncloud
+  zone: beg
+  variant: 'r4-block-early (learn file: night.jsonl) — services with no observed client
+    are removed, not merely narrowed'
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+
+# [auto] 2700 flows total | 1800 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | 900 hits: BEG_INT_GT_OTHER (10.5.12.250) | via: SSH/tcp/22
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:      # was: BEG_GT
+    - BEG_GT_OTHER
+    - BEG_INT_GT_OTHER
+
+# [auto] 3599 flows total | 3599 hits: BEG_GT_OTHER (2a07:1182:5:20::60, 100.97.5.60) | via: HTTP/tcp/80
+  - name: allow-tcp-HTTP
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: BEG_GT_OTHER      # was: ANY_V6
+
+# [auto] 3600 flows total | 3600 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | via: HTTPS/tcp/443
+  - name: allow-tcp-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: BEG_GT_OTHER      # was: ANY_V6
+
+# [auto] 900 flows total | 900 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250) | via: WINDOWS-SMB/tcp/445
+  - name: allow-tcp-WINDOWS-SMB
+    protocol: tcp
+    destination-port: WINDOWS-SMB
+    action: accept
+    source-address: BEG_INT_GT_OTHER      # was: ANY
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-loopback
+    source-address: LOOPBACK
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmp
+    protocol: icmp
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmpv6
+    protocol: icmpv6
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: drop-ANY
+    action: deny
+    counter: drop-ANY
+
+- header:
+    targets:
+      nftables: mixed output
+  terms:
+  - name: allow-loopback
+    action: accept
+    source-address: LOOPBACK
+  - name: allow-icmp
+    action: accept
+    protocol: icmp
+  - name: allow-icmpv6
+    action: accept
+    protocol: icmpv6
+# [auto] 342 hits: beg (2a07:1182:5:20::1) | 33 hits: BEG_GT_OTHER (2a07:1182:5:20::60) | 5 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11)
+  - name: allow-icmpv6-ICMPV6
+    protocol: icmpv6
+    destination-address:
+    - fw1-beg
+    - BEG_GT_OTHER
+    - beg
+    action: accept
+# [auto] 3112 hits: EXTERNAL (2a07:1181:95:95::4)
+  - name: allow-tcp-DNS-TCP
+    protocol: tcp
+    destination-port: DNS-TCP
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /128: 2a07:1181:95:95::4/128
+      (3112 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 284 hits: EXTERNAL (100.100.108.30)
+  - name: allow-tcp-TCP_1514
+    protocol: tcp
+    destination-port: TCP_1514
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (284 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 56 hits: EXTERNAL (100.100.108.30)
+  - name: allow-tcp-TCP_1515
+    protocol: tcp
+    destination-port: TCP_1515
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (56 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 76152 hits: EXTERNAL (100.95.95.4)
+  - name: allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.95.95.4/32
+      (76152 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 65 hits: beg (100.97.5.63)
+  - name: allow-udp-NETBIOS-DGM-LEGACY
+    protocol: udp
+    destination-port: NETBIOS-DGM-LEGACY
+    destination-address: beg
+    action: accept
+# [auto] 392 hits: EXTERNAL (193.40.133.134, 193.40.134.137, 212.7.1.131, 212.7.1.132 and 6 more)
+  - name: allow-udp-NTP
+    protocol: udp
+    destination-port: NTP
+    comment: 'ANY covers 10 unresolved dst: 10 addresses in 6 blocks, widest /16:
+      193.40.0.0/16 (3 dst, 157 hits), 212.7.1.128/29 (2 dst, 152 hits), 2001:1b28:1:5::130/126
+      (2 dst, 80 hits), 185.125.190.56/30 (3 dst, 3 hits) -- 10 addresses spread over
+      6 groups, largest 3: too scattered to name, ANY is honest'
+    action: accept
+# [auto] review terms above, then replace with deny-ANY when ready
+  - name: allow-ANY
+    action: accept

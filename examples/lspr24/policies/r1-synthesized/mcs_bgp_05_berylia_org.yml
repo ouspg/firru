@@ -1,0 +1,147 @@
+metadata:
+  host: mcs
+  zone: bgp
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv6 ::/0 (init)
+# [auto] unexpected owner: SSH served by init; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BGP_GT
+# [auto] IPv4 0.0.0.0/0 (nginx) | IPv6 ::/0 (nginx) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
+      - name: allow-tcp-HTTP
+        protocol: tcp
+        destination-port: HTTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (nginx) | IPv6 ::/0 (nginx) | aliases: HTTPS,WINDOWS-HYPERV-REPLICA-HTTPS
+      - name: allow-tcp-HTTPS
+        protocol: tcp
+        destination-port: HTTPS
+        action: accept
+        source-address: ANY
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-DOCKER-SWARM
+        protocol: tcp
+        destination-port: DOCKER-SWARM
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-TCP_5050
+        protocol: tcp
+        destination-port: TCP_5050
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-POSTGRES
+        protocol: tcp
+        destination-port: POSTGRES
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-REDIS
+        protocol: tcp
+        destination-port: REDIS
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-TCP_8000
+        protocol: tcp
+        destination-port: TCP_8000
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-TCP_8086
+        protocol: tcp
+        destination-port: TCP_8086
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-TCP_8161
+        protocol: tcp
+        destination-port: TCP_8161
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-TCP_9000
+        protocol: tcp
+        destination-port: TCP_9000
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-DNP3
+        protocol: tcp
+        destination-port: DNP3
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-TCP_20260
+        protocol: tcp
+        destination-port: TCP_20260
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-TCP_20310
+        protocol: tcp
+        destination-port: TCP_20310
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (dockerd)
+      - name: allow-tcp-WINDOWS-RPC-DYNAMIC
+        protocol: tcp
+        destination-port: WINDOWS-RPC-DYNAMIC
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv4 0.0.0.0/0 (ntpd), 10.5.20.5/32 (ntpd), 172.19.0.1/32 (ntpd) | IPv6 2a07:1182:5:f20::5/128 (ntpd), ::/0 (ntpd), fe80::1810:feff:feb/128 (ntpd), fe80::20b6:99ff:fe4/128 (ntpd), fe80::250:56ff:fe89/128 (ntpd), fe80::2810:2ff:fe1d/128 (ntpd), fe80::281b:3dff:fed/128 (ntpd), fe80::3422:5ff:fee9/128 (ntpd), fe80::34a6:5aff:fe8/128 (ntpd), fe80::40c6:82ff:fe0/128 (ntpd), fe80::4497:b7ff:fe8/128 (ntpd), fe80::48c6:d1ff:fe2/128 (ntpd), fe80::542d:d2ff:fe2/128 (ntpd), fe80::5cd5:49ff:fe6/128 (ntpd), fe80::6854:3eff:feb/128 (ntpd), fe80::78a9:14ff:fed/128 (ntpd), fe80::7c8c:42ff:fe4/128 (ntpd), fe80::80b8:1ff:fe61/128 (ntpd), fe80::8cc9:75ff:feb/128 (ntpd), fe80::8de:38ff:fe19/128 (ntpd), fe80::943c:18ff:fe9/128 (ntpd), fe80::943f:74ff:feb/128 (ntpd), fe80::94a6:e1ff:fe8/128 (ntpd), fe80::c04d:26ff:fe9/128 (ntpd), fe80::cc37:8ff:fec9/128 (ntpd), fe80::ccc:d3ff:fe80/128 (ntpd), fe80::d086:a4ff:fee/128 (ntpd), fe80::d0ad:dcff:fe3/128 (ntpd), fe80::d425:64ff:fef/128 (ntpd), fe80::dcd5:40ff:fe3/128 (ntpd), fe80::e4ce:44ff:fea/128 (ntpd), fe80::f083:b9ff:fe5/128 (ntpd), fe80::f80d:66ff:fee/128 (ntpd), fe80::fc6d:f0ff:fe8/128 (ntpd), fe80::fc73:dff:fef2/128 (ntpd)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 | aliases: VXLAN,DOCKER-SWARM
+      - name: allow-udp-VXLAN
+        protocol: udp
+        destination-port: VXLAN
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv6 ::/0 (dockerd) | aliases: DOCKER-SWARM,METALLB-MEMBERLIST
+      - name: allow-udp-DOCKER-SWARM
+        protocol: udp
+        destination-port: DOCKER-SWARM
+        action: accept
+        source-address: ANY_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

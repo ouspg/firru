@@ -1,0 +1,35 @@
+metadata:
+  host: gas-hmi
+  zone: beg
+  provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: ANY
+    comment: 4 sources answered, 1 not
+  - name: allow-tcp-TCP_3000
+    protocol: tcp
+    destination-port: TCP_3000
+    action: accept
+    source-address: ANY
+    comment: every one of 3 sources was answered
+  - name: allow-tcp-TCP_8000
+    protocol: tcp
+    destination-port: TCP_8000
+    action: accept
+    source-address: ANY
+    comment: every one of 3 sources was answered
+  - name: allow-tcp-TCP_12349
+    protocol: tcp
+    destination-port: TCP_12349
+    action: accept
+    source-address: ANY
+    comment: every one of 2 sources was answered
+  - name: drop-ANY
+    action: deny

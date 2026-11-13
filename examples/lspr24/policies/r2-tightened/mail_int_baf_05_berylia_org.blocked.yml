@@ -1,0 +1,3110 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 900 hits | reason: src not covered by ['BAF_INT_GT']
+  - protocol: tcp
+    service: RDP
+    src_ip: 10.5.11.250
+    src_token: BAF_INT_GT_OTHER
+    proposed_src: "['BAF_INT_GT']"
+# 900 hits | reason: src not covered by ['BAF_INT_GT']
+  - protocol: tcp
+    service: RDP
+    src_ip: 2a07:1182:5:11::250
+    src_token: BAF_INT_GT_OTHER
+    proposed_src: "['BAF_INT_GT']"
+# 375 hits | reason: port not in policy (6809,6810,6832,6833,6843,6844,6872,6889,6890,6901,6902,7065,7069,7077,7078,7084,7085,7101,7107,7110,7112,7118,7119,7123)
+  - protocol: tcp
+    service: CEPH-OSD
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 259 hits | reason: port not in policy (6809,6810,6832,6833,6843,6844,6872,6889,6890,6901,6902,7065,7069,7077,7078,7084,7085,7101,7107,7110,7112,7118,7119,7123)
+  - protocol: tcp
+    service: CEPH-OSD
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 36 hits | reason: port not in policy (30066,30129,30242,30288,30668,30823,30935,30937,30938,31310,31311,31323,31356,31373,31376,31379,31415,31426,31428,31429,31431,31432,31442,31466,31475,31853,31854,31906,31907,31920,31921,31959,31960,31962,31963)
+  - protocol: tcp
+    service: K8S-NODEPORT
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 9 hits | reason: port not in policy (30066,30129,30242,30288,30668,30823,30935,30937,30938,31310,31311,31323,31356,31373,31376,31379,31415,31426,31428,31429,31431,31432,31442,31466,31475,31853,31854,31906,31907,31920,31921,31959,31960,31962,31963)
+  - protocol: tcp
+    service: K8S-NODEPORT
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (6789)
+  - protocol: tcp
+    service: CEPH-MON
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 164 hits | reason: port not in policy (41220)
+  - protocol: tcp
+    service: unknown-tcp-41220
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 159 hits | reason: port not in policy (40071)
+  - protocol: tcp
+    service: unknown-tcp-40071
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 151 hits | reason: port not in policy (40092)
+  - protocol: tcp
+    service: unknown-tcp-40092
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 133 hits | reason: port not in policy (41201)
+  - protocol: tcp
+    service: unknown-tcp-41201
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 126 hits | reason: port not in policy (40133)
+  - protocol: tcp
+    service: unknown-tcp-40133
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 106 hits | reason: port not in policy (40202)
+  - protocol: tcp
+    service: unknown-tcp-40202
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 106 hits | reason: port not in policy (6556)
+  - protocol: tcp
+    service: unknown-tcp-6556
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 99 hits | reason: port not in policy (40155)
+  - protocol: tcp
+    service: unknown-tcp-40155
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 97 hits | reason: port not in policy (40418)
+  - protocol: tcp
+    service: unknown-tcp-40418
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 92 hits | reason: port not in policy (39890)
+  - protocol: tcp
+    service: unknown-tcp-39890
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 89 hits | reason: port not in policy (39892)
+  - protocol: tcp
+    service: unknown-tcp-39892
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 81 hits | reason: port not in policy (40421)
+  - protocol: tcp
+    service: unknown-tcp-40421
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 80 hits | reason: port not in policy (43198)
+  - protocol: tcp
+    service: unknown-tcp-43198
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 75 hits | reason: port not in policy (40369)
+  - protocol: tcp
+    service: unknown-tcp-40369
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 73 hits | reason: port not in policy (40214)
+  - protocol: tcp
+    service: unknown-tcp-40214
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 71 hits | reason: port not in policy (41253)
+  - protocol: tcp
+    service: unknown-tcp-41253
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 69 hits | reason: port not in policy (40340)
+  - protocol: tcp
+    service: unknown-tcp-40340
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 66 hits | reason: port not in policy (40362)
+  - protocol: tcp
+    service: unknown-tcp-40362
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 66 hits | reason: port not in policy (40441)
+  - protocol: tcp
+    service: unknown-tcp-40441
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 63 hits | reason: port not in policy (40397)
+  - protocol: tcp
+    service: unknown-tcp-40397
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 61 hits | reason: port not in policy (42354)
+  - protocol: tcp
+    service: unknown-tcp-42354
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 61 hits | reason: port not in policy (6616)
+  - protocol: tcp
+    service: unknown-tcp-6616
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 60 hits | reason: port not in policy (6531)
+  - protocol: tcp
+    service: unknown-tcp-6531
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 58 hits | reason: port not in policy (41360)
+  - protocol: tcp
+    service: unknown-tcp-41360
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 57 hits | reason: port not in policy (23178)
+  - protocol: tcp
+    service: unknown-tcp-23178
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 56 hits | reason: port not in policy (40358)
+  - protocol: tcp
+    service: unknown-tcp-40358
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 55 hits | reason: port not in policy (39885)
+  - protocol: tcp
+    service: unknown-tcp-39885
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 55 hits | reason: port not in policy (40414)
+  - protocol: tcp
+    service: unknown-tcp-40414
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 49 hits | reason: port not in policy (41358)
+  - protocol: tcp
+    service: unknown-tcp-41358
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 45 hits | reason: port not in policy (23179)
+  - protocol: tcp
+    service: unknown-tcp-23179
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 41 hits | reason: port not in policy (43447)
+  - protocol: tcp
+    service: unknown-tcp-43447
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 40 hits | reason: port not in policy (40451)
+  - protocol: tcp
+    service: unknown-tcp-40451
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 36 hits | reason: port not in policy (23022)
+  - protocol: tcp
+    service: unknown-tcp-23022
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 36 hits | reason: port not in policy (6516)
+  - protocol: tcp
+    service: unknown-tcp-6516
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 30 hits | reason: port not in policy (23003)
+  - protocol: tcp
+    service: unknown-tcp-23003
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 29 hits | reason: port not in policy (23157)
+  - protocol: tcp
+    service: unknown-tcp-23157
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 28 hits | reason: port not in policy (23156)
+  - protocol: tcp
+    service: unknown-tcp-23156
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 27 hits | reason: port not in policy (23150)
+  - protocol: tcp
+    service: unknown-tcp-23150
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 26 hits | reason: port not in policy (23112)
+  - protocol: tcp
+    service: unknown-tcp-23112
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 25 hits | reason: port not in policy (23151)
+  - protocol: tcp
+    service: unknown-tcp-23151
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 24 hits | reason: port not in policy (23138)
+  - protocol: tcp
+    service: unknown-tcp-23138
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 23 hits | reason: port not in policy (23446)
+  - protocol: tcp
+    service: unknown-tcp-23446
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 23 hits | reason: port not in policy (23449)
+  - protocol: tcp
+    service: unknown-tcp-23449
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 22 hits | reason: port not in policy (23376)
+  - protocol: tcp
+    service: unknown-tcp-23376
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 22 hits | reason: port not in policy (23420)
+  - protocol: tcp
+    service: unknown-tcp-23420
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 21 hits | reason: port not in policy (23137)
+  - protocol: tcp
+    service: unknown-tcp-23137
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 21 hits | reason: port not in policy (23448)
+  - protocol: tcp
+    service: unknown-tcp-23448
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 20 hits | reason: port not in policy (23145)
+  - protocol: tcp
+    service: unknown-tcp-23145
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 19 hits | reason: port not in policy (23233)
+  - protocol: tcp
+    service: unknown-tcp-23233
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 19 hits | reason: port not in policy (23248)
+  - protocol: tcp
+    service: unknown-tcp-23248
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 18 hits | reason: port not in policy (23263)
+  - protocol: tcp
+    service: unknown-tcp-23263
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 17 hits | reason: port not in policy (22998)
+  - protocol: tcp
+    service: unknown-tcp-22998
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 17 hits | reason: port not in policy (23080)
+  - protocol: tcp
+    service: unknown-tcp-23080
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 17 hits | reason: port not in policy (23383)
+  - protocol: tcp
+    service: unknown-tcp-23383
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 16 hits | reason: port not in policy (23144)
+  - protocol: tcp
+    service: unknown-tcp-23144
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 15 hits | reason: port not in policy (23004)
+  - protocol: tcp
+    service: unknown-tcp-23004
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 15 hits | reason: port not in policy (23264)
+  - protocol: tcp
+    service: unknown-tcp-23264
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 15 hits | reason: port not in policy (23390)
+  - protocol: tcp
+    service: unknown-tcp-23390
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 14 hits | reason: port not in policy (23381)
+  - protocol: tcp
+    service: unknown-tcp-23381
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 14 hits | reason: port not in policy (23793)
+  - protocol: tcp
+    service: unknown-tcp-23793
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 14 hits | reason: port not in policy (44994)
+  - protocol: tcp
+    service: unknown-tcp-44994
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 13 hits | reason: port not in policy (23378)
+  - protocol: tcp
+    service: unknown-tcp-23378
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 11 hits | reason: port not in policy (22967)
+  - protocol: tcp
+    service: unknown-tcp-22967
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 11 hits | reason: port not in policy (23081)
+  - protocol: tcp
+    service: unknown-tcp-23081
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 10 hits | reason: port not in policy (10940)
+  - protocol: tcp
+    service: unknown-tcp-10940
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 10 hits | reason: port not in policy (44509)
+  - protocol: tcp
+    service: unknown-tcp-44509
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 9 hits | reason: port not in policy (15992)
+  - protocol: tcp
+    service: unknown-tcp-15992
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 9 hits | reason: port not in policy (16188)
+  - protocol: tcp
+    service: unknown-tcp-16188
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 9 hits | reason: port not in policy (23382)
+  - protocol: tcp
+    service: unknown-tcp-23382
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 9 hits | reason: port not in policy (49069)
+  - protocol: tcp
+    service: unknown-tcp-49069
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 8 hits | reason: port not in policy (11020)
+  - protocol: tcp
+    service: unknown-tcp-11020
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 8 hits | reason: port not in policy (15782)
+  - protocol: tcp
+    service: unknown-tcp-15782
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 8 hits | reason: port not in policy (19041)
+  - protocol: tcp
+    service: unknown-tcp-19041
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 8 hits | reason: port not in policy (26229)
+  - protocol: tcp
+    service: unknown-tcp-26229
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 8 hits | reason: port not in policy (45167)
+  - protocol: tcp
+    service: unknown-tcp-45167
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 8 hits | reason: port not in policy (45291)
+  - protocol: tcp
+    service: unknown-tcp-45291
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 8 hits | reason: port not in policy (45995)
+  - protocol: tcp
+    service: unknown-tcp-45995
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 8 hits | reason: port not in policy (46011)
+  - protocol: tcp
+    service: unknown-tcp-46011
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 8 hits | reason: port not in policy (6546)
+  - protocol: tcp
+    service: unknown-tcp-6546
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 7 hits | reason: port not in policy (11251)
+  - protocol: tcp
+    service: unknown-tcp-11251
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 7 hits | reason: port not in policy (20266)
+  - protocol: tcp
+    service: unknown-tcp-20266
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 7 hits | reason: port not in policy (23947)
+  - protocol: tcp
+    service: unknown-tcp-23947
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 7 hits | reason: port not in policy (25856)
+  - protocol: tcp
+    service: unknown-tcp-25856
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 7 hits | reason: port not in policy (45046)
+  - protocol: tcp
+    service: unknown-tcp-45046
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (10116)
+  - protocol: tcp
+    service: unknown-tcp-10116
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (10746)
+  - protocol: tcp
+    service: unknown-tcp-10746
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (11663)
+  - protocol: tcp
+    service: unknown-tcp-11663
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (14747)
+  - protocol: tcp
+    service: unknown-tcp-14747
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (15744)
+  - protocol: tcp
+    service: unknown-tcp-15744
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (22978)
+  - protocol: tcp
+    service: unknown-tcp-22978
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (23796)
+  - protocol: tcp
+    service: unknown-tcp-23796
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (25897)
+  - protocol: tcp
+    service: unknown-tcp-25897
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (40359)
+  - protocol: tcp
+    service: unknown-tcp-40359
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (44506)
+  - protocol: tcp
+    service: unknown-tcp-44506
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (44778)
+  - protocol: tcp
+    service: unknown-tcp-44778
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 6 hits | reason: port not in policy (45054)
+  - protocol: tcp
+    service: unknown-tcp-45054
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (16162)
+  - protocol: tcp
+    service: unknown-tcp-16162
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (23822)
+  - protocol: tcp
+    service: unknown-tcp-23822
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (44666)
+  - protocol: tcp
+    service: unknown-tcp-44666
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (45076)
+  - protocol: tcp
+    service: unknown-tcp-45076
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (45079)
+  - protocol: tcp
+    service: unknown-tcp-45079
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (45095)
+  - protocol: tcp
+    service: unknown-tcp-45095
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (45163)
+  - protocol: tcp
+    service: unknown-tcp-45163
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (45305)
+  - protocol: tcp
+    service: unknown-tcp-45305
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (45464)
+  - protocol: tcp
+    service: unknown-tcp-45464
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (6139)
+  - protocol: tcp
+    service: unknown-tcp-6139
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (6488)
+  - protocol: tcp
+    service: unknown-tcp-6488
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 5 hits | reason: port not in policy (6712)
+  - protocol: tcp
+    service: unknown-tcp-6712
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (10826)
+  - protocol: tcp
+    service: unknown-tcp-10826
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (12225)
+  - protocol: tcp
+    service: unknown-tcp-12225
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (15305)
+  - protocol: tcp
+    service: unknown-tcp-15305
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (24188)
+  - protocol: tcp
+    service: unknown-tcp-24188
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (24504)
+  - protocol: tcp
+    service: unknown-tcp-24504
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (25089)
+  - protocol: tcp
+    service: unknown-tcp-25089
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (25477)
+  - protocol: tcp
+    service: unknown-tcp-25477
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (25547)
+  - protocol: tcp
+    service: unknown-tcp-25547
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (29076)
+  - protocol: tcp
+    service: unknown-tcp-29076
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (44622)
+  - protocol: tcp
+    service: unknown-tcp-44622
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (45006)
+  - protocol: tcp
+    service: unknown-tcp-45006
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (45016)
+  - protocol: tcp
+    service: unknown-tcp-45016
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (45020)
+  - protocol: tcp
+    service: unknown-tcp-45020
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (45047)
+  - protocol: tcp
+    service: unknown-tcp-45047
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (45169)
+  - protocol: tcp
+    service: unknown-tcp-45169
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (45400)
+  - protocol: tcp
+    service: unknown-tcp-45400
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (45994)
+  - protocol: tcp
+    service: unknown-tcp-45994
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (6481)
+  - protocol: tcp
+    service: unknown-tcp-6481
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 4 hits | reason: port not in policy (6511)
+  - protocol: tcp
+    service: unknown-tcp-6511
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (11287)
+  - protocol: tcp
+    service: unknown-tcp-11287
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (15742)
+  - protocol: tcp
+    service: unknown-tcp-15742
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (20626)
+  - protocol: tcp
+    service: unknown-tcp-20626
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (20794)
+  - protocol: tcp
+    service: unknown-tcp-20794
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (21200)
+  - protocol: tcp
+    service: unknown-tcp-21200
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (21889)
+  - protocol: tcp
+    service: unknown-tcp-21889
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (22017)
+  - protocol: tcp
+    service: unknown-tcp-22017
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (23125)
+  - protocol: tcp
+    service: unknown-tcp-23125
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (23164)
+  - protocol: tcp
+    service: unknown-tcp-23164
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (23243)
+  - protocol: tcp
+    service: unknown-tcp-23243
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (23247)
+  - protocol: tcp
+    service: unknown-tcp-23247
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (23393)
+  - protocol: tcp
+    service: unknown-tcp-23393
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (25327)
+  - protocol: tcp
+    service: unknown-tcp-25327
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (40252)
+  - protocol: tcp
+    service: unknown-tcp-40252
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (43798)
+  - protocol: tcp
+    service: unknown-tcp-43798
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45007)
+  - protocol: tcp
+    service: unknown-tcp-45007
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45018)
+  - protocol: tcp
+    service: unknown-tcp-45018
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45019)
+  - protocol: tcp
+    service: unknown-tcp-45019
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45075)
+  - protocol: tcp
+    service: unknown-tcp-45075
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45077)
+  - protocol: tcp
+    service: unknown-tcp-45077
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45080)
+  - protocol: tcp
+    service: unknown-tcp-45080
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45081)
+  - protocol: tcp
+    service: unknown-tcp-45081
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45096)
+  - protocol: tcp
+    service: unknown-tcp-45096
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45170)
+  - protocol: tcp
+    service: unknown-tcp-45170
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (45262)
+  - protocol: tcp
+    service: unknown-tcp-45262
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (46010)
+  - protocol: tcp
+    service: unknown-tcp-46010
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (46030)
+  - protocol: tcp
+    service: unknown-tcp-46030
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (46031)
+  - protocol: tcp
+    service: unknown-tcp-46031
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (6359)
+  - protocol: tcp
+    service: unknown-tcp-6359
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 3 hits | reason: port not in policy (6362)
+  - protocol: tcp
+    service: unknown-tcp-6362
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (10046)
+  - protocol: tcp
+    service: unknown-tcp-10046
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (14823)
+  - protocol: tcp
+    service: unknown-tcp-14823
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (14824)
+  - protocol: tcp
+    service: unknown-tcp-14824
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (15226)
+  - protocol: tcp
+    service: unknown-tcp-15226
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (17393)
+  - protocol: tcp
+    service: unknown-tcp-17393
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (18033)
+  - protocol: tcp
+    service: unknown-tcp-18033
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (18897)
+  - protocol: tcp
+    service: unknown-tcp-18897
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (19890)
+  - protocol: tcp
+    service: unknown-tcp-19890
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (20028)
+  - protocol: tcp
+    service: unknown-tcp-20028
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (20104)
+  - protocol: tcp
+    service: unknown-tcp-20104
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (20191)
+  - protocol: tcp
+    service: unknown-tcp-20191
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (20581)
+  - protocol: tcp
+    service: unknown-tcp-20581
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (21384)
+  - protocol: tcp
+    service: unknown-tcp-21384
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (22355)
+  - protocol: tcp
+    service: unknown-tcp-22355
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (22748)
+  - protocol: tcp
+    service: unknown-tcp-22748
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (23126)
+  - protocol: tcp
+    service: unknown-tcp-23126
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (24422)
+  - protocol: tcp
+    service: unknown-tcp-24422
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (24487)
+  - protocol: tcp
+    service: unknown-tcp-24487
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (24753)
+  - protocol: tcp
+    service: unknown-tcp-24753
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (25539)
+  - protocol: tcp
+    service: unknown-tcp-25539
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (26120)
+  - protocol: tcp
+    service: unknown-tcp-26120
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (27294)
+  - protocol: tcp
+    service: unknown-tcp-27294
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (40104)
+  - protocol: tcp
+    service: unknown-tcp-40104
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (41390)
+  - protocol: tcp
+    service: unknown-tcp-41390
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (43799)
+  - protocol: tcp
+    service: unknown-tcp-43799
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (45073)
+  - protocol: tcp
+    service: unknown-tcp-45073
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (45171)
+  - protocol: tcp
+    service: unknown-tcp-45171
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (45257)
+  - protocol: tcp
+    service: unknown-tcp-45257
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (45304)
+  - protocol: tcp
+    service: unknown-tcp-45304
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (6397)
+  - protocol: tcp
+    service: unknown-tcp-6397
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (6518)
+  - protocol: tcp
+    service: unknown-tcp-6518
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (6523)
+  - protocol: tcp
+    service: unknown-tcp-6523
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (6561)
+  - protocol: tcp
+    service: unknown-tcp-6561
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (6570)
+  - protocol: tcp
+    service: unknown-tcp-6570
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (6590)
+  - protocol: tcp
+    service: unknown-tcp-6590
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10567)
+  - protocol: tcp
+    service: unknown-tcp-10567
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10568)
+  - protocol: tcp
+    service: unknown-tcp-10568
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10570)
+  - protocol: tcp
+    service: unknown-tcp-10570
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10571)
+  - protocol: tcp
+    service: unknown-tcp-10571
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10624)
+  - protocol: tcp
+    service: unknown-tcp-10624
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10719)
+  - protocol: tcp
+    service: unknown-tcp-10719
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10736)
+  - protocol: tcp
+    service: unknown-tcp-10736
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10797)
+  - protocol: tcp
+    service: unknown-tcp-10797
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10812)
+  - protocol: tcp
+    service: unknown-tcp-10812
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10822)
+  - protocol: tcp
+    service: unknown-tcp-10822
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10856)
+  - protocol: tcp
+    service: unknown-tcp-10856
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10981)
+  - protocol: tcp
+    service: unknown-tcp-10981
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10982)
+  - protocol: tcp
+    service: unknown-tcp-10982
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10997)
+  - protocol: tcp
+    service: unknown-tcp-10997
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (10998)
+  - protocol: tcp
+    service: unknown-tcp-10998
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11036)
+  - protocol: tcp
+    service: unknown-tcp-11036
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11037)
+  - protocol: tcp
+    service: unknown-tcp-11037
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11071)
+  - protocol: tcp
+    service: unknown-tcp-11071
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11072)
+  - protocol: tcp
+    service: unknown-tcp-11072
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11073)
+  - protocol: tcp
+    service: unknown-tcp-11073
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11103)
+  - protocol: tcp
+    service: unknown-tcp-11103
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11104)
+  - protocol: tcp
+    service: unknown-tcp-11104
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11105)
+  - protocol: tcp
+    service: unknown-tcp-11105
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11119)
+  - protocol: tcp
+    service: unknown-tcp-11119
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11120)
+  - protocol: tcp
+    service: unknown-tcp-11120
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (11979)
+  - protocol: tcp
+    service: unknown-tcp-11979
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12017)
+  - protocol: tcp
+    service: unknown-tcp-12017
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12019)
+  - protocol: tcp
+    service: unknown-tcp-12019
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12291)
+  - protocol: tcp
+    service: unknown-tcp-12291
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12292)
+  - protocol: tcp
+    service: unknown-tcp-12292
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12293)
+  - protocol: tcp
+    service: unknown-tcp-12293
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12294)
+  - protocol: tcp
+    service: unknown-tcp-12294
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12672)
+  - protocol: tcp
+    service: unknown-tcp-12672
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12784)
+  - protocol: tcp
+    service: unknown-tcp-12784
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12801)
+  - protocol: tcp
+    service: unknown-tcp-12801
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12846)
+  - protocol: tcp
+    service: unknown-tcp-12846
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12850)
+  - protocol: tcp
+    service: unknown-tcp-12850
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12860)
+  - protocol: tcp
+    service: unknown-tcp-12860
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12877)
+  - protocol: tcp
+    service: unknown-tcp-12877
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12892)
+  - protocol: tcp
+    service: unknown-tcp-12892
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12896)
+  - protocol: tcp
+    service: unknown-tcp-12896
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12908)
+  - protocol: tcp
+    service: unknown-tcp-12908
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12997)
+  - protocol: tcp
+    service: unknown-tcp-12997
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12998)
+  - protocol: tcp
+    service: unknown-tcp-12998
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (12999)
+  - protocol: tcp
+    service: unknown-tcp-12999
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (13000)
+  - protocol: tcp
+    service: unknown-tcp-13000
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14814)
+  - protocol: tcp
+    service: unknown-tcp-14814
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14822)
+  - protocol: tcp
+    service: unknown-tcp-14822
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14841)
+  - protocol: tcp
+    service: unknown-tcp-14841
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14857)
+  - protocol: tcp
+    service: unknown-tcp-14857
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14916)
+  - protocol: tcp
+    service: unknown-tcp-14916
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14920)
+  - protocol: tcp
+    service: unknown-tcp-14920
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14930)
+  - protocol: tcp
+    service: unknown-tcp-14930
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14945)
+  - protocol: tcp
+    service: unknown-tcp-14945
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14958)
+  - protocol: tcp
+    service: unknown-tcp-14958
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (14972)
+  - protocol: tcp
+    service: unknown-tcp-14972
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15120)
+  - protocol: tcp
+    service: unknown-tcp-15120
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15121)
+  - protocol: tcp
+    service: unknown-tcp-15121
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15130)
+  - protocol: tcp
+    service: unknown-tcp-15130
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15165)
+  - protocol: tcp
+    service: unknown-tcp-15165
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15166)
+  - protocol: tcp
+    service: unknown-tcp-15166
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15184)
+  - protocol: tcp
+    service: unknown-tcp-15184
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15185)
+  - protocol: tcp
+    service: unknown-tcp-15185
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15212)
+  - protocol: tcp
+    service: unknown-tcp-15212
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15213)
+  - protocol: tcp
+    service: unknown-tcp-15213
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15215)
+  - protocol: tcp
+    service: unknown-tcp-15215
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15216)
+  - protocol: tcp
+    service: unknown-tcp-15216
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15311)
+  - protocol: tcp
+    service: unknown-tcp-15311
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15312)
+  - protocol: tcp
+    service: unknown-tcp-15312
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15931)
+  - protocol: tcp
+    service: unknown-tcp-15931
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15934)
+  - protocol: tcp
+    service: unknown-tcp-15934
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (15935)
+  - protocol: tcp
+    service: unknown-tcp-15935
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (16905)
+  - protocol: tcp
+    service: unknown-tcp-16905
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (16926)
+  - protocol: tcp
+    service: unknown-tcp-16926
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (16972)
+  - protocol: tcp
+    service: unknown-tcp-16972
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (16973)
+  - protocol: tcp
+    service: unknown-tcp-16973
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (16978)
+  - protocol: tcp
+    service: unknown-tcp-16978
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (16989)
+  - protocol: tcp
+    service: unknown-tcp-16989
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (17010)
+  - protocol: tcp
+    service: unknown-tcp-17010
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (17023)
+  - protocol: tcp
+    service: unknown-tcp-17023
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (17035)
+  - protocol: tcp
+    service: unknown-tcp-17035
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (17449)
+  - protocol: tcp
+    service: unknown-tcp-17449
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (17450)
+  - protocol: tcp
+    service: unknown-tcp-17450
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (17451)
+  - protocol: tcp
+    service: unknown-tcp-17451
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (17871)
+  - protocol: tcp
+    service: unknown-tcp-17871
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (18032)
+  - protocol: tcp
+    service: unknown-tcp-18032
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (18034)
+  - protocol: tcp
+    service: unknown-tcp-18034
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (18035)
+  - protocol: tcp
+    service: unknown-tcp-18035
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (18223)
+  - protocol: tcp
+    service: unknown-tcp-18223
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (18950)
+  - protocol: tcp
+    service: unknown-tcp-18950
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (18969)
+  - protocol: tcp
+    service: unknown-tcp-18969
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (18973)
+  - protocol: tcp
+    service: unknown-tcp-18973
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19021)
+  - protocol: tcp
+    service: unknown-tcp-19021
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19033)
+  - protocol: tcp
+    service: unknown-tcp-19033
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19037)
+  - protocol: tcp
+    service: unknown-tcp-19037
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19048)
+  - protocol: tcp
+    service: unknown-tcp-19048
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19063)
+  - protocol: tcp
+    service: unknown-tcp-19063
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19064)
+  - protocol: tcp
+    service: unknown-tcp-19064
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19077)
+  - protocol: tcp
+    service: unknown-tcp-19077
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19242)
+  - protocol: tcp
+    service: unknown-tcp-19242
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19243)
+  - protocol: tcp
+    service: unknown-tcp-19243
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19300)
+  - protocol: tcp
+    service: unknown-tcp-19300
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19301)
+  - protocol: tcp
+    service: unknown-tcp-19301
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19327)
+  - protocol: tcp
+    service: unknown-tcp-19327
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19328)
+  - protocol: tcp
+    service: unknown-tcp-19328
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19330)
+  - protocol: tcp
+    service: unknown-tcp-19330
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19331)
+  - protocol: tcp
+    service: unknown-tcp-19331
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19343)
+  - protocol: tcp
+    service: unknown-tcp-19343
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19344)
+  - protocol: tcp
+    service: unknown-tcp-19344
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19484)
+  - protocol: tcp
+    service: unknown-tcp-19484
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19485)
+  - protocol: tcp
+    service: unknown-tcp-19485
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19502)
+  - protocol: tcp
+    service: unknown-tcp-19502
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19636)
+  - protocol: tcp
+    service: unknown-tcp-19636
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19757)
+  - protocol: tcp
+    service: unknown-tcp-19757
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19785)
+  - protocol: tcp
+    service: unknown-tcp-19785
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (19891)
+  - protocol: tcp
+    service: unknown-tcp-19891
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (20029)
+  - protocol: tcp
+    service: unknown-tcp-20029
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (20103)
+  - protocol: tcp
+    service: unknown-tcp-20103
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (20265)
+  - protocol: tcp
+    service: unknown-tcp-20265
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (20580)
+  - protocol: tcp
+    service: unknown-tcp-20580
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (20956)
+  - protocol: tcp
+    service: unknown-tcp-20956
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21021)
+  - protocol: tcp
+    service: unknown-tcp-21021
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21025)
+  - protocol: tcp
+    service: unknown-tcp-21025
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21041)
+  - protocol: tcp
+    service: unknown-tcp-21041
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21089)
+  - protocol: tcp
+    service: unknown-tcp-21089
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21093)
+  - protocol: tcp
+    service: unknown-tcp-21093
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21112)
+  - protocol: tcp
+    service: unknown-tcp-21112
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21125)
+  - protocol: tcp
+    service: unknown-tcp-21125
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21137)
+  - protocol: tcp
+    service: unknown-tcp-21137
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21150)
+  - protocol: tcp
+    service: unknown-tcp-21150
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21213)
+  - protocol: tcp
+    service: unknown-tcp-21213
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21214)
+  - protocol: tcp
+    service: unknown-tcp-21214
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21215)
+  - protocol: tcp
+    service: unknown-tcp-21215
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21216)
+  - protocol: tcp
+    service: unknown-tcp-21216
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21888)
+  - protocol: tcp
+    service: unknown-tcp-21888
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21890)
+  - protocol: tcp
+    service: unknown-tcp-21890
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (21891)
+  - protocol: tcp
+    service: unknown-tcp-21891
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (22354)
+  - protocol: tcp
+    service: unknown-tcp-22354
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (22599)
+  - protocol: tcp
+    service: unknown-tcp-22599
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (22668)
+  - protocol: tcp
+    service: unknown-tcp-22668
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (22693)
+  - protocol: tcp
+    service: unknown-tcp-22693
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (22736)
+  - protocol: tcp
+    service: unknown-tcp-22736
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (22857)
+  - protocol: tcp
+    service: unknown-tcp-22857
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (22964)
+  - protocol: tcp
+    service: unknown-tcp-22964
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23078)
+  - protocol: tcp
+    service: unknown-tcp-23078
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23079)
+  - protocol: tcp
+    service: unknown-tcp-23079
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23082)
+  - protocol: tcp
+    service: unknown-tcp-23082
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23083)
+  - protocol: tcp
+    service: unknown-tcp-23083
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23129)
+  - protocol: tcp
+    service: unknown-tcp-23129
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23148)
+  - protocol: tcp
+    service: unknown-tcp-23148
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23191)
+  - protocol: tcp
+    service: unknown-tcp-23191
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23192)
+  - protocol: tcp
+    service: unknown-tcp-23192
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23193)
+  - protocol: tcp
+    service: unknown-tcp-23193
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23195)
+  - protocol: tcp
+    service: unknown-tcp-23195
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23196)
+  - protocol: tcp
+    service: unknown-tcp-23196
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23197)
+  - protocol: tcp
+    service: unknown-tcp-23197
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23198)
+  - protocol: tcp
+    service: unknown-tcp-23198
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23201)
+  - protocol: tcp
+    service: unknown-tcp-23201
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23227)
+  - protocol: tcp
+    service: unknown-tcp-23227
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23237)
+  - protocol: tcp
+    service: unknown-tcp-23237
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23244)
+  - protocol: tcp
+    service: unknown-tcp-23244
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23245)
+  - protocol: tcp
+    service: unknown-tcp-23245
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23253)
+  - protocol: tcp
+    service: unknown-tcp-23253
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23258)
+  - protocol: tcp
+    service: unknown-tcp-23258
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23286)
+  - protocol: tcp
+    service: unknown-tcp-23286
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23377)
+  - protocol: tcp
+    service: unknown-tcp-23377
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23384)
+  - protocol: tcp
+    service: unknown-tcp-23384
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23523)
+  - protocol: tcp
+    service: unknown-tcp-23523
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23524)
+  - protocol: tcp
+    service: unknown-tcp-23524
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23530)
+  - protocol: tcp
+    service: unknown-tcp-23530
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23531)
+  - protocol: tcp
+    service: unknown-tcp-23531
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23553)
+  - protocol: tcp
+    service: unknown-tcp-23553
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23554)
+  - protocol: tcp
+    service: unknown-tcp-23554
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23556)
+  - protocol: tcp
+    service: unknown-tcp-23556
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23557)
+  - protocol: tcp
+    service: unknown-tcp-23557
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23616)
+  - protocol: tcp
+    service: unknown-tcp-23616
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23617)
+  - protocol: tcp
+    service: unknown-tcp-23617
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23618)
+  - protocol: tcp
+    service: unknown-tcp-23618
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23641)
+  - protocol: tcp
+    service: unknown-tcp-23641
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23757)
+  - protocol: tcp
+    service: unknown-tcp-23757
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23758)
+  - protocol: tcp
+    service: unknown-tcp-23758
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23779)
+  - protocol: tcp
+    service: unknown-tcp-23779
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23780)
+  - protocol: tcp
+    service: unknown-tcp-23780
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23831)
+  - protocol: tcp
+    service: unknown-tcp-23831
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (23833)
+  - protocol: tcp
+    service: unknown-tcp-23833
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24423)
+  - protocol: tcp
+    service: unknown-tcp-24423
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24424)
+  - protocol: tcp
+    service: unknown-tcp-24424
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24425)
+  - protocol: tcp
+    service: unknown-tcp-24425
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24430)
+  - protocol: tcp
+    service: unknown-tcp-24430
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24441)
+  - protocol: tcp
+    service: unknown-tcp-24441
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24445)
+  - protocol: tcp
+    service: unknown-tcp-24445
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24446)
+  - protocol: tcp
+    service: unknown-tcp-24446
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24447)
+  - protocol: tcp
+    service: unknown-tcp-24447
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24474)
+  - protocol: tcp
+    service: unknown-tcp-24474
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24475)
+  - protocol: tcp
+    service: unknown-tcp-24475
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24493)
+  - protocol: tcp
+    service: unknown-tcp-24493
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24496)
+  - protocol: tcp
+    service: unknown-tcp-24496
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24501)
+  - protocol: tcp
+    service: unknown-tcp-24501
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24502)
+  - protocol: tcp
+    service: unknown-tcp-24502
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24503)
+  - protocol: tcp
+    service: unknown-tcp-24503
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24521)
+  - protocol: tcp
+    service: unknown-tcp-24521
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24523)
+  - protocol: tcp
+    service: unknown-tcp-24523
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24524)
+  - protocol: tcp
+    service: unknown-tcp-24524
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24712)
+  - protocol: tcp
+    service: unknown-tcp-24712
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24965)
+  - protocol: tcp
+    service: unknown-tcp-24965
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24966)
+  - protocol: tcp
+    service: unknown-tcp-24966
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (24967)
+  - protocol: tcp
+    service: unknown-tcp-24967
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25066)
+  - protocol: tcp
+    service: unknown-tcp-25066
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25067)
+  - protocol: tcp
+    service: unknown-tcp-25067
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25080)
+  - protocol: tcp
+    service: unknown-tcp-25080
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25206)
+  - protocol: tcp
+    service: unknown-tcp-25206
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25207)
+  - protocol: tcp
+    service: unknown-tcp-25207
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25256)
+  - protocol: tcp
+    service: unknown-tcp-25256
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25275)
+  - protocol: tcp
+    service: unknown-tcp-25275
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25281)
+  - protocol: tcp
+    service: unknown-tcp-25281
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25301)
+  - protocol: tcp
+    service: unknown-tcp-25301
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25302)
+  - protocol: tcp
+    service: unknown-tcp-25302
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25332)
+  - protocol: tcp
+    service: unknown-tcp-25332
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25345)
+  - protocol: tcp
+    service: unknown-tcp-25345
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25361)
+  - protocol: tcp
+    service: unknown-tcp-25361
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25368)
+  - protocol: tcp
+    service: unknown-tcp-25368
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25381)
+  - protocol: tcp
+    service: unknown-tcp-25381
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25396)
+  - protocol: tcp
+    service: unknown-tcp-25396
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25734)
+  - protocol: tcp
+    service: unknown-tcp-25734
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25735)
+  - protocol: tcp
+    service: unknown-tcp-25735
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (25738)
+  - protocol: tcp
+    service: unknown-tcp-25738
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (26041)
+  - protocol: tcp
+    service: unknown-tcp-26041
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (26479)
+  - protocol: tcp
+    service: unknown-tcp-26479
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (26480)
+  - protocol: tcp
+    service: unknown-tcp-26480
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (26481)
+  - protocol: tcp
+    service: unknown-tcp-26481
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27293)
+  - protocol: tcp
+    service: unknown-tcp-27293
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27311)
+  - protocol: tcp
+    service: unknown-tcp-27311
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27334)
+  - protocol: tcp
+    service: unknown-tcp-27334
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27398)
+  - protocol: tcp
+    service: unknown-tcp-27398
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27406)
+  - protocol: tcp
+    service: unknown-tcp-27406
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27418)
+  - protocol: tcp
+    service: unknown-tcp-27418
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27424)
+  - protocol: tcp
+    service: unknown-tcp-27424
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27434)
+  - protocol: tcp
+    service: unknown-tcp-27434
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27437)
+  - protocol: tcp
+    service: unknown-tcp-27437
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27438)
+  - protocol: tcp
+    service: unknown-tcp-27438
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27455)
+  - protocol: tcp
+    service: unknown-tcp-27455
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27703)
+  - protocol: tcp
+    service: unknown-tcp-27703
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27704)
+  - protocol: tcp
+    service: unknown-tcp-27704
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27720)
+  - protocol: tcp
+    service: unknown-tcp-27720
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27721)
+  - protocol: tcp
+    service: unknown-tcp-27721
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27754)
+  - protocol: tcp
+    service: unknown-tcp-27754
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27755)
+  - protocol: tcp
+    service: unknown-tcp-27755
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27758)
+  - protocol: tcp
+    service: unknown-tcp-27758
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27759)
+  - protocol: tcp
+    service: unknown-tcp-27759
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27780)
+  - protocol: tcp
+    service: unknown-tcp-27780
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27781)
+  - protocol: tcp
+    service: unknown-tcp-27781
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27909)
+  - protocol: tcp
+    service: unknown-tcp-27909
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27910)
+  - protocol: tcp
+    service: unknown-tcp-27910
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (27991)
+  - protocol: tcp
+    service: unknown-tcp-27991
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (28114)
+  - protocol: tcp
+    service: unknown-tcp-28114
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (28121)
+  - protocol: tcp
+    service: unknown-tcp-28121
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (28122)
+  - protocol: tcp
+    service: unknown-tcp-28122
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (28934)
+  - protocol: tcp
+    service: unknown-tcp-28934
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (29375)
+  - protocol: tcp
+    service: unknown-tcp-29375
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (29396)
+  - protocol: tcp
+    service: unknown-tcp-29396
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (29461)
+  - protocol: tcp
+    service: unknown-tcp-29461
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (29468)
+  - protocol: tcp
+    service: unknown-tcp-29468
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (29478)
+  - protocol: tcp
+    service: unknown-tcp-29478
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (29484)
+  - protocol: tcp
+    service: unknown-tcp-29484
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (29497)
+  - protocol: tcp
+    service: unknown-tcp-29497
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (29515)
+  - protocol: tcp
+    service: unknown-tcp-29515
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (29639)
+  - protocol: tcp
+    service: unknown-tcp-29639
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39883)
+  - protocol: tcp
+    service: unknown-tcp-39883
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39894)
+  - protocol: tcp
+    service: unknown-tcp-39894
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39896)
+  - protocol: tcp
+    service: unknown-tcp-39896
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39918)
+  - protocol: tcp
+    service: unknown-tcp-39918
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39921)
+  - protocol: tcp
+    service: unknown-tcp-39921
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39929)
+  - protocol: tcp
+    service: unknown-tcp-39929
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39932)
+  - protocol: tcp
+    service: unknown-tcp-39932
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39967)
+  - protocol: tcp
+    service: unknown-tcp-39967
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39970)
+  - protocol: tcp
+    service: unknown-tcp-39970
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39977)
+  - protocol: tcp
+    service: unknown-tcp-39977
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39980)
+  - protocol: tcp
+    service: unknown-tcp-39980
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39982)
+  - protocol: tcp
+    service: unknown-tcp-39982
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (39985)
+  - protocol: tcp
+    service: unknown-tcp-39985
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40000)
+  - protocol: tcp
+    service: unknown-tcp-40000
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40006)
+  - protocol: tcp
+    service: unknown-tcp-40006
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40012)
+  - protocol: tcp
+    service: unknown-tcp-40012
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40014)
+  - protocol: tcp
+    service: unknown-tcp-40014
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40015)
+  - protocol: tcp
+    service: unknown-tcp-40015
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40019)
+  - protocol: tcp
+    service: unknown-tcp-40019
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40021)
+  - protocol: tcp
+    service: unknown-tcp-40021
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40045)
+  - protocol: tcp
+    service: unknown-tcp-40045
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40059)
+  - protocol: tcp
+    service: unknown-tcp-40059
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40061)
+  - protocol: tcp
+    service: unknown-tcp-40061
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40102)
+  - protocol: tcp
+    service: unknown-tcp-40102
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40106)
+  - protocol: tcp
+    service: unknown-tcp-40106
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40119)
+  - protocol: tcp
+    service: unknown-tcp-40119
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40130)
+  - protocol: tcp
+    service: unknown-tcp-40130
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40139)
+  - protocol: tcp
+    service: unknown-tcp-40139
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40184)
+  - protocol: tcp
+    service: unknown-tcp-40184
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40256)
+  - protocol: tcp
+    service: unknown-tcp-40256
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40332)
+  - protocol: tcp
+    service: unknown-tcp-40332
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (41389)
+  - protocol: tcp
+    service: unknown-tcp-41389
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (41391)
+  - protocol: tcp
+    service: unknown-tcp-41391
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42174)
+  - protocol: tcp
+    service: unknown-tcp-42174
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42188)
+  - protocol: tcp
+    service: unknown-tcp-42188
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42215)
+  - protocol: tcp
+    service: unknown-tcp-42215
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42222)
+  - protocol: tcp
+    service: unknown-tcp-42222
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42233)
+  - protocol: tcp
+    service: unknown-tcp-42233
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42238)
+  - protocol: tcp
+    service: unknown-tcp-42238
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42254)
+  - protocol: tcp
+    service: unknown-tcp-42254
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42277)
+  - protocol: tcp
+    service: unknown-tcp-42277
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42605)
+  - protocol: tcp
+    service: unknown-tcp-42605
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (42606)
+  - protocol: tcp
+    service: unknown-tcp-42606
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (43800)
+  - protocol: tcp
+    service: unknown-tcp-43800
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (43801)
+  - protocol: tcp
+    service: unknown-tcp-43801
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44178)
+  - protocol: tcp
+    service: unknown-tcp-44178
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44179)
+  - protocol: tcp
+    service: unknown-tcp-44179
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44180)
+  - protocol: tcp
+    service: unknown-tcp-44180
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44241)
+  - protocol: tcp
+    service: unknown-tcp-44241
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44242)
+  - protocol: tcp
+    service: unknown-tcp-44242
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44243)
+  - protocol: tcp
+    service: unknown-tcp-44243
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44259)
+  - protocol: tcp
+    service: unknown-tcp-44259
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44260)
+  - protocol: tcp
+    service: unknown-tcp-44260
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44265)
+  - protocol: tcp
+    service: unknown-tcp-44265
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44266)
+  - protocol: tcp
+    service: unknown-tcp-44266
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44276)
+  - protocol: tcp
+    service: unknown-tcp-44276
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44282)
+  - protocol: tcp
+    service: unknown-tcp-44282
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44283)
+  - protocol: tcp
+    service: unknown-tcp-44283
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44284)
+  - protocol: tcp
+    service: unknown-tcp-44284
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44307)
+  - protocol: tcp
+    service: unknown-tcp-44307
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44308)
+  - protocol: tcp
+    service: unknown-tcp-44308
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44614)
+  - protocol: tcp
+    service: unknown-tcp-44614
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44773)
+  - protocol: tcp
+    service: unknown-tcp-44773
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (44774)
+  - protocol: tcp
+    service: unknown-tcp-44774
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (45057)
+  - protocol: tcp
+    service: unknown-tcp-45057
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (45058)
+  - protocol: tcp
+    service: unknown-tcp-45058
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (45168)
+  - protocol: tcp
+    service: unknown-tcp-45168
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (45261)
+  - protocol: tcp
+    service: unknown-tcp-45261
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46276)
+  - protocol: tcp
+    service: unknown-tcp-46276
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46286)
+  - protocol: tcp
+    service: unknown-tcp-46286
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46290)
+  - protocol: tcp
+    service: unknown-tcp-46290
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46291)
+  - protocol: tcp
+    service: unknown-tcp-46291
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46292)
+  - protocol: tcp
+    service: unknown-tcp-46292
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46293)
+  - protocol: tcp
+    service: unknown-tcp-46293
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46296)
+  - protocol: tcp
+    service: unknown-tcp-46296
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46328)
+  - protocol: tcp
+    service: unknown-tcp-46328
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46335)
+  - protocol: tcp
+    service: unknown-tcp-46335
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46346)
+  - protocol: tcp
+    service: unknown-tcp-46346
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46353)
+  - protocol: tcp
+    service: unknown-tcp-46353
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46368)
+  - protocol: tcp
+    service: unknown-tcp-46368
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (46397)
+  - protocol: tcp
+    service: unknown-tcp-46397
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48295)
+  - protocol: tcp
+    service: unknown-tcp-48295
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48296)
+  - protocol: tcp
+    service: unknown-tcp-48296
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48297)
+  - protocol: tcp
+    service: unknown-tcp-48297
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48299)
+  - protocol: tcp
+    service: unknown-tcp-48299
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48309)
+  - protocol: tcp
+    service: unknown-tcp-48309
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48310)
+  - protocol: tcp
+    service: unknown-tcp-48310
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48311)
+  - protocol: tcp
+    service: unknown-tcp-48311
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48330)
+  - protocol: tcp
+    service: unknown-tcp-48330
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48375)
+  - protocol: tcp
+    service: unknown-tcp-48375
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48382)
+  - protocol: tcp
+    service: unknown-tcp-48382
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48389)
+  - protocol: tcp
+    service: unknown-tcp-48389
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48395)
+  - protocol: tcp
+    service: unknown-tcp-48395
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48411)
+  - protocol: tcp
+    service: unknown-tcp-48411
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48412)
+  - protocol: tcp
+    service: unknown-tcp-48412
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48413)
+  - protocol: tcp
+    service: unknown-tcp-48413
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48423)
+  - protocol: tcp
+    service: unknown-tcp-48423
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48424)
+  - protocol: tcp
+    service: unknown-tcp-48424
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48437)
+  - protocol: tcp
+    service: unknown-tcp-48437
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48450)
+  - protocol: tcp
+    service: unknown-tcp-48450
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48452)
+  - protocol: tcp
+    service: unknown-tcp-48452
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48453)
+  - protocol: tcp
+    service: unknown-tcp-48453
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48460)
+  - protocol: tcp
+    service: unknown-tcp-48460
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (48461)
+  - protocol: tcp
+    service: unknown-tcp-48461
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6360)
+  - protocol: tcp
+    service: unknown-tcp-6360
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6363)
+  - protocol: tcp
+    service: unknown-tcp-6363
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6387)
+  - protocol: tcp
+    service: unknown-tcp-6387
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6438)
+  - protocol: tcp
+    service: unknown-tcp-6438
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6440)
+  - protocol: tcp
+    service: unknown-tcp-6440
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6448)
+  - protocol: tcp
+    service: unknown-tcp-6448
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6452)
+  - protocol: tcp
+    service: unknown-tcp-6452
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6482)
+  - protocol: tcp
+    service: unknown-tcp-6482
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6483)
+  - protocol: tcp
+    service: unknown-tcp-6483
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6485)
+  - protocol: tcp
+    service: unknown-tcp-6485
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6489)
+  - protocol: tcp
+    service: unknown-tcp-6489
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6497)
+  - protocol: tcp
+    service: unknown-tcp-6497
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6505)
+  - protocol: tcp
+    service: unknown-tcp-6505
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6506)
+  - protocol: tcp
+    service: unknown-tcp-6506
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6507)
+  - protocol: tcp
+    service: unknown-tcp-6507
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6508)
+  - protocol: tcp
+    service: unknown-tcp-6508
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6510)
+  - protocol: tcp
+    service: unknown-tcp-6510
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6515)
+  - protocol: tcp
+    service: unknown-tcp-6515
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6520)
+  - protocol: tcp
+    service: unknown-tcp-6520
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6534)
+  - protocol: tcp
+    service: unknown-tcp-6534
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6542)
+  - protocol: tcp
+    service: unknown-tcp-6542
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6547)
+  - protocol: tcp
+    service: unknown-tcp-6547
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6552)
+  - protocol: tcp
+    service: unknown-tcp-6552
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6553)
+  - protocol: tcp
+    service: unknown-tcp-6553
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6555)
+  - protocol: tcp
+    service: unknown-tcp-6555
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6562)
+  - protocol: tcp
+    service: unknown-tcp-6562
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6564)
+  - protocol: tcp
+    service: unknown-tcp-6564
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6566)
+  - protocol: tcp
+    service: unknown-tcp-6566
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6567)
+  - protocol: tcp
+    service: unknown-tcp-6567
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6571)
+  - protocol: tcp
+    service: unknown-tcp-6571
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6585)
+  - protocol: tcp
+    service: unknown-tcp-6585
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6587)
+  - protocol: tcp
+    service: unknown-tcp-6587
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6597)
+  - protocol: tcp
+    service: unknown-tcp-6597
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6779)
+  - protocol: tcp
+    service: unknown-tcp-6779
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (6780)
+  - protocol: tcp
+    service: unknown-tcp-6780
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8400)
+  - protocol: tcp
+    service: unknown-tcp-8400
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8485)
+  - protocol: tcp
+    service: unknown-tcp-8485
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8486)
+  - protocol: tcp
+    service: unknown-tcp-8486
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8487)
+  - protocol: tcp
+    service: unknown-tcp-8487
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8654)
+  - protocol: tcp
+    service: unknown-tcp-8654
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8672)
+  - protocol: tcp
+    service: unknown-tcp-8672
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8719)
+  - protocol: tcp
+    service: unknown-tcp-8719
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8723)
+  - protocol: tcp
+    service: unknown-tcp-8723
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8732)
+  - protocol: tcp
+    service: unknown-tcp-8732
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8748)
+  - protocol: tcp
+    service: unknown-tcp-8748
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8769)
+  - protocol: tcp
+    service: unknown-tcp-8769
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8781)
+  - protocol: tcp
+    service: unknown-tcp-8781
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8904)
+  - protocol: tcp
+    service: unknown-tcp-8904
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8905)
+  - protocol: tcp
+    service: unknown-tcp-8905
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8908)
+  - protocol: tcp
+    service: unknown-tcp-8908
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (8910)
+  - protocol: tcp
+    service: unknown-tcp-8910
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org

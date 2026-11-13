@@ -1,0 +1,160 @@
+# What this case study assumes: everything the two dataset files do not
+# record and the policies still need. `assumptions.py` applies it -- to a copy
+# of the loot (loot-assumed/; loot-ossec/ stays the measured record) and to
+# def/ -- and nothing else in the example encodes knowledge from outside the
+# data. Every entry says where it comes from and why it holds, so it can be
+# argued with.
+#
+# The evidence is firru-os-baselines (stock installs, measured) and the
+# capture's own night window (03-06 19:00 - 03-07 08:00), which is clean by
+# schedule rather than by the dataset's Label column: Label marks red-team
+# hosts, and nothing here may be decided by it.
+
+# --- Dynamic port ranges ------------------------------------------------------
+# Synthesis drops a listener in its host's dynamic range as a client socket the
+# snapshot caught; loot-diff and audit pair and collapse such ports the same
+# way. The archive records no host's range. Written into the loot as
+# metadata.ephemeral, with metadata.ephemeral_source naming the entry.
+
+dynamic_ranges:
+
+  linux:
+    tcp: 32768-60999
+    udp: 32768-60999
+    source: firru-os-baselines, all 102 Linux runs
+    why: >
+      The kernel default, and the same on every Linux run the baselines hold:
+      Ubuntu 22.04.5, 24.04 and 26.04.1, Debian 12 and 13, AlmaLinux 9.8 and
+      10.2, Fedora 44. LSPR24's Linux hosts are Ubuntu 20.04 to 23.10, Debian
+      12 and AlmaLinux 8; 22.04 and Debian 12 are measured directly, and
+      nothing in a stock install of the others changes the sysctl.
+
+  windows:
+    tcp: 49152-65535
+    udp: 49152-65535
+    source: firru-os-baselines, 19 of the 20 Windows runs that record it
+    why: >
+      The Vista-and-later default, measured on stock Windows 10 19045, Windows
+      11 and Server 2019, 2022 and 2025, as a workgroup host, a domain member
+      and a domain controller. LSPR24's Windows hosts are Windows 10 19045,
+      Windows 11 22000 and Server 2022 20348. The one run that differs is
+      Exchange, below.
+
+  hosts:
+    mail:
+      tcp: 6005-64325
+      udp: 49152-64325
+      source: firru-os-baselines win2022-std-desktop-member-exchange-g3
+      why: >
+        An Exchange server: its loot lists MSExchangeDelivery,
+        MSExchangeMailboxAssistants and w3wp listeners. Exchange setup moves
+        the TCP range to 6005-64325 and leaves UDP at 49152 (the stock
+        Exchange install shows exactly that), so the Windows default would be
+        wrong for this host and only for it.
+
+# --- Windows listeners ----------------------------------------------------------
+# The netstat check is a Unix rootcheck. Windows sockets come only from
+# syscollector's dbsync_ports, a stream of changes: a service that stayed up
+# all week emits nothing, so the 8 Windows hosts carry 35 sockets between them.
+# Each is filled in as the stock install of its role, plus the layers its
+# traffic shows. A filled-in listener is flagged `inferred` and names its run;
+# an observed one wins where both exist.
+#
+#   <host>:
+#     base:    a baseline run, all of its listeners
+#     layers:  runs whose listeners beyond `minus` are added (what enabling
+#              that one service adds on a stock install)
+#     why:     the evidence
+#
+# `assumptions.py --flows night.jsonl` checks it: an inferred port that never
+# answered, and an answering port nothing explains, are both reported.
+
+windows:
+
+  dc1:
+    base: win2022-std-desktop-dc-g3k
+    layers:
+      - {run: win2022-std-desktop-ssh-g2, minus: win2022-std-desktop-public-g2}
+      - {run: win2022-std-desktop-rds-g2, minus: win2022-std-desktop-public-g2, only: [tcp/3389, udp/3389]}
+    why: >
+      Server 2022 Datacenter (osinfo) and the beg domain controller (inventory,
+      and lsass on 3268/3269 in its own loot). SSH and RDP both answered in the
+      capture. From the RD Session Host run only the RDP listener is taken,
+      since that is what enabling Remote Desktop adds.
+
+  dc2:
+    base: win2022-std-desktop-dc-g3k
+    layers:
+      - {run: win2022-std-desktop-ssh-g2, minus: win2022-std-desktop-public-g2}
+      - {run: win2022-std-desktop-rds-g2, minus: win2022-std-desktop-public-g2, only: [tcp/3389, udp/3389]}
+    why: >
+      The second beg domain controller (inventory); the same answering ports as
+      dc1 on DNS, Kerberos, LDAP, the Global Catalog and ADWS, and on SSH and
+      RDP.
+
+  adcs-beg:
+    base: win2022-std-desktop-member-g3
+    layers:
+      - {run: win2022-std-desktop-ca-g2, minus: win2022-std-desktop-dc-g3k}
+      - {run: win2022-std-desktop-ssh-g2, minus: win2022-std-desktop-public-g2}
+      - {run: win2022-std-desktop-rds-g2, minus: win2022-std-desktop-public-g2, only: [tcp/3389, udp/3389]}
+    why: >
+      The beg certificate authority (inventory name), a domain member: none of
+      the directory ports answered there. The baselines' CA run is a CA on a
+      domain controller, so the CA is taken as what it adds over a stock DC,
+      on top of a stock member server. HTTP for the CRL and the RPC endpoint
+      mapper answered, and SSH and RDP.
+
+  mail:
+    base: win2022-std-desktop-member-exchange-g3
+    layers:
+      - {run: win2022-std-desktop-ssh-g2, minus: win2022-std-desktop-public-g2}
+      - {run: win2022-std-desktop-rds-g2, minus: win2022-std-desktop-public-g2, only: [tcp/3389, udp/3389]}
+    why: >
+      Server 2022 Datacenter running Exchange (osinfo, and the MSExchange
+      processes in its loot); SMTP, submission, HTTPS and WinRM answered, as on
+      the stock Exchange install, and SSH and RDP.
+
+  ws1-baf01: &workstation
+    base: win11-pro-26300-member-g3
+    layers:
+      - {run: win11-pro-26300-public-openssh-g2, minus: win11-pro-26300-public-g2}
+      - {run: win11-pro-26300-public-rdp-g2, minus: win11-pro-26300-public-g2}
+      - {run: win11-pro-26300-public-winrm-g2, minus: win11-pro-26300-public-g2}
+    why: >
+      A domain-joined workstation (inventory). The nearest baseline is Windows
+      11 Pro 26300 as a domain member; LSPR24's are Windows 10 19045 and
+      Windows 11 22000 Enterprise N; stock Windows 10 Pro 19045, Windows 11
+      LTSC 26100 and Windows 11 Pro 26300 listen on exactly the same ports
+      (the three -public-g2 runs). SSH, RDP and WinRM
+      answered on the workstations, each a layer measured on its own.
+
+  ws1-beg01: *workstation
+  ws1-beg02: *workstation
+  ws2-beg01: *workstation
+
+# --- Management sources -----------------------------------------------------
+# Synthesis names a management term's sources as the zone's green-team token
+# plus MGMT_HOSTS, the blue team's own access. The capture identifies the first
+# (<ZONE>_GT_OTHER, from the organiser label on its traffic) and not the second.
+
+mgmt_hosts:
+  addresses:
+    - 100.96.5.1        # fw1-baf
+    - 100.97.5.62
+    - 100.98.5.60
+  source: the night window, SSH and RDP flows that got an answer
+  why: >
+    28 sources got an answer on SSH or RDP overnight. 25 are the green team's
+    hosts, which the inventory names already; the interior ones reach 26 hosts
+    each on both ports all night, administration as well as scoring, so the
+    green-team token on a management term is the administrators' path too. The
+    other three are these. fw1-baf, the DMZ firewall's own address, reached
+    adfs and wap on SSH and RDP 1,800 times each: administration routed
+    through the firewall, whose real sources sit behind its NAT and cannot be
+    named from here. 100.97.5.62 and 100.98.5.60 are exterior addresses with
+    no asset behind them, 9 flows and 1. Over all windows, 173 internal
+    sources reached SSH or RDP somewhere: users, and lateral movement from
+    inside the zones, which the red-team label does not mark because the
+    hosts doing it are the blue team's own. Not management, so the night
+    window is the bound.

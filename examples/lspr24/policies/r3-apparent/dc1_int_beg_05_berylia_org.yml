@@ -1,0 +1,65 @@
+metadata:
+  host: dc1
+  zone: beg_int
+  provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: ANY
+    comment: every one of 4 sources was answered
+  - name: allow-tcp-DNS-TCP
+    protocol: tcp
+    destination-port: DNS-TCP
+    action: accept
+    source-address: ANY
+    comment: every one of 32 sources was answered
+  - name: allow-tcp-KERBEROS-TCP
+    protocol: tcp
+    destination-port: KERBEROS-TCP
+    action: accept
+    source-address: ANY
+    comment: 28 sources answered, 1 not
+  - name: allow-tcp-LDAP-TCP
+    protocol: tcp
+    destination-port: LDAP-TCP
+    action: accept
+    source-address: ANY
+    comment: 35 sources answered, 1 not
+  - name: allow-tcp-LDAPS
+    protocol: tcp
+    destination-port: LDAPS
+    action: accept
+    source-address: ANY
+    comment: every one of 9 sources was answered
+  - name: allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    action: accept
+    source-address: ANY
+    comment: every one of 59 sources was answered
+  - name: allow-udp-KERBEROS-UDP
+    protocol: udp
+    destination-port: KERBEROS-UDP
+    action: accept
+    source-address: ANY
+    comment: every one of 2 sources was answered
+  - name: allow-udp-NTP
+    protocol: udp
+    destination-port: NTP
+    action: accept
+    source-address: ANY
+    comment: every one of 15 sources was answered
+  - name: allow-udp-LDAP-UDP
+    protocol: udp
+    destination-port: LDAP-UDP
+    action: accept
+    source-address: ANY
+    comment: 26 sources answered, 3 not
+  - name: drop-ANY
+    action: deny

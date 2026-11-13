@@ -1,0 +1,567 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49670,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "spoolsv.exe",
+        "pid": 2500,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49670,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "spoolsv.exe",
+        "pid": 2500,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-ssh-g2",
+      "port": 22,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\OpenSSH\\sshd.exe\"",
+        "exe": "C:\\Program Files\\OpenSSH\\sshd.exe",
+        "name": "sshd",
+        "pid": "2328",
+        "services": [
+          "sshd"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-ssh-g2",
+      "port": 22,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\OpenSSH\\sshd.exe\"",
+        "exe": "C:\\Program Files\\OpenSSH\\sshd.exe",
+        "name": "sshd",
+        "pid": "2328",
+        "services": [
+          "sshd"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-ca-g2",
+      "port": 80,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-ca-g2",
+      "port": 80,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 135,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "880",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 135,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "880",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "192.168.150.173/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 139,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 445,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 445,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 5985,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 5985,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 47001,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 47001,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 123,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k LocalService -s W32Time",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "720",
+        "services": [
+          "W32Time"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 123,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k LocalService -s W32Time",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "720",
+        "services": [
+          "W32Time"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "192.168.150.173/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 137,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "192.168.150.173/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 138,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 5353,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1116",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 5353,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1116",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 5355,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1116",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-g3",
+      "port": 5355,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1116",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "111",
+    "annotationfile": null,
+    "assumed": [
+      "dynamic_ranges",
+      "windows"
+    ],
+    "collected_at": "2024-03-07T11:04:41",
+    "ephemeral": {
+      "tcp": [
+        49152,
+        65535
+      ],
+      "udp": [
+        49152,
+        65535
+      ]
+    },
+    "ephemeral_source": "assumed: firru-os-baselines, 19 of the 20 Windows runs that record it",
+    "hostname": "adcs-beg",
+    "ip": "10.5.12.18",
+    "listenfile": "wazuh syscollector dbsync_ports (union, partial)",
+    "os": "windows"
+  }
+}

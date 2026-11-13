@@ -1,0 +1,598 @@
+# =============================================================================
+# services.yml — canonical services: protocols that are not Windows-specific
+#
+# Named by protocol, not by OS or vendor, so a Linux, BSD or Windows policy can
+# use the same name. Each entry's "# Source:" gives the defining RFC (or IANA
+# registration) and, where KB832017 lists the port, the Windows service that
+# uses it. Windows-only services, and everything Samba shares with Windows
+# (NetBIOS, SMB, AD Global Catalog), are in windows-services.yml.
+#
+# NAME-LEGACY marks a port that should not be open on a current estate; the
+# "# LEGACY:" line says why.
+#
+# "# Owner:" names the units/processes/services that identify an entry; it
+# settles ports two names claim (COCKPIT/PROMETHEUS on 9090). "# Expect:"
+# lists the usual implementations of a name no one process identifies (HTTP:
+# nginx, apache2...). Anything else serving the port is reported in the
+# synthesized term as an unexpected owner. See firru/owners.py.
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # DNS
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 1035; Windows: KB832017: DNS Server; Internet Connection Firewall/Internet Connection Sharing
+  # Expect: processes=named,unbound,dnsmasq,systemd-resolve,coredns,pdns_server,pdns_recursor,knotd,kresd,dns units=systemd-resolved.service
+  DNS-UDP:
+    - port: 53
+      protocol: udp
+      comment: >
+        Standard resolver queries, DC Locator SRV lookups
+        (_ldap._tcp.dc._msdcs.<domain>), and dynamic DNS registration.
+        Primary transport; falls back to TCP for responses > 512 bytes.
+
+  # Source: RFC 1035, RFC 7766; Windows: KB832017: DNS Server; Internet Connection Firewall/Internet Connection Sharing
+  # Expect: processes=named,unbound,dnsmasq,systemd-resolve,coredns,pdns_server,pdns_recursor,knotd,kresd,dns units=systemd-resolved.service
+  DNS-TCP:
+    - port: 53
+      protocol: tcp
+      comment: >
+        Large responses (DNSSEC, big SRV sets) and zone transfers
+        (AXFR/IXFR). Required between DCs for conditional forwarder
+        resolution across trust boundaries.
+
+  # ---------------------------------------------------------------------------
+  # NTP
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 5905; Windows: KB832017: Windows Time
+  NTP:
+    - port: 123
+      protocol: udp
+      comment: >
+        Windows Time (W32Time). Domain members sync from their DC, DCs from
+        the PDC emulator, the PDC emulator from an external source.
+
+  # ---------------------------------------------------------------------------
+  # Kerberos
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 4120; Windows: KB832017: Kerberos Key Distribution Center
+  KERBEROS-TCP:
+    - port: 88
+      protocol: tcp
+      comment: >
+        Used when the Kerberos packet exceeds UDP MTU (~1500 bytes; common
+        with large PACs or many group memberships). In cross-forest or
+        unidirectional trust scenarios, inter-realm referral tickets traverse
+        this port from the trusting DC toward the trusted DC.
+
+  # Source: RFC 4120; Windows: KB832017: Kerberos Key Distribution Center
+  KERBEROS-UDP:
+    - port: 88
+      protocol: udp
+      comment: >
+        Default transport for AS-REQ / TGS-REQ exchanges. Automatically falls
+        back to TCP for large tickets. Allow both UDP and TCP 88 in all DC
+        rulesets.
+
+  # Source: RFC 3244; Windows: KB832017: Kerberos Key Distribution Center
+  KERBEROS-KPASSWD-UDP:
+    - port: 464
+      protocol: udp
+      comment: >
+        Used when a user or computer account changes its domain password.
+        The KDC receives the change request and updates the AD password
+        attribute.
+
+  # Source: RFC 3244; Windows: KB832017: Kerberos Key Distribution Center
+  KERBEROS-KPASSWD-TCP:
+    - port: 464
+      protocol: tcp
+      comment: Fallback for large kpasswd messages. Same function as UDP 464.
+
+  # ---------------------------------------------------------------------------
+  # LDAP  (Global Catalog 3268/3269 is AD-specific: windows-services.yml)
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 4511; Windows: KB832017: Distributed File System Namespaces; Distributed File System Replication; Local Security Authority
+  LDAP-TCP:
+    - port: 389
+      protocol: tcp
+      comment: >
+        Directory queries, trust object resolution, DC Locator responses,
+        Netlogon DC discovery, SID/name resolution for trusted domain users,
+        and Group Policy LDAP queries. Core AD protocol.
+
+  # Source: RFC 4511 (CLDAP: RFC 1798); Windows: KB832017: Distributed File System Namespaces; Distributed File System Replication; Kerberos Key Distribution Center; Local Security Authority
+  LDAP-UDP:
+    - port: 389
+      protocol: udp
+      comment: >
+        DC Locator (DsGetDcName) sends UDP LDAP pings before falling back to
+        TCP. Also used by the Kerberos KDC and Netlogon for DC discovery.
+
+  # Source: IANA ldaps 636/tcp; Windows: KB832017: Local Security Authority
+  LDAPS:
+    - port: 636
+      protocol: tcp
+      comment: >
+        Required when LDAP signing/channel binding is enforced via GPO
+        (Domain Controller: LDAP server signing requirements = Require
+        signing). Also used by Offline Files and Roaming User Profiles.
+
+  # ---------------------------------------------------------------------------
+  # DHCP servers
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 2131; Windows: KB832017: DHCP Server; Internet Connection Firewall/Internet Connection Sharing
+  DHCP-SERVER:
+    - port: 67
+      protocol: udp
+      comment: >
+        Client DISCOVER/REQUEST broadcasts. Required on any segment where this
+        server provides leases (Windows DHCP Server, ISC dhcpd, Kea). On
+        Windows also used by Internet Connection Sharing (SharedAccess).
+
+  # Source: RFC 8415 section 7.2
+  DHCPV6-SERVER:
+    - port: 547
+      protocol: udp
+      comment: >
+        DHCPv6 server. KB832017 has no DHCPv6 entry; the Windows DHCP Server
+        role's own firewall rule (DHCP Server v6, UDP-In) opens 546 and 547.
+
+  # ---------------------------------------------------------------------------
+  # FTP
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 959; Windows: KB832017: Application Layer Gateway Service; FTP Publishing Service
+  FTP-CONTROL:
+    - port: 21
+      protocol: tcp
+      comment: >
+        IIS FTP Publishing Service and the ALG FTP plugin for active FTP NAT
+        traversal. The Windows ALG redirects matching traffic to a loopback
+        port in 3000–5000 for NAT rewriting.
+
+  # Source: RFC 959; Windows: KB832017: FTP Publishing Service
+  FTP-DATA:
+    - port: 20
+      protocol: tcp
+      comment: >
+        IIS FTP in active mode only. Most modern FTP clients use passive mode
+        (PASV) which uses a dynamic high port. Prefer passive FTP across any
+        routed boundary.
+
+  # ---------------------------------------------------------------------------
+  # IPsec
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 7296; Windows: KB832017: Local Security Authority
+  IPSEC-ISAKMP:
+    - port: 500
+      protocol: udp
+      comment: >
+        Required when AD or inter-DC traffic is protected by IPsec policy, or
+        when L2TP/IPsec VPN tunnels carry replication or trust traffic between
+        sites.
+
+  # Source: RFC 3948; Windows: KB832017: Local Security Authority
+  IPSEC-NAT-T:
+    - port: 4500
+      protocol: udp
+      comment: >
+        Required when IPsec-protected traffic passes through a NAT device.
+        Encapsulates ESP inside UDP so NAT state can be maintained.
+
+  # ---------------------------------------------------------------------------
+  # RADIUS
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 2865; Windows: KB832017: Internet Authentication Service
+  RADIUS-AUTH:
+    - port: 1812
+      protocol: udp
+      comment: >
+        RADIUS Authentication (RFC 2865) — standard port. Used by Windows NPS,
+        FreeRADIUS, and any RFC-compliant RADIUS server.
+
+  # Source: RFC 2866; Windows: KB832017: Internet Authentication Service
+  RADIUS-ACCT:
+    - port: 1813
+      protocol: udp
+      comment: >
+        RADIUS Accounting (RFC 2866) — session start/stop/interim records
+        from NAS devices to the RADIUS server.
+
+  # Source: RFC 2865 section 3 (1645 is the pre-RFC port); Windows: KB832017: Internet Authentication Service
+  # LEGACY: pre-RFC 2865 port; RFC 2865 assigns 1812
+  RADIUS-AUTH-LEGACY:
+    - port: 1645
+      protocol: udp
+      comment: >
+        Legacy RADIUS Authentication — original pre-RFC port. Only open if
+        older NAS equipment requires it.
+
+  # Source: RFC 2866 (1646 is the pre-RFC port); Windows: KB832017: Internet Authentication Service
+  # LEGACY: pre-RFC 2866 port; RFC 2866 assigns 1813
+  RADIUS-ACCT-LEGACY:
+    - port: 1646
+      protocol: udp
+      comment: >
+        Legacy RADIUS Accounting — original pre-RFC accounting port. Only
+        open if older NAS equipment requires it.
+
+  # ---------------------------------------------------------------------------
+  # Web
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 9110; Windows: KB832017: World Wide Web Publishing Service
+  # Expect: processes=nginx,apache2,httpd,caddy,haproxy,traefik,envoy,lighttpd,varnishd,system services=w3svc
+  HTTP:
+    - port: 80
+      protocol: tcp
+
+  # Source: RFC 9110; Windows: KB832017: HTTP SSL; World Wide Web Publishing Service
+  # Expect: processes=nginx,apache2,httpd,caddy,haproxy,traefik,envoy,lighttpd,varnishd,system services=w3svc
+  HTTPS:
+    - port: 443
+      protocol: tcp
+
+  # ---------------------------------------------------------------------------
+  # Mail / News
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 1939; Windows: KB832017: Exchange Server; Microsoft POP3 Service
+  POP3:
+    - port: 110
+      protocol: tcp
+      comment: >
+        Microsoft POP3 Service (Windows Server 2003 SBS). Generic protocol;
+        same port used by Dovecot, Courier, etc. on Linux.
+
+  # Source: RFC 3977; Windows: KB832017: Network News Transfer Protocol
+  NNTP:
+    - port: 119
+      protocol: tcp
+      comment: >
+        Windows Server 2003 NNTPSVC. Legacy; not present in modern Windows
+        Server. Same port used by INN and other NNTP servers on Linux.
+
+  # Source: RFC 4642; Windows: KB832017: Network News Transfer Protocol
+  NNTPS:
+    - port: 563
+      protocol: tcp
+      comment: NNTP over SSL — legacy; same caveats as plain NNTP.
+
+  # ---------------------------------------------------------------------------
+  # Discovery
+  # ---------------------------------------------------------------------------
+
+  # Source: UPnP Device Architecture 2.0; Windows: KB832017: SSDP Discovery Service
+  SSDP:
+    - port: 1900
+      protocol: udp
+
+  # ---------------------------------------------------------------------------
+  # Remote access
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 4253
+  # Expect: processes=sshd,dropbear units=ssh.socket,sshd.socket,ssh.service,sshd.service
+  SSH:
+    - port: 22
+      protocol: tcp
+      comment: Secure Shell.
+
+  # Source: RFC 6143 (IANA rfb)
+  VNC:
+    - port: 5900
+      protocol: tcp
+      comment: RFB display :0; display :N listens on 5900+N.
+
+  # ---------------------------------------------------------------------------
+  # Mail
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 5321
+  SMTP:
+    - port: 25
+      protocol: tcp
+      comment: Server-to-server mail relay.
+
+  # Source: RFC 6409
+  SMTP-SUBMIT:
+    - port: 587
+      protocol: tcp
+      comment: Message submission from clients (STARTTLS).
+
+  # Source: RFC 8314 (submissions)
+  SMTPS:
+    - port: 465
+      protocol: tcp
+      comment: Message submission over implicit TLS.
+
+  # Source: RFC 9051
+  IMAP:
+    - port: 143
+      protocol: tcp
+
+  # Source: RFC 8314
+  IMAPS:
+    - port: 993
+      protocol: tcp
+
+  # Source: RFC 8314
+  POP3S:
+    - port: 995
+      protocol: tcp
+
+  # ---------------------------------------------------------------------------
+  # Link-local name resolution  (not routed; firru scopes these to the link)
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 6762
+  MDNS:
+    - port: 5353
+      protocol: udp
+      comment: Multicast DNS (avahi, systemd-resolved, Bonjour, Windows 10+).
+
+  # Source: RFC 4795
+  LLMNR:
+    - port: 5355
+      protocol: udp
+    - port: 5355
+      protocol: tcp
+      comment: Link-Local Multicast Name Resolution (Windows, systemd-resolved).
+
+  # ---------------------------------------------------------------------------
+  # Management and logging
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 3417
+  SNMP:
+    - port: 161
+      protocol: udp
+      comment: Agent; requests from the manager.
+
+  # Source: RFC 3417
+  SNMP-TRAP:
+    - port: 162
+      protocol: udp
+      comment: Manager; traps and informs from agents.
+
+  # Source: RFC 5426 (UDP); TCP 514 is common practice (RFC 6587)
+  SYSLOG:
+    - port: 514
+      protocol: udp
+    - port: 514
+      protocol: tcp
+
+  # Source: RFC 5425
+  SYSLOG-TLS:
+    - port: 6514
+      protocol: tcp
+
+  # Source: RFC 8010 section 8.1.1 (IANA ipp 631/tcp, 631/udp)
+  # Owner: processes=cupsd,cups-browsed units=cups.socket
+  IPP:
+    - port: 631
+      protocol: tcp
+    - port: 631
+      protocol: udp
+      comment: >
+        UDP is CUPS browsing (cups-browsed), which a stock desktop install
+        listens on world-wide; printing itself is TCP.
+
+  # Source: RFC 1833 (IANA sunrpc 111/tcp, 111/udp)
+  # Owner: processes=rpcbind units=rpcbind.socket
+  RPCBIND:
+    - port: 111
+      protocol: tcp
+    - port: 111
+      protocol: udp
+
+  # Source: RFC 1350
+  TFTP:
+    - port: 69
+      protocol: udp
+      comment: >
+        Transfers continue on ephemeral ports; stateful firewalls need a helper.
+
+  # ---------------------------------------------------------------------------
+  # DHCP clients
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 2131
+  DHCP-CLIENT:
+    - port: 68
+      protocol: udp
+      comment: Server replies to the client port.
+
+  # Source: RFC 8415 section 7.2
+  DHCPV6-CLIENT:
+    - port: 546
+      protocol: udp
+
+  # ---------------------------------------------------------------------------
+  # Routing and overlays
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 4271
+  BGP:
+    - port: 179
+      protocol: tcp
+
+  # Source: RFC 5881 (control 3784, echo 3785)
+  BFD:
+    - port: 3784
+      protocol: udp
+    - port: 3785
+      protocol: udp
+      comment: Single-hop BFD.
+
+  # Source: RFC 5883
+  BFD-MULTIHOP:
+    - port: 4784
+      protocol: udp
+
+  # Source: RFC 7348
+  VXLAN:
+    - port: 4789
+      protocol: udp
+
+  # ---------------------------------------------------------------------------
+  # Real-time communication
+  # ---------------------------------------------------------------------------
+
+  # Source: RFC 8489, RFC 8656
+  STUN-TURN:
+    - port: 3478
+      protocol: udp
+    - port: 3478
+      protocol: tcp
+      comment: Relayed media then uses the TURN server's relay port range.
+
+  # Source: RFC 8489, RFC 8656
+  STUN-TURN-TLS:
+    - port: 5349
+      protocol: tcp
+
+  # Source: RFC 6120
+  XMPP-CLIENT:
+    - port: 5222
+      protocol: tcp
+
+  # Source: RFC 6120
+  XMPP-SERVER:
+    - port: 5269
+      protocol: tcp
+
+  # ---------------------------------------------------------------------------
+  # Web, extra
+  # ---------------------------------------------------------------------------
+
+  # Source: IANA http-alt
+  # Expect: processes=nginx,apache2,httpd,caddy,haproxy,traefik,envoy,lighttpd,varnishd,system services=w3svc
+  HTTP-ALT:
+    - port: 8080
+      protocol: tcp
+      comment: Application servers and proxies; a name, not a protocol guarantee.
+
+  # Source: RFC 9114 (HTTP/3 over QUIC, RFC 9000)
+  HTTPS-UDP:
+    - port: 443
+      protocol: udp
+
+  # ---------------------------------------------------------------------------
+  # Databases and caches
+  # ---------------------------------------------------------------------------
+
+  # Source: IANA mysql
+  MYSQL:
+    - port: 3306
+      protocol: tcp
+      comment: MySQL and MariaDB classic protocol.
+
+  # Source: IANA mysqlx
+  MYSQL-X:
+    - port: 33060
+      protocol: tcp
+      comment: >
+        MySQL X Protocol; MySQL 8 enables it by default, MariaDB does not ship it.
+
+  # Source: IANA postgresql
+  POSTGRES:
+    - port: 5432
+      protocol: tcp
+
+  # Source: IANA redis
+  REDIS:
+    - port: 6379
+      protocol: tcp
+
+  # Source: IANA mongodb
+  MONGODB:
+    - port: 27017
+      protocol: tcp
+
+  # Source: IANA memcache
+  MEMCACHED:
+    - port: 11211
+      protocol: tcp
+      comment: >
+        UDP 11211 is disabled by default since memcached 1.5.6 (amplification).
+
+  # ---------------------------------------------------------------------------
+  # Messaging
+  # ---------------------------------------------------------------------------
+
+  # Source: IANA mqtt; OASIS MQTT 5.0 section 4.2
+  MQTT:
+    - port: 1883
+      protocol: tcp
+
+  # Source: IANA secure-mqtt; OASIS MQTT 5.0 section 4.2
+  MQTT-TLS:
+    - port: 8883
+      protocol: tcp
+
+  # Source: IANA amqp
+  AMQP:
+    - port: 5672
+      protocol: tcp
+      comment: RabbitMQ, Qpid, ActiveMQ.
+
+  # Source: IANA amqps
+  AMQPS:
+    - port: 5671
+      protocol: tcp
+
+  # ---------------------------------------------------------------------------
+  # Industrial control  (never from outside the control network)
+  # ---------------------------------------------------------------------------
+
+  # Source: IANA mbap
+  MODBUS:
+    - port: 502
+      protocol: tcp
+      comment: Modbus/TCP; no authentication.
+
+  # Source: IANA iec-104
+  IEC-104:
+    - port: 2404
+      protocol: tcp
+      comment: IEC 60870-5-104 telecontrol.
+
+  # Source: IANA iso-tsap (RFC 1006)
+  IEC-61850-MMS:
+    - port: 102
+      protocol: tcp
+      comment: MMS over ISO-on-TCP; Siemens S7 uses the same port.
+
+  # Source: IANA dnp
+  DNP3:
+    - port: 20000
+      protocol: tcp
+    - port: 20000
+      protocol: udp
+
+  # Source: IANA opcua-tcp
+  OPC-UA:
+    - port: 4840
+      protocol: tcp
+
+  # ---------------------------------------------------------------------------
+  # Host management
+  # ---------------------------------------------------------------------------
+
+  # Source: cockpit-project.org guide (cockpit.socket ListenStream=9090)
+  # Owner: units=cockpit.socket processes=cockpit-ws,cockpit-tls
+  COCKPIT:
+    - port: 9090
+      protocol: tcp
+      comment: >
+        Same port as PROMETHEUS. firewalld on EL pre-opens it even when cockpit is not installed.

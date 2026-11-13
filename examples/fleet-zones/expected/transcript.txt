@@ -1,0 +1,393 @@
+
+== 1. collect: one loot-host directory per host (here: stock installs)
+
+== 2. normalize, then what the site changed (configure.py: a stand-in for configured hosts)
+  db1: 1 ports → stock/db1.json
+  dc1: 7568 ports → stock/dc1.json
+  files1: 29 ports → stock/files1.json
+  jump1: 3 ports → stock/jump1.json
+  mail1: 11 ports → stock/mail1.json
+  ns1: 2 ports → stock/ns1.json
+  print1: 29 ports → stock/print1.json
+  smb1: 2 ports → stock/smb1.json
+  web1: 3 ports → stock/web1.json
+  ws1: 35 ports → stock/ws1.json
+  ws2: 4 ports → stock/ws2.json
+  ws3: 6 ports → stock/ws3.json
+old: stock/  (12 hosts)
+new: loot/  (12 hosts)
+identity: port
+
+hosts in both: 12   only in old: 0   only in new: 0
+
+per-host listener changes:
+  db1
+    + tcp/22  sshd  [world-listen]
+    + tcp/5432  postgres  [world-listen]
+  mail1
+    + tcp/22  sshd  [world-listen]
+  ns1
+    + tcp/53  named  [world-listen]
+    + udp/53  named  [world-listen]
+  smb1
+    + tcp/445  smbd  [world-listen]
+  web1
+    + tcp/22  sshd  [world-listen]
+    + tcp/443  apache2  [world-listen]
+
+8 added, 0 removed, 0 changed process, across 5 hosts
+
+== 3. definitions: firru's services, the site's networks, zones and source policy
+
+== 4. synthesize, review, accept
+Source policy: ./def/heuristics.py
+  db1: 3 terms
+  dc1: 23 terms
+  files1: 10 terms
+  jump1: 2 terms
+  mail1: 7 terms
+  ns1: 3 terms
+  print1: 10 terms
+  smb1: 2 terms
+  web1: 4 terms
+  ws1: 8 terms
+  ws2: 1 terms
+  ws3: 3 terms
+# --- Unknown services: review and add to def/services.yml ---
+services:
+  TCP_5040:  # Procs: {'svchost': 1} | Hosts: ['ws1']
+    - port: 5040
+      protocol: tcp
+  UDP_5050: # Procs: {'svchost': 1} | Hosts: ['ws1']
+    - port: 5050
+      protocol: udp
+
+== 5. traffic, and what tighten makes of it
+Reading flows from flows.jsonl (single pass, 12 hosts) …
+  1637 flows in 109 conversations, 1637 involving a known host
+Host: db1  IPs: ['10.20.2.13', '2001:db8:20:2::d']
+  ingress: 507 flows across 2 service buckets
+  egress:  0 flows across 0 service buckets
+Host: dc1  IPs: ['10.20.2.10', '2001:db8:20:2::a']
+  ingress: 392 flows across 5 service buckets
+  egress:  0 flows across 0 service buckets
+Host: files1  IPs: ['10.20.2.11', '2001:db8:20:2::b']
+  ingress: 92 flows across 2 service buckets
+  egress:  0 flows across 0 service buckets
+Host: jump1  IPs: ['10.20.9.10', '2001:db8:20:9::a']
+  ingress: 0 flows across 0 service buckets
+  egress:  24 flows across 2 service buckets
+Host: mail1  IPs: ['10.20.1.11', '2001:db8:20:1::b']
+  ingress: 47 flows across 2 service buckets
+  egress:  0 flows across 0 service buckets
+Host: ns1  IPs: ['10.20.1.12', '2001:db8:20:1::c']
+  ingress: 187 flows across 2 service buckets
+  egress:  0 flows across 0 service buckets
+Host: print1  IPs: ['10.20.2.12', '2001:db8:20:2::c']
+  ingress: 0 flows across 0 service buckets
+  egress:  0 flows across 0 service buckets
+Host: smb1  IPs: ['10.20.2.14', '2001:db8:20:2::e']
+  ingress: 4 flows across 1 service buckets
+  egress:  0 flows across 0 service buckets
+Host: web1  IPs: ['10.20.1.10', '2001:db8:20:1::a']
+  ingress: 408 flows across 3 service buckets
+  egress:  500 flows across 1 service buckets
+Host: ws1  IPs: ['10.20.3.21', '2001:db8:20:3::15']
+  ingress: 0 flows across 0 service buckets
+  egress:  160 flows across 4 service buckets
+Host: ws2  IPs: ['10.20.3.22', '2001:db8:20:3::16']
+  ingress: 0 flows across 0 service buckets
+  egress:  163 flows across 5 service buckets
+Host: ws3  IPs: ['10.20.3.23', '2001:db8:20:3::17']
+  ingress: 0 flows across 0 service buckets
+  egress:  160 flows across 4 service buckets
+Written: policies/tightened/db1.yml  (2 changed, 0 dead, 0 group suggestions)
+Written: policies/tightened/dc1.yml  (4 changed, 6 dead, 0 group suggestions)
+Written: policies/tightened/dc1.blocked.yml  (1 would-be-blocked flows)
+Written: policies/tightened/dc1.dead.yml  (6 dead-rule candidates)
+Written: policies/tightened/files1.yml  (1 changed, 6 dead, 0 group suggestions)
+Written: policies/tightened/files1.blocked.yml  (1 would-be-blocked flows)
+Written: policies/tightened/files1.dead.yml  (6 dead-rule candidates)
+Written: policies/tightened/jump1.yml  (0 changed, 1 dead, 0 group suggestions)
+Written: policies/tightened/jump1.dead.yml  (1 dead-rule candidates)
+Written: policies/tightened/mail1.yml  (1 changed, 0 dead, 0 group suggestions)
+Written: policies/tightened/ns1.yml  (1 changed, 0 dead, 0 group suggestions)
+Written: policies/tightened/print1.yml  (0 changed, 6 dead, 0 group suggestions)
+Written: policies/tightened/print1.dead.yml  (6 dead-rule candidates)
+Written: policies/tightened/smb1.yml  (1 changed, 0 dead, 0 group suggestions)
+Written: policies/tightened/web1.yml  (1 changed, 0 dead, 0 group suggestions)
+Written: policies/tightened/ws1.yml  (0 changed, 5 dead, 0 group suggestions)
+Written: policies/tightened/ws1.dead.yml  (5 dead-rule candidates)
+Written: policies/tightened/ws2.yml  (0 changed, 1 dead, 0 group suggestions)
+Written: policies/tightened/ws2.dead.yml  (1 dead-rule candidates)
+Written: policies/tightened/ws3.yml  (0 changed, 3 dead, 0 group suggestions)
+Written: policies/tightened/ws3.dead.yml  (3 dead-rule candidates)
+dc1:
+  narrowed (4) — fewer peers, safe to apply (--narrow):
+    > allow-tcp-KERBEROS-TCP   tcp/88                 source ANY -> CLIENTS_HOSTS  observed (120 flows)
+    > allow-tcp-LDAP-TCP       tcp/389                source ANY -> CLIENTS_HOSTS  observed (180 flows)
+    > allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135                source ANY -> CLIENTS_HOSTS  observed (30 flows)
+    > allow-tcp-WINDOWS-SMB    tcp/445                source ANY -> CLIENTS_HOSTS  observed (60 flows)
+  postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
+db1:
+  narrowed (1) — fewer peers, safe to apply (--narrow):
+    > allow-tcp-POSTGRES       tcp/5432               source ANY -> [web1, ws2]  observed (503 flows)
+  postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
+web1:
+  added (1) — new relations, safe to apply:
+    + allow-tcp-POSTGRES       out tcp/5432           dest db1
+
+== 6. accept the narrowings, then one decision tighten cannot make
+policies/pol/db1.yml: allow-tcp-POSTGRES source -> [web1, ws2]
+policies/pol/dc1.yml: allow-tcp-KERBEROS-TCP source -> CLIENTS_HOSTS
+policies/pol/dc1.yml: allow-tcp-LDAP-TCP source -> CLIENTS_HOSTS
+policies/pol/dc1.yml: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER source -> CLIENTS_HOSTS
+policies/pol/dc1.yml: allow-tcp-WINDOWS-SMB source -> CLIENTS_HOSTS
+policies/pol/files1.yml: allow-tcp-WINDOWS-SMB source -> CLIENTS_HOSTS
+policies/pol/db1.yml: allow-tcp-POSTGRES source -> web1
+
+== 7. merge: one policy per zone, for the firewall between them
+  note: db1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: dc1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: files1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: jump1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: mail1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: ns1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: print1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: smb1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: web1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: ws1 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: ws2 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+  note: ws3 egress has real terms but still ends open (allow-ANY); the zone terminal now decides what the host left undecided
+
+============================================================
+Policy warnings for zone SERVERS:
+  Policy inconsistency in SERVERS for proto=tcp port=WINDOWS-RPC-ENDPOINT-MAPPER:
+    CLIENTS_HOSTS: ['dc1']
+    ANY: ['files1', 'print1']
+  Consider whether all hosts should use the same source restriction.
+  Policy inconsistency in SERVERS for proto=tcp port=WINDOWS-SMB:
+    CLIENTS_HOSTS: ['dc1', 'files1']
+    ANY: ['print1', 'smb1']
+  Consider whether all hosts should use the same source restriction.
+============================================================
+
+Written zones/pol/SERVERS.yml (25 allow, 3 intra-zone deny, ghost-drop, log-drop terminal — 5 hosts)
+Written zones/pol/MGMT.yml (3 allow, 1 intra-zone deny, ghost-drop, log-drop terminal — 1 hosts)
+Written zones/pol/DMZ.yml (13 allow, 0 intra-zone deny, ghost-drop, log-drop terminal — 3 hosts)
+Written zones/pol/CLIENTS.yml (5 allow, 3 intra-zone deny, ghost-drop, log-drop terminal — 3 hosts)
+metadata:
+  host: SERVERS
+  zone: SERVERS
+  hosts:
+  - db1
+  - dc1
+  - files1
+  - print1
+  - smb1
+filters:
+- header:
+    targets:
+      nftables: mixed input
+  terms:
+  - name: allow-icmp-any-shared
+    protocol: icmp
+    action: accept
+    destination-address: SERVERS_HOSTS
+  - name: allow-icmpv6-any-shared
+    protocol: icmpv6
+    action: accept
+    destination-address: SERVERS_HOSTS
+  - name: allow-tcp-SSH-shared
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - jump1
+    destination-address: db1 smb1
+  - name: db1-allow-tcp-POSTGRES
+    protocol: tcp
+    destination-port: POSTGRES
+    action: accept
+    source-address: web1
+    destination-address: db1
+  - name: db1-allow-udp-DHCP-CLIENT
+    protocol: udp
+    destination-port: DHCP-CLIENT
+    action: accept
+    source-address: ANY_V4
+    destination-address: db1
+  - name: dc1-allow-tcp-DNS-TCP
+    protocol: tcp
+    destination-port: DNS-TCP
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: dc1-allow-tcp-KERBEROS-TCP
+    protocol: tcp
+    destination-port: KERBEROS-TCP
+    action: accept
+    source-address: CLIENTS_HOSTS
+    destination-address: dc1
+  - name: dc1-allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+    protocol: tcp
+    destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+    action: accept
+    source-address: CLIENTS_HOSTS
+    destination-address: dc1
+  - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER-from-ANY-shared
+    protocol: tcp
+    destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+    action: accept
+    source-address: ANY
+    destination-address: files1 print1
+  - name: dc1-allow-tcp-LDAP-TCP
+    protocol: tcp
+    destination-port: LDAP-TCP
+    action: accept
+    source-address: CLIENTS_HOSTS
+    destination-address: dc1
+  - name: allow-tcp-WINDOWS-SMB-from-CLIENTS_HOSTS-shared
+    protocol: tcp
+    destination-port: WINDOWS-SMB
+    action: accept
+    source-address: CLIENTS_HOSTS
+    destination-address: dc1 files1
+  - name: allow-tcp-WINDOWS-SMB-from-ANY-shared
+    protocol: tcp
+    destination-port: WINDOWS-SMB
+    action: accept
+    source-address: ANY
+    destination-address: print1 smb1
+  - name: dc1-allow-tcp-KERBEROS-KPASSWD-TCP
+    protocol: tcp
+    destination-port: KERBEROS-KPASSWD-TCP
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: dc1-allow-tcp-WINDOWS-RPC-HTTPS
+    protocol: tcp
+    destination-port: WINDOWS-RPC-HTTPS
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: dc1-allow-tcp-LDAPS
+    protocol: tcp
+    destination-port: LDAPS
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: dc1-allow-tcp-LDAP-GC
+    protocol: tcp
+    destination-port: LDAP-GC
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: dc1-allow-tcp-LDAP-GC-SSL
+    protocol: tcp
+    destination-port: LDAP-GC-SSL
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: allow-tcp-WINRM-HTTP-shared
+    protocol: tcp
+    destination-port: WINRM-HTTP
+    action: accept
+    source-address:
+    - jump1
+    destination-address: dc1 files1 print1
+  - name: dc1-allow-tcp-WINDOWS-AD-ADWS
+    protocol: tcp
+    destination-port: WINDOWS-AD-ADWS
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED-shared
+    protocol: tcp
+    destination-port: WINDOWS-WINRM-UNCONFIGURED
+    action: accept
+    source-address: ANY
+    destination-address: dc1 files1 print1
+  - name: dc1-allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: dc1-allow-udp-KERBEROS-UDP
+    protocol: udp
+    destination-port: KERBEROS-UDP
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: allow-udp-NTP-shared
+    protocol: udp
+    destination-port: NTP
+    action: accept
+    source-address: ANY
+    destination-address: dc1 files1 print1
+  - name: dc1-allow-udp-LDAP-UDP
+    protocol: udp
+    destination-port: LDAP-UDP
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: dc1-allow-udp-KERBEROS-KPASSWD-UDP
+    protocol: udp
+    destination-port: KERBEROS-KPASSWD-UDP
+    action: accept
+    source-address: ANY
+    destination-address: dc1
+  - name: deny-ext-tcp-NETBIOS-SSN-LEGACY
+    action: deny
+    destination-address: dc1 files1 print1
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: NETBIOS-SSN-LEGACY
+  - name: deny-ext-udp-NETBIOS-DGM-LEGACY
+    action: deny
+    destination-address: dc1 files1 print1
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: NETBIOS-DGM-LEGACY
+  - name: deny-ext-udp-NETBIOS-NS-LEGACY
+    action: deny
+    destination-address: dc1 files1 print1
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: NETBIOS-NS-LEGACY
+  - name: drop-ghost-hosts
+    action: deny
+    destination-address: SERVERS
+    comment: 'Ghost host catch-all: drops traffic to IPs in SERVERS not matched by
+      any allow term above.  All legitimate hosts should appear in policies/pol/ and
+      be covered by explicit allow terms.'
+  - name: log-drop-ANY
+    action: deny
+    logging: true
+    comment: 'SETTLING: drop + log unmatched traffic to catch false positives. Promote
+      to drop (--terminal drop) when the log has been quiet.'
+
+== 8. compile: the hosts, and the zones
+out/hosts:
+db1.nft
+dc1.bat
+files1.bat
+jump1.nft
+mail1.nft
+ns1.nft
+print1.bat
+smb1.nft
+web1.nft
+ws1.bat
+ws2.nft
+ws3.nft
+
+out/zones:
+CLIENTS.nft
+DMZ.nft
+MGMT.nft
+SERVERS.nft

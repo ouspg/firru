@@ -1,0 +1,7 @@
+# ss-version: ss utility, iproute2-6.10.0
+# os: Fedora Linux 41 (Container Image)
+# flags: ss -tulnpe 
+Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                                                                     
+tcp   LISTEN 0      5            0.0.0.0:19001      0.0.0.0:*    users:(("plain",pid=25,fd=3))     ino:2396356 sk:7007 cgroup:/ <-> cgroup:/
+tcp   LISTEN 0      5            0.0.0.0:19002      0.0.0.0:*    users:(("my proc:x",pid=27,fd=3)) ino:2376474 sk:7008 cgroup:/ <-> cgroup:/
+tcp   LISTEN 0      5            0.0.0.0:19003      0.0.0.0:*    users:(("svc(1",pid=29,fd=3))     ino:2384263 sk:7009 cgroup:/ <-> cgroup:/

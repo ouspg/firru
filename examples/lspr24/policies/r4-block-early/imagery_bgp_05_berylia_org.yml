@@ -1,0 +1,102 @@
+# firru tighten output — review and copy changes to policies/pol/imagery_bgp_05_berylia_org.yml
+# Source suggestions changed: 3 | Dead rules: 0 | Group suggestions: 0
+metadata:
+  host: imagery
+  zone: bgp
+  variant: 'r4-block-early (learn file: night.jsonl) — services with no observed client
+    are removed, not merely narrowed'
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+
+# [auto] 1800 flows total | 1800 hits: BGP_GT_OTHER (100.98.5.59, 2a07:1182:5:30::59) | via: SSH/tcp/22
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: BGP_GT_OTHER      # was: BGP_GT
+
+# [auto] 3609 flows total | 3609 hits: BGP_GT_OTHER (2a07:1182:5:30::59, 100.98.5.59) | via: HTTP/tcp/80
+  - name: allow-tcp-HTTP
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: BGP_GT_OTHER      # was: ANY
+
+# [auto] 3598 flows total | 3598 hits: BGP_GT_OTHER (100.98.5.59, 2a07:1182:5:30::59) | via: HTTPS/tcp/443
+  - name: allow-tcp-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: BGP_GT_OTHER      # was: ANY
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-loopback
+    source-address: LOOPBACK
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmp
+    protocol: icmp
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmpv6
+    protocol: icmpv6
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: drop-ANY
+    action: deny
+    counter: drop-ANY
+
+- header:
+    targets:
+      nftables: mixed output
+  terms:
+  - name: allow-loopback
+    action: accept
+    source-address: LOOPBACK
+  - name: allow-icmp
+    action: accept
+    protocol: icmp
+  - name: allow-icmpv6
+    action: accept
+    protocol: icmpv6
+# [auto] 292 hits: bgp (2a07:1182:5:30::1) | 84 hits: core (fe80::250:56ff:fe89:a9cf) | 74 hits: BGP_GT_OTHER (2a07:1182:5:30::59)
+  - name: allow-icmpv6-ICMPV6
+    protocol: icmpv6
+    destination-address:
+    - BGP_GT_OTHER
+    - bgp
+    - core
+    action: accept
+# [auto] 4575 hits: EXTERNAL (100.100.108.30)
+  - name: allow-tcp-TCP_1514
+    protocol: tcp
+    destination-port: TCP_1514
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (4575 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 915 hits: EXTERNAL (100.100.108.30)
+  - name: allow-tcp-TCP_1515
+    protocol: tcp
+    destination-port: TCP_1515
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (915 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 7565 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+  - name: allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    comment: 'ANY covers 2 unresolved dst: 2 addresses in 2 blocks, widest /32: 2a07:1181:95:95::4/128
+      (4327 hits), 100.95.95.4/32 (3238 hits) -- 1 of 2 sit in one group, so a named
+      group would cover most of this'
+    action: accept
+# [auto] review terms above, then replace with deny-ANY when ready
+  - name: allow-ANY
+    action: accept

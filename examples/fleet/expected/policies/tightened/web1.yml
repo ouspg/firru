@@ -1,0 +1,59 @@
+# firru tighten output — review and copy changes to policies/pol/web1.yml
+# Source suggestions changed: 0 | Dead rules: 0 | Group suggestions: 0
+metadata:
+  host: web1
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] 434 flows total | 434 hits: EXTERNAL (198.51.100.104, 203.0.113.30, 203.0.113.144, 192.0.2.13 and 36 more) | via: HTTP/tcp/80
+# [auto] ANY covers 40 unresolved src: 40 addresses in 3 blocks, widest /24: 192.0.2.0/24 (15 src, 158 hits), 198.51.100.0/24 (11 src, 145 hits), 203.0.113.0/24 (14 src, 131 hits) -- 40 of 40 are private address space, so they belong in the inventory rather than behind ANY
+      - name: allow-tcp-HTTP
+        protocol: tcp
+        destination-port: HTTP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-DHCP-CLIENT
+        protocol: udp
+        destination-port: DHCP-CLIENT
+        action: accept
+        source-address: ANY_V4
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] no egress flows observed — placeholder kept
+      - name: allow-ANY
+        action: accept

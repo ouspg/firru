@@ -1,0 +1,168 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 500 hits | reason: port not in policy (49889,50227,50289,50801,52320,53246,55549,58331,58624,58638,63880,64164)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 481 hits | reason: port not in policy (49889,50227,50289,50801,52320,53246,55549,58331,58624,58638,63880,64164)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:20::30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 390 hits | reason: protocol not in policy (ipip)
+  - protocol: '4'
+    service: ipip
+    src_ip: 100.97.5.31
+    src_token: k8s-worker01_beg_05_berylia_org
+# 390 hits | reason: protocol not in policy (ipip)
+  - protocol: '4'
+    service: ipip
+    src_ip: 100.97.5.32
+    src_token: k8s-worker02_beg_05_berylia_org
+# 390 hits | reason: protocol not in policy (ipip)
+  - protocol: '4'
+    service: ipip
+    src_ip: 100.97.5.33
+    src_token: k8s-worker03_beg_05_berylia_org
+# 389 hits | reason: protocol not in policy (ipip)
+  - protocol: '4'
+    service: ipip
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 165 hits | reason: port not in policy (49889,50227,50289,50801,52320,53246,55549,58331,58624,58638,63880,64164)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:20::32
+    src_token: k8s-worker02_beg_05_berylia_org
+# 156 hits | reason: port not in policy (49889,50227,50289,50801,52320,53246,55549,58331,58624,58638,63880,64164)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 100.97.5.33
+    src_token: k8s-worker03_beg_05_berylia_org
+# 17 hits | reason: port not in policy (30076)
+  - protocol: tcp
+    service: K8S-NODEPORT
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 11 hits | reason: port not in policy (7195)
+  - protocol: tcp
+    service: CEPH-OSD
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 1559 hits | reason: port not in policy (10249)
+  - protocol: tcp
+    service: unknown-tcp-10249
+    src_ip: 100.97.5.32
+    src_token: k8s-worker02_beg_05_berylia_org
+# 387 hits | reason: port not in policy (9165)
+  - protocol: tcp
+    service: unknown-tcp-9165
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 386 hits | reason: port not in policy (11795)
+  - protocol: tcp
+    service: unknown-tcp-11795
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 386 hits | reason: port not in policy (41280)
+  - protocol: tcp
+    service: unknown-tcp-41280
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 314 hits | reason: port not in policy (49143)
+  - protocol: tcp
+    service: unknown-tcp-49143
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 185 hits | reason: port not in policy (29683)
+  - protocol: tcp
+    service: unknown-tcp-29683
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 185 hits | reason: port not in policy (44945)
+  - protocol: tcp
+    service: unknown-tcp-44945
+    src_ip: 2a07:1182:5:20::31
+    src_token: k8s-worker01_beg_05_berylia_org
+# 179 hits | reason: port not in policy (44327)
+  - protocol: tcp
+    service: unknown-tcp-44327
+    src_ip: 100.97.5.31
+    src_token: k8s-worker01_beg_05_berylia_org
+# 153 hits | reason: port not in policy (42765)
+  - protocol: tcp
+    service: unknown-tcp-42765
+    src_ip: 2a07:1182:5:20::33
+    src_token: k8s-worker03_beg_05_berylia_org
+# 147 hits | reason: port not in policy (38409)
+  - protocol: tcp
+    service: unknown-tcp-38409
+    src_ip: 2a07:1182:5:20::30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 140 hits | reason: port not in policy (48045)
+  - protocol: tcp
+    service: unknown-tcp-48045
+    src_ip: 100.97.5.32
+    src_token: k8s-worker02_beg_05_berylia_org
+# 131 hits | reason: port not in policy (46995)
+  - protocol: tcp
+    service: unknown-tcp-46995
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 20 hits | reason: port not in policy (22451)
+  - protocol: tcp
+    service: unknown-tcp-22451
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 16 hits | reason: port not in policy (15623)
+  - protocol: tcp
+    service: unknown-tcp-15623
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 16 hits | reason: port not in policy (20248)
+  - protocol: tcp
+    service: unknown-tcp-20248
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 16 hits | reason: port not in policy (34386)
+  - protocol: tcp
+    service: unknown-tcp-34386
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 16 hits | reason: port not in policy (41692)
+  - protocol: tcp
+    service: unknown-tcp-41692
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 15 hits | reason: port not in policy (13331)
+  - protocol: tcp
+    service: unknown-tcp-13331
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 15 hits | reason: port not in policy (48097)
+  - protocol: tcp
+    service: unknown-tcp-48097
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 13 hits | reason: port not in policy (17745)
+  - protocol: tcp
+    service: unknown-tcp-17745
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 11 hits | reason: port not in policy (4297)
+  - protocol: tcp
+    service: unknown-tcp-4297
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 9 hits | reason: port not in policy (14516)
+  - protocol: tcp
+    service: unknown-tcp-14516
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org
+# 9 hits | reason: port not in policy (6334)
+  - protocol: tcp
+    service: unknown-tcp-6334
+    src_ip: 100.97.5.30
+    src_token: k8s-control-plane_beg_05_berylia_org

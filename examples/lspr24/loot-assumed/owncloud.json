@@ -1,0 +1,452 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 629,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 891,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 139,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "smbd",
+        "pid": 857,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 139,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "smbd",
+        "pid": 857,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 891,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 445,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "smbd",
+        "pid": 857,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 445,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "smbd",
+        "pid": 857,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 6379,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "redis-server",
+        "pid": 728,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::1/128",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 6379,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "redis-server",
+        "pid": 728,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 629,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 742,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "100.97.5.8/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 742,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 742,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "2a07:1182:5:20::8/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 742,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 742,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::1/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 742,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fe80::250:56ff:fe89/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 742,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 137,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nmbd",
+        "pid": 800,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "100.97.5.63/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 137,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nmbd",
+        "pid": 800,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "100.97.5.8/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 137,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nmbd",
+        "pid": 800,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 138,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nmbd",
+        "pid": 800,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "100.97.5.63/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 138,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nmbd",
+        "pid": 800,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "100.97.5.8/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 138,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "nmbd",
+        "pid": 800,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "080",
+    "annotationfile": null,
+    "assumed": [
+      "dynamic_ranges"
+    ],
+    "collected_at": "2024-03-07T08:31:18",
+    "ephemeral": {
+      "tcp": [
+        32768,
+        60999
+      ],
+      "udp": [
+        32768,
+        60999
+      ]
+    },
+    "ephemeral_source": "assumed: firru-os-baselines, all 102 Linux runs",
+    "hostname": "owncloud",
+    "ip": "100.97.5.8",
+    "listenfile": "ossec rootcheck netstat",
+    "os": "linux"
+  }
+}

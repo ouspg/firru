@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor cruft
+*~
+\#*\#
+.\#*
+
+# Local data — firru ships no capture data
+*.jsonl
+*.pcap
+
+# Raw collection artifacts. Both are byte-identical to the fixtures already
+# extracted into tests/fixtures/ (netstat_macos26_*.txt, lsof_macos26_*.txt);
+# keeping the unpacked artifact as well would commit the same captures twice,
+# and firru/ is a package directory rather than a place for dumps.
+tmp/
+firru/macos-listeners/

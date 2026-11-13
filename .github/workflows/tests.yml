@@ -1,0 +1,30 @@
+# The test suite, on every push and pull request, on the oldest and a recent
+# Python firru supports, from a regular install of the dependencies (the
+# Aerleon fork comes from git).
+#
+# The examples' expected outputs (examples/check.sh) are not checked here: they
+# need a firru-os-baselines checkout, which this job cannot read while that
+# repository is private. Run check.sh locally before merging an output change.
+
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install
+        run: pip install '.[test]'
+      - name: Test
+        run: pytest -q

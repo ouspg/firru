@@ -1,0 +1,105 @@
+metadata:
+  host: k8s-control-plane
+  zone: beg
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 | IPv6 ::/0
+# [auto] unexpected owner: SSH no process attribution; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BEG_GT
+# [auto] IPv4 0.0.0.0/0 (bird) | IPv6 ::/0 (bird6)
+      - name: allow-tcp-BGP
+        protocol: tcp
+        destination-port: BGP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 100.97.5.30/32 (etcd)
+      - name: allow-tcp-ETCD-CLIENT
+        protocol: tcp
+        destination-port: ETCD-CLIENT
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv4 100.97.5.30/32 (etcd)
+      - name: allow-tcp-ETCD-PEER
+        protocol: tcp
+        destination-port: ETCD-PEER
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv6 ::/0 (kube-apiserver)
+      - name: allow-tcp-K8S-API-SERVER
+        protocol: tcp
+        destination-port: K8S-API-SERVER
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv4 100.97.5.30/32 (speaker)
+      - name: allow-tcp-METALLB-METRICS
+        protocol: tcp
+        destination-port: METALLB-METRICS
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv4 100.97.5.30/32 (speaker) | aliases: METALLB-MEMBERLIST,DOCKER-SWARM
+      - name: allow-tcp-METALLB-MEMBERLIST
+        protocol: tcp
+        destination-port: METALLB-MEMBERLIST
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv6 ::/0 (node)
+      - name: allow-tcp-NODE-EXPORTER
+        protocol: tcp
+        destination-port: NODE-EXPORTER
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (kubelet)
+      - name: allow-tcp-K8S-KUBELET
+        protocol: tcp
+        destination-port: K8S-KUBELET
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv6 ::/0 (kube-proxy)
+      - name: allow-tcp-K8S-KUBE-PROXY
+        protocol: tcp
+        destination-port: K8S-KUBE-PROXY
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv4 100.97.5.30/32 (speaker) | aliases: METALLB-MEMBERLIST,DOCKER-SWARM
+      - name: allow-udp-METALLB-MEMBERLIST
+        protocol: udp
+        destination-port: METALLB-MEMBERLIST
+        action: accept
+        source-address: ANY_V4
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

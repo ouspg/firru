@@ -1,0 +1,55 @@
+table inet filtering_policies {
+    chain allow-loopback {
+        ip saddr 127.0.0.0/8 ct state new accept
+        ip6 saddr ::1/128 ct state new accept
+    }
+    chain allow-icmp {
+        ip protocol icmp ct state new accept
+    }
+    chain allow-icmpv6 {
+        meta l4proto icmpv6 accept
+    }
+    chain allow-tcp-SSH {
+        ip saddr 10.20.9.10/32 tcp dport 22 ct state new accept
+        ip6 saddr 2001:db8:20:9::a/128 tcp dport 22 ct state new accept
+    }
+    chain allow-tcp-WINDOWS-SMB {
+        ip saddr 0.0.0.0/0 tcp dport 445 ct state new accept
+        ip6 saddr ::/0 tcp dport 445 ct state new accept
+    }
+    chain drop-ANY {
+        counter drop
+    }
+    chain root0 {
+        type filter hook input priority 0; policy drop;
+        ct state established,related accept
+        jump allow-loopback
+        jump allow-icmp
+        jump allow-icmpv6
+        jump allow-tcp-SSH
+        jump allow-tcp-WINDOWS-SMB
+        jump drop-ANY
+    }
+    chain allow-loopback {
+        ip saddr 127.0.0.0/8 ct state new accept
+        ip6 saddr ::1/128 ct state new accept
+    }
+    chain allow-icmp {
+        ip protocol icmp ct state new accept
+    }
+    chain allow-icmpv6 {
+        meta l4proto icmpv6 accept
+    }
+    chain allow-ANY {
+        ct state new accept
+    }
+    chain root1 {
+        type filter hook output priority 0; policy drop;
+        ct state established,related accept
+        jump allow-loopback
+        jump allow-icmp
+        jump allow-icmpv6
+        jump allow-ANY
+    }
+}
+

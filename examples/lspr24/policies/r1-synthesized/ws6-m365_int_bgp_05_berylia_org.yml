@@ -1,0 +1,60 @@
+metadata:
+  host: ws6-m365
+  zone: bgp_int
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv6 ::/0 (init)
+# [auto] unexpected owner: SSH served by init; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BGP_INT_GT
+# [auto] IPv6 ::/0 (xrdp)
+      - name: allow-tcp-RDP
+        protocol: tcp
+        destination-port: RDP
+        action: accept
+        source-address:
+          - BGP_INT_GT
+# [auto] IPv4 0.0.0.0/0 (avahi-daemon) | IPv6 ::/0 (avahi-daemon)
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

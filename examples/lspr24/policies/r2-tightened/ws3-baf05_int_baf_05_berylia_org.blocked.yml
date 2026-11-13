@@ -1,0 +1,38 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 900 hits | reason: port not in policy (445)
+  - protocol: tcp
+    service: WINDOWS-SMB
+    src_ip: 2a07:1182:5:11::250
+    src_token: BAF_INT_GT_OTHER
+# 2 hits | reason: port not in policy (52595,58336,58752)
+  - protocol: udp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (52595,58336,58752)
+  - protocol: udp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 10.5.11.3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (32903)
+  - protocol: udp
+    service: unknown-udp-32903
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (34638)
+  - protocol: udp
+    service: unknown-udp-34638
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (35732)
+  - protocol: udp
+    service: unknown-udp-35732
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org
+# 1 hits | reason: port not in policy (40399)
+  - protocol: udp
+    service: unknown-udp-40399
+    src_ip: 2a07:1182:5:11::2
+    src_token: dc1_int_baf_05_berylia_org

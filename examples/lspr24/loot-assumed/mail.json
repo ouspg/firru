@@ -1,0 +1,1696 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 55871,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "w3wp.exe",
+        "pid": 14004,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 55871,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "w3wp.exe",
+        "pid": 14004,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 62413,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "w3wp.exe",
+        "pid": 10300,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 62425,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "MSExchangeMailboxAssistants.exe",
+        "pid": 4948,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 62601,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "w3wp.exe",
+        "pid": 11316,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 62623,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "MSExchangeDelivery.exe",
+        "pid": 5848,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 64261,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "MSExchangeMailboxAssistants.exe",
+        "pid": 4948,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 64266,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "MSExchangeMailboxAssistants.exe",
+        "pid": 4948,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-ssh-g2",
+      "port": 22,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\OpenSSH\\sshd.exe\"",
+        "exe": "C:\\Program Files\\OpenSSH\\sshd.exe",
+        "name": "sshd",
+        "pid": "2328",
+        "services": [
+          "sshd"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-ssh-g2",
+      "port": 22,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\OpenSSH\\sshd.exe\"",
+        "exe": "C:\\Program Files\\OpenSSH\\sshd.exe",
+        "name": "sshd",
+        "pid": "2328",
+        "services": [
+          "sshd"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 25,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe",
+        "name": "MSExchangeFrontendTransport",
+        "pid": "4484",
+        "services": [
+          "MSExchangeFrontEndTransport"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 25,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe",
+        "name": "MSExchangeFrontendTransport",
+        "pid": "4484",
+        "services": [
+          "MSExchangeFrontEndTransport"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 80,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 80,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 81,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 81,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 135,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "868",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 135,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "868",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "192.168.150.130/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 139,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 443,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 443,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 444,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 444,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 445,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 445,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 465,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\edgetransport.exe\" -pipe:2412 -stopkey:Global\\ExchangeStopKey-a16f8941-8016-493e-8451-522a61eb3ce3 -resetkey:Global\\ExchangeResetKey-40980566-b043-4487-9707-a8fcf39234ca -readykey:Global\\ExchangeReadyKey-0812c750-e81a-429e-969f-798ecdc279a1 -hangkey:Global\\ExchangeHangKey-1eaf14ce-2af9-42e1-b8cc-f6a748477a61 -startUpProgressKey:Global\\ExchangeProgressKey-02f6433a-19d0-4582-bd59-faf74c3891d8 -workerListening",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\edgetransport.exe",
+        "name": "EdgeTransport",
+        "pid": "5216",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 465,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\edgetransport.exe\" -pipe:2412 -stopkey:Global\\ExchangeStopKey-a16f8941-8016-493e-8451-522a61eb3ce3 -resetkey:Global\\ExchangeResetKey-40980566-b043-4487-9707-a8fcf39234ca -readykey:Global\\ExchangeReadyKey-0812c750-e81a-429e-969f-798ecdc279a1 -hangkey:Global\\ExchangeHangKey-1eaf14ce-2af9-42e1-b8cc-f6a748477a61 -startUpProgressKey:Global\\ExchangeProgressKey-02f6433a-19d0-4582-bd59-faf74c3891d8 -workerListening",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\edgetransport.exe",
+        "name": "EdgeTransport",
+        "pid": "5216",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 475,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe",
+        "name": "MSExchangeDelivery",
+        "pid": "4380",
+        "services": [
+          "MSExchangeDelivery"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 475,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe",
+        "name": "MSExchangeDelivery",
+        "pid": "4380",
+        "services": [
+          "MSExchangeDelivery"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 476,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe",
+        "name": "MSExchangeDelivery",
+        "pid": "4380",
+        "services": [
+          "MSExchangeDelivery"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 476,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe",
+        "name": "MSExchangeDelivery",
+        "pid": "4380",
+        "services": [
+          "MSExchangeDelivery"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 477,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe",
+        "name": "MSExchangeDelivery",
+        "pid": "4380",
+        "services": [
+          "MSExchangeDelivery"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 477,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeDelivery.exe",
+        "name": "MSExchangeDelivery",
+        "pid": "4380",
+        "services": [
+          "MSExchangeDelivery"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 587,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe",
+        "name": "MSExchangeFrontendTransport",
+        "pid": "4484",
+        "services": [
+          "MSExchangeFrontEndTransport"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 587,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe",
+        "name": "MSExchangeFrontendTransport",
+        "pid": "4484",
+        "services": [
+          "MSExchangeFrontEndTransport"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 593,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "868",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 593,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "868",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 717,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe",
+        "name": "MSExchangeFrontendTransport",
+        "pid": "4484",
+        "services": [
+          "MSExchangeFrontEndTransport"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 717,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\MSExchangeFrontendTransport.exe",
+        "name": "MSExchangeFrontendTransport",
+        "pid": "4484",
+        "services": [
+          "MSExchangeFrontEndTransport"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 808,
+      "process": {
+        "cmdline": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\SMSvcHost.exe",
+        "exe": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\SMSvcHost.exe",
+        "name": "SMSvcHost",
+        "pid": "2464",
+        "services": [
+          "NetPipeActivator",
+          "NetTcpActivator",
+          "NetTcpPortSharing"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 808,
+      "process": {
+        "cmdline": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\SMSvcHost.exe",
+        "exe": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\SMSvcHost.exe",
+        "name": "SMSvcHost",
+        "pid": "2464",
+        "services": [
+          "NetPipeActivator",
+          "NetTcpActivator",
+          "NetTcpPortSharing"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 890,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Microsoft.Exchange.Directory.TopologyService.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Microsoft.Exchange.Directory.TopologyService.exe",
+        "name": "Microsoft.Exchange.Directory.TopologyService",
+        "pid": "3152",
+        "services": [
+          "MSExchangeADTopology"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 890,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Microsoft.Exchange.Directory.TopologyService.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Microsoft.Exchange.Directory.TopologyService.exe",
+        "name": "Microsoft.Exchange.Directory.TopologyService",
+        "pid": "3152",
+        "services": [
+          "MSExchangeADTopology"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 2525,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\edgetransport.exe\" -pipe:2412 -stopkey:Global\\ExchangeStopKey-a16f8941-8016-493e-8451-522a61eb3ce3 -resetkey:Global\\ExchangeResetKey-40980566-b043-4487-9707-a8fcf39234ca -readykey:Global\\ExchangeReadyKey-0812c750-e81a-429e-969f-798ecdc279a1 -hangkey:Global\\ExchangeHangKey-1eaf14ce-2af9-42e1-b8cc-f6a748477a61 -startUpProgressKey:Global\\ExchangeProgressKey-02f6433a-19d0-4582-bd59-faf74c3891d8 -workerListening",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\edgetransport.exe",
+        "name": "EdgeTransport",
+        "pid": "5216",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 2525,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\edgetransport.exe\" -pipe:2412 -stopkey:Global\\ExchangeStopKey-a16f8941-8016-493e-8451-522a61eb3ce3 -resetkey:Global\\ExchangeResetKey-40980566-b043-4487-9707-a8fcf39234ca -readykey:Global\\ExchangeReadyKey-0812c750-e81a-429e-969f-798ecdc279a1 -hangkey:Global\\ExchangeHangKey-1eaf14ce-2af9-42e1-b8cc-f6a748477a61 -startUpProgressKey:Global\\ExchangeProgressKey-02f6433a-19d0-4582-bd59-faf74c3891d8 -workerListening",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\edgetransport.exe",
+        "name": "EdgeTransport",
+        "pid": "5216",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3800,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3800,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3801,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\hostcontrollerservice.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\hostcontrollerservice.exe",
+        "name": "hostcontrollerservice",
+        "pid": "2380",
+        "services": [
+          "HostControllerService"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3801,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\hostcontrollerservice.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\hostcontrollerservice.exe",
+        "name": "hostcontrollerservice",
+        "pid": "2380",
+        "services": [
+          "HostControllerService"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3803,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\AdminNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\AdminNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\AdminNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "2316",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3803,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\AdminNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\AdminNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\AdminNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "2316",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3823,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\ResourceProfile\\contentengine\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\\Logs\\NodeRunner.log\" --applicationbase \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\ResourceProfile\\contentengine\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4424",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3823,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\ResourceProfile\\contentengine\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\\Logs\\NodeRunner.log\" --applicationbase \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\ResourceProfile\\contentengine\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4424",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3828,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\ResourceProfile\\contentengine\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\\Logs\\NodeRunner.log\" --applicationbase \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\ResourceProfile\\contentengine\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4424",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3828,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\ResourceProfile\\contentengine\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\ContentEngineNode1\\Logs\\NodeRunner.log\" --applicationbase \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\ResourceProfile\\contentengine\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4424",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3843,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\InteractionEngineNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\InteractionEngineNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\InteractionEngineNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4568",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3843,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\InteractionEngineNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\InteractionEngineNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\InteractionEngineNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4568",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3863,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4472",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3863,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4472",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3867,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4472",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3867,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4472",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3875,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4472",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 3875,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe\" --noderoot \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\" --addfrom \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Configuration\\Local\\Node.ini\" --tracelog \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\HostController\\Data\\Nodes\\Fsis\\IndexNode1\\Logs\\NodeRunner.log\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\Search\\Ceres\\Runtime\\1.0\\NodeRunner.exe",
+        "name": "noderunner",
+        "pid": "4472",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 5985,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 5985,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 6001,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\bin\\Microsoft.Exchange.RpcClientAccess.Service.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\bin\\Microsoft.Exchange.RpcClientAccess.Service.exe",
+        "name": "Microsoft.Exchange.RpcClientAccess.Service",
+        "pid": "4372",
+        "services": [
+          "MSExchangeRPC"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 6001,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\bin\\Microsoft.Exchange.RpcClientAccess.Service.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\bin\\Microsoft.Exchange.RpcClientAccess.Service.exe",
+        "name": "Microsoft.Exchange.RpcClientAccess.Service",
+        "pid": "4372",
+        "services": [
+          "MSExchangeRPC"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 64327,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\msexchangerepl.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\msexchangerepl.exe",
+        "name": "msexchangerepl",
+        "pid": "4668",
+        "services": [
+          "MSExchangeRepl"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 64327,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\msexchangerepl.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\msexchangerepl.exe",
+        "name": "msexchangerepl",
+        "pid": "4668",
+        "services": [
+          "MSExchangeRepl"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 64337,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\msexchangerepl.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\msexchangerepl.exe",
+        "name": "msexchangerepl",
+        "pid": "4668",
+        "services": [
+          "MSExchangeRepl"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 64337,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\msexchangerepl.exe\"",
+        "exe": "C:\\Program Files\\Microsoft\\Exchange Server\\V15\\Bin\\msexchangerepl.exe",
+        "name": "msexchangerepl",
+        "pid": "4668",
+        "services": [
+          "MSExchangeRepl"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 123,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k LocalService -s W32Time",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "524",
+        "services": [
+          "W32Time"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 123,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k LocalService -s W32Time",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "524",
+        "services": [
+          "W32Time"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "192.168.150.130/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 137,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "192.168.150.130/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 138,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 5353,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1700",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 5353,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1700",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 5355,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1700",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 5355,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1700",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-member-exchange-g3",
+      "port": 9050,
+      "process": {
+        "cmdline": "c:\\windows\\system32\\inetsrv\\w3wp.exe -ap \"MSExchangePowerShellAppPool\" -v \"v4.0\" -c \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\bin\\GenericAppPoolConfigWithGCServerEnabledFalse.config\" -a \\\\.\\pipe\\iisipmecb88855-8dd1-4834-ba12-74e6c59d33e1 -h \"C:\\inetpub\\temp\\apppools\\MSExchangePowerShellAppPool\\MSExchangePowerShellAppPool.config\" -w \"\" -m 0",
+        "exe": "c:\\windows\\system32\\inetsrv\\w3wp.exe",
+        "name": "w3wp",
+        "pid": "11236",
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "002",
+    "annotationfile": null,
+    "assumed": [
+      "dynamic_ranges",
+      "windows"
+    ],
+    "collected_at": "2024-03-07T13:51:47",
+    "ephemeral": {
+      "tcp": [
+        6005,
+        64325
+      ],
+      "udp": [
+        49152,
+        64325
+      ]
+    },
+    "ephemeral_source": "assumed: firru-os-baselines win2022-std-desktop-member-exchange-g3",
+    "hostname": "mail",
+    "ip": "10.5.11.5",
+    "listenfile": "wazuh syscollector dbsync_ports (union, partial)",
+    "os": "windows"
+  }
+}

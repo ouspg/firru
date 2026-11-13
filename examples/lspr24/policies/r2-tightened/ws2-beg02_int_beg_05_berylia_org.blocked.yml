@@ -1,0 +1,18 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 899 hits | reason: port not in policy (445)
+  - protocol: tcp
+    service: WINDOWS-SMB
+    src_ip: 2a07:1182:5:12::250
+    src_token: BEG_INT_GT_OTHER
+# 14 hits | reason: port not in policy (50482,50505,50795,51933,59820,62061,62243)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::2
+    src_token: dc1_int_beg_05_berylia_org
+# 13 hits | reason: port not in policy (54722,58211,58762,58883,62398,62587,63989)
+  - protocol: udp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::2
+    src_token: dc1_int_beg_05_berylia_org

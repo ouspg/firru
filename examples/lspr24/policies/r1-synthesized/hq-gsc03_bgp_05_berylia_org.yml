@@ -1,0 +1,88 @@
+metadata:
+  host: hq-gsc03
+  zone: bgp
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 | IPv6 ::/0
+# [auto] unexpected owner: SSH no process attribution; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BGP_GT
+# [auto] IPv4 0.0.0.0/0 (rigctld)
+      - name: allow-tcp-TCP_4532
+        protocol: tcp
+        destination-port: TCP_4532
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv4 0.0.0.0/0 (rotctld)
+      - name: allow-tcp-TCP_4533
+        protocol: tcp
+        destination-port: TCP_4533
+        action: accept
+        source-address: ANY_V4
+# [auto] IPv4 0.0.0.0/0 (Xtigervnc) | IPv6 ::/0 (Xtigervnc)
+      - name: allow-tcp-VNC
+        protocol: tcp
+        destination-port: VNC
+        action: accept
+        source-address: ANY
+# [auto] IPv4 10.5.20.12/32 (docker-proxy) | IPv6 2a07:1182:5:f20::1/128 (docker-proxy)
+# [auto] unexpected owner: HTTP-ALT forwarded by docker-proxy; the service is behind it; expected nginx, apache2, httpd, caddy, haproxy, traefik, +5 more
+      - name: allow-tcp-HTTP-ALT
+        protocol: tcp
+        destination-port: HTTP-ALT
+        action: accept
+        source-address: ANY
+# [auto] IPv4 10.5.20.12/32 (docker-proxy) | IPv6 2a07:1182:5:f20::1/128 (docker-proxy)
+      - name: allow-tcp-TCP_9000
+        protocol: tcp
+        destination-port: TCP_9000
+        action: accept
+        source-address: ANY
+# [auto] IPv6 ::/0 (socat)
+      - name: allow-tcp-TCP_19000
+        protocol: tcp
+        destination-port: TCP_19000
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv4 0.0.0.0/0 (ntpd), 10.5.20.12/32 (ntpd), 172.19.0.1/32 (ntpd) | IPv6 2a07:1182:5:f20::12/128 (ntpd), ::/0 (ntpd), fd12:3456:789a:1::1/128 (ntpd), fe80::1/128 (ntpd), fe80::250:56ff:fe89/128 (ntpd), fe80::8cec:d4ff:fef/128 (ntpd), fe80::d8e5:f0ff:fe1/128 (ntpd)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

@@ -1,0 +1,182 @@
+metadata:
+  host: baf
+  zone: baf
+  hosts:
+  - c4i-ads_baf_05_berylia_org
+filters:
+- header:
+    targets:
+      nftables: mixed input
+  terms:
+  - name: c4i-ads_baf_05_berylia_org-allow-icmp
+    protocol: icmp
+    action: accept
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-icmpv6
+    protocol: icmpv6
+    action: accept
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-DNS-TCP
+    protocol: tcp
+    destination-port: DNS-TCP
+    action: accept
+    source-address: ANY_V4
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-RPCBIND
+    protocol: tcp
+    destination-port: RPCBIND
+    action: accept
+    source-address: ANY
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-VNC
+    protocol: tcp
+    destination-port: VNC
+    action: accept
+    source-address: ANY
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-COCKPIT
+    protocol: tcp
+    destination-port: COCKPIT
+    action: accept
+    source-address: ANY_V6
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-TCP_9099
+    protocol: tcp
+    destination-port: TCP_9099
+    action: accept
+    source-address: ANY_V6
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-TCP_9536
+    protocol: tcp
+    destination-port: TCP_9536
+    action: accept
+    source-address: ANY
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-TCP_13075
+    protocol: tcp
+    destination-port: TCP_13075
+    action: accept
+    source-address: ANY
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-TCP_16567
+    protocol: tcp
+    destination-port: TCP_16567
+    action: accept
+    source-address: ANY
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-K8S-NODEPORT
+    protocol: tcp
+    destination-port: K8S-NODEPORT
+    action: accept
+    source-address: ANY
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    action: accept
+    source-address: ANY_V4
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-udp-DHCP-SERVER
+    protocol: udp
+    destination-port: DHCP-SERVER
+    action: accept
+    source-address: ANY_V4
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-udp-RPCBIND
+    protocol: udp
+    destination-port: RPCBIND
+    action: accept
+    source-address: ANY
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-udp-UDP_5101
+    protocol: udp
+    destination-port: UDP_5101
+    action: accept
+    source-address: ANY_V4
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-udp-UDP_9001
+    protocol: udp
+    destination-port: UDP_9001
+    action: accept
+    source-address: ANY_V6
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-udp-UDP_9101
+    protocol: udp
+    destination-port: UDP_9101
+    action: accept
+    source-address: ANY_V6
+    destination-address: c4i-ads_baf_05_berylia_org
+  - name: deny-ext-tcp-CEPH-OSD
+    action: deny
+    destination-address: c4i-ads_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: CEPH-OSD
+  - name: deny-ext-tcp-SSH
+    action: deny
+    destination-address: c4i-ads_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SSH
+  - name: deny-ext-udp-UDP_5000
+    action: deny
+    destination-address: c4i-ads_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: UDP_5000
+  - name: drop-ghost-hosts
+    action: deny
+    destination-address: baf
+    comment: 'Ghost host catch-all: drops traffic to IPs in baf not matched by any
+      allow term above.  All legitimate hosts should appear in policies/pol/ and be
+      covered by explicit allow terms.'
+  - name: log-accept-ANY
+    action: accept
+    logging: true
+    comment: 'INITIAL DEPLOYMENT: accept + log all unmatched traffic. Promote to log-drop
+      (--terminal log-drop) once rules are stable.'
+- header:
+    targets:
+      nftables: mixed output
+  terms:
+  - name: c4i-ads_baf_05_berylia_org-egress-TCP_1514
+    protocol: tcp
+    destination-port: TCP_1514
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (283 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+    source-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-egress-TCP_1515
+    protocol: tcp
+    destination-port: TCP_1515
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (56 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+    source-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-egress-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    comment: 'ANY covers 24 unresolved dst: 24 addresses in 24 blocks, widest /4:
+      100.95.95.4/32 (2960 hits), 2a07:1181:95:95::4/128 (2958 hits), 2001::/20 (11
+      dst, 36 hits), 192.0.0.0/4 (11 dst, 30 hits) -- one group per address, so no
+      summary narrows it and ANY is honest'
+    action: accept
+    source-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-egress-NTP
+    protocol: udp
+    destination-port: NTP
+    comment: 'ANY covers 4 unresolved dst: 4 addresses in 4 blocks, widest /32: 193.40.134.137/32
+      (48 hits), 193.40.133.134/32 (45 hits), 2a04:6f00:4::141/128 (45 hits), 2a10:1fc0:1::34f9:5fcf/128
+      (45 hits) -- one group per address, so no summary narrows it and ANY is honest'
+    action: accept
+    source-address: c4i-ads_baf_05_berylia_org
+  - name: log-accept-ANY-egress
+    action: accept
+    logging: true
+    comment: 'INITIAL DEPLOYMENT: accept + log all unmatched traffic. Promote to log-drop
+      (--terminal log-drop) once rules are stable.'

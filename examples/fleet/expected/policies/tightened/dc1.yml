@@ -1,0 +1,205 @@
+# firru tighten output — review and copy changes to policies/pol/dc1.yml
+# Source suggestions changed: 0 | Dead rules: 2 | Group suggestions: 0
+metadata:
+  host: dc1
+filters:
+  - header:
+      targets:
+        windows_advfirewall: in mixed block
+    terms:
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-DNS-TCP
+        protocol: tcp
+        destination-port: DNS-TCP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-KERBEROS-TCP
+        protocol: tcp
+        destination-port: KERBEROS-TCP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+        protocol: tcp
+        destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-NETBIOS-SSN-LEGACY
+        protocol: tcp
+        destination-port: NETBIOS-SSN-LEGACY
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-LDAP-TCP
+        protocol: tcp
+        destination-port: LDAP-TCP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINDOWS-SMB
+        protocol: tcp
+        destination-port: WINDOWS-SMB
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-KERBEROS-KPASSWD-TCP
+        protocol: tcp
+        destination-port: KERBEROS-KPASSWD-TCP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINDOWS-RPC-HTTPS
+        protocol: tcp
+        destination-port: WINDOWS-RPC-HTTPS
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-LDAPS
+        protocol: tcp
+        destination-port: LDAPS
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-LDAP-GC
+        protocol: tcp
+        destination-port: LDAP-GC
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-LDAP-GC-SSL
+        protocol: tcp
+        destination-port: LDAP-GC-SSL
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINRM-HTTP
+        protocol: tcp
+        destination-port: WINRM-HTTP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINDOWS-AD-ADWS
+        protocol: tcp
+        destination-port: WINDOWS-AD-ADWS
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
+        protocol: tcp
+        destination-port: WINDOWS-WINRM-UNCONFIGURED
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-KERBEROS-UDP
+        protocol: udp
+        destination-port: KERBEROS-UDP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-NETBIOS-NS-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-NS-LEGACY
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-NETBIOS-DGM-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-DGM-LEGACY
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-LDAP-UDP
+        protocol: udp
+        destination-port: LDAP-UDP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-KERBEROS-KPASSWD-UDP
+        protocol: udp
+        destination-port: KERBEROS-KPASSWD-UDP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-LLMNR
+        protocol: udp
+        destination-port: LLMNR
+        action: accept
+        source-address:
+          - LLMNR_SOURCES_V4
+          - LLMNR_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        platform-exclude:
+          - windows_advfirewall
+
+  - header:
+      targets:
+        windows_advfirewall: out mixed
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] no egress flows observed — placeholder kept
+      - name: allow-ANY
+        action: accept

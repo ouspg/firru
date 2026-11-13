@@ -1,0 +1,80 @@
+metadata:
+  host: mail1
+  zone: DMZ
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 (sshd /usr/sbin/sshd) | IPv6 ::/0 (sshd /usr/sbin/sshd)
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - jump1
+# [auto] IPv4 0.0.0.0/0 (master) | IPv6 ::/0 (master)
+      - name: allow-tcp-SMTP
+        protocol: tcp
+        destination-port: SMTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (dovecot) | IPv6 ::/0 (dovecot)
+      - name: allow-tcp-POP3
+        protocol: tcp
+        destination-port: POP3
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (dovecot) | IPv6 ::/0 (dovecot)
+      - name: allow-tcp-IMAP
+        protocol: tcp
+        destination-port: IMAP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (dovecot) | IPv6 ::/0 (dovecot)
+      - name: allow-tcp-IMAPS
+        protocol: tcp
+        destination-port: IMAPS
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (dovecot) | IPv6 ::/0 (dovecot)
+      - name: allow-tcp-POP3S
+        protocol: tcp
+        destination-port: POP3S
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.128/32 (systemd-network)
+      - name: allow-udp-DHCP-CLIENT
+        protocol: udp
+        destination-port: DHCP-CLIENT
+        action: accept
+        source-address: ANY_V4
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

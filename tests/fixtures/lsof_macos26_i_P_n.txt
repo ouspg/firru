@@ -1,0 +1,17 @@
+COMMAND    PID   USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+identitys  411 runner   13u  IPv4 0xf87217a079ab7cd3      0t0  UDP *:*
+identitys  411 runner   15u  IPv4 0x55e9c65865f61fc6      0t0  UDP *:*
+identitys  411 runner   20u  IPv4 0x5e3748f029607461      0t0  UDP *:*
+replicato  466 runner    8u  IPv6 0xa35b619fefdf08dc      0t0  UDP *:52710
+hosted-co  971 runner   10u  IPv4 0x32a266bd5e9b1b20      0t0  TCP 192.168.64.8:49152->140.82.112.24:443 (ESTABLISHED)
+hosted-co  971 runner   11u  IPv4 0xc16de98b216a398a      0t0  TCP 192.168.64.8:49153->140.82.112.24:443 (ESTABLISHED)
+Runner.Li 2416 runner  127u  IPv6 0xc8a7f98895dffc97      0t0  TCP 192.168.64.8:49155->20.85.130.105:443 (ESTABLISHED)
+Runner.Li 2416 runner  137u  IPv6 0x2611bb8c4cf608f3      0t0  TCP 192.168.64.8:49156->20.85.130.105:443 (ESTABLISHED)
+Runner.Li 2416 runner  138u  IPv6 0x7ca8d39e22c65670      0t0  TCP 192.168.64.8:49157->20.85.130.105:443 (ESTABLISHED)
+Runner.Wo 2430 runner  136u  IPv6 0x3c1af7ce8a96ba6d      0t0  TCP 192.168.64.8:49158->140.82.114.21:443 (ESTABLISHED)
+Runner.Wo 2430 runner  154u  IPv6 0x8698d329c7ef1159      0t0  TCP 192.168.64.8:49159->140.82.114.21:443 (ESTABLISHED)
+Runner.Wo 2430 runner  160u  IPv6 0x951e7f6e538dc02e      0t0  TCP 192.168.64.8:49160->140.82.114.21:443 (ESTABLISHED)
+Runner.Wo 2430 runner  183u  IPv6 0xaaa728320e822e32      0t0  TCP 192.168.64.8:49161->20.209.112.225:443 (ESTABLISHED)
+Python    2448 runner    3u  IPv4 0x9b18199c237d65e4      0t0  TCP *:19001 (CLOSED)
+Python    2450 runner    3u  IPv4 0xe7b6e14402e85fc2      0t0  TCP *:19002 (CLOSED)
+Python    2452 runner    3u  IPv4 0x9ded2c2be7000783      0t0  TCP *:19003 (CLOSED)

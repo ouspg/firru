@@ -1,0 +1,116 @@
+metadata:
+  host: beg
+  zone: beg
+  hosts:
+  - gas-historian_beg_05_berylia_org
+  - gas-hmi_beg_05_berylia_org
+  - inventory_beg_05_berylia_org
+  - k8s-control-plane_beg_05_berylia_org
+  - k8s-worker01_beg_05_berylia_org
+  - k8s-worker02_beg_05_berylia_org
+  - k8s-worker03_beg_05_berylia_org
+  - k8s-worker04_beg_05_berylia_org
+  - maintenance_beg_05_berylia_org
+  - news_beg_05_berylia_org
+  - owncloud_beg_05_berylia_org
+  - salt-master_beg_05_berylia_org
+filters:
+- header:
+    targets:
+      nftables: mixed input
+  terms:
+  - name: allow-tcp-SSH-shared
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: ANY
+    comment: 3 sources answered, 1 not
+    destination-address: gas-historian_beg_05_berylia_org gas-hmi_beg_05_berylia_org
+      inventory_beg_05_berylia_org k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+      maintenance_beg_05_berylia_org news_beg_05_berylia_org owncloud_beg_05_berylia_org
+      salt-master_beg_05_berylia_org
+  - name: gas-historian_beg_05_berylia_org-allow-tcp-MYSQL
+    protocol: tcp
+    destination-port: MYSQL
+    action: accept
+    source-address: ANY
+    comment: 3 sources answered, 1 not
+    destination-address: gas-historian_beg_05_berylia_org
+  - name: gas-historian_beg_05_berylia_org-allow-tcp-HTTP-ALT
+    protocol: tcp
+    destination-port: HTTP-ALT
+    action: accept
+    source-address: ANY
+    comment: 4 sources answered, 2 not
+    destination-address: gas-historian_beg_05_berylia_org
+  - name: gas-hmi_beg_05_berylia_org-allow-tcp-TCP_3000
+    protocol: tcp
+    destination-port: TCP_3000
+    action: accept
+    source-address: ANY
+    comment: every one of 3 sources was answered
+    destination-address: gas-hmi_beg_05_berylia_org
+  - name: gas-hmi_beg_05_berylia_org-allow-tcp-TCP_8000
+    protocol: tcp
+    destination-port: TCP_8000
+    action: accept
+    source-address: ANY
+    comment: every one of 3 sources was answered
+    destination-address: gas-hmi_beg_05_berylia_org
+  - name: gas-hmi_beg_05_berylia_org-allow-tcp-TCP_12349
+    protocol: tcp
+    destination-port: TCP_12349
+    action: accept
+    source-address: ANY
+    comment: every one of 2 sources was answered
+    destination-address: gas-hmi_beg_05_berylia_org
+  - name: allow-tcp-HTTP-shared
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: ANY
+    comment: 10 sources answered, 3 not
+    destination-address: inventory_beg_05_berylia_org maintenance_beg_05_berylia_org
+      news_beg_05_berylia_org owncloud_beg_05_berylia_org salt-master_beg_05_berylia_org
+  - name: allow-tcp-HTTPS-shared
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: ANY
+    comment: 55 sources answered, 12 not
+    destination-address: inventory_beg_05_berylia_org maintenance_beg_05_berylia_org
+      news_beg_05_berylia_org owncloud_beg_05_berylia_org salt-master_beg_05_berylia_org
+  - name: allow-tcp-BGP-shared
+    protocol: tcp
+    destination-port: BGP
+    action: accept
+    source-address: ANY
+    comment: every one of 8 sources was answered
+    destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org
+  - name: salt-master_beg_05_berylia_org-allow-tcp-TCP_4505
+    protocol: tcp
+    destination-port: TCP_4505
+    action: accept
+    source-address: ANY
+    comment: 5 sources answered, 1 not
+    destination-address: salt-master_beg_05_berylia_org
+  - name: salt-master_beg_05_berylia_org-allow-tcp-TCP_4506
+    protocol: tcp
+    destination-port: TCP_4506
+    action: accept
+    source-address: ANY
+    comment: 5 sources answered, 1 not
+    destination-address: salt-master_beg_05_berylia_org
+  - name: drop-ghost-hosts
+    action: deny
+    destination-address: beg
+    comment: 'Ghost host catch-all: drops traffic to IPs in beg not matched by any
+      allow term above.  All legitimate hosts should appear in policies/pol/ and be
+      covered by explicit allow terms.'
+  - name: log-accept-ANY
+    action: accept
+    logging: true
+    comment: 'INITIAL DEPLOYMENT: accept + log all unmatched traffic. Promote to log-drop
+      (--terminal log-drop) once rules are stable.'

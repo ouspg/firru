@@ -1,0 +1,250 @@
+# =============================================================================
+# cloud-native.yml — container platforms, orchestration, monitoring, data
+#
+# Default ports of software that is not an internet standard but is common
+# enough to name: Kubernetes, CNIs, Docker, Prometheus, OpenTelemetry, Kafka,
+# ZooKeeper, RabbitMQ, Elasticsearch, Ceph. Each "# Source:" is the project's
+# own documentation. Every one of these ports is configurable, and many
+# collide (9090, 7946, 8472, 4789); a name here is the default, not proof.
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Kubernetes control plane
+  # ---------------------------------------------------------------------------
+
+  # Source: kubernetes.io/docs/reference/networking/ports-and-protocols
+  K8S-API-SERVER:
+    - port: 6443
+      protocol: tcp
+
+  # Source: kubernetes.io/docs/reference/networking/ports-and-protocols; etcd.io/docs (2379 client)
+  ETCD-CLIENT:
+    - port: 2379
+      protocol: tcp
+
+  # Source: kubernetes.io/docs/reference/networking/ports-and-protocols; etcd.io/docs (2380 peer)
+  ETCD-PEER:
+    - port: 2380
+      protocol: tcp
+      comment: Between etcd members only.
+
+  # Source: kubeadm etcd --listen-metrics-urls default
+  ETCD-METRICS:
+    - port: 2381
+      protocol: tcp
+      comment: kubeadm binds it to 127.0.0.1; reachable only if that was changed.
+
+  # Source: kubernetes.io/docs/reference/networking/ports-and-protocols
+  K8S-SCHEDULER:
+    - port: 10259
+      protocol: tcp
+      comment: Self only (health/metrics).
+
+  # Source: kubernetes.io/docs/reference/networking/ports-and-protocols
+  K8S-CONTROLLER-MANAGER:
+    - port: 10257
+      protocol: tcp
+      comment: Self only (health/metrics).
+
+  # ---------------------------------------------------------------------------
+  # Kubernetes nodes
+  # ---------------------------------------------------------------------------
+
+  # Source: kubernetes.io/docs/reference/networking/ports-and-protocols
+  K8S-KUBELET:
+    - port: 10250
+      protocol: tcp
+      comment: From the control plane.
+
+  # Source: kubernetes.io/docs/reference/networking/ports-and-protocols
+  K8S-KUBE-PROXY:
+    - port: 10256
+      protocol: tcp
+      comment: Health check, from load balancers.
+
+  # Source: kubernetes.io/docs/reference/networking/ports-and-protocols
+  K8S-NODEPORT:
+    - port: 30000-32767
+      protocol: tcp
+    - port: 30000-32767
+      protocol: udp
+      comment: >
+        NodePort Services. kube-proxy programs these in the kernel; no process listens, so a socket inventory never shows them.
+
+  # Source: kubernetes.io KubeletConfiguration readOnlyPort
+  # LEGACY: unauthenticated read-only kubelet API, off by default (readOnlyPort 0)
+  K8S-KUBELET-READONLY:
+    - port: 10255
+      protocol: tcp
+
+  # ---------------------------------------------------------------------------
+  # Container networking
+  # ---------------------------------------------------------------------------
+
+  # Source: docs.tigera.io calico network requirements
+  CALICO-TYPHA:
+    - port: 5473
+      protocol: tcp
+
+  # Source: docs.cilium.io firewall requirements
+  CILIUM-HEALTH:
+    - port: 4240
+      protocol: tcp
+
+  # Source: docs.cilium.io firewall requirements
+  CILIUM-VXLAN:
+    - port: 8472
+      protocol: udp
+      comment: Same port as FLANNEL-VXLAN; Linux kernel VXLAN default.
+
+  # Source: github.com/flannel-io/flannel Documentation/backends.md
+  FLANNEL-VXLAN:
+    - port: 8472
+      protocol: udp
+
+  # Source: metallb.universe.tf (speaker memberlist)
+  # Owner: processes=speaker
+  METALLB-MEMBERLIST:
+    - port: 7946
+      protocol: tcp
+    - port: 7946
+      protocol: udp
+      comment: Same port as Docker swarm node gossip.
+
+  # Source: metallb.universe.tf manifests (speaker and controller
+  # --port=7472, the Prometheus metrics endpoint)
+  # Owner: processes=speaker,controller
+  METALLB-METRICS:
+    - port: 7472
+      protocol: tcp
+
+  # Source: IANA docker-s; docs.docker.com dockerd --tlsverify
+  DOCKER-API-TLS:
+    - port: 2376
+      protocol: tcp
+
+  # Source: IANA docker
+  DOCKER-API:
+    - port: 2375
+      protocol: tcp
+      comment: 'Unauthenticated: equivalent to root on the host. Never expose.'
+
+  # Source: docs.docker.com engine/network/drivers/overlay
+  # Owner: processes=dockerd
+  DOCKER-SWARM:
+    - port: 2377
+      protocol: tcp
+    - port: 7946
+      protocol: tcp
+    - port: 7946
+      protocol: udp
+    - port: 4789
+      protocol: udp
+      comment: 2377 cluster management, 7946 node gossip, 4789 overlay (VXLAN).
+
+  # ---------------------------------------------------------------------------
+  # Monitoring
+  # ---------------------------------------------------------------------------
+
+  # Source: github.com/prometheus/prometheus/wiki/Default-port-allocations
+  # Owner: units=prometheus.service processes=prometheus
+  PROMETHEUS:
+    - port: 9090
+      protocol: tcp
+      comment: Same port as COCKPIT.
+
+  # Source: github.com/prometheus/prometheus/wiki/Default-port-allocations
+  PROMETHEUS-PUSHGATEWAY:
+    - port: 9091
+      protocol: tcp
+
+  # Source: github.com/prometheus/prometheus/wiki/Default-port-allocations
+  ALERTMANAGER:
+    - port: 9093
+      protocol: tcp
+      comment: Cluster gossip uses 9094 tcp/udp.
+
+  # Source: github.com/prometheus/prometheus/wiki/Default-port-allocations
+  NODE-EXPORTER:
+    - port: 9100
+      protocol: tcp
+      comment: Same port as JetDirect raw printing.
+
+  # Source: github.com/prometheus/prometheus/wiki/Default-port-allocations
+  BLACKBOX-EXPORTER:
+    - port: 9115
+      protocol: tcp
+
+  # Source: opentelemetry.io/docs/specs/otlp
+  OTLP-GRPC:
+    - port: 4317
+      protocol: tcp
+
+  # Source: opentelemetry.io/docs/specs/otlp
+  OTLP-HTTP:
+    - port: 4318
+      protocol: tcp
+
+  # Source: opentelemetry-collector-contrib healthcheckextension default
+  OTEL-HEALTH:
+    - port: 13133
+      protocol: tcp
+
+  # ---------------------------------------------------------------------------
+  # Data and messaging
+  # ---------------------------------------------------------------------------
+
+  # Source: kafka.apache.org documentation (default listener)
+  KAFKA:
+    - port: 9092
+      protocol: tcp
+      comment: TLS and SASL listeners use whatever port they are configured on.
+
+  # Source: zookeeper.apache.org zookeeperAdmin (clientPort)
+  ZOOKEEPER-CLIENT:
+    - port: 2181
+      protocol: tcp
+
+  # Source: zookeeper.apache.org zookeeperAdmin (quorum 2888, election 3888)
+  ZOOKEEPER-PEER:
+    - port: 2888
+      protocol: tcp
+    - port: 3888
+      protocol: tcp
+
+  # Source: rabbitmq.com/docs/networking
+  RABBITMQ-EPMD:
+    - port: 4369
+      protocol: tcp
+      comment: Erlang port mapper.
+
+  # Source: rabbitmq.com/docs/networking
+  RABBITMQ-CLUSTER:
+    - port: 25672
+      protocol: tcp
+      comment: Inter-node and CLI tools.
+
+  # Source: elastic.co guide (http.port default)
+  ELASTICSEARCH:
+    - port: 9200
+      protocol: tcp
+
+  # Source: elastic.co guide (transport.port default)
+  ELASTICSEARCH-TRANSPORT:
+    - port: 9300
+      protocol: tcp
+      comment: Between cluster nodes.
+
+  # Source: docs.ceph.com rados network-config-ref (msgr2 3300, msgr1 6789)
+  CEPH-MON:
+    - port: 3300
+      protocol: tcp
+    - port: 6789
+      protocol: tcp
+
+  # Source: docs.ceph.com rados network-config-ref
+  CEPH-OSD:
+    - port: 6800-7300
+      protocol: tcp
+      comment: OSDs, MDS and MGR bind in this range.

@@ -1,0 +1,7 @@
+# ss-version: ss utility, iproute2-6.6.0
+# os: Alpine Linux v3.19
+# flags: ss -tulnp tulnp
+Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                           
+tcp   LISTEN 0      5            0.0.0.0:19003      0.0.0.0:*    users:(("svc(1",pid=16,fd=3))    
+tcp   LISTEN 0      5            0.0.0.0:19002      0.0.0.0:*    users:(("my proc:x",pid=14,fd=3))
+tcp   LISTEN 0      5            0.0.0.0:19001      0.0.0.0:*    users:(("plain",pid=12,fd=3))    

@@ -1,0 +1,160 @@
+table inet filtering_policies {
+    chain allow-icmp-any-shared {
+        ip daddr { 10.20.2.10/32, 10.20.2.11/32, 10.20.2.12/32, 10.20.2.13/32, 10.20.2.14/32 } ip protocol icmp ct state new accept
+        ip6 daddr { 2001:db8:20:2::a/128, 2001:db8:20:2::b/128, 2001:db8:20:2::c/128, 2001:db8:20:2::d/128, 2001:db8:20:2::e/128 } ip protocol icmp ct state new accept
+    }
+    chain allow-icmpv6-any-shared {
+        ip daddr { 10.20.2.10/32, 10.20.2.11/32, 10.20.2.12/32, 10.20.2.13/32, 10.20.2.14/32 } meta l4proto icmpv6 accept
+        ip6 daddr { 2001:db8:20:2::a/128, 2001:db8:20:2::b/128, 2001:db8:20:2::c/128, 2001:db8:20:2::d/128, 2001:db8:20:2::e/128 } meta l4proto icmpv6 accept
+    }
+    chain allow-tcp-SSH-shared {
+        ip saddr 10.20.9.10/32 ip daddr { 10.20.2.13/32, 10.20.2.14/32 } tcp dport 22 ct state new accept
+        ip6 saddr 2001:db8:20:9::a/128 ip6 daddr { 2001:db8:20:2::d/128, 2001:db8:20:2::e/128 } tcp dport 22 ct state new accept
+    }
+    chain db1-allow-tcp-POSTGRES {
+        ip saddr 10.20.1.10/32 ip daddr 10.20.2.13/32 tcp dport 5432 ct state new accept
+        ip6 saddr 2001:db8:20:1::a/128 ip6 daddr 2001:db8:20:2::d/128 tcp dport 5432 ct state new accept
+    }
+    chain db1-allow-udp-DHCP-CLIENT {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.13/32 udp dport 68 ct state new accept
+    }
+    chain dc1-allow-tcp-DNS-TCP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 tcp dport 53 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 tcp dport 53 ct state new accept
+    }
+    chain dc1-allow-tcp-KERBEROS-TCP {
+        ip saddr { 10.20.3.21/32, 10.20.3.22/32, 10.20.3.23/32 } ip daddr 10.20.2.10/32 tcp dport 88 ct state new accept
+        ip6 saddr { 2001:db8:20:3::15/128, 2001:db8:20:3::16/128, 2001:db8:20:3::17/128 } ip6 daddr 2001:db8:20:2::a/128 tcp dport 88 ct state new accept
+    }
+    chain dc1-allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER {
+        ip saddr { 10.20.3.21/32, 10.20.3.22/32, 10.20.3.23/32 } ip daddr 10.20.2.10/32 tcp dport 135 ct state new accept
+        ip6 saddr { 2001:db8:20:3::15/128, 2001:db8:20:3::16/128, 2001:db8:20:3::17/128 } ip6 daddr 2001:db8:20:2::a/128 tcp dport 135 ct state new accept
+    }
+    chain allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER-from-ANY-shared {
+        ip saddr 0.0.0.0/0 ip daddr { 10.20.2.11/32, 10.20.2.12/32 } tcp dport 135 ct state new accept
+        ip6 saddr ::/0 ip6 daddr { 2001:db8:20:2::b/128, 2001:db8:20:2::c/128 } tcp dport 135 ct state new accept
+    }
+    chain dc1-allow-tcp-LDAP-TCP {
+        ip saddr { 10.20.3.21/32, 10.20.3.22/32, 10.20.3.23/32 } ip daddr 10.20.2.10/32 tcp dport 389 ct state new accept
+        ip6 saddr { 2001:db8:20:3::15/128, 2001:db8:20:3::16/128, 2001:db8:20:3::17/128 } ip6 daddr 2001:db8:20:2::a/128 tcp dport 389 ct state new accept
+    }
+    chain allow-tcp-WINDOWS-SMB-from-CLIENTS_HOSTS-shared {
+        ip saddr { 10.20.3.21/32, 10.20.3.22/32, 10.20.3.23/32 } ip daddr { 10.20.2.10/32, 10.20.2.11/32 } tcp dport 445 ct state new accept
+        ip6 saddr { 2001:db8:20:3::15/128, 2001:db8:20:3::16/128, 2001:db8:20:3::17/128 } ip6 daddr { 2001:db8:20:2::a/128, 2001:db8:20:2::b/128 } tcp dport 445 ct state new accept
+    }
+    chain allow-tcp-WINDOWS-SMB-from-ANY-shared {
+        ip saddr 0.0.0.0/0 ip daddr { 10.20.2.12/32, 10.20.2.14/32 } tcp dport 445 ct state new accept
+        ip6 saddr ::/0 ip6 daddr { 2001:db8:20:2::c/128, 2001:db8:20:2::e/128 } tcp dport 445 ct state new accept
+    }
+    chain dc1-allow-tcp-KERBEROS-KPASSWD-TCP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 tcp dport 464 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 tcp dport 464 ct state new accept
+    }
+    chain dc1-allow-tcp-WINDOWS-RPC-HTTPS {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 tcp dport 593 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 tcp dport 593 ct state new accept
+    }
+    chain dc1-allow-tcp-LDAPS {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 tcp dport 636 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 tcp dport 636 ct state new accept
+    }
+    chain dc1-allow-tcp-LDAP-GC {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 tcp dport 3268 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 tcp dport 3268 ct state new accept
+    }
+    chain dc1-allow-tcp-LDAP-GC-SSL {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 tcp dport 3269 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 tcp dport 3269 ct state new accept
+    }
+    chain allow-tcp-WINRM-HTTP-shared {
+        ip saddr 10.20.9.10/32 ip daddr { 10.20.2.10/32, 10.20.2.11/32, 10.20.2.12/32 } tcp dport 5985 ct state new accept
+        ip6 saddr 2001:db8:20:9::a/128 ip6 daddr { 2001:db8:20:2::a/128, 2001:db8:20:2::b/128, 2001:db8:20:2::c/128 } tcp dport 5985 ct state new accept
+    }
+    chain dc1-allow-tcp-WINDOWS-AD-ADWS {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 tcp dport 9389 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 tcp dport 9389 ct state new accept
+    }
+    chain allow-tcp-WINDOWS-WINRM-UNCONFIGURED-shared {
+        ip saddr 0.0.0.0/0 ip daddr { 10.20.2.10/32, 10.20.2.11/32, 10.20.2.12/32 } tcp dport 47001 ct state new accept
+        ip6 saddr ::/0 ip6 daddr { 2001:db8:20:2::a/128, 2001:db8:20:2::b/128, 2001:db8:20:2::c/128 } tcp dport 47001 ct state new accept
+    }
+    chain dc1-allow-udp-DNS-UDP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 udp dport 53 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 udp dport 53 ct state new accept
+    }
+    chain dc1-allow-udp-KERBEROS-UDP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 udp dport 88 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 udp dport 88 ct state new accept
+    }
+    chain allow-udp-NTP-shared {
+        ip saddr 0.0.0.0/0 ip daddr { 10.20.2.10/32, 10.20.2.11/32, 10.20.2.12/32 } udp dport 123 ct state new accept
+        ip6 saddr ::/0 ip6 daddr { 2001:db8:20:2::a/128, 2001:db8:20:2::b/128, 2001:db8:20:2::c/128 } udp dport 123 ct state new accept
+    }
+    chain dc1-allow-udp-LDAP-UDP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 udp dport 389 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 udp dport 389 ct state new accept
+    }
+    chain dc1-allow-udp-KERBEROS-KPASSWD-UDP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.2.10/32 udp dport 464 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:2::a/128 udp dport 464 ct state new accept
+    }
+    chain deny-ext-tcp-NETBIOS-SSN-LEGACY {
+        comment "intra-zone only — port is open on host(s) but no legitimate external traffic observed; host firewall handles intra-zone access"
+        ip daddr { 10.20.2.10/32, 10.20.2.11/32, 10.20.2.12/32 } tcp dport 139 drop
+        ip6 daddr { 2001:db8:20:2::a/128, 2001:db8:20:2::b/128, 2001:db8:20:2::c/128 } tcp dport 139 drop
+    }
+    chain deny-ext-udp-NETBIOS-DGM-LEGACY {
+        comment "intra-zone only — port is open on host(s) but no legitimate external traffic observed; host firewall handles intra-zone access"
+        ip daddr { 10.20.2.10/32, 10.20.2.11/32, 10.20.2.12/32 } udp dport 138 drop
+        ip6 daddr { 2001:db8:20:2::a/128, 2001:db8:20:2::b/128, 2001:db8:20:2::c/128 } udp dport 138 drop
+    }
+    chain deny-ext-udp-NETBIOS-NS-LEGACY {
+        comment "intra-zone only — port is open on host(s) but no legitimate external traffic observed; host firewall handles intra-zone access"
+        ip daddr { 10.20.2.10/32, 10.20.2.11/32, 10.20.2.12/32 } udp dport 137 drop
+        ip6 daddr { 2001:db8:20:2::a/128, 2001:db8:20:2::b/128, 2001:db8:20:2::c/128 } udp dport 137 drop
+    }
+    chain drop-ghost-hosts {
+        comment "Ghost host catch-all: drops traffic to IPs in SERVERS not matched by any allow term above.  All legitimate hosts should appear in policies/pol/ and be covered by explicit allow terms."
+        ip daddr 10.20.2.0/24 drop
+        ip6 daddr 2001:db8:20:2::/64 drop
+    }
+    chain log-drop-ANY {
+        comment "SETTLING: drop + log unmatched traffic to catch false positives. Promote to drop (--terminal drop) when the log has been quiet."
+        log prefix "log-drop-ANY" drop
+    }
+    chain root0 {
+        type filter hook input priority 0; policy drop;
+        ct state established,related accept
+        jump allow-icmp-any-shared
+        jump allow-icmpv6-any-shared
+        jump allow-tcp-SSH-shared
+        jump db1-allow-tcp-POSTGRES
+        jump db1-allow-udp-DHCP-CLIENT
+        jump dc1-allow-tcp-DNS-TCP
+        jump dc1-allow-tcp-KERBEROS-TCP
+        jump dc1-allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+        jump allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER-from-ANY-shared
+        jump dc1-allow-tcp-LDAP-TCP
+        jump allow-tcp-WINDOWS-SMB-from-CLIENTS_HOSTS-shared
+        jump allow-tcp-WINDOWS-SMB-from-ANY-shared
+        jump dc1-allow-tcp-KERBEROS-KPASSWD-TCP
+        jump dc1-allow-tcp-WINDOWS-RPC-HTTPS
+        jump dc1-allow-tcp-LDAPS
+        jump dc1-allow-tcp-LDAP-GC
+        jump dc1-allow-tcp-LDAP-GC-SSL
+        jump allow-tcp-WINRM-HTTP-shared
+        jump dc1-allow-tcp-WINDOWS-AD-ADWS
+        jump allow-tcp-WINDOWS-WINRM-UNCONFIGURED-shared
+        jump dc1-allow-udp-DNS-UDP
+        jump dc1-allow-udp-KERBEROS-UDP
+        jump allow-udp-NTP-shared
+        jump dc1-allow-udp-LDAP-UDP
+        jump dc1-allow-udp-KERBEROS-KPASSWD-UDP
+        jump deny-ext-tcp-NETBIOS-SSN-LEGACY
+        jump deny-ext-udp-NETBIOS-DGM-LEGACY
+        jump deny-ext-udp-NETBIOS-NS-LEGACY
+        jump drop-ghost-hosts
+        jump log-drop-ANY
+    }
+}
+

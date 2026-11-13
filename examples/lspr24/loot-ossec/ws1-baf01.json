@@ -1,0 +1,149 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3389,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 31508,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3389,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "svchost.exe",
+        "pid": 31508,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 5876,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": " ",
+        "pid": 22196,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 8684,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": " ",
+        "pid": 22196,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 14011,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": " ",
+        "pid": 22196,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 25428,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": " ",
+        "pid": 22196,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 27980,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": " ",
+        "pid": 22196,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 54928,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": " ",
+        "pid": 22196,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "007",
+    "annotationfile": null,
+    "collected_at": "2024-03-07T12:53:24",
+    "hostname": "ws1-baf01",
+    "ip": "10.5.11.31",
+    "listenfile": "wazuh syscollector dbsync_ports (union, partial)",
+    "os": "windows"
+  }
+}

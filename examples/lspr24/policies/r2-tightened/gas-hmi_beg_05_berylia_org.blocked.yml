@@ -1,0 +1,13 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 388 hits | reason: port not in policy (49854,50536)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 10.5.17.200
+    src_token: REQ_TOKEN_10.5.17.200
+# 150 hits | reason: port not in policy (49854,50536)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 100.97.5.37
+    src_token: salt-master_beg_05_berylia_org

@@ -1,0 +1,271 @@
+metadata:
+  host: mail
+  zone: baf_int
+filters:
+  - header:
+      targets:
+        windows_advfirewall: in mixed block
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 (sshd C:\Program Files\OpenSSH\sshd.exe sshd) | IPv6 ::/0 (sshd C:\Program Files\OpenSSH\sshd.exe sshd)
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BAF_INT_GT
+# [auto] IPv4 0.0.0.0/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport) | IPv6 ::/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport)
+      - name: allow-tcp-SMTP
+        protocol: tcp
+        destination-port: SMTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
+      - name: allow-tcp-HTTP
+        protocol: tcp
+        destination-port: HTTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-TCP_81
+        protocol: tcp
+        destination-port: TCP_81
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs)
+      - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+        protocol: tcp
+        destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.130/32 (System)
+      - name: allow-tcp-NETBIOS-SSN-LEGACY
+        protocol: tcp
+        destination-port: NETBIOS-SSN-LEGACY
+        action: accept
+        source-address:
+          - BAF_INT_HOSTS
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System) | aliases: HTTPS,WINDOWS-HYPERV-REPLICA-HTTPS
+      - name: allow-tcp-HTTPS
+        protocol: tcp
+        destination-port: HTTPS
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-TCP_444
+        protocol: tcp
+        destination-port: TCP_444
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINDOWS-SMB
+        protocol: tcp
+        destination-port: WINDOWS-SMB
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (EdgeTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\edgetransport.exe) | IPv6 ::/0 (EdgeTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\edgetransport.exe)
+      - name: allow-tcp-SMTPS
+        protocol: tcp
+        destination-port: SMTPS
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery) | IPv6 ::/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery)
+      - name: allow-tcp-TCP_475
+        protocol: tcp
+        destination-port: TCP_475
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery) | IPv6 ::/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery)
+      - name: allow-tcp-TCP_476
+        protocol: tcp
+        destination-port: TCP_476
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery) | IPv6 ::/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery)
+      - name: allow-tcp-TCP_477
+        protocol: tcp
+        destination-port: TCP_477
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport) | IPv6 ::/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport)
+      - name: allow-tcp-SMTP-SUBMIT
+        protocol: tcp
+        destination-port: SMTP-SUBMIT
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs)
+      - name: allow-tcp-WINDOWS-RPC-HTTPS
+        protocol: tcp
+        destination-port: WINDOWS-RPC-HTTPS
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport) | IPv6 ::/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport)
+      - name: allow-tcp-TCP_717
+        protocol: tcp
+        destination-port: TCP_717
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (SMSvcHost C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SMSvcHost.exe NetPipeActivator NetTcpActivator NetTcpPortSharing) | IPv6 ::/0 (SMSvcHost C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SMSvcHost.exe NetPipeActivator NetTcpActivator NetTcpPortSharing)
+      - name: allow-tcp-TCP_808
+        protocol: tcp
+        destination-port: TCP_808
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (Microsoft.Exchange.Directory.TopologyService C:\Program Files\Microsoft\Exchange Server\V15\Bin\Microsoft.Exchange.Directory.TopologyService.exe MSExchangeADTopology) | IPv6 ::/0 (Microsoft.Exchange.Directory.TopologyService C:\Program Files\Microsoft\Exchange Server\V15\Bin\Microsoft.Exchange.Directory.TopologyService.exe MSExchangeADTopology)
+      - name: allow-tcp-TCP_890
+        protocol: tcp
+        destination-port: TCP_890
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (EdgeTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\edgetransport.exe) | IPv6 ::/0 (EdgeTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\edgetransport.exe)
+      - name: allow-tcp-TCP_2525
+        protocol: tcp
+        destination-port: TCP_2525
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\System32\svchost.exe TermService) | IPv6 ::/0 (svchost C:\Windows\System32\svchost.exe TermService)
+      - name: allow-tcp-RDP
+        protocol: tcp
+        destination-port: RDP
+        action: accept
+        source-address:
+          - BAF_INT_GT
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-TCP_3800
+        protocol: tcp
+        destination-port: TCP_3800
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (hostcontrollerservice C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\HostController\hostcontrollerservice.exe HostControllerService) | IPv6 ::/0 (hostcontrollerservice C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\HostController\hostcontrollerservice.exe HostControllerService)
+      - name: allow-tcp-TCP_3801
+        protocol: tcp
+        destination-port: TCP_3801
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
+      - name: allow-tcp-TCP_3803
+        protocol: tcp
+        destination-port: TCP_3803
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\ResourceProfile\contentengine\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\ResourceProfile\contentengine\NodeRunner.exe)
+      - name: allow-tcp-TCP_3823
+        protocol: tcp
+        destination-port: TCP_3823
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\ResourceProfile\contentengine\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\ResourceProfile\contentengine\NodeRunner.exe)
+      - name: allow-tcp-TCP_3828
+        protocol: tcp
+        destination-port: TCP_3828
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
+      - name: allow-tcp-TCP_3843
+        protocol: tcp
+        destination-port: TCP_3843
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
+      - name: allow-tcp-TCP_3863
+        protocol: tcp
+        destination-port: TCP_3863
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
+      - name: allow-tcp-TCP_3867
+        protocol: tcp
+        destination-port: TCP_3867
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
+      - name: allow-tcp-TCP_3875
+        protocol: tcp
+        destination-port: TCP_3875
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINRM-HTTP
+        protocol: tcp
+        destination-port: WINRM-HTTP
+        action: accept
+        source-address:
+          - BAF_INT_GT
+# [auto] IPv4 0.0.0.0/0 (Microsoft.Exchange.RpcClientAccess.Service C:\Program Files\Microsoft\Exchange Server\V15\bin\Microsoft.Exchange.RpcClientAccess.Service.exe MSExchangeRPC) | IPv6 ::/0 (Microsoft.Exchange.RpcClientAccess.Service C:\Program Files\Microsoft\Exchange Server\V15\bin\Microsoft.Exchange.RpcClientAccess.Service.exe MSExchangeRPC)
+      - name: allow-tcp-TCP_6001
+        protocol: tcp
+        destination-port: TCP_6001
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (msexchangerepl C:\Program Files\Microsoft\Exchange Server\V15\Bin\msexchangerepl.exe MSExchangeRepl) | IPv6 ::/0 (msexchangerepl C:\Program Files\Microsoft\Exchange Server\V15\Bin\msexchangerepl.exe MSExchangeRepl)
+      - name: allow-tcp-WINDOWS-RPC-DYNAMIC
+        protocol: tcp
+        destination-port: WINDOWS-RPC-DYNAMIC
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe W32Time) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe W32Time)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.130/32 (System)
+      - name: allow-udp-NETBIOS-NS-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-NS-LEGACY
+        action: accept
+        source-address:
+          - BAF_INT_HOSTS
+# [auto] IPv4 192.168.150.130/32 (System)
+      - name: allow-udp-NETBIOS-DGM-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-DGM-LEGACY
+        action: accept
+        source-address:
+          - BAF_INT_HOSTS
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\System32\svchost.exe TermService) | IPv6 ::/0 (svchost C:\Windows\System32\svchost.exe TermService)
+      - name: allow-udp-RDP
+        protocol: udp
+        destination-port: RDP
+        action: accept
+        source-address:
+          - BAF_INT_GT
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe Dnscache) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe Dnscache)
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe Dnscache) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe Dnscache)
+      - name: allow-udp-LLMNR
+        protocol: udp
+        destination-port: LLMNR
+        action: accept
+        source-address:
+          - LLMNR_SOURCES_V4
+          - LLMNR_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        platform-exclude:
+          - windows_advfirewall
+
+# egress
+  - header:
+      targets:
+        windows_advfirewall: out mixed
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

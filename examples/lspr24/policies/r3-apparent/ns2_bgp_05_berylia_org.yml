@@ -1,0 +1,23 @@
+metadata:
+  host: ns2
+  zone: bgp
+  provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: ANY
+    comment: every one of 3 sources was answered
+  - name: allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    action: accept
+    source-address: ANY
+    comment: every one of 2 sources was answered
+  - name: drop-ANY
+    action: deny

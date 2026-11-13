@@ -1,0 +1,7 @@
+# ss-version: ss utility, iproute2-ss180129
+# os: Ubuntu 18.04.6 LTS
+# flags: ss -tulnpe tulnpe
+Netid  State    Recv-Q   Send-Q      Local Address:Port      Peer Address:Port                                                                                  
+tcp    LISTEN   0        5                 0.0.0.0:19003          0.0.0.0:*      users:(("svc(1",pid=521,fd=3)) ino:2445527 sk:25 <->                           
+tcp    LISTEN   0        5                 0.0.0.0:19002          0.0.0.0:*      users:(("my proc:x",pid=519,fd=3)) ino:2449492 sk:26 <->                       
+tcp    LISTEN   0        5                 0.0.0.0:19001          0.0.0.0:*      users:(("plain",pid=517,fd=3)) ino:2450476 sk:27 <->                           

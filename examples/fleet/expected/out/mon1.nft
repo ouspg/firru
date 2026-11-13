@@ -1,0 +1,53 @@
+table inet filtering_policies {
+    chain allow-loopback {
+        ip saddr 127.0.0.0/8 ct state new accept
+        ip6 saddr ::1/128 ct state new accept
+    }
+    chain allow-icmp {
+        ip protocol icmp ct state new accept
+    }
+    chain allow-icmpv6 {
+        meta l4proto icmpv6 accept
+    }
+    chain allow-tcp-MUNIN {
+        ip saddr 192.168.150.250/32 tcp dport 4949 ct state new accept
+    }
+    chain allow-udp-DHCP-CLIENT {
+        ip saddr 0.0.0.0/0 udp dport 68 ct state new accept
+    }
+    chain drop-ANY {
+        counter drop
+    }
+    chain root0 {
+        type filter hook input priority 0; policy drop;
+        ct state established,related accept
+        jump allow-loopback
+        jump allow-icmp
+        jump allow-icmpv6
+        jump allow-tcp-MUNIN
+        jump allow-udp-DHCP-CLIENT
+        jump drop-ANY
+    }
+    chain allow-loopback {
+        ip saddr 127.0.0.0/8 ct state new accept
+        ip6 saddr ::1/128 ct state new accept
+    }
+    chain allow-icmp {
+        ip protocol icmp ct state new accept
+    }
+    chain allow-icmpv6 {
+        meta l4proto icmpv6 accept
+    }
+    chain allow-ANY {
+        ct state new accept
+    }
+    chain root1 {
+        type filter hook output priority 0; policy drop;
+        ct state established,related accept
+        jump allow-loopback
+        jump allow-icmp
+        jump allow-icmpv6
+        jump allow-ANY
+    }
+}
+

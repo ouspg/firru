@@ -1,0 +1,7 @@
+# ss-version: ss utility, iproute2-ss190107
+# os: Debian GNU/Linux 10 (buster)
+# flags: ss -tulnp tulnp
+Netid   State    Recv-Q   Send-Q     Local Address:Port      Peer Address:Port                                                                                  
+tcp     LISTEN   0        5                0.0.0.0:19001          0.0.0.0:*      users:(("plain",pid=554,fd=3))                                                 
+tcp     LISTEN   0        5                0.0.0.0:19002          0.0.0.0:*      users:(("my proc:x",pid=556,fd=3))                                             
+tcp     LISTEN   0        5                0.0.0.0:19003          0.0.0.0:*      users:(("svc(1",pid=558,fd=3))                                                 

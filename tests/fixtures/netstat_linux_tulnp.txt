@@ -1,0 +1,8 @@
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1569/sshd: /usr/sbi 
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN      1560/cupsd          
+tcp        0      0 0.0.0.0:27500           0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      1569/sshd: /usr/sbi 
+udp        0      0 0.0.0.0:5353            0.0.0.0:*                           1371/avahi-daemon:  
+udp6       0      0 :::5353                 :::*                                1371/avahi-daemon:  

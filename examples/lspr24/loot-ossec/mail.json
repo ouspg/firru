@@ -1,0 +1,149 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 55871,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "w3wp.exe",
+        "pid": 14004,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 55871,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "w3wp.exe",
+        "pid": 14004,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 62413,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "w3wp.exe",
+        "pid": 10300,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 62425,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "MSExchangeMailboxAssistants.exe",
+        "pid": 4948,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 62601,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "w3wp.exe",
+        "pid": 11316,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 62623,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "MSExchangeDelivery.exe",
+        "pid": 5848,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 64261,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "MSExchangeMailboxAssistants.exe",
+        "pid": 4948,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 64266,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "MSExchangeMailboxAssistants.exe",
+        "pid": 4948,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "002",
+    "annotationfile": null,
+    "collected_at": "2024-03-07T13:51:47",
+    "hostname": "mail",
+    "ip": "10.5.11.5",
+    "listenfile": "wazuh syscollector dbsync_ports (union, partial)",
+    "os": "windows"
+  }
+}

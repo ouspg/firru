@@ -1,0 +1,200 @@
+metadata:
+  host: dc1
+  zone: beg_int
+filters:
+  - header:
+      targets:
+        windows_advfirewall: in mixed block
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 (sshd C:\Program Files\OpenSSH\sshd.exe sshd) | IPv6 ::/0 (sshd C:\Program Files\OpenSSH\sshd.exe sshd)
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BEG_INT_GT
+# [auto] IPv4 192.168.150.194/32 (dns C:\Windows\system32\dns.exe DNS) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (dns C:\Windows\system32\dns.exe DNS)
+      - name: allow-tcp-DNS-TCP
+        protocol: tcp
+        destination-port: DNS-TCP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 ::/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
+      - name: allow-tcp-KERBEROS-TCP
+        protocol: tcp
+        destination-port: KERBEROS-TCP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs)
+      - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+        protocol: tcp
+        destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.194/32 (System)
+      - name: allow-tcp-NETBIOS-SSN-LEGACY
+        protocol: tcp
+        destination-port: NETBIOS-SSN-LEGACY
+        action: accept
+        source-address:
+          - BEG_INT_HOSTS
+# [auto] IPv4 0.0.0.0/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 ::/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
+      - name: allow-tcp-LDAP-TCP
+        protocol: tcp
+        destination-port: LDAP-TCP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINDOWS-SMB
+        protocol: tcp
+        destination-port: WINDOWS-SMB
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 ::/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
+      - name: allow-tcp-KERBEROS-KPASSWD-TCP
+        protocol: tcp
+        destination-port: KERBEROS-KPASSWD-TCP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs)
+      - name: allow-tcp-WINDOWS-RPC-HTTPS
+        protocol: tcp
+        destination-port: WINDOWS-RPC-HTTPS
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 ::/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
+      - name: allow-tcp-LDAPS
+        protocol: tcp
+        destination-port: LDAPS
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (lsass.exe) | IPv6 ::/0 (lsass.exe)
+      - name: allow-tcp-LDAP-GC
+        protocol: tcp
+        destination-port: LDAP-GC
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (lsass.exe) | IPv6 ::/0 (lsass.exe)
+      - name: allow-tcp-LDAP-GC-SSL
+        protocol: tcp
+        destination-port: LDAP-GC-SSL
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\System32\svchost.exe TermService) | IPv6 ::/0 (svchost C:\Windows\System32\svchost.exe TermService)
+      - name: allow-tcp-RDP
+        protocol: tcp
+        destination-port: RDP
+        action: accept
+        source-address:
+          - BEG_INT_GT
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINRM-HTTP
+        protocol: tcp
+        destination-port: WINRM-HTTP
+        action: accept
+        source-address:
+          - BEG_INT_GT
+# [auto] IPv4 0.0.0.0/0 (Microsoft.ActiveDirectory.WebServices C:\Windows\ADWS\Microsoft.ActiveDirectory.WebServices.exe ADWS) | IPv6 ::/0 (Microsoft.ActiveDirectory.WebServices C:\Windows\ADWS\Microsoft.ActiveDirectory.WebServices.exe ADWS)
+      - name: allow-tcp-WINDOWS-AD-ADWS
+        protocol: tcp
+        destination-port: WINDOWS-AD-ADWS
+        action: accept
+        source-address:
+          - BEG_INT_GT
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
+        protocol: tcp
+        destination-port: WINDOWS-WINRM-UNCONFIGURED
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.194/32 (dns C:\Windows\system32\dns.exe DNS) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (dns C:\Windows\system32\dns.exe DNS)
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.194/32 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
+      - name: allow-udp-KERBEROS-UDP
+        protocol: udp
+        destination-port: KERBEROS-UDP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe W32Time) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe W32Time)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.194/32 (System)
+      - name: allow-udp-NETBIOS-NS-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-NS-LEGACY
+        action: accept
+        source-address:
+          - BEG_INT_HOSTS
+# [auto] IPv4 192.168.150.194/32 (System)
+      - name: allow-udp-NETBIOS-DGM-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-DGM-LEGACY
+        action: accept
+        source-address:
+          - BEG_INT_HOSTS
+# [auto] IPv4 0.0.0.0/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 ::/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
+      - name: allow-udp-LDAP-UDP
+        protocol: udp
+        destination-port: LDAP-UDP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.194/32 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
+      - name: allow-udp-KERBEROS-KPASSWD-UDP
+        protocol: udp
+        destination-port: KERBEROS-KPASSWD-UDP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\System32\svchost.exe TermService) | IPv6 ::/0 (svchost C:\Windows\System32\svchost.exe TermService)
+      - name: allow-udp-RDP
+        protocol: udp
+        destination-port: RDP
+        action: accept
+        source-address:
+          - BEG_INT_GT
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe Dnscache) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe Dnscache)
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe Dnscache) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe Dnscache)
+      - name: allow-udp-LLMNR
+        protocol: udp
+        destination-port: LLMNR
+        action: accept
+        source-address:
+          - LLMNR_SOURCES_V4
+          - LLMNR_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        platform-exclude:
+          - windows_advfirewall
+
+# egress
+  - header:
+      targets:
+        windows_advfirewall: out mixed
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

@@ -1,0 +1,367 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 724,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 631,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "cupsd",
+        "pid": 945,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::1/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 631,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "cupsd",
+        "pid": 945,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::1/128",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 3350,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "xrdp-sesman",
+        "pid": 1649,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3389,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "xrdp",
+        "pid": 1659,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 724,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 907,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "10.5.12.31/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 907,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 907,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "2a07:1182:5:12::31/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 907,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 907,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::1/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 907,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fe80::250:56ff:fe89/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 907,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 631,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "cups-browsed",
+        "pid": 995,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5353,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "avahi-daemon",
+        "pid": 787,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5353,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "avahi-daemon",
+        "pid": 787,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49006,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "avahi-daemon",
+        "pid": 787,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49248,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "avahi-daemon",
+        "pid": 787,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "106",
+    "annotationfile": null,
+    "assumed": [
+      "dynamic_ranges"
+    ],
+    "collected_at": "2024-03-07T08:27:40",
+    "ephemeral": {
+      "tcp": [
+        32768,
+        60999
+      ],
+      "udp": [
+        32768,
+        60999
+      ]
+    },
+    "ephemeral_source": "assumed: firru-os-baselines, all 102 Linux runs",
+    "hostname": "ws3-beg01",
+    "ip": "10.5.12.31",
+    "listenfile": "ossec rootcheck netstat",
+    "os": "linux"
+  }
+}

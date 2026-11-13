@@ -1,0 +1,7 @@
+# ss-version: ss utility, iproute2-6.2.0
+# os: Rocky Linux 8.10 (Green Obsidian)
+# flags: ss -tulnpe 
+Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                                                                     
+tcp   LISTEN 0      5            0.0.0.0:19001      0.0.0.0:*    users:(("plain",pid=68,fd=3)) ino:2384097 sk:6004 cgroup:/ <-> cgroup:/    
+tcp   LISTEN 0      5            0.0.0.0:19002      0.0.0.0:*    users:(("my proc:x",pid=70,fd=3)) ino:2382730 sk:6005 cgroup:/ <-> cgroup:/
+tcp   LISTEN 0      5            0.0.0.0:19003      0.0.0.0:*    users:(("svc(1",pid=72,fd=3)) ino:2385672 sk:6006 cgroup:/ <-> cgroup:/    

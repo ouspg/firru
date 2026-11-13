@@ -1,0 +1,157 @@
+# Suggested new network group definitions.
+# Review, name appropriately, and add to def/ before rerunning tighten.
+networks:
+  SUGGEST_TCP_DNS_TCP:
+# observed sources for tcp-DNS-TCP: dc1_int_beg_05_berylia_org, mail_beg_05_berylia_org, ws1-beg01_int_beg_05_berylia_org, ws1-beg02_int_beg_05_berylia_org, ws1-beg03_int_beg_05_berylia_org, ws1-beg04_int_beg_05_berylia_org, ws1-beg05_int_beg_05_berylia_org, ws2-beg01_int_beg_05_berylia_org, ws2-beg02_int_beg_05_berylia_org, ws2-beg03_int_beg_05_berylia_org, ws2-beg04_int_beg_05_berylia_org, ws2-beg05_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org
+    values:
+      - address: dc1_int_beg_05_berylia_org
+      - address: mail_beg_05_berylia_org
+      - address: ws1-beg01_int_beg_05_berylia_org
+      - address: ws1-beg02_int_beg_05_berylia_org
+      - address: ws1-beg03_int_beg_05_berylia_org
+      - address: ws1-beg04_int_beg_05_berylia_org
+      - address: ws1-beg05_int_beg_05_berylia_org
+      - address: ws2-beg01_int_beg_05_berylia_org
+      - address: ws2-beg02_int_beg_05_berylia_org
+      - address: ws2-beg03_int_beg_05_berylia_org
+      - address: ws2-beg04_int_beg_05_berylia_org
+      - address: ws2-beg05_int_beg_05_berylia_org
+      - address: ws3-beg03_int_beg_05_berylia_org
+      - address: ws3-beg04_int_beg_05_berylia_org
+      - address: ws3-beg05_int_beg_05_berylia_org
+  SUGGEST_TCP_KERBEROS_TCP:
+# observed sources for tcp-KERBEROS-TCP: BEG_INT_GT_OTHER, adcs-beg_int_beg_05_berylia_org, beg-power-ws_int_beg_05_berylia_org, ws1-beg03_int_beg_05_berylia_org, ws1-beg04_int_beg_05_berylia_org, ws2-beg01_int_beg_05_berylia_org, ws2-beg02_int_beg_05_berylia_org, ws2-beg03_int_beg_05_berylia_org, ws2-beg04_int_beg_05_berylia_org, ws2-beg05_int_beg_05_berylia_org, ws3-beg01_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org
+    values:
+      - address: BEG_INT_GT_OTHER
+      - address: adcs-beg_int_beg_05_berylia_org
+      - address: beg-power-ws_int_beg_05_berylia_org
+      - address: ws1-beg03_int_beg_05_berylia_org
+      - address: ws1-beg04_int_beg_05_berylia_org
+      - address: ws2-beg01_int_beg_05_berylia_org
+      - address: ws2-beg02_int_beg_05_berylia_org
+      - address: ws2-beg03_int_beg_05_berylia_org
+      - address: ws2-beg04_int_beg_05_berylia_org
+      - address: ws2-beg05_int_beg_05_berylia_org
+      - address: ws3-beg01_int_beg_05_berylia_org
+      - address: ws3-beg03_int_beg_05_berylia_org
+      - address: ws3-beg04_int_beg_05_berylia_org
+      - address: ws3-beg05_int_beg_05_berylia_org
+  SUGGEST_TCP_LDAP_GC:
+# observed sources for tcp-LDAP-GC: BEG_GT_OTHER, BEG_INT_GT_OTHER, adcs-beg_int_beg_05_berylia_org, ws3-beg01_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org
+    values:
+      - address: BEG_GT_OTHER
+      - address: BEG_INT_GT_OTHER
+      - address: adcs-beg_int_beg_05_berylia_org
+      - address: ws3-beg01_int_beg_05_berylia_org
+      - address: ws3-beg03_int_beg_05_berylia_org
+      - address: ws3-beg04_int_beg_05_berylia_org
+      - address: ws3-beg05_int_beg_05_berylia_org
+  SUGGEST_TCP_LDAP_TCP:
+# observed sources for tcp-LDAP-TCP: BEG_INT_GT_OTHER, adcs-beg_int_beg_05_berylia_org, beg-power-ws_int_beg_05_berylia_org, mail_beg_05_berylia_org, ws1-beg01_int_beg_05_berylia_org, ws1-beg02_int_beg_05_berylia_org, ws1-beg03_int_beg_05_berylia_org, ws1-beg04_int_beg_05_berylia_org, ws1-beg05_int_beg_05_berylia_org, ws2-beg02_int_beg_05_berylia_org, ws2-beg03_int_beg_05_berylia_org, ws2-beg04_int_beg_05_berylia_org, ws2-beg05_int_beg_05_berylia_org, ws3-beg01_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org
+    values:
+      - address: BEG_INT_GT_OTHER
+      - address: adcs-beg_int_beg_05_berylia_org
+      - address: beg-power-ws_int_beg_05_berylia_org
+      - address: mail_beg_05_berylia_org
+      - address: ws1-beg01_int_beg_05_berylia_org
+      - address: ws1-beg02_int_beg_05_berylia_org
+      - address: ws1-beg03_int_beg_05_berylia_org
+      - address: ws1-beg04_int_beg_05_berylia_org
+      - address: ws1-beg05_int_beg_05_berylia_org
+      - address: ws2-beg02_int_beg_05_berylia_org
+      - address: ws2-beg03_int_beg_05_berylia_org
+      - address: ws2-beg04_int_beg_05_berylia_org
+      - address: ws2-beg05_int_beg_05_berylia_org
+      - address: ws3-beg01_int_beg_05_berylia_org
+      - address: ws3-beg03_int_beg_05_berylia_org
+      - address: ws3-beg04_int_beg_05_berylia_org
+      - address: ws3-beg05_int_beg_05_berylia_org
+  SUGGEST_TCP_WINDOWS_RPC_ENDPOINT_MAPPER:
+# observed sources for tcp-WINDOWS-RPC-ENDPOINT-MAPPER: BEG_INT_GT_OTHER, adcs-beg_int_beg_05_berylia_org, beg-power-ws_int_beg_05_berylia_org, mail_beg_05_berylia_org, ws1-beg01_int_beg_05_berylia_org, ws1-beg02_int_beg_05_berylia_org, ws1-beg03_int_beg_05_berylia_org, ws1-beg04_int_beg_05_berylia_org, ws2-beg03_int_beg_05_berylia_org, ws2-beg05_int_beg_05_berylia_org
+    values:
+      - address: BEG_INT_GT_OTHER
+      - address: adcs-beg_int_beg_05_berylia_org
+      - address: beg-power-ws_int_beg_05_berylia_org
+      - address: mail_beg_05_berylia_org
+      - address: ws1-beg01_int_beg_05_berylia_org
+      - address: ws1-beg02_int_beg_05_berylia_org
+      - address: ws1-beg03_int_beg_05_berylia_org
+      - address: ws1-beg04_int_beg_05_berylia_org
+      - address: ws2-beg03_int_beg_05_berylia_org
+      - address: ws2-beg05_int_beg_05_berylia_org
+  SUGGEST_TCP_WINDOWS_SMB:
+# observed sources for tcp-WINDOWS-SMB: BEG_GT_OTHER, BEG_INT_GT_OTHER, adcs-beg_int_beg_05_berylia_org, beg-power-ws_int_beg_05_berylia_org, mail_beg_05_berylia_org, ws1-beg01_int_beg_05_berylia_org, ws1-beg02_int_beg_05_berylia_org, ws1-beg03_int_beg_05_berylia_org, ws1-beg04_int_beg_05_berylia_org, ws2-beg03_int_beg_05_berylia_org, ws2-beg05_int_beg_05_berylia_org
+    values:
+      - address: BEG_GT_OTHER
+      - address: BEG_INT_GT_OTHER
+      - address: adcs-beg_int_beg_05_berylia_org
+      - address: beg-power-ws_int_beg_05_berylia_org
+      - address: mail_beg_05_berylia_org
+      - address: ws1-beg01_int_beg_05_berylia_org
+      - address: ws1-beg02_int_beg_05_berylia_org
+      - address: ws1-beg03_int_beg_05_berylia_org
+      - address: ws1-beg04_int_beg_05_berylia_org
+      - address: ws2-beg03_int_beg_05_berylia_org
+      - address: ws2-beg05_int_beg_05_berylia_org
+  SUGGEST_UDP_DNS_UDP:
+# observed sources for udp-DNS-UDP: BEG_GT_OTHER, BEG_INT_GT_OTHER, adcs-beg_int_beg_05_berylia_org, beg-power-ws_int_beg_05_berylia_org, dc1_int_beg_05_berylia_org, lemonldapng_int_beg_05_berylia_org, mail_beg_05_berylia_org, ws1-beg01_int_beg_05_berylia_org, ws1-beg02_int_beg_05_berylia_org, ws1-beg03_int_beg_05_berylia_org, ws1-beg04_int_beg_05_berylia_org, ws1-beg05_int_beg_05_berylia_org, ws2-beg01_int_beg_05_berylia_org, ws2-beg02_int_beg_05_berylia_org, ws2-beg03_int_beg_05_berylia_org, ws2-beg04_int_beg_05_berylia_org, ws2-beg05_int_beg_05_berylia_org, ws3-beg01_int_beg_05_berylia_org, ws3-beg02_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org, ws4-beg01_int_beg_05_berylia_org, ws4-beg02_int_beg_05_berylia_org, ws4-beg03_int_beg_05_berylia_org, ws4-beg04_int_beg_05_berylia_org, ws4-beg05_int_beg_05_berylia_org
+    values:
+      - address: BEG_GT_OTHER
+      - address: BEG_INT_GT_OTHER
+      - address: adcs-beg_int_beg_05_berylia_org
+      - address: beg-power-ws_int_beg_05_berylia_org
+      - address: dc1_int_beg_05_berylia_org
+      - address: lemonldapng_int_beg_05_berylia_org
+      - address: mail_beg_05_berylia_org
+      - address: ws1-beg01_int_beg_05_berylia_org
+      - address: ws1-beg02_int_beg_05_berylia_org
+      - address: ws1-beg03_int_beg_05_berylia_org
+      - address: ws1-beg04_int_beg_05_berylia_org
+      - address: ws1-beg05_int_beg_05_berylia_org
+      - address: ws2-beg01_int_beg_05_berylia_org
+      - address: ws2-beg02_int_beg_05_berylia_org
+      - address: ws2-beg03_int_beg_05_berylia_org
+      - address: ws2-beg04_int_beg_05_berylia_org
+      - address: ws2-beg05_int_beg_05_berylia_org
+      - address: ws3-beg01_int_beg_05_berylia_org
+      - address: ws3-beg02_int_beg_05_berylia_org
+      - address: ws3-beg03_int_beg_05_berylia_org
+      - address: ws3-beg04_int_beg_05_berylia_org
+      - address: ws3-beg05_int_beg_05_berylia_org
+      - address: ws4-beg01_int_beg_05_berylia_org
+      - address: ws4-beg02_int_beg_05_berylia_org
+      - address: ws4-beg03_int_beg_05_berylia_org
+      - address: ws4-beg04_int_beg_05_berylia_org
+      - address: ws4-beg05_int_beg_05_berylia_org
+  SUGGEST_UDP_LDAP_UDP:
+# observed sources for udp-LDAP-UDP: adcs-beg_int_beg_05_berylia_org, beg-power-ws_int_beg_05_berylia_org, mail_beg_05_berylia_org, ws1-beg01_int_beg_05_berylia_org, ws1-beg02_int_beg_05_berylia_org, ws1-beg03_int_beg_05_berylia_org, ws1-beg04_int_beg_05_berylia_org, ws1-beg05_int_beg_05_berylia_org, ws2-beg01_int_beg_05_berylia_org, ws2-beg02_int_beg_05_berylia_org, ws2-beg03_int_beg_05_berylia_org, ws2-beg04_int_beg_05_berylia_org, ws2-beg05_int_beg_05_berylia_org
+    values:
+      - address: adcs-beg_int_beg_05_berylia_org
+      - address: beg-power-ws_int_beg_05_berylia_org
+      - address: mail_beg_05_berylia_org
+      - address: ws1-beg01_int_beg_05_berylia_org
+      - address: ws1-beg02_int_beg_05_berylia_org
+      - address: ws1-beg03_int_beg_05_berylia_org
+      - address: ws1-beg04_int_beg_05_berylia_org
+      - address: ws1-beg05_int_beg_05_berylia_org
+      - address: ws2-beg01_int_beg_05_berylia_org
+      - address: ws2-beg02_int_beg_05_berylia_org
+      - address: ws2-beg03_int_beg_05_berylia_org
+      - address: ws2-beg04_int_beg_05_berylia_org
+      - address: ws2-beg05_int_beg_05_berylia_org
+  SUGGEST_UDP_NTP:
+# observed sources for udp-NTP: BEG_GT_OTHER, BEG_INT_GT_OTHER, adcs-beg_int_beg_05_berylia_org, ws1-beg03_int_beg_05_berylia_org, ws1-beg04_int_beg_05_berylia_org, ws2-beg01_int_beg_05_berylia_org, ws2-beg03_int_beg_05_berylia_org, ws2-beg05_int_beg_05_berylia_org, ws4-beg01_int_beg_05_berylia_org, ws4-beg02_int_beg_05_berylia_org, ws4-beg03_int_beg_05_berylia_org, ws4-beg04_int_beg_05_berylia_org, ws4-beg05_int_beg_05_berylia_org
+    values:
+      - address: BEG_GT_OTHER
+      - address: BEG_INT_GT_OTHER
+      - address: adcs-beg_int_beg_05_berylia_org
+      - address: ws1-beg03_int_beg_05_berylia_org
+      - address: ws1-beg04_int_beg_05_berylia_org
+      - address: ws2-beg01_int_beg_05_berylia_org
+      - address: ws2-beg03_int_beg_05_berylia_org
+      - address: ws2-beg05_int_beg_05_berylia_org
+      - address: ws4-beg01_int_beg_05_berylia_org
+      - address: ws4-beg02_int_beg_05_berylia_org
+      - address: ws4-beg03_int_beg_05_berylia_org
+      - address: ws4-beg04_int_beg_05_berylia_org
+      - address: ws4-beg05_int_beg_05_berylia_org

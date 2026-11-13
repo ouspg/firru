@@ -1,0 +1,48 @@
+metadata:
+  host: web1
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 (apache2) | IPv6 ::/0 (apache2) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
+      - name: allow-tcp-HTTP
+        protocol: tcp
+        destination-port: HTTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.126/32 (systemd-network)
+      - name: allow-udp-DHCP-CLIENT
+        protocol: udp
+        destination-port: DHCP-CLIENT
+        action: accept
+        source-address: ANY_V4
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

@@ -1,0 +1,469 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 621,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 4532,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "rigctld",
+        "pid": 1825,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 4533,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "rotctld",
+        "pid": 1823,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5900,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "Xtigervnc",
+        "pid": 182615,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5900,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "Xtigervnc",
+        "pid": 182615,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "10.5.20.10/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 8080,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "docker-proxy",
+        "pid": 1190,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 8080,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "docker-proxy",
+        "pid": 1205,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "2a07:1182:5:f20::1/128",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 8080,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "docker-proxy",
+        "pid": 1175,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "10.5.20.10/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 9000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "docker-proxy",
+        "pid": 1170,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "2a07:1182:5:f20::1/128",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 9000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "docker-proxy",
+        "pid": 1152,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 19000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "socat",
+        "pid": 1827,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 621,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "10.5.20.10/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "172.19.0.1/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "2a07:1182:5:f20::10/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::1/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fd12:3456:789a:1::1/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fe80::1/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fe80::1cbd:2eff:fe0/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fe80::250:56ff:fe89/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fe80::cc66:4cff:fea/128",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 123,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "ntpd",
+        "pid": 747,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "078",
+    "annotationfile": null,
+    "assumed": [
+      "dynamic_ranges"
+    ],
+    "collected_at": "2024-03-07T08:27:19",
+    "ephemeral": {
+      "tcp": [
+        32768,
+        60999
+      ],
+      "udp": [
+        32768,
+        60999
+      ]
+    },
+    "ephemeral_source": "assumed: firru-os-baselines, all 102 Linux runs",
+    "hostname": "hq-gsc01",
+    "ip": "10.5.20.10",
+    "listenfile": "ossec rootcheck netstat",
+    "os": "linux"
+  }
+}

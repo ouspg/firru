@@ -1,0 +1,115 @@
+metadata:
+  host: beg_int
+  zone: beg_int
+  hosts:
+  - adcs-beg_int_beg_05_berylia_org
+  - dc1_int_beg_05_berylia_org
+  - dc2_int_beg_05_berylia_org
+  - lemonldapng_int_beg_05_berylia_org
+  - ws1-beg01_int_beg_05_berylia_org
+  - ws1-beg02_int_beg_05_berylia_org
+  - ws2-beg01_int_beg_05_berylia_org
+  - ws2-beg02_int_beg_05_berylia_org
+  - ws3-beg01_int_beg_05_berylia_org
+  - ws3-beg02_int_beg_05_berylia_org
+  - ws3-beg03_int_beg_05_berylia_org
+  - ws3-beg04_int_beg_05_berylia_org
+  - ws3-beg05_int_beg_05_berylia_org
+filters:
+- header:
+    targets:
+      nftables: mixed input
+  terms:
+  - name: allow-tcp-SSH-shared
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: ANY
+    comment: every one of 4 sources was answered
+    destination-address: adcs-beg_int_beg_05_berylia_org dc1_int_beg_05_berylia_org
+      dc2_int_beg_05_berylia_org lemonldapng_int_beg_05_berylia_org ws1-beg01_int_beg_05_berylia_org
+      ws1-beg02_int_beg_05_berylia_org ws2-beg01_int_beg_05_berylia_org ws2-beg02_int_beg_05_berylia_org
+      ws3-beg01_int_beg_05_berylia_org ws3-beg02_int_beg_05_berylia_org ws3-beg03_int_beg_05_berylia_org
+      ws3-beg04_int_beg_05_berylia_org ws3-beg05_int_beg_05_berylia_org
+  - name: allow-tcp-HTTP-shared
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: ANY
+    comment: every one of 5 sources was answered
+    destination-address: adcs-beg_int_beg_05_berylia_org lemonldapng_int_beg_05_berylia_org
+  - name: allow-tcp-DNS-TCP-shared
+    protocol: tcp
+    destination-port: DNS-TCP
+    action: accept
+    source-address: ANY
+    comment: every one of 32 sources was answered
+    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
+  - name: allow-tcp-KERBEROS-TCP-shared
+    protocol: tcp
+    destination-port: KERBEROS-TCP
+    action: accept
+    source-address: ANY
+    comment: 28 sources answered, 1 not
+    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
+  - name: allow-tcp-LDAP-TCP-shared
+    protocol: tcp
+    destination-port: LDAP-TCP
+    action: accept
+    source-address: ANY
+    comment: 35 sources answered, 1 not
+    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
+  - name: allow-tcp-LDAPS-shared
+    protocol: tcp
+    destination-port: LDAPS
+    action: accept
+    source-address: ANY
+    comment: every one of 9 sources was answered
+    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
+  - name: allow-udp-DNS-UDP-shared
+    protocol: udp
+    destination-port: DNS-UDP
+    action: accept
+    source-address: ANY
+    comment: every one of 59 sources was answered
+    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
+  - name: allow-udp-KERBEROS-UDP-shared
+    protocol: udp
+    destination-port: KERBEROS-UDP
+    action: accept
+    source-address: ANY
+    comment: every one of 2 sources was answered
+    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
+  - name: allow-udp-NTP-shared
+    protocol: udp
+    destination-port: NTP
+    action: accept
+    source-address: ANY
+    comment: every one of 15 sources was answered
+    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org ws3-beg01_int_beg_05_berylia_org
+      ws3-beg04_int_beg_05_berylia_org ws3-beg05_int_beg_05_berylia_org
+  - name: allow-udp-LDAP-UDP-shared
+    protocol: udp
+    destination-port: LDAP-UDP
+    action: accept
+    source-address: ANY
+    comment: 26 sources answered, 3 not
+    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
+  - name: lemonldapng_int_beg_05_berylia_org-allow-tcp-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: ANY
+    comment: every one of 3 sources was answered
+    destination-address: lemonldapng_int_beg_05_berylia_org
+  - name: drop-ghost-hosts
+    action: deny
+    destination-address: beg_int
+    comment: 'Ghost host catch-all: drops traffic to IPs in beg_int not matched by
+      any allow term above.  All legitimate hosts should appear in policies/pol/ and
+      be covered by explicit allow terms.'
+  - name: log-accept-ANY
+    action: accept
+    logging: true
+    comment: 'INITIAL DEPLOYMENT: accept + log all unmatched traffic. Promote to log-drop
+      (--terminal log-drop) once rules are stable.'

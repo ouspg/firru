@@ -1,0 +1,96 @@
+# firru tighten output — review and copy changes to policies/pol/cctv-ai-monitor_int_bgp_05_berylia_org.yml
+# Source suggestions changed: 1 | Dead rules: 0 | Group suggestions: 0
+metadata:
+  host: cctv-ai-monitor
+  zone: bgp_int
+  variant: 'r4-block-early (learn file: night.jsonl) — services with no observed client
+    are removed, not merely narrowed'
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+
+# [auto] 1799 flows total | 1799 hits: BGP_INT_GT_OTHER (10.5.13.250, 2a07:1182:5:13::250) | via: SSH/tcp/22
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: BGP_INT_GT_OTHER      # was: BGP_INT_GT
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-loopback
+    source-address: LOOPBACK
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmp
+    protocol: icmp
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmpv6
+    protocol: icmpv6
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: drop-ANY
+    action: deny
+    counter: drop-ANY
+
+- header:
+    targets:
+      nftables: mixed output
+  terms:
+  - name: allow-loopback
+    action: accept
+    source-address: LOOPBACK
+  - name: allow-icmp
+    action: accept
+    protocol: icmp
+  - name: allow-icmpv6
+    action: accept
+    protocol: icmpv6
+# [auto] 337 hits: bgp_int (2a07:1182:5:13::1) | 113 hits: core (fe80::250:56ff:fe89:cef1) | 51 hits: BGP_INT_GT_OTHER (2a07:1182:5:13::250)
+  - name: allow-icmpv6-ICMPV6
+    protocol: icmpv6
+    destination-address:
+    - BGP_INT_GT_OTHER
+    - bgp_int
+    - core
+    action: accept
+# [auto] 9194 hits: EXTERNAL (2a07:1181:95:95::4)
+  - name: allow-tcp-DNS-TCP
+    protocol: tcp
+    destination-port: DNS-TCP
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /128: 2a07:1181:95:95::4/128
+      (9194 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 4406 hits: EXTERNAL (100.100.108.30)
+  - name: allow-tcp-TCP_1514
+    protocol: tcp
+    destination-port: TCP_1514
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (4406 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 882 hits: EXTERNAL (100.100.108.30)
+  - name: allow-tcp-TCP_1515
+    protocol: tcp
+    destination-port: TCP_1515
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (882 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 42544 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4)
+  - name: allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    comment: 'ANY covers 2 unresolved dst: 2 addresses in 2 blocks, widest /32: 100.95.95.4/32
+      (31329 hits), 2a07:1181:95:95::4/128 (11215 hits) -- 1 of 2 sit in one group,
+      so a named group would cover most of this'
+    action: accept
+# [auto] review terms above, then replace with deny-ANY when ready
+  - name: allow-ANY
+    action: accept

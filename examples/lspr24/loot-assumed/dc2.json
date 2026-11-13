@@ -1,0 +1,1167 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49673,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "spoolsv.exe",
+        "pid": 2244,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49673,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "spoolsv.exe",
+        "pid": 2244,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-ssh-g2",
+      "port": 22,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\OpenSSH\\sshd.exe\"",
+        "exe": "C:\\Program Files\\OpenSSH\\sshd.exe",
+        "name": "sshd",
+        "pid": "2328",
+        "services": [
+          "sshd"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-ssh-g2",
+      "port": 22,
+      "process": {
+        "cmdline": "\"C:\\Program Files\\OpenSSH\\sshd.exe\"",
+        "exe": "C:\\Program Files\\OpenSSH\\sshd.exe",
+        "name": "sshd",
+        "pid": "2328",
+        "services": [
+          "sshd"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "192.168.150.194/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 53,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\dns.exe",
+        "exe": "C:\\Windows\\system32\\dns.exe",
+        "name": "dns",
+        "pid": "2624",
+        "services": [
+          "DNS"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "fe80::1c24:6f28:4931:45d9%6/128",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 53,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\dns.exe",
+        "exe": "C:\\Windows\\system32\\dns.exe",
+        "name": "dns",
+        "pid": "2624",
+        "services": [
+          "DNS"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 88,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 88,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 135,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "916",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 135,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "916",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "192.168.150.194/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 139,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 389,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 389,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 445,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 445,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 464,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 464,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 593,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "916",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 593,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k RPCSS -p",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "916",
+        "services": [
+          "RpcEptMapper",
+          "RpcSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 636,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 636,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 3268,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 3268,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 3269,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 3269,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 5985,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 5985,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 9389,
+      "process": {
+        "cmdline": "C:\\Windows\\ADWS\\Microsoft.ActiveDirectory.WebServices.exe",
+        "exe": "C:\\Windows\\ADWS\\Microsoft.ActiveDirectory.WebServices.exe",
+        "name": "Microsoft.ActiveDirectory.WebServices",
+        "pid": "2528",
+        "services": [
+          "ADWS"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 9389,
+      "process": {
+        "cmdline": "C:\\Windows\\ADWS\\Microsoft.ActiveDirectory.WebServices.exe",
+        "exe": "C:\\Windows\\ADWS\\Microsoft.ActiveDirectory.WebServices.exe",
+        "name": "Microsoft.ActiveDirectory.WebServices",
+        "pid": "2528",
+        "services": [
+          "ADWS"
+        ],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 47001,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 47001,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "192.168.150.194/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 53,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\dns.exe",
+        "exe": "C:\\Windows\\system32\\dns.exe",
+        "name": "dns",
+        "pid": "2624",
+        "services": [
+          "DNS"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fe80::1c24:6f28:4931:45d9%6/128",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 53,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\dns.exe",
+        "exe": "C:\\Windows\\system32\\dns.exe",
+        "name": "dns",
+        "pid": "2624",
+        "services": [
+          "DNS"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "192.168.150.194/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 88,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fe80::1c24:6f28:4931:45d9%6/128",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 88,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 123,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k LocalService -s W32Time",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "364",
+        "services": [
+          "W32Time"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 123,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k LocalService -s W32Time",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "364",
+        "services": [
+          "W32Time"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "192.168.150.194/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 137,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "192.168.150.194/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 138,
+      "process": {
+        "cmdline": "",
+        "exe": "",
+        "name": "System",
+        "pid": "4",
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 389,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "inferred",
+        "well-known",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 389,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "192.168.150.194/32",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 464,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "fe80::1c24:6f28:4931:45d9%6/128",
+      "flags": [
+        "inferred",
+        "specific-ip",
+        "well-known"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 464,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\lsass.exe",
+        "exe": "C:\\Windows\\system32\\lsass.exe",
+        "name": "lsass",
+        "pid": "640",
+        "services": [
+          "EFS",
+          "Kdc",
+          "KeyIso",
+          "Netlogon",
+          "NTDS",
+          "SamSs"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-rds-g2",
+      "port": 3389,
+      "process": {
+        "cmdline": "C:\\Windows\\System32\\svchost.exe -k termsvcs -s TermService",
+        "exe": "C:\\Windows\\System32\\svchost.exe",
+        "name": "svchost",
+        "pid": "3668",
+        "services": [
+          "TermService"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 5353,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1112",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 5353,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1112",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 5355,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1112",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "inferred",
+        "world-listen"
+      ],
+      "inferred_from": "win2022-std-desktop-dc-g3k",
+      "port": 5355,
+      "process": {
+        "cmdline": "C:\\Windows\\system32\\svchost.exe -k NetworkService -p -s Dnscache",
+        "exe": "C:\\Windows\\system32\\svchost.exe",
+        "name": "svchost",
+        "pid": "1112",
+        "services": [
+          "Dnscache"
+        ],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "112",
+    "annotationfile": null,
+    "assumed": [
+      "dynamic_ranges",
+      "windows"
+    ],
+    "collected_at": "2024-03-07T11:07:47",
+    "ephemeral": {
+      "tcp": [
+        49152,
+        65535
+      ],
+      "udp": [
+        49152,
+        65535
+      ]
+    },
+    "ephemeral_source": "assumed: firru-os-baselines, 19 of the 20 Windows runs that record it",
+    "hostname": "dc2",
+    "ip": "10.5.12.3",
+    "listenfile": "wazuh syscollector dbsync_ports (union, partial)",
+    "os": "windows"
+  }
+}

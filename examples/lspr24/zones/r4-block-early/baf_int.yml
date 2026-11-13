@@ -1,0 +1,149 @@
+metadata:
+  host: baf_int
+  zone: baf_int
+  hosts:
+  - mail_int_baf_05_berylia_org
+  - ticketdesk_int_baf_05_berylia_org
+  - ws1-baf01_int_baf_05_berylia_org
+  - ws3-baf05_int_baf_05_berylia_org
+filters:
+- header:
+    targets:
+      nftables: mixed input
+  terms:
+  - name: allow-icmp-any-shared
+    protocol: icmp
+    action: accept
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: allow-icmpv6-any-shared
+    protocol: icmpv6
+    action: accept
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: deny-ext-tcp-HTTP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: HTTP
+  - name: deny-ext-tcp-HTTPS
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: HTTPS
+  - name: deny-ext-tcp-RDP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+      ws3-baf05_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: RDP
+  - name: deny-ext-tcp-SMTP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SMTP
+  - name: deny-ext-tcp-SMTP-SUBMIT
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SMTP-SUBMIT
+  - name: deny-ext-tcp-SMTPS
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SMTPS
+  - name: deny-ext-tcp-SSH
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SSH
+  - name: deny-ext-tcp-WINDOWS-SMB
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: WINDOWS-SMB
+  - name: deny-ext-tcp-WINRM-HTTP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: WINRM-HTTP
+  - name: deny-ext-udp-RDP
+    action: deny
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: RDP
+  - name: drop-ghost-hosts
+    action: deny
+    destination-address: baf_int
+    comment: 'Ghost host catch-all: drops traffic to IPs in baf_int not matched by
+      any allow term above.  All legitimate hosts should appear in policies/pol/ and
+      be covered by explicit allow terms.'
+  - name: log-accept-ANY
+    action: accept
+    logging: true
+    comment: 'INITIAL DEPLOYMENT: accept + log all unmatched traffic. Promote to log-drop
+      (--terminal log-drop) once rules are stable.'
+- header:
+    targets:
+      nftables: mixed output
+  terms:
+  - name: egress-TCP_1514-shared
+    protocol: tcp
+    destination-port: TCP_1514
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (1871 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+    source-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: egress-TCP_1515-shared
+    protocol: tcp
+    destination-port: TCP_1515
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (373 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+    source-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: ws1-baf01_int_baf_05_berylia_org-egress-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    comment: 'ANY covers 6 unresolved dst: 6 addresses in 6 blocks, widest /15: 1.0.0.0/15
+      (2 dst, 2 hits), 8.8.0.0/20 (2 dst, 2 hits), 9.9.9.9/32 (1 hit), 149.112.112.112/32
+      (1 hit) -- one group per address, so no summary narrows it and ANY is honest'
+    action: accept
+    source-address: ws1-baf01_int_baf_05_berylia_org
+  - name: ws3-baf05_int_baf_05_berylia_org-egress-NTP
+    protocol: udp
+    destination-port: NTP
+    comment: 'ANY covers 3 unresolved dst: 3 addresses in 3 blocks, widest /32: 193.40.134.137/32
+      (1 hit), 212.7.1.131/32 (1 hit), 2620:2d:4000:1::3f/128 (1 hit) -- one group
+      per address, so no summary narrows it and ANY is honest'
+    action: accept
+    source-address: ws3-baf05_int_baf_05_berylia_org
+  - name: log-accept-ANY-egress
+    action: accept
+    logging: true
+    comment: 'INITIAL DEPLOYMENT: accept + log all unmatched traffic. Promote to log-drop
+      (--terminal log-drop) once rules are stable.'

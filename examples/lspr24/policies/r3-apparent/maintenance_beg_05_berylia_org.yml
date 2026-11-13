@@ -1,0 +1,29 @@
+metadata:
+  host: maintenance
+  zone: beg
+  provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: ANY
+    comment: 3 sources answered, 2 not
+  - name: allow-tcp-HTTP
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: ANY
+    comment: 6 sources answered, 1 not
+  - name: allow-tcp-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: ANY
+    comment: 60 sources answered, 3 not
+  - name: drop-ANY
+    action: deny

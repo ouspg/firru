@@ -1,0 +1,41 @@
+metadata:
+  host: salt-master
+  zone: beg
+  provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: ANY
+    comment: every one of 3 sources was answered
+  - name: allow-tcp-HTTP
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: ANY
+    comment: every one of 4 sources was answered
+  - name: allow-tcp-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: ANY
+    comment: 3 sources answered, 1 not
+  - name: allow-tcp-TCP_4505
+    protocol: tcp
+    destination-port: TCP_4505
+    action: accept
+    source-address: ANY
+    comment: 5 sources answered, 1 not
+  - name: allow-tcp-TCP_4506
+    protocol: tcp
+    destination-port: TCP_4506
+    action: accept
+    source-address: ANY
+    comment: 5 sources answered, 1 not
+  - name: drop-ANY
+    action: deny

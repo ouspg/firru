@@ -1,0 +1,145 @@
+# firru tighten output — review and copy changes to policies/pol/ws3-beg01_int_beg_05_berylia_org.yml
+# Source suggestions changed: 2 | Dead rules: 1 | Group suggestions: 0
+metadata:
+  host: ws3-beg01
+  zone: beg_int
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+
+# [auto] 2727 flows total | 2727 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address: BEG_INT_GT_OTHER  # was: BEG_INT_GT
+
+# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: RDP/tcp/3389
+      - name: allow-tcp-RDP
+        protocol: tcp
+        destination-port: RDP
+        action: accept
+        source-address: BEG_INT_GT_OTHER  # was: BEG_INT_GT
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-IPP
+        protocol: udp
+        destination-port: IPP
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] 127 hits: dc2_int_beg_05_berylia_org (10.5.12.3) | 126 hits: dc1_int_beg_05_berylia_org (10.5.12.2)
+      - name: allow-icmp-ICMP
+        protocol: icmp
+        destination-address:
+          - dc1_int_beg_05_berylia_org
+          - dc2_int_beg_05_berylia_org
+        action: accept
+# [auto] 226 hits: dc2_int_beg_05_berylia_org (2a07:1182:5:12::3) | 220 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2) | 110 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250) | 38 hits: beg_int (2a07:1182:5:12::1)
+      - name: allow-icmpv6-ICMPV6
+        protocol: icmpv6
+        destination-address:
+          - BEG_INT_GT_OTHER
+          - beg_int
+          - dc1_int_beg_05_berylia_org
+          - dc2_int_beg_05_berylia_org
+        action: accept
+# [auto] 69 hits: dc2_int_beg_05_berylia_org (10.5.12.3) | 45 hits: dc1_int_beg_05_berylia_org (10.5.12.2)
+      - name: allow-tcp-KERBEROS-TCP
+        protocol: tcp
+        destination-port: KERBEROS-TCP
+        destination-address:
+          - dc1_int_beg_05_berylia_org
+          - dc2_int_beg_05_berylia_org
+        action: accept
+# [auto] 26 hits: dc2_int_beg_05_berylia_org (10.5.12.3) | 18 hits: dc1_int_beg_05_berylia_org (10.5.12.2)
+      - name: allow-tcp-LDAP-GC
+        protocol: tcp
+        destination-port: LDAP-GC
+        destination-address:
+          - dc1_int_beg_05_berylia_org
+          - dc2_int_beg_05_berylia_org
+        action: accept
+# [auto] 73 hits: dc2_int_beg_05_berylia_org (10.5.12.3) | 53 hits: dc1_int_beg_05_berylia_org (10.5.12.2)
+      - name: allow-tcp-LDAP-TCP
+        protocol: tcp
+        destination-port: LDAP-TCP
+        destination-address:
+          - dc1_int_beg_05_berylia_org
+          - dc2_int_beg_05_berylia_org
+        action: accept
+# [auto] 66 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250)
+      - name: allow-tcp-WINDOWS-RPC-DYNAMI
+        protocol: tcp
+        destination-port: WINDOWS-RPC-DYNAMIC
+        destination-address: BEG_INT_GT_OTHER
+        action: accept
+# [auto] 14547 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2, 10.5.12.2) | 14509 hits: dc2_int_beg_05_berylia_org (10.5.12.3, 2a07:1182:5:12::3)
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        destination-address:
+          - dc1_int_beg_05_berylia_org
+          - dc2_int_beg_05_berylia_org
+        action: accept
+# [auto] 182 hits: EXTERNAL (2001:1b28:1:5::132, 212.7.1.131, 193.40.133.134, 193.40.134.137 and 4 more)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        comment: 'ANY covers 8 unresolved dst: 8 addresses in 6 blocks, widest /3:
+          192.0.0.0/3 (4 dst, 141 hits), 2001:1b28:1:5::132/128 (38 hits), 185.125.190.56/31
+          (2 dst, 2 hits), 91.189.91.157/32 (1 hit) -- 8 addresses spread over 6 groups,
+          largest 2: too scattered to name, ANY is honest'
+        action: accept
+# [auto] review terms above, then replace with deny-ANY when ready; unnamed ports only this allows: tcp/33214 (1 hits, 1 dst), tcp/33744 (1 hits, 1 dst), tcp/34346 (1 hits, 1 dst), tcp/35106 (1 hits, 1 dst), tcp/35122 (1 hits, 1 dst), tcp/35246 (1 hits, 1 dst), tcp/35322 (1 hits, 1 dst), tcp/35446 (1 hits, 1 dst) and 60 more -- name them (firru edit-services add) to get terms
+      - name: allow-ANY
+        action: accept

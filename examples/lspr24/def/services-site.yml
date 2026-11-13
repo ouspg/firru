@@ -1,0 +1,11 @@
+# This site's own services: what no registry names and the stock definitions
+# do not carry, each with the evidence for it.
+services:
+
+  # Source: Infinispan's default UDP JGroups stack (mcast_port 46655), the
+  # cluster transport of Keycloak's embedded cache. The LSPR24 loot has java
+  # on udp/46655 on the keycloak host and nowhere else.
+  # Owner: processes=java
+  KEYCLOAK-PING:
+    - port: 46655
+      protocol: udp

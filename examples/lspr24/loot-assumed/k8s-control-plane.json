@@ -1,0 +1,418 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": null,
+        "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 662,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 179,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "bird",
+        "pid": 2564,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 179,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "bird6",
+        "pid": 2563,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "100.97.5.30/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 2379,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "etcd",
+        "pid": 1185,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 2379,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "etcd",
+        "pid": 1185,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "100.97.5.30/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 2380,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "etcd",
+        "pid": 1185,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 2381,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "etcd",
+        "pid": 1185,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 6443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kube-apiserver",
+        "pid": 1132,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "100.97.5.30/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 7472,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "speaker",
+        "pid": 2912,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "100.97.5.30/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 7946,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "speaker",
+        "pid": 2912,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 9099,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "calico-node",
+        "pid": 2079,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 9100,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "node",
+        "pid": 1683,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 10248,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kubelet",
+        "pid": 852,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 10249,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kube-proxy",
+        "pid": 1721,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 10250,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kubelet",
+        "pid": 852,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 10256,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kube-proxy",
+        "pid": 1721,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 10257,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kube-controlle",
+        "pid": 1192,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 10259,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kube-scheduler",
+        "pid": 1157,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 32769,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "containerd",
+        "pid": 760,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.53/32",
+      "flags": [
+        "specific-ip",
+        "well-known"
+      ],
+      "port": 53,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd-resolve",
+        "pid": 662,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "100.97.5.30/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 7946,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "speaker",
+        "pid": 2912,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "046",
+    "annotationfile": null,
+    "assumed": [
+      "dynamic_ranges"
+    ],
+    "collected_at": "2024-03-07T08:28:45",
+    "ephemeral": {
+      "tcp": [
+        32768,
+        60999
+      ],
+      "udp": [
+        32768,
+        60999
+      ]
+    },
+    "ephemeral_source": "assumed: firru-os-baselines, all 102 Linux runs",
+    "hostname": "k8s-control-plane",
+    "ip": "100.97.5.30",
+    "listenfile": "ossec rootcheck netstat",
+    "os": "linux"
+  }
+}

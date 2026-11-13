@@ -1,0 +1,25 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 900 hits | reason: src not covered by ['BEG_INT_GT']
+  - protocol: tcp
+    service: RDP
+    src_ip: 10.5.12.250
+    src_token: BEG_INT_GT_OTHER
+    proposed_src: "['BEG_INT_GT']"
+# 900 hits | reason: src not covered by ['BEG_INT_GT']
+  - protocol: tcp
+    service: RDP
+    src_ip: 2a07:1182:5:12::250
+    src_token: BEG_INT_GT_OTHER
+    proposed_src: "['BEG_INT_GT']"
+# 2 hits | reason: port not in policy (49558,63117)
+  - protocol: udp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 10.5.12.2
+    src_token: dc1_int_beg_05_berylia_org
+# 1 hits | reason: port not in policy (49289)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::3
+    src_token: dc2_int_beg_05_berylia_org

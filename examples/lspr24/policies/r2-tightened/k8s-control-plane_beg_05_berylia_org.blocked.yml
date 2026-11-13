@@ -1,0 +1,53 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 6298 hits | reason: port not in policy (80)
+  - protocol: tcp
+    service: HTTP
+    src_ip: 100.97.5.60
+    src_token: BEG_GT_OTHER
+# 6295 hits | reason: port not in policy (443)
+  - protocol: tcp
+    service: HTTPS
+    src_ip: 2a07:1182:5:20::60
+    src_token: BEG_GT_OTHER
+# 6291 hits | reason: port not in policy (80)
+  - protocol: tcp
+    service: HTTP
+    src_ip: 2a07:1182:5:20::60
+    src_token: BEG_GT_OTHER
+# 6290 hits | reason: port not in policy (443)
+  - protocol: tcp
+    service: HTTPS
+    src_ip: 100.97.5.60
+    src_token: BEG_GT_OTHER
+# 1560 hits | reason: port not in policy (10257)
+  - protocol: tcp
+    service: K8S-CONTROLLER-MANAGER
+    src_ip: 100.97.5.32
+    src_token: k8s-worker02_beg_05_berylia_org
+# 1559 hits | reason: port not in policy (2381)
+  - protocol: tcp
+    service: ETCD-METRICS
+    src_ip: 100.97.5.32
+    src_token: k8s-worker02_beg_05_berylia_org
+# 1559 hits | reason: port not in policy (10259)
+  - protocol: tcp
+    service: K8S-SCHEDULER
+    src_ip: 100.97.5.32
+    src_token: k8s-worker02_beg_05_berylia_org
+# 288 hits | reason: protocol not in policy (ipip)
+  - protocol: '4'
+    service: ipip
+    src_ip: 100.97.5.32
+    src_token: k8s-worker02_beg_05_berylia_org
+# 74 hits | reason: protocol not in policy (ipip)
+  - protocol: '4'
+    service: ipip
+    src_ip: 100.97.5.31
+    src_token: k8s-worker01_beg_05_berylia_org
+# 1560 hits | reason: port not in policy (10249)
+  - protocol: tcp
+    service: unknown-tcp-10249
+    src_ip: 100.97.5.32
+    src_token: k8s-worker02_beg_05_berylia_org

@@ -1,0 +1,101 @@
+# firru tighten output — review and copy changes to policies/pol/news_beg_05_berylia_org.yml
+# Source suggestions changed: 3 | Dead rules: 0 | Group suggestions: 0
+metadata:
+  host: news
+  zone: beg
+  variant: 'r4-block-early (learn file: night.jsonl) — services with no observed client
+    are removed, not merely narrowed'
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+
+# [auto] 1799 flows total | 1799 hits: BEG_GT_OTHER (2a07:1182:5:20::60, 100.97.5.60) | via: SSH/tcp/22
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: BEG_GT_OTHER      # was: BEG_GT
+
+# [auto] 3596 flows total | 3596 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | via: HTTP/tcp/80
+  - name: allow-tcp-HTTP
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: BEG_GT_OTHER      # was: ANY
+
+# [auto] 3600 flows total | 3600 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | via: HTTPS/tcp/443
+  - name: allow-tcp-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: BEG_GT_OTHER      # was: ANY
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-loopback
+    source-address: LOOPBACK
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmp
+    protocol: icmp
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: allow-icmpv6
+    protocol: icmpv6
+    action: accept
+
+# [auto] no flows observed in window — source unchanged
+  - name: drop-ANY
+    action: deny
+    counter: drop-ANY
+
+- header:
+    targets:
+      nftables: mixed output
+  terms:
+  - name: allow-loopback
+    action: accept
+    source-address: LOOPBACK
+  - name: allow-icmp
+    action: accept
+    protocol: icmp
+  - name: allow-icmpv6
+    action: accept
+    protocol: icmpv6
+# [auto] 193 hits: beg (2a07:1182:5:20::1) | 113 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11)
+  - name: allow-icmpv6-ICMPV6
+    protocol: icmpv6
+    destination-address:
+    - fw1-beg
+    - beg
+    action: accept
+# [auto] 284 hits: EXTERNAL (100.100.108.30)
+  - name: allow-tcp-TCP_1514
+    protocol: tcp
+    destination-port: TCP_1514
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (284 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 56 hits: EXTERNAL (100.100.108.30)
+  - name: allow-tcp-TCP_1515
+    protocol: tcp
+    destination-port: TCP_1515
+    comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+      (56 hits) -- a single destination: name it or deny it, ANY is not the answer
+      either way'
+    action: accept
+# [auto] 14287 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+  - name: allow-udp-DNS-UDP
+    protocol: udp
+    destination-port: DNS-UDP
+    comment: 'ANY covers 2 unresolved dst: 2 addresses in 2 blocks, widest /32: 2a07:1181:95:95::4/128
+      (7192 hits), 100.95.95.4/32 (7095 hits) -- 1 of 2 sit in one group, so a named
+      group would cover most of this'
+    action: accept
+# [auto] review terms above, then replace with deny-ANY when ready; unnamed ports only this allows: tcp/48868 (1 hits, 1 dst) -- name them (firru edit-services add) to get terms
+  - name: allow-ANY
+    action: accept

@@ -1,0 +1,65 @@
+metadata:
+  host: ws2-beg02
+  zone: beg_int
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 (sshd.exe) | IPv6 ::/0 (sshd.exe)
+# [auto] unexpected owner: SSH served by sshd.exe; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BEG_INT_GT
+# [auto] IPv4 0.0.0.0/0 (svchost.exe) | IPv6 ::/0 (svchost.exe)
+      - name: allow-tcp-RDP
+        protocol: tcp
+        destination-port: RDP
+        action: accept
+        source-address:
+          - BEG_INT_GT
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINRM-HTTP
+        protocol: tcp
+        destination-port: WINRM-HTTP
+        action: accept
+        source-address:
+          - BEG_INT_GT
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
+        protocol: tcp
+        destination-port: WINDOWS-WINRM-UNCONFIGURED
+        action: accept
+        source-address: ANY
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "firru flow record",
+  "$comment": "One observed flow, written to flows.jsonl by the flow producers (zeek-to-flows, loot-flows, loot-conntrack). What the fields mean, and why null is not zero: docs/flow-record.md",
+  "type": "object",
+  "required": [
+    "protocol", "src_ip", "dst_ip", "src_port", "dst_port", "originator",
+    "timestamp", "end_time", "orig_pkts", "resp_pkts", "responded",
+    "source", "direction_known"
+  ],
+  "properties": {
+    "protocol":        {"type": "string"},
+    "src_ip":          {"type": "string"},
+    "dst_ip":          {"type": "string"},
+    "src_port":        {"type": ["integer", "null"]},
+    "dst_port":        {"type": ["integer", "null"]},
+    "originator":      {"type": ["string", "null"]},
+    "timestamp":       {"type": ["number", "null"]},
+    "end_time":        {"type": ["number", "null"]},
+    "orig_pkts":       {"type": ["integer", "null"]},
+    "resp_pkts":       {"type": ["integer", "null"]},
+    "orig_bytes":      {"type": ["integer", "null"]},
+    "resp_bytes":      {"type": ["integer", "null"]},
+    "responded":       {"type": ["boolean", "null"]},
+    "direction_known": {"type": "boolean"},
+    "source":          {"type": "string",
+                        "enum": ["zeek", "arkime", "conntrack", "lspr24"]},
+
+    "conn_state":      {"type": ["string", "null"]},
+    "ct_state":        {"type": ["string", "null"]},
+    "conntrack_event": {"type": ["string", "null"]},
+    "incomplete":      {"type": "boolean"},
+    "tags":            {"type": "array", "items": {"type": "string"}},
+    "fqdn":            {"type": "string"},
+
+    "rt_src":          {"type": "boolean"},
+    "rt_dst":          {"type": "boolean"},
+    "src_zone":        {"type": ["string", "null"]},
+    "dst_zone":        {"type": ["string", "null"]},
+    "intra_zone":      {"type": "boolean"}
+  }
+}

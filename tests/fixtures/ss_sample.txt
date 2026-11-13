@@ -1,0 +1,5 @@
+Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:Port Process
+tcp   LISTEN 0      128    0.0.0.0:22          0.0.0.0:*         users:(("sshd",pid=1234,fd=3))
+tcp   LISTEN 0      4096   127.0.0.1:8005      0.0.0.0:*         users:(("node",pid=2001,fd=20))
+udp   UNCONN 0      0      0.0.0.0:68          0.0.0.0:*         users:(("dhclient",pid=999,fd=6))
+nl    UNCONN 0      0      0:0                 *

@@ -1,0 +1,13 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 390 hits | reason: port not in policy (179)
+  - protocol: tcp
+    service: BGP
+    src_ip: 100.97.5.11
+    src_token: fw1-beg_05_berylia_org
+# 390 hits | reason: port not in policy (179)
+  - protocol: tcp
+    service: BGP
+    src_ip: 100.97.5.12
+    src_token: REQ_TOKEN_100.97.5.12

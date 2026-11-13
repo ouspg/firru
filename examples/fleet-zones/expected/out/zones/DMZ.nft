@@ -1,0 +1,82 @@
+table inet filtering_policies {
+    chain allow-icmp-any-shared {
+        ip daddr { 10.20.1.10/32, 10.20.1.11/32, 10.20.1.12/32 } ip protocol icmp ct state new accept
+        ip6 daddr { 2001:db8:20:1::a/128, 2001:db8:20:1::b/128, 2001:db8:20:1::c/128 } ip protocol icmp ct state new accept
+    }
+    chain allow-icmpv6-any-shared {
+        ip daddr { 10.20.1.10/32, 10.20.1.11/32, 10.20.1.12/32 } meta l4proto icmpv6 accept
+        ip6 daddr { 2001:db8:20:1::a/128, 2001:db8:20:1::b/128, 2001:db8:20:1::c/128 } meta l4proto icmpv6 accept
+    }
+    chain allow-tcp-SSH-shared {
+        ip saddr 10.20.9.10/32 ip daddr { 10.20.1.10/32, 10.20.1.11/32, 10.20.1.12/32 } tcp dport 22 ct state new accept
+        ip6 saddr 2001:db8:20:9::a/128 ip6 daddr { 2001:db8:20:1::a/128, 2001:db8:20:1::b/128, 2001:db8:20:1::c/128 } tcp dport 22 ct state new accept
+    }
+    chain mail1-allow-tcp-SMTP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.1.11/32 tcp dport 25 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:1::b/128 tcp dport 25 ct state new accept
+    }
+    chain mail1-allow-tcp-POP3 {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.1.11/32 tcp dport 110 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:1::b/128 tcp dport 110 ct state new accept
+    }
+    chain mail1-allow-tcp-IMAP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.1.11/32 tcp dport 143 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:1::b/128 tcp dport 143 ct state new accept
+    }
+    chain mail1-allow-tcp-IMAPS {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.1.11/32 tcp dport 993 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:1::b/128 tcp dport 993 ct state new accept
+    }
+    chain mail1-allow-tcp-POP3S {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.1.11/32 tcp dport 995 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:1::b/128 tcp dport 995 ct state new accept
+    }
+    chain allow-udp-DHCP-CLIENT-shared {
+        ip saddr 0.0.0.0/0 ip daddr { 10.20.1.10/32, 10.20.1.11/32 } udp dport 68 ct state new accept
+    }
+    chain ns1-allow-tcp-DNS-TCP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.1.12/32 tcp dport 53 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:1::c/128 tcp dport 53 ct state new accept
+    }
+    chain ns1-allow-udp-DNS-UDP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.1.12/32 udp dport 53 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:1::c/128 udp dport 53 ct state new accept
+    }
+    chain web1-allow-tcp-HTTP {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.1.10/32 tcp dport 80 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:1::a/128 tcp dport 80 ct state new accept
+    }
+    chain web1-allow-tcp-HTTPS {
+        ip saddr 0.0.0.0/0 ip daddr 10.20.1.10/32 tcp dport 443 ct state new accept
+        ip6 saddr ::/0 ip6 daddr 2001:db8:20:1::a/128 tcp dport 443 ct state new accept
+    }
+    chain drop-ghost-hosts {
+        comment "Ghost host catch-all: drops traffic to IPs in DMZ not matched by any allow term above.  All legitimate hosts should appear in policies/pol/ and be covered by explicit allow terms."
+        ip daddr 10.20.1.0/24 drop
+        ip6 daddr 2001:db8:20:1::/64 drop
+    }
+    chain log-drop-ANY {
+        comment "SETTLING: drop + log unmatched traffic to catch false positives. Promote to drop (--terminal drop) when the log has been quiet."
+        log prefix "log-drop-ANY" drop
+    }
+    chain root0 {
+        type filter hook input priority 0; policy drop;
+        ct state established,related accept
+        jump allow-icmp-any-shared
+        jump allow-icmpv6-any-shared
+        jump allow-tcp-SSH-shared
+        jump mail1-allow-tcp-SMTP
+        jump mail1-allow-tcp-POP3
+        jump mail1-allow-tcp-IMAP
+        jump mail1-allow-tcp-IMAPS
+        jump mail1-allow-tcp-POP3S
+        jump allow-udp-DHCP-CLIENT-shared
+        jump ns1-allow-tcp-DNS-TCP
+        jump ns1-allow-udp-DNS-UDP
+        jump web1-allow-tcp-HTTP
+        jump web1-allow-tcp-HTTPS
+        jump drop-ghost-hosts
+        jump log-drop-ANY
+    }
+}
+

@@ -1,0 +1,13 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 1799 hits | reason: port not in policy (80)
+  - protocol: tcp
+    service: HTTP
+    src_ip: 100.98.5.59
+    src_token: BGP_GT_OTHER
+# 1799 hits | reason: port not in policy (80)
+  - protocol: tcp
+    service: HTTP
+    src_ip: 2a07:1182:5:30::59
+    src_token: BGP_GT_OTHER

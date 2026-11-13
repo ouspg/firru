@@ -1,0 +1,58 @@
+# firru tighten output — review and copy changes to policies/pol/mon1.yml
+# Source suggestions changed: 1 | Dead rules: 0 | Group suggestions: 0
+metadata:
+  host: mon1
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+
+# [auto] 288 flows total | 288 hits: MONITORING (192.168.150.250) | via: MUNIN/tcp/4949
+      - name: allow-tcp-MUNIN
+        protocol: tcp
+        destination-port: MUNIN
+        action: accept
+        source-address: MONITORING  # was: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-DHCP-CLIENT
+        protocol: udp
+        destination-port: DHCP-CLIENT
+        action: accept
+        source-address: ANY_V4
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] no egress flows observed — placeholder kept
+      - name: allow-ANY
+        action: accept

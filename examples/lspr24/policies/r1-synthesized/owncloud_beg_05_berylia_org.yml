@@ -1,0 +1,90 @@
+metadata:
+  host: owncloud
+  zone: beg
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 | IPv6 ::/0
+# [auto] unexpected owner: SSH no process attribution; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BEG_GT
+# [auto] IPv6 ::/0 (apache2) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
+      - name: allow-tcp-HTTP
+        protocol: tcp
+        destination-port: HTTP
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv4 0.0.0.0/0 (smbd) | IPv6 ::/0 (smbd)
+      - name: allow-tcp-NETBIOS-SSN-LEGACY
+        protocol: tcp
+        destination-port: NETBIOS-SSN-LEGACY
+        action: accept
+        source-address:
+          - BEG_HOSTS
+# [auto] IPv6 ::/0 (apache2) | aliases: HTTPS,WINDOWS-HYPERV-REPLICA-HTTPS
+      - name: allow-tcp-HTTPS
+        protocol: tcp
+        destination-port: HTTPS
+        action: accept
+        source-address: ANY_V6
+# [auto] IPv4 0.0.0.0/0 (smbd) | IPv6 ::/0 (smbd)
+      - name: allow-tcp-WINDOWS-SMB
+        protocol: tcp
+        destination-port: WINDOWS-SMB
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (ntpd), 100.97.5.8/32 (ntpd) | IPv6 2a07:1182:5:20::8/128 (ntpd), ::/0 (ntpd), fe80::250:56ff:fe89/128 (ntpd)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (nmbd), 100.97.5.63/32 (nmbd), 100.97.5.8/32 (nmbd)
+      - name: allow-udp-NETBIOS-NS-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-NS-LEGACY
+        action: accept
+        source-address:
+          - BEG_HOSTS
+# [auto] IPv4 0.0.0.0/0 (nmbd), 100.97.5.63/32 (nmbd), 100.97.5.8/32 (nmbd)
+      - name: allow-udp-NETBIOS-DGM-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-DGM-LEGACY
+        action: accept
+        source-address:
+          - BEG_HOSTS
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+# egress
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

@@ -1,0 +1,276 @@
+metadata:
+  host: beg
+  zone: beg
+  hosts:
+  - gas-historian_beg_05_berylia_org
+  - gas-hmi_beg_05_berylia_org
+  - inventory_beg_05_berylia_org
+  - k8s-control-plane_beg_05_berylia_org
+  - k8s-worker01_beg_05_berylia_org
+  - k8s-worker02_beg_05_berylia_org
+  - k8s-worker03_beg_05_berylia_org
+  - k8s-worker04_beg_05_berylia_org
+  - maintenance_beg_05_berylia_org
+  - news_beg_05_berylia_org
+  - owncloud_beg_05_berylia_org
+  - salt-master_beg_05_berylia_org
+filters:
+- header:
+    targets:
+      nftables: mixed input
+  terms:
+  - name: allow-icmp-any-shared
+    protocol: icmp
+    action: accept
+    destination-address: gas-historian_beg_05_berylia_org gas-hmi_beg_05_berylia_org
+      inventory_beg_05_berylia_org k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+      maintenance_beg_05_berylia_org news_beg_05_berylia_org owncloud_beg_05_berylia_org
+      salt-master_beg_05_berylia_org
+  - name: allow-icmpv6-any-shared
+    protocol: icmpv6
+    action: accept
+    destination-address: gas-historian_beg_05_berylia_org gas-hmi_beg_05_berylia_org
+      inventory_beg_05_berylia_org k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+      maintenance_beg_05_berylia_org news_beg_05_berylia_org owncloud_beg_05_berylia_org
+      salt-master_beg_05_berylia_org
+  - name: allow-tcp-MYSQL-from-ANY_V4-shared
+    protocol: tcp
+    destination-port: MYSQL
+    action: accept
+    source-address: ANY_V4
+    destination-address: inventory_beg_05_berylia_org news_beg_05_berylia_org
+  - name: gas-historian_beg_05_berylia_org-allow-tcp-MYSQL
+    protocol: tcp
+    destination-port: MYSQL
+    action: accept
+    source-address: ANY_V6
+    destination-address: gas-historian_beg_05_berylia_org
+  - name: gas-historian_beg_05_berylia_org-allow-tcp-HTTP-ALT
+    protocol: tcp
+    destination-port: HTTP-ALT
+    action: accept
+    source-address: ANY_V4
+    destination-address: gas-historian_beg_05_berylia_org
+  - name: allow-tcp-MYSQL-X-shared
+    protocol: tcp
+    destination-port: MYSQL-X
+    action: accept
+    source-address: ANY_V6
+    destination-address: gas-historian_beg_05_berylia_org inventory_beg_05_berylia_org
+  - name: allow-udp-IPP-shared
+    protocol: udp
+    destination-port: IPP
+    action: accept
+    source-address: ANY_V4
+    destination-address: gas-historian_beg_05_berylia_org gas-hmi_beg_05_berylia_org
+  - name: gas-hmi_beg_05_berylia_org-allow-tcp-TCP_3000
+    protocol: tcp
+    destination-port: TCP_3000
+    action: accept
+    source-address: ANY_V6
+    destination-address: gas-hmi_beg_05_berylia_org
+  - name: gas-hmi_beg_05_berylia_org-allow-tcp-TCP_8000
+    protocol: tcp
+    destination-port: TCP_8000
+    action: accept
+    source-address: ANY_V4
+    destination-address: gas-hmi_beg_05_berylia_org
+  - name: gas-hmi_beg_05_berylia_org-allow-tcp-TCP_12349
+    protocol: tcp
+    destination-port: TCP_12349
+    action: accept
+    source-address: ANY_V4
+    destination-address: gas-hmi_beg_05_berylia_org
+  - name: allow-tcp-HTTP-from-ANY-shared
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: ANY
+    destination-address: inventory_beg_05_berylia_org maintenance_beg_05_berylia_org
+      news_beg_05_berylia_org
+  - name: salt-master_beg_05_berylia_org-allow-tcp-HTTP
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: ANY_V4
+    destination-address: salt-master_beg_05_berylia_org
+  - name: owncloud_beg_05_berylia_org-allow-tcp-HTTP
+    protocol: tcp
+    destination-port: HTTP
+    action: accept
+    source-address: ANY_V6
+    destination-address: owncloud_beg_05_berylia_org
+  - name: allow-tcp-HTTPS-from-ANY-shared
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: ANY
+    destination-address: inventory_beg_05_berylia_org maintenance_beg_05_berylia_org
+      news_beg_05_berylia_org
+  - name: salt-master_beg_05_berylia_org-allow-tcp-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: ANY_V4
+    destination-address: salt-master_beg_05_berylia_org
+  - name: owncloud_beg_05_berylia_org-allow-tcp-HTTPS
+    protocol: tcp
+    destination-port: HTTPS
+    action: accept
+    source-address: ANY_V6
+    destination-address: owncloud_beg_05_berylia_org
+  - name: inventory_beg_05_berylia_org-allow-tcp-REDIS
+    protocol: tcp
+    destination-port: REDIS
+    action: accept
+    source-address: ANY
+    destination-address: inventory_beg_05_berylia_org
+  - name: allow-tcp-BGP-shared
+    protocol: tcp
+    destination-port: BGP
+    action: accept
+    source-address: ANY
+    destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+  - name: k8s-control-plane_beg_05_berylia_org-allow-tcp-ETCD-CLIENT
+    protocol: tcp
+    destination-port: ETCD-CLIENT
+    action: accept
+    source-address: ANY_V4
+    destination-address: k8s-control-plane_beg_05_berylia_org
+  - name: k8s-control-plane_beg_05_berylia_org-allow-tcp-ETCD-PEER
+    protocol: tcp
+    destination-port: ETCD-PEER
+    action: accept
+    source-address: ANY_V4
+    destination-address: k8s-control-plane_beg_05_berylia_org
+  - name: k8s-control-plane_beg_05_berylia_org-allow-tcp-K8S-API-SERVER
+    protocol: tcp
+    destination-port: K8S-API-SERVER
+    action: accept
+    source-address: ANY_V6
+    destination-address: k8s-control-plane_beg_05_berylia_org
+  - name: allow-tcp-METALLB-METRICS-shared
+    protocol: tcp
+    destination-port: METALLB-METRICS
+    action: accept
+    source-address: ANY_V4
+    destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+  - name: allow-tcp-METALLB-MEMBERLIST-shared
+    protocol: tcp
+    destination-port: METALLB-MEMBERLIST
+    action: accept
+    source-address: ANY_V4
+    destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+  - name: allow-tcp-NODE-EXPORTER-shared
+    protocol: tcp
+    destination-port: NODE-EXPORTER
+    action: accept
+    source-address: ANY_V6
+    destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+  - name: allow-tcp-K8S-KUBELET-shared
+    protocol: tcp
+    destination-port: K8S-KUBELET
+    action: accept
+    source-address: ANY_V6
+    destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+  - name: allow-tcp-K8S-KUBE-PROXY-shared
+    protocol: tcp
+    destination-port: K8S-KUBE-PROXY
+    action: accept
+    source-address: ANY_V6
+    destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+  - name: allow-udp-METALLB-MEMBERLIST-shared
+    protocol: udp
+    destination-port: METALLB-MEMBERLIST
+    action: accept
+    source-address: ANY_V4
+    destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+  - name: owncloud_beg_05_berylia_org-allow-tcp-WINDOWS-SMB
+    protocol: tcp
+    destination-port: WINDOWS-SMB
+    action: accept
+    source-address: ANY
+    destination-address: owncloud_beg_05_berylia_org
+  - name: owncloud_beg_05_berylia_org-allow-udp-NTP
+    protocol: udp
+    destination-port: NTP
+    action: accept
+    source-address: ANY
+    destination-address: owncloud_beg_05_berylia_org
+  - name: salt-master_beg_05_berylia_org-allow-tcp-TCP_3333
+    protocol: tcp
+    destination-port: TCP_3333
+    action: accept
+    source-address: ANY_V4
+    destination-address: salt-master_beg_05_berylia_org
+  - name: salt-master_beg_05_berylia_org-allow-tcp-TCP_4505
+    protocol: tcp
+    destination-port: TCP_4505
+    action: accept
+    source-address: ANY_V4
+    destination-address: salt-master_beg_05_berylia_org
+  - name: salt-master_beg_05_berylia_org-allow-tcp-TCP_4506
+    protocol: tcp
+    destination-port: TCP_4506
+    action: accept
+    source-address: ANY_V4
+    destination-address: salt-master_beg_05_berylia_org
+  - name: deny-ext-tcp-NETBIOS-SSN-LEGACY
+    action: deny
+    destination-address: owncloud_beg_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: NETBIOS-SSN-LEGACY
+  - name: deny-ext-tcp-RDP
+    action: deny
+    destination-address: gas-historian_beg_05_berylia_org gas-hmi_beg_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: RDP
+  - name: deny-ext-tcp-SSH
+    action: deny
+    destination-address: gas-historian_beg_05_berylia_org gas-hmi_beg_05_berylia_org
+      inventory_beg_05_berylia_org k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
+      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
+      maintenance_beg_05_berylia_org news_beg_05_berylia_org owncloud_beg_05_berylia_org
+      salt-master_beg_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: SSH
+  - name: deny-ext-udp-NETBIOS-DGM-LEGACY
+    action: deny
+    destination-address: owncloud_beg_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: NETBIOS-DGM-LEGACY
+  - name: deny-ext-udp-NETBIOS-NS-LEGACY
+    action: deny
+    destination-address: owncloud_beg_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: NETBIOS-NS-LEGACY
+  - name: drop-ghost-hosts
+    action: deny
+    destination-address: beg
+    comment: 'Ghost host catch-all: drops traffic to IPs in beg not matched by any
+      allow term above.  All legitimate hosts should appear in policies/pol/ and be
+      covered by explicit allow terms.'
+  - name: log-accept-ANY
+    action: accept
+    logging: true
+    comment: 'INITIAL DEPLOYMENT: accept + log all unmatched traffic. Promote to log-drop
+      (--terminal log-drop) once rules are stable.'

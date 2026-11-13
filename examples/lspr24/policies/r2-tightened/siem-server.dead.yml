@@ -1,0 +1,9 @@
+# Dead-rule candidates — NoPair(policy_term, traffic_in_window).
+# Each term below has a tightened source-address but zero observed traffic
+# in the lookback window.  Options: remove, widen window, or re-check host.
+dead_rules:
+  - name: allow-tcp-SSH
+    protocol: tcp
+    service: SSH
+    source:
+      - MGMT_HOSTS

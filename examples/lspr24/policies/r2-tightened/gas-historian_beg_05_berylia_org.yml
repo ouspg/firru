@@ -1,0 +1,134 @@
+# firru tighten output — review and copy changes to policies/pol/gas-historian_beg_05_berylia_org.yml
+# Source suggestions changed: 1 | Dead rules: 2 | Group suggestions: 0
+metadata:
+  host: gas-historian
+  zone: beg
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+
+# [auto] 1800 flows total | 1800 hits: BEG_GT_OTHER (10.5.17.250, 2a07:1182:5:17::250) | via: SSH/tcp/22
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address: BEG_GT_OTHER  # was: BEG_GT
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-MYSQL
+        protocol: tcp
+        destination-port: MYSQL
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-RDP
+        protocol: tcp
+        destination-port: RDP
+        action: accept
+        source-address:
+          - BEG_GT
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-HTTP-ALT
+        protocol: tcp
+        destination-port: HTTP-ALT
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-MYSQL-X
+        protocol: tcp
+        destination-port: MYSQL-X
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-IPP
+        protocol: udp
+        destination-port: IPP
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] 33 hits: beg (2a07:1182:5:17::1) | 23 hits: fw1-beg_05_berylia_org (2a07:1182:5:17::61)
+      - name: allow-icmpv6-ICMPV6
+        protocol: icmpv6
+        destination-address:
+          - fw1-beg
+          - beg
+        action: accept
+# [auto] 283 hits: EXTERNAL (100.100.108.30)
+      - name: allow-tcp-TCP_1514
+        protocol: tcp
+        destination-port: TCP_1514
+        comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+          (283 hits) -- a single destination: name it or deny it, ANY is not the answer
+          either way'
+        action: accept
+# [auto] 56 hits: EXTERNAL (100.100.108.30)
+      - name: allow-tcp-TCP_1515
+        protocol: tcp
+        destination-port: TCP_1515
+        comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+          (56 hits) -- a single destination: name it or deny it, ANY is not the answer
+          either way'
+        action: accept
+# [auto] 151 hits: salt-master_beg_05_berylia_org (100.97.5.37)
+      - name: allow-tcp-TCP_4506
+        protocol: tcp
+        destination-port: TCP_4506
+        destination-address: salt-master_beg_05_berylia_org
+        action: accept
+# [auto] 2316 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        comment: 'ANY covers 2 unresolved dst: 2 addresses in 2 blocks, widest /32:
+          2a07:1181:95:95::4/128 (1167 hits), 100.95.95.4/32 (1149 hits) -- 1 of 2
+          sit in one group, so a named group would cover most of this'
+        action: accept
+# [auto] review terms above, then replace with deny-ANY when ready
+      - name: allow-ANY
+        action: accept

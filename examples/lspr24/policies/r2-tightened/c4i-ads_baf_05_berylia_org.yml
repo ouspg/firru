@@ -1,0 +1,239 @@
+# firru tighten output — review and copy changes to policies/pol/c4i-ads_baf_05_berylia_org.yml
+# Source suggestions changed: 3 | Dead rules: 1 | Group suggestions: 0
+metadata:
+  host: c4i-ads
+  zone: baf
+filters:
+  - header:
+      targets:
+        nftables: mixed input DROP
+    terms:
+
+# [auto] 3600 flows total | 3600 hits: BAF_GT_OTHER (10.5.15.250, 2a07:1182:5:15::250) | via: SSH/tcp/22
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address: BAF_GT_OTHER  # was: BAF_GT
+
+# [auto] 232569 flows total | 232569 hits: baf (10.5.15.33) | via: CEPH-OSD/tcp/7000
+      - name: allow-tcp-CEPH-OSD
+        protocol: tcp
+        destination-port: CEPH-OSD
+        action: accept
+        source-address: baf  # was: ANY_V6
+
+# [auto] 389 flows total | 389 hits: baf (10.5.15.35) | via: UDP_5000/udp/5000
+      - name: allow-udp-UDP_5000
+        protocol: udp
+        destination-port: UDP_5000
+        action: accept
+        source-address: baf  # was: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-loopback
+        source-address: LOOPBACK
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-DNS-TCP
+        protocol: tcp
+        destination-port: DNS-TCP
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-RPCBIND
+        protocol: tcp
+        destination-port: RPCBIND
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-VNC
+        protocol: tcp
+        destination-port: VNC
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-COCKPIT
+        protocol: tcp
+        destination-port: COCKPIT
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_9099
+        protocol: tcp
+        destination-port: TCP_9099
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_9536
+        protocol: tcp
+        destination-port: TCP_9536
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_13075
+        protocol: tcp
+        destination-port: TCP_13075
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-TCP_16567
+        protocol: tcp
+        destination-port: TCP_16567
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-tcp-K8S-NODEPORT
+        protocol: tcp
+        destination-port: K8S-NODEPORT
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-DHCP-SERVER
+        protocol: udp
+        destination-port: DHCP-SERVER
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-RPCBIND
+        protocol: udp
+        destination-port: RPCBIND
+        action: accept
+        source-address: ANY
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-UDP_5101
+        protocol: udp
+        destination-port: UDP_5101
+        action: accept
+        source-address: ANY_V4
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-UDP_9001
+        protocol: udp
+        destination-port: UDP_9001
+        action: accept
+        source-address: ANY_V6
+
+# [auto] no flows observed in window — source unchanged
+      - name: allow-udp-UDP_9101
+        protocol: udp
+        destination-port: UDP_9101
+        action: accept
+        source-address: ANY_V6
+      - name: drop-ANY
+        action: deny
+        counter: drop-ANY
+
+  - header:
+      targets:
+        nftables: mixed output
+    terms:
+      - name: allow-loopback
+        action: accept
+        source-address: LOOPBACK
+      - name: allow-icmp
+        action: accept
+        protocol: icmp
+      - name: allow-icmpv6
+        action: accept
+        protocol: icmpv6
+# [auto] 345 hits: fw1-baf_5_berylia_org (2a07:1182:5:15::1) | 284 hits: BAF_GT_OTHER (2a07:1182:5:15::250)
+      - name: allow-icmpv6-ICMPV6
+        protocol: icmpv6
+        destination-address:
+          - fw1-baf
+          - BAF_GT_OTHER
+        action: accept
+# [auto] 233494 hits: baf (10.5.15.31)
+      - name: allow-tcp-CEPH-OSD
+        protocol: tcp
+        destination-port: CEPH-OSD
+        destination-address: baf
+        action: accept
+# [auto] 2203 hits: map-ads_baf_05_berylia_org (10.5.15.34)
+      - name: allow-tcp-HTTP-ALT
+        protocol: tcp
+        destination-port: HTTP-ALT
+        destination-address: map-ads_baf_05_berylia_org
+        action: accept
+# [auto] 283 hits: EXTERNAL (100.100.108.30)
+      - name: allow-tcp-TCP_1514
+        protocol: tcp
+        destination-port: TCP_1514
+        comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+          (283 hits) -- a single destination: name it or deny it, ANY is not the answer
+          either way'
+        action: accept
+# [auto] 56 hits: EXTERNAL (100.100.108.30)
+      - name: allow-tcp-TCP_1515
+        protocol: tcp
+        destination-port: TCP_1515
+        comment: 'ANY covers 1 unresolved dst: 1 address in 1 block, widest /32: 100.100.108.30/32
+          (56 hits) -- a single destination: name it or deny it, ANY is not the answer
+          either way'
+        action: accept
+# [auto] 5984 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4, 192.5.5.241, 192.36.148.17 and 20 more)
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        comment: 'ANY covers 24 unresolved dst: 24 addresses in 24 blocks, widest
+          /4: 100.95.95.4/32 (2960 hits), 2a07:1181:95:95::4/128 (2958 hits), 2001::/20
+          (11 dst, 36 hits), 192.0.0.0/4 (11 dst, 30 hits) -- one group per address,
+          so no summary narrows it and ANY is honest'
+        action: accept
+# [auto] 183 hits: EXTERNAL (193.40.134.137, 193.40.133.134, 2a04:6f00:4::141, 2a10:1fc0:1::34f9:5fcf)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        comment: 'ANY covers 4 unresolved dst: 4 addresses in 4 blocks, widest /32:
+          193.40.134.137/32 (48 hits), 193.40.133.134/32 (45 hits), 2a04:6f00:4::141/128
+          (45 hits), 2a10:1fc0:1::34f9:5fcf/128 (45 hits) -- one group per address,
+          so no summary narrows it and ANY is honest'
+        action: accept
+# [auto] 389 hits: baf (10.5.15.31)
+      - name: allow-udp-UDP_5000
+        protocol: udp
+        destination-port: UDP_5000
+        destination-address: baf
+        action: accept
+# [auto] review terms above, then replace with deny-ANY when ready; unnamed ports only this allows: udp/6000 (10 hits, 1 dst) -- name them (firru edit-services add) to get terms
+      - name: allow-ANY
+        action: accept

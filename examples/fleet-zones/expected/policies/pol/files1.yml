@@ -1,0 +1,100 @@
+metadata:
+  host: files1
+  zone: SERVERS
+filters:
+  - header:
+      targets:
+        windows_advfirewall: in mixed block
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe RpcEptMapper RpcSs)
+      - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+        protocol: tcp
+        destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.157/32 (System)
+      - name: allow-tcp-NETBIOS-SSN-LEGACY
+        protocol: tcp
+        destination-port: NETBIOS-SSN-LEGACY
+        action: accept
+        source-address:
+          - SERVERS_HOSTS
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINDOWS-SMB
+        protocol: tcp
+        destination-port: WINDOWS-SMB
+        action: accept
+        source-address: CLIENTS_HOSTS
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINRM-HTTP
+        protocol: tcp
+        destination-port: WINRM-HTTP
+        action: accept
+        source-address:
+          - jump1
+# [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
+      - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
+        protocol: tcp
+        destination-port: WINDOWS-WINRM-UNCONFIGURED
+        action: accept
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe W32Time) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe W32Time)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address: ANY
+# [auto] IPv4 192.168.150.157/32 (System)
+      - name: allow-udp-NETBIOS-NS-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-NS-LEGACY
+        action: accept
+        source-address:
+          - SERVERS_HOSTS
+# [auto] IPv4 192.168.150.157/32 (System)
+      - name: allow-udp-NETBIOS-DGM-LEGACY
+        protocol: udp
+        destination-port: NETBIOS-DGM-LEGACY
+        action: accept
+        source-address:
+          - SERVERS_HOSTS
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe Dnscache) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe Dnscache)
+      - name: allow-udp-MDNS
+        protocol: udp
+        destination-port: MDNS
+        action: accept
+        source-address:
+          - MDNS_SOURCES_V4
+          - MDNS_SOURCES_V6
+# [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe Dnscache) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe Dnscache)
+      - name: allow-udp-LLMNR
+        protocol: udp
+        destination-port: LLMNR
+        action: accept
+        source-address:
+          - LLMNR_SOURCES_V4
+          - LLMNR_SOURCES_V6
+      - name: drop-ANY
+        action: deny
+        platform-exclude:
+          - windows_advfirewall
+
+# egress
+  - header:
+      targets:
+        windows_advfirewall: out mixed
+    terms:
+      - name: allow-icmp
+        protocol: icmp
+        action: accept
+      - name: allow-icmpv6
+        protocol: icmpv6
+        action: accept
+      - name: allow-ANY
+        action: accept

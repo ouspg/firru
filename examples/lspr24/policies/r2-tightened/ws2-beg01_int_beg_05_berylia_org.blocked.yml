@@ -1,0 +1,30 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 900 hits | reason: src not covered by ['BEG_INT_GT']
+  - protocol: tcp
+    service: RDP
+    src_ip: 10.5.12.250
+    src_token: BEG_INT_GT_OTHER
+    proposed_src: "['BEG_INT_GT']"
+# 900 hits | reason: src not covered by ['BEG_INT_GT']
+  - protocol: tcp
+    service: RDP
+    src_ip: 2a07:1182:5:12::250
+    src_token: BEG_INT_GT_OTHER
+    proposed_src: "['BEG_INT_GT']"
+# 54 hits | reason: port not in policy (50784,50946,52481,52680,53782,54388,55872,56078,56548,56653,57288,58501,59070,59226,59326,59392,59628,59966,60247,61036,61718,62992)
+  - protocol: udp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::2
+    src_token: dc1_int_beg_05_berylia_org
+# 11 hits | reason: port not in policy (50484,52667,52729,54994,63954)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::2
+    src_token: dc1_int_beg_05_berylia_org
+# 2 hits | reason: port not in policy (50784,50946,52481,52680,53782,54388,55872,56078,56548,56653,57288,58501,59070,59226,59326,59392,59628,59966,60247,61036,61718,62992)
+  - protocol: udp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 10.5.12.2
+    src_token: dc1_int_beg_05_berylia_org

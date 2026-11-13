@@ -1,0 +1,13 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 900 hits | reason: port not in policy (445)
+  - protocol: tcp
+    service: WINDOWS-SMB
+    src_ip: 2a07:1182:5:13::250
+    src_token: BGP_INT_GT_OTHER
+# 900 hits | reason: port not in policy (445)
+  - protocol: tcp
+    service: WINDOWS-SMB
+    src_ip: 2a07:1182:5:f20::250
+    src_token: BGP_GT_OTHER

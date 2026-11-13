@@ -1,0 +1,64 @@
+{
+  "listen_ports": [
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49669,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "spoolsv.exe",
+        "pid": 2752,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 49669,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "spoolsv.exe",
+        "pid": 2752,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "127.0.0.1/32",
+      "flags": [
+        "high-port",
+        "specific-ip"
+      ],
+      "port": 54615,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "owncloud.exe",
+        "pid": 10764,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    }
+  ],
+  "metadata": {
+    "agent_id": "115",
+    "annotationfile": null,
+    "collected_at": "2024-03-07T11:30:00",
+    "hostname": "ws2-beg01",
+    "ip": "10.5.12.26",
+    "listenfile": "wazuh syscollector dbsync_ports (union, partial)",
+    "os": "windows"
+  }
+}

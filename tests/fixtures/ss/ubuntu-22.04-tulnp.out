@@ -1,0 +1,7 @@
+# ss-version: ss utility, iproute2-5.15.0
+# os: Ubuntu 22.04.5 LTS
+# flags: ss -tulnp tulnp
+Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                             
+tcp   LISTEN 0      0            0.0.0.0:19001      0.0.0.0:*    users:(("plain",pid=1355,fd=3))    
+tcp   LISTEN 0      0            0.0.0.0:19002      0.0.0.0:*    users:(("my proc:x",pid=1360,fd=3))
+tcp   LISTEN 0      0            0.0.0.0:19003      0.0.0.0:*    users:(("svc(1",pid=1365,fd=3))    

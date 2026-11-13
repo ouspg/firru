@@ -1,0 +1,25 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 900 hits | reason: src not covered by ['BAF_INT_GT']
+  - protocol: tcp
+    service: RDP
+    src_ip: 10.5.11.250
+    src_token: BAF_INT_GT_OTHER
+    proposed_src: "['BAF_INT_GT']"
+# 899 hits | reason: src not covered by ['BAF_INT_GT']
+  - protocol: tcp
+    service: RDP
+    src_ip: 2a07:1182:5:11::250
+    src_token: BAF_INT_GT_OTHER
+    proposed_src: "['BAF_INT_GT']"
+# 236 hits | reason: port not in policy (49712,49714,56080,63582)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:11::4
+    src_token: files_int_baf_05_berylia_org
+# 2 hits | reason: port not in policy (49712,49714,56080,63582)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:11::3
+    src_token: dc2_int_baf_05_berylia_org

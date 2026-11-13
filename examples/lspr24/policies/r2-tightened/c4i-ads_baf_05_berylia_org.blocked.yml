@@ -1,0 +1,8 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 1 hits | reason: port not in policy (39686)
+  - protocol: tcp
+    service: unknown-tcp-39686
+    src_ip: 10.5.15.31
+    src_token: REQ_TOKEN_10.5.15.31

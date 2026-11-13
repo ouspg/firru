@@ -1,0 +1,70 @@
+metadata:
+  host: CLIENTS
+  zone: CLIENTS
+  hosts:
+  - ws1
+  - ws2
+  - ws3
+filters:
+- header:
+    targets:
+      nftables: mixed input
+  terms:
+  - name: allow-icmp-any-shared
+    protocol: icmp
+    action: accept
+    destination-address: CLIENTS_HOSTS
+  - name: allow-icmpv6-any-shared
+    protocol: icmpv6
+    action: accept
+    destination-address: CLIENTS_HOSTS
+  - name: ws1-allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+    protocol: tcp
+    destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+    action: accept
+    source-address: ANY
+    destination-address: ws1
+  - name: ws1-allow-tcp-WINDOWS-SMB
+    protocol: tcp
+    destination-port: WINDOWS-SMB
+    action: accept
+    source-address: ANY
+    destination-address: ws1
+  - name: ws1-allow-udp-NTP
+    protocol: udp
+    destination-port: NTP
+    action: accept
+    source-address: ANY
+    destination-address: ws1
+  - name: deny-ext-tcp-NETBIOS-SSN-LEGACY
+    action: deny
+    destination-address: ws1
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: NETBIOS-SSN-LEGACY
+  - name: deny-ext-udp-NETBIOS-DGM-LEGACY
+    action: deny
+    destination-address: ws1
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: NETBIOS-DGM-LEGACY
+  - name: deny-ext-udp-NETBIOS-NS-LEGACY
+    action: deny
+    destination-address: ws1
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: NETBIOS-NS-LEGACY
+  - name: drop-ghost-hosts
+    action: deny
+    destination-address: CLIENTS
+    comment: 'Ghost host catch-all: drops traffic to IPs in CLIENTS not matched by
+      any allow term above.  All legitimate hosts should appear in policies/pol/ and
+      be covered by explicit allow terms.'
+  - name: log-drop-ANY
+    action: deny
+    logging: true
+    comment: 'SETTLING: drop + log unmatched traffic to catch false positives. Promote
+      to drop (--terminal drop) when the log has been quiet.'

@@ -1,0 +1,78 @@
+# Would-be-blocked flows — review and add to policy if legitimate,
+# or confirm they should be dropped.
+blocked:
+# 2021 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::2
+    src_token: dc1_int_beg_05_berylia_org
+# 1805 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::2a
+    src_token: ws2-beg05_int_beg_05_berylia_org
+# 368 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::28
+    src_token: ws2-beg03_int_beg_05_berylia_org
+# 367 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::24
+    src_token: ws1-beg04_int_beg_05_berylia_org
+# 156 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 10.5.12.38
+    src_token: ws4-beg03_int_beg_05_berylia_org
+# 156 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 10.5.12.40
+    src_token: ws4-beg05_int_beg_05_berylia_org
+# 119 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:22::20
+    src_token: beg-power-ws_int_beg_05_berylia_org
+# 58 hits | reason: port not in policy (49768,49829,50398,50609,50989,51077,51081,51118,51367,51681,51794,51887,51959,52434,52642,52651,53046,53074,53206,53282,54563,54983,55044,55666,55928,59595,61197,61198,61666,61677,61818,61820,61969,62071,62293,62496,62767,62880,62896,62925,63012,63280,63344,63399,63421,63590,63826,63891,63972,63991,63994,64046,64438,64736,65131,65175,65246)
+  - protocol: udp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 10.5.12.2
+    src_token: dc1_int_beg_05_berylia_org
+# 19 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::18
+    src_token: adcs-beg_int_beg_05_berylia_org
+# 19 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::21
+    src_token: ws1-beg01_int_beg_05_berylia_org
+# 18 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::22
+    src_token: ws1-beg02_int_beg_05_berylia_org
+# 5 hits | reason: port not in policy (49768,49829,50398,50609,50989,51077,51081,51118,51367,51681,51794,51887,51959,52434,52642,52651,53046,53074,53206,53282,54563,54983,55044,55666,55928,59595,61197,61198,61666,61677,61818,61820,61969,62071,62293,62496,62767,62880,62896,62925,63012,63280,63344,63399,63421,63590,63826,63891,63972,63991,63994,64046,64438,64736,65131,65175,65246)
+  - protocol: udp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::2
+    src_token: dc1_int_beg_05_berylia_org
+# 4 hits | reason: port not in policy (49668,52066,62583,65278)
+  - protocol: tcp
+    service: WINDOWS-RPC-DYNAMIC
+    src_ip: 2a07:1182:5:12::23
+    src_token: ws1-beg03_int_beg_05_berylia_org
+# 900 hits | reason: port not in policy (134)
+  - protocol: tcp
+    service: unknown-tcp-134
+    src_ip: 100.97.5.60
+    src_token: BEG_GT_OTHER
+# 899 hits | reason: port not in policy (134)
+  - protocol: tcp
+    service: unknown-tcp-134
+    src_ip: 2a07:1182:5:20::60
+    src_token: BEG_GT_OTHER

@@ -1,0 +1,41 @@
+metadata:
+  host: hq-gsc08
+  zone: bgp
+  provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
+filters:
+- header:
+    targets:
+      nftables: mixed input DROP
+  terms:
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address: ANY
+    comment: every one of 7 sources was answered
+  - name: allow-tcp-TCP_4533
+    protocol: tcp
+    destination-port: TCP_4533
+    action: accept
+    source-address: ANY
+    comment: every one of 1 sources was answered
+  - name: allow-tcp-VNC
+    protocol: tcp
+    destination-port: VNC
+    action: accept
+    source-address: ANY
+    comment: every one of 4 sources was answered
+  - name: allow-tcp-HTTP-ALT
+    protocol: tcp
+    destination-port: HTTP-ALT
+    action: accept
+    source-address: ANY
+    comment: every one of 3 sources was answered
+  - name: allow-tcp-TCP_19000
+    protocol: tcp
+    destination-port: TCP_19000
+    action: accept
+    source-address: ANY
+    comment: every one of 1 sources was answered
+  - name: drop-ANY
+    action: deny

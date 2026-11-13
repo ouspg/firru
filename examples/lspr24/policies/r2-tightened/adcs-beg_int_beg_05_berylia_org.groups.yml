@@ -1,0 +1,18 @@
+# Suggested new network group definitions.
+# Review, name appropriately, and add to def/ before rerunning tighten.
+networks:
+  SUGGEST_TCP_WINDOWS_RPC_ENDPOINT_MAPPER:
+# observed sources for tcp-WINDOWS-RPC-ENDPOINT-MAPPER: dc1_int_beg_05_berylia_org, dc2_int_beg_05_berylia_org, ws1-beg01_int_beg_05_berylia_org, ws1-beg02_int_beg_05_berylia_org, ws1-beg03_int_beg_05_berylia_org, ws1-beg04_int_beg_05_berylia_org, ws1-beg05_int_beg_05_berylia_org, ws2-beg01_int_beg_05_berylia_org, ws2-beg02_int_beg_05_berylia_org, ws2-beg03_int_beg_05_berylia_org, ws2-beg04_int_beg_05_berylia_org, ws2-beg05_int_beg_05_berylia_org
+    values:
+      - address: dc1_int_beg_05_berylia_org
+      - address: dc2_int_beg_05_berylia_org
+      - address: ws1-beg01_int_beg_05_berylia_org
+      - address: ws1-beg02_int_beg_05_berylia_org
+      - address: ws1-beg03_int_beg_05_berylia_org
+      - address: ws1-beg04_int_beg_05_berylia_org
+      - address: ws1-beg05_int_beg_05_berylia_org
+      - address: ws2-beg01_int_beg_05_berylia_org
+      - address: ws2-beg02_int_beg_05_berylia_org
+      - address: ws2-beg03_int_beg_05_berylia_org
+      - address: ws2-beg04_int_beg_05_berylia_org
+      - address: ws2-beg05_int_beg_05_berylia_org

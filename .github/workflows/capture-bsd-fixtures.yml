@@ -1,0 +1,147 @@
+# Capture listener dumps from platforms we cannot stand up locally.
+#
+# macOS and the BSDs have no `ss`, and firru reads them through `netstat -an`
+# (firru/netstat.py). jc's public fixture corpus has FreeBSD 12 but every one of
+# its macOS captures used `netstat -An` — capital A, no lowercase a — which
+# prints connections only and hides every listening socket. So there is no
+# public macOS dump with a listener in it, and this job exists to make one.
+#
+# Manual only: it is not worth a runner on every push.
+#
+# Run it:   gh workflow run capture-bsd-fixtures.yml
+# Collect:  gh run download <run-id>
+# Then drop the .out files into tests/fixtures/ and extend tests/test_netstat.py.
+
+name: capture-bsd-fixtures
+
+on:
+  workflow_dispatch:
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: Plant listeners and capture
+        # Two macOS facts the first two runs taught us, both the hard way.
+        #
+        # 1. `python3 -m http.server` never reaches LISTEN here. HTTPServer's
+        #    server_bind() calls socket.getfqdn() between bind() and listen(),
+        #    and on a runner with no reverse DNS that blocks for far longer than
+        #    any sleep you would write. The socket sits bound-but-not-listening,
+        #    which macOS reports as CLOSED. The processes were alive the whole
+        #    time; they just had not called listen() yet.
+        #
+        # 2. Copying /usr/bin/python3 to a hostile filename does not rename the
+        #    process. It is a shim that re-execs the real framework binary, so
+        #    lsof reports `Python` whatever the copy is called.
+        #
+        # A ten-line C listener fixes both: it calls listen() immediately with
+        # no name resolution anywhere, and it is a real binary, so its filename
+        # is its comm. Names stay under 15 characters because comm is truncated
+        # and the point is sanitizing, not truncation.
+        run: |
+          cat > /tmp/l.c <<'EOF'
+          #include <stdlib.h>
+          #include <string.h>
+          #include <unistd.h>
+          #include <netinet/in.h>
+          #include <sys/socket.h>
+          int main(int argc, char **argv) {
+            int s = socket(AF_INET, SOCK_STREAM, 0), one = 1;
+            struct sockaddr_in a;
+            setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+            memset(&a, 0, sizeof(a));
+            a.sin_family = AF_INET;
+            a.sin_addr.s_addr = htonl(INADDR_ANY);
+            a.sin_port = htons((unsigned short) atoi(argv[1]));
+            if (bind(s, (struct sockaddr *) &a, sizeof(a))) return 1;
+            if (listen(s, 5)) return 2;
+            sleep(600);
+            return 0;
+          }
+          EOF
+          cc -o /tmp/listener /tmp/l.c
+          cp /tmp/listener "/tmp/plain"
+          cp /tmp/listener "/tmp/my proc:x"
+          cp /tmp/listener "/tmp/svc(1):y"
+          for pair in "plain 19001" "my proc:x 19002" "svc(1):y 19003"; do
+            name="${pair% *}"; port="${pair##* }"
+            ( "/tmp/$name" "$port" >/dev/null 2>&1 & )
+          done
+          sleep 2
+
+          mkdir -p out
+          sw_vers | tee out/_provenance.txt
+
+          # The one that matters. Lowercase -a is what includes listeners.
+          /usr/sbin/netstat -an          > out/netstat-an.out
+          /usr/sbin/netstat -an -p tcp   > out/netstat-an-p-tcp.out
+          /usr/sbin/netstat -an -p udp   > out/netstat-an-p-udp.out
+          # Kept as the negative fixture: this is the flag mistake, and having
+          # a real one pins the guard that refuses it.
+          /usr/sbin/netstat -An          > out/netstat-An-NO-LISTENERS.out
+
+          # The gap netstat cannot fill. BSD and macOS netstat carry no PID and
+          # no command name, so every listener from that source is UNKNOWN. lsof
+          # is where the attribution actually lives, and capturing it in the same
+          # run is what would let a macOS collection be annotated later.
+          # `+c 0` disables lsof's COMMAND truncation. The default width is 9
+          # characters on macOS (which is why its own output reads
+          # `identitys`, `Runner.Li`, `hosted-co`), and a truncated command name
+          # is exactly the attribution this capture exists to preserve.
+          lsof -i -P -n +c 0 > out/lsof-i-P-n.out 2>/dev/null || echo "(lsof failed)" > out/lsof-i-P-n.out
+          lsof -i -P -n      > out/lsof-i-P-n-truncated.out 2>/dev/null || true
+
+      - name: Verify the capture is usable
+        # Fail the job rather than upload a dump that looks fine and inventories
+        # nothing. Both earlier runs uploaded a "successful" artifact whose
+        # planted listeners were all in state CLOSED.
+        run: |
+          echo "LISTEN rows: $(grep -c LISTEN out/netstat-an.out)"
+          for p in 19001 19002 19003; do
+            grep -E "[*.]$p\\b.*LISTEN" out/netstat-an.out \
+              || { echo "port $p is not LISTEN:"; grep -E "[*.]$p\\b" out/netstat-an.out; exit 1; }
+          done
+          # A warning, not a failure. The netstat dump is what this job exists
+          # to produce; lsof attribution is groundwork for later. Failing here
+          # threw away a perfectly good capture once already.
+          grep -q "my proc:x" out/lsof-i-P-n.out \
+            || echo "::warning::lsof did not show the hostile process name — check +c 0"
+
+      - uses: actions/upload-artifact@v4
+        # Always. A failed verification is precisely when the dump is needed,
+        # and the previous run discarded it on the way out.
+        if: always()
+        with:
+          name: macos-listeners
+          path: out/
+
+  # FreeBSD has no hosted runner, so this uses a third-party action that boots a
+  # VM on a Linux runner. Left in because jc's FreeBSD fixture is 24 lines from
+  # 2020 and carries none of the planted names — but it is third-party code with
+  # repo access, so judge it before enabling rather than after.
+  freebsd:
+    runs-on: ubuntu-latest
+    if: ${{ false }}   # flip to true once you're happy with the action below
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vmactions/freebsd-vm@v1
+        with:
+          usesh: true
+          run: |
+            pkg install -y python3 || true
+            PY=$(command -v python3)
+            cp "$PY" "/tmp/plain"; cp "$PY" "/tmp/my proc:x"; cp "$PY" "/tmp/svc(1):y"
+            for pair in "plain 19001" "my proc:x 19002" "svc(1):y 19003"; do
+              name="${pair% *}"; port="${pair##* }"
+              ( "/tmp/$name" -m http.server "$port" >/dev/null 2>&1 & )
+            done
+            sleep 3
+            mkdir -p out
+            freebsd-version > out/_provenance.txt
+            netstat -an  > out/netstat-an.out
+            sockstat -l  > out/sockstat-l.out 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: freebsd-listeners
+          path: out/
