@@ -29,10 +29,11 @@ for ex in "$@"; do
     mkdir -p "$got/$(dirname "$p")"
     cp -r "$work/$p" "$got/$p"
   done
-  # The transcript, with this machine's paths taken out. A regular install
-  # carries the stock def/ inside the package; an editable one reads $FIRRU/def.
+  # The transcript, with this machine's paths taken out. Where the stock def/
+  # is depends on the install (inside a wheel, or an editable checkout that
+  # need not be this one), so its notice is normalized whatever it names.
   sed -e "s#$work#.#g" -e "s#$BASELINES#\$BASELINES#g" -e "s#$FIRRU#\$FIRRU#g" \
-      -e "s#[^ ]*/firru/_stock_def#\$FIRRU/def#g" \
+      -e "s#using the stock definitions in [^ ]*#using the stock definitions in \$FIRRU/def#" \
     "$work/run.log" > "$got/transcript.txt"
   want=$FIRRU/examples/$ex/expected
   if [ -n "$UPDATE" ]; then
