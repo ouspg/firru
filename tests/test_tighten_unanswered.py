@@ -79,7 +79,7 @@ class TestComment:
 
     def test_a_peer_never_answered_is_tagged(self):
         assert self._comment({"10.0.0.2": 30, "10.0.0.3": 6}, {"10.0.0.3": 6}) == \
-            "30 hits: win1 (10.0.0.2) | 6 hits: web1 (10.0.0.3) [none answered]"
+            "30 hits: win1 (10.0.0.2) | 6 hits: web1 (10.0.0.3) [never answered]"
 
     def test_a_peer_answered_sometimes_says_how_often_not(self):
         assert self._comment({"10.0.0.3": 6}, {"10.0.0.3": 2}) == \

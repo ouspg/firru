@@ -194,3 +194,67 @@ class TestFmtCutDeterministic:
         for k in ("a", "c", "b"):
             b[k] = {"a": 2, "b": 2, "c": 3}[k]
         assert _fmt_cut(a) == _fmt_cut(b)
+
+
+class TestNeverAnswered:
+    """A change that would admit a peer whose every flow went unanswered grants
+    more than the window's policy enforced: it is written commented out, as
+    widened, so `grep narrowed | sh` cannot take it."""
+
+    def _flows(self, tmp_path, *items):
+        """items: (src_ip, hits, responded) on tcp/22 to H1."""
+        p = tmp_path / "flows.jsonl"
+        p.write_text("".join(
+            json.dumps({"protocol": "tcp", "dst_port": 22, "src_ip": src,
+                        "dst_ip": "10.0.0.5", "responded": responded}) + "\n"
+            for src, hits, responded in items for _ in range(hits)))
+        return str(p)
+
+    def _line(self, tmp_path, capsys, flows):
+        out = _run(tmp_path, [_t("allow-tcp-SSH", "SSH")],
+                   [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")], flows, capsys=capsys)
+        return [l for l in out.splitlines() if "set-source" in l][0]
+
+    def _sh(self, tmp_path, capsys, flows, src):
+        out = _run(tmp_path, [_t("allow-tcp-SSH", "SSH")],
+                   [_t("allow-tcp-SSH", "SSH", src=src)], flows, capsys=capsys)
+        return [l for l in out.splitlines() if "set-source" in l]
+
+    def test_a_token_only_never_answered_is_left_out_of_a_runnable_line(self, tmp_path, capsys):
+        flows = self._flows(tmp_path, ("10.9.1.1", 4, True), ("10.7.1.1", 2, False))
+        runnable, proposed = self._sh(tmp_path, capsys, flows, "[NET_MGMT, NET_APP]")
+        assert runnable.startswith("firru set-source ") and " NET_MGMT --defs" in runnable
+        assert runnable.endswith("# narrowed observed (4 flows), left out never answered: NET_APP")
+        assert proposed.startswith("# firru set-source ") and "NET_APP NET_MGMT" in proposed
+
+    def test_nothing_runnable_when_every_token_was_never_answered(self, tmp_path, capsys):
+        flows = self._flows(tmp_path, ("10.7.1.1", 2, False))
+        (line,) = self._sh(tmp_path, capsys, flows, "NET_APP")
+        assert line.startswith("# ") and "# widened:" in line
+
+    def test_an_admitted_peer_never_answered_is_named(self, tmp_path, capsys):
+        """10.9.2.2 sits in NET_MGMT beside an answered peer: the group stays,
+        so it still admits 10.9.2.2, and no line is runnable."""
+        flows = self._flows(tmp_path, ("10.9.1.1", 4, True), ("10.9.2.2", 3, False))
+        (line,) = self._sh(tmp_path, capsys, flows, "NET_MGMT")
+        assert line.startswith("# firru set-source ")
+        assert line.endswith("# widened: would admit "
+                             "3 never-answered flow(s) from 10.9.2.2×3")
+
+    def test_a_peer_answered_once_is_not(self, tmp_path, capsys):
+        flows = self._flows(tmp_path, ("10.9.2.2", 3, False), ("10.9.2.2", 1, True))
+        line = self._line(tmp_path, capsys, flows)
+        assert not line.startswith("#") and line.endswith("# narrowed observed (4 flows)")
+
+    def test_a_peer_the_new_side_refuses_is_not_its_concern(self, tmp_path, capsys):
+        """10.7.x is outside NET_MGMT: the narrowing cuts it, which is a
+        contradiction, not an admission."""
+        flows = self._flows(tmp_path, ("10.9.1.1", 4, True), ("10.7.1.1", 2, False))
+        assert "widened" not in self._line(tmp_path, capsys, flows)
+
+    def test_the_terminal_says_it_too(self, tmp_path, capsys):
+        flows = self._flows(tmp_path, ("10.9.1.1", 4, True), ("10.9.2.2", 3, False))
+        out = _run(tmp_path, [_t("allow-tcp-SSH", "SSH")],
+                   [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")], flows,
+                   output="human", capsys=capsys)
+        assert "!! WIDENED: admits 3 never-answered flow(s) from 10.9.2.2×3" in out

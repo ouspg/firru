@@ -348,7 +348,7 @@ def summarise_annotations(ip_counter, annotator):
         n = sum(unanswered.get(ip, 0) for ip in ips)
         if not n:
             return ""
-        return " [none answered]" if n == hits else f" [{n} unanswered]"
+        return " [never answered]" if n == hits else f" [{n} unanswered]"
 
     parts = []
     for tok, data in sorted(token_groups.items(), key=lambda x: (-x[1]["hits"], x[0])):

@@ -81,6 +81,7 @@ from firru.policy import (
     normalize_source,
     peer_field,
     port_surface,
+    source_peers,
     target_names,
     term_covers,
     term_peers,
@@ -318,7 +319,8 @@ def _flow_evidence(flows_file, host_ips):
     a whole-fleet pass over 147M flows is neither needed nor affordable. On a
     per-host JSONL file the filter is a cheap no-op over a small file."""
     from firru.flows import iter_flows
-    ev = defaultdict(Counter)
+    from firru.cli.tighten import Hits
+    ev = defaultdict(Hits)
     ips = set(host_ips)
     for flow in iter_flows(flows_file, host_ips=ips):
         port = flow.get("dst_port")
@@ -326,9 +328,14 @@ def _flow_evidence(flows_file, host_ips):
         if not port or not proto:
             continue
         if flow.get("dst_ip") in ips:
-            ev[(DIR_IN, proto, int(port))][flow.get("src_ip")] += 1
+            key, peer = (DIR_IN, proto, int(port)), flow.get("src_ip")
         elif flow.get("src_ip") in ips:
-            ev[(DIR_OUT, proto, int(port))][flow.get("dst_ip")] += 1
+            key, peer = (DIR_OUT, proto, int(port)), flow.get("dst_ip")
+        else:
+            continue
+        ev[key][peer] += 1
+        if flow.get("responded") is False:
+            ev[key].unanswered[peer] += 1
     return ev
 
 
@@ -375,6 +382,11 @@ def _diff_evidence(ev, old_doc, new_doc, defs, result):
     ``hits`` is how often the term's surface was exercised in the window;
     ``cut`` counts flows the change would newly block — peers the OLD side
     admitted that the NEW side does not (for a removal: everything observed).
+    ``silent`` counts the flows of peers the NEW side admits although none of
+    their flows was answered: tried, refused or unheard, never served. When
+    there are any, ``keep`` is the NEW side's tokens without those that admit
+    only such peers, ``left_out`` the rest, and ``keep_hits`` the flows ``keep``
+    still covers.
     This is the paper's two counterfactuals made greppable: *observed* backs
     review-then-deploy, *unexercised* is what block-early accepts on faith
     (no data == can deny, with log-drop as the net), and *contradicted*
@@ -399,8 +411,41 @@ def _diff_evidence(ev, old_doc, new_doc, defs, result):
                 # The surface is gone entirely; every observed flow on it drops.
                 for k in ports:
                     cut.update(ev.get(k, {}))
-            out[id(term)] = {"hits": hits, "cut": cut}
+            silent = Counter()
+            if cls != "removed":
+                new_peers = term_peers(defs, term, ports[0][0])
+                seen, unanswered = Counter(), Counter()
+                for k in ports:
+                    seen.update(ev.get(k, {}))
+                    unanswered.update(getattr(ev.get(k), "unanswered", {}))
+                silent = Counter({ip: n for ip, n in seen.items()
+                                  if unanswered[ip] == n and _admits(new_peers, ip)})
+            rec = {"hits": hits, "cut": cut, "silent": silent}
+            if silent:
+                rec.update(_without_silent(defs, term, ports[0][0], seen, silent))
+            out[id(term)] = rec
     return out
+
+
+def _without_silent(defs, term, direction, seen, silent):
+    """Split the term's tokens: those whose observed peers include one that was
+    answered, or none observed at all (kept), and those every observed peer of
+    which went unanswered (left out). A group with one answered member stays,
+    and then still admits its silent members: ``keep`` is empty unless what is
+    kept admits none of them, so no runnable line widens."""
+    keep, left_out = [], []
+    for tok in _term_peer_tokens(term, direction):
+        peers = source_peers(defs, tok)
+        admitted = [ip for ip in seen if _admits(peers, ip)]
+        if admitted and all(ip in silent for ip in admitted):
+            left_out.append(tok)
+        else:
+            keep.append(tok)
+    kept = source_peers(defs, keep) if keep else frozenset()
+    if any(_admits(kept, ip) for ip in silent):
+        keep = []
+    keep_hits = sum(n for ip, n in seen.items() if keep and _admits(kept, ip))
+    return {"keep": keep, "left_out": left_out, "keep_hits": keep_hits}
 
 
 def _ev_tag(evidence, term):
@@ -418,6 +463,20 @@ def _ev_cut(evidence, term):
     """The would-be-cut counter for a term, or None."""
     rec = (evidence or {}).get(id(term))
     return rec["cut"] if rec and rec["cut"] else None
+
+
+def _ev_silent(evidence, term):
+    """Never-answered peers the new term admits, as a Counter of flows, or None.
+
+    The window's policy refused them (or nothing listened), so admitting them
+    grants more than was enforced: a widening, whatever the term's class says.
+    """
+    rec = (evidence or {}).get(id(term))
+    return rec["silent"] if rec and rec.get("silent") else None
+
+
+def _fmt_silent(silent, limit=3):
+    return _fmt_cut(silent, limit).replace("observed flow(s)", "never-answered flow(s)", 1)
 
 
 def _fmt_cut(cut, limit=3):
@@ -671,8 +730,12 @@ def _emit_sh(old_path, new_path, defs_dir, result, direction=None, swaps=None,
         print(f"# firru rm {old_path} {open_name} && "
               f"firru apply {old_path} --from {new_path} --only {term_name}{d}  # terminal")
     for term, _ in result["added"]:
-        print(f"firru apply {old_path} --from {new_path} --only {term.get('name')}{d}"
-              f"  # added{_ev_tag(evidence, term)}")
+        line = f"firru apply {old_path} --from {new_path} --only {term.get('name')}{d}"
+        silent = _ev_silent(evidence, term)
+        if silent:
+            print(f"# {line}  # widened: would admit {_fmt_silent(silent)}")
+        else:
+            print(f"{line}  # added{_ev_tag(evidence, term)}")
     for cls in ("narrowed", "widened"):
         for term, ports in result[cls]:
             side = ports[0][0]
@@ -683,10 +746,22 @@ def _emit_sh(old_path, new_path, defs_dir, result, direction=None, swaps=None,
             line = (f"firru {_peer_verb(side)} {old_path} {old_name} "
                     f"{' '.join(_term_peer_tokens(term, side))} --defs {defs_dir}")
             cut = _ev_cut(evidence, term)
+            silent = _ev_silent(evidence, term)
             if cut:
                 # The change would block traffic that actually happened; a grep
                 # must not be able to take it. Same rule as the terminal.
                 print(f"# {line}  # {cls} CONTRADICTED: would cut {_fmt_cut(cut)}")
+            elif silent:
+                # It would admit peers that were tried and never answered: more
+                # than was enforced. Not runnable as proposed; runnable without
+                # the tokens that admit only those peers, when any remain.
+                rec = evidence[id(term)]
+                if rec["keep"] and cls == "narrowed":
+                    print(f"firru {_peer_verb(side)} {old_path} {old_name} "
+                          f"{' '.join(rec['keep'])} --defs {defs_dir}  # narrowed "
+                          f"observed ({rec['keep_hits']} flows), left out never "
+                          f"answered: {' '.join(rec['left_out'])}")
+                print(f"# {line}  # widened: would admit {_fmt_silent(silent)}")
             else:
                 print(f"{line}  # {cls}{_ev_tag(evidence, term)}")
     for term, _ in result["cosmetic"]:
@@ -762,7 +837,9 @@ def _print_diff(name, result, swaps=None, evidence=None, zero_evidence=None):
         for term, ports in narrowed:
             d = ports[0][0]
             cut = _ev_cut(evidence, term)
+            silent = _ev_silent(evidence, term)
             note = (f"  !! CONTRADICTED: cuts {_fmt_cut(cut)}" if cut
+                    else f"  !! WIDENED: admits {_fmt_silent(silent)}" if silent
                     else _ev_tag(evidence, term).replace(" ", "  ", 1))
             print(f"    > {term.get('name',''):24s} {_fmt_ports(ports):22s} {_peer_word(d)} "
                   f"{_fmt_peers(old_s[ports[0]], d)} -> {_fmt_peers(term, d)}{note}")
