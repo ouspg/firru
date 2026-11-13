@@ -1,0 +1,9 @@
+Netid State  Recv-Q Send-Q          Local Address:Port  Peer Address:PortProcess                                                                                                           
+udp   UNCONN 0      0                  127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=587,fd=16)) uid:992 ino:4882 sk:1 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0               127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=587,fd=14)) uid:992 ino:4880 sk:2 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0      192.168.150.126%enp1s0:68         0.0.0.0:*    users:(("systemd-network",pid=819,fd=22)) uid:998 ino:8640 sk:3 cgroup:/system.slice/systemd-networkd.service <->
+tcp   LISTEN 0      4096               127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=587,fd=17)) uid:992 ino:4883 sk:4 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      70                  127.0.0.1:33060      0.0.0.0:*    users:(("mysqld",pid=1033,fd=21)) uid:109 ino:11421 sk:7 cgroup:/system.slice/mysql.service <->                  
+tcp   LISTEN 0      4096            127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=587,fd=15)) uid:992 ino:4881 sk:5 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      151                 127.0.0.1:3306       0.0.0.0:*    users:(("mysqld",pid=1033,fd=23)) uid:109 ino:11441 sk:8 cgroup:/system.slice/mysql.service <->                  
+tcp   LISTEN 0      511                         *:80               *:*    users:(("apache2",pid=908,fd=4),("apache2",pid=906,fd=4),("apache2",pid=905,fd=4),("apache2",pid=900,fd=4),("apache2",pid=899,fd=4),("apache2",pid=885,fd=4)) ino:8873 sk:6 cgroup:/system.slice/apache2.service v6only:0 <->

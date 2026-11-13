@@ -1,18 +1,20 @@
 #!/bin/bash
 # A zoned fleet from stock installs: twelve hosts from firru-os-baselines in
 # four zones, synthesized, tightened against made-up traffic, then merged into
-# one policy per zone for a central firewall. Run from an empty directory:
-#   BASELINES=~/firru-os-baselines FIRRU=~/firru bash $FIRRU/examples/fleet-zones/run.sh
+# one policy per zone for a central firewall. The runs it uses are copied into
+# examples/baselines/. Run from an empty directory:
+#   FIRRU=~/firru bash $FIRRU/examples/fleet-zones/run.sh
 # Needs firru installed (pip install FIRRU) and aclgen (Aerleon) on PATH.
 set -euo pipefail
-: "${BASELINES:?a clone of firru-os-baselines}" "${FIRRU:?a clone of firru (for def/ and this example)}"
+: "${FIRRU:?a clone of firru (for def/ and this example)}"
+BASELINES=${BASELINES:-$FIRRU/examples/baselines}   # or a firru-os-baselines clone
 export FIRRU_BASELINES=$BASELINES   # loot-diff and audit pick baselines from these runs only
 R=$BASELINES/runs
 EX=$FIRRU/examples/fleet-zones
 step() { printf '\n== %s\n' "$*"; }
 
 step "1. collect: one loot-host directory per host (here: stock installs)"
-take() { mkdir -p "hosts/$1" && cp -a "$R/$2/loot-host" "hosts/$1/"; }   # -a: the collection time is the files'
+take() { mkdir -p "hosts/$1" && cp -r "$R/$2/loot-host" "hosts/$1/"; }
 take web1   ubuntu-24.04.5-server+lamp-server-g1         # DMZ
 take mail1  ubuntu-24.04.5-server+mail-server-g1
 take ns1    almalinux-10.2-dns-server-g1

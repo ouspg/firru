@@ -116,9 +116,9 @@ only in its log.
   Firewall the same way. A difference is reported for review, never applied.
 - `loot-diff OLD NEW` reports what opened, closed or changed hands between two
   collections. With `--baseline REF` it compares a host with a stock install
-  of its operating system from
-  [firru-os-baselines](https://github.com/ouspg/firru-os-baselines)
-  (`$FIRRU_BASELINES`).
+  of its operating system. firru ships one record per install from
+  [firru-os-baselines](https://github.com/ouspg/firru-os-baselines);
+  `$FIRRU_BASELINES` names a clone of it instead.
 - `firru audit LOOT --policy POL` puts one host's sockets, running firewall,
   baseline and reviewed policy side by side.
 - `flow-verdict` marks each flow with the verdict of the policy in force and
@@ -204,6 +204,8 @@ pip install '.[test]' && pytest
 ```
 
 The tests use synthetic fixtures only. firru ships no capture data.
+`examples/check.sh` rebuilds both fleet examples and compares their output
+with `examples/*/expected/`.
 
 ## Citing
 

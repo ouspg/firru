@@ -1,0 +1,3 @@
+# Added 2026-10-29 from the run name: this run predates loot-host
+# collecting os-release. Not read on the host.
+fedora-44

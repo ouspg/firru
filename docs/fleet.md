@@ -3,8 +3,8 @@
 From nothing to compiled, tightened host firewalls for a set of hosts, then
 what they do against an attacker. Every step below runs as written in
 `examples/fleet/run.sh`, on four real hosts: stock installs from
-[firru-os-baselines](https://github.com/ouspg/firru-os-baselines), each with
-one change, so the output quoted here is what you get
+[firru-os-baselines](https://github.com/ouspg/firru-os-baselines) (copied into
+`examples/baselines/`), each with one change, so the output quoted here is what you get
 (`examples/fleet/expected/`).
 
 | host | what it is | the change |
@@ -15,10 +15,9 @@ one change, so the output quoted here is what you get
 | dc1  | Windows Server 2022 | domain controller |
 
 ```sh
-git clone https://github.com/ouspg/firru-os-baselines
 git clone https://github.com/ouspg/firru && pip install ./firru
 mkdir walk && cd walk
-BASELINES=../firru-os-baselines FIRRU=../firru bash ../firru/examples/fleet/run.sh
+FIRRU=../firru bash ../firru/examples/fleet/run.sh
 ```
 
 ## 1. Collect
@@ -68,8 +67,9 @@ firru diff --baseline baselines/ loot/ \
 
 The domain controller's thousands of sockets are all stock. What a person has
 to look at is three lines. `baselines/` holds the stock runs, normalized the
-same way; `firru loot-diff --baseline list` names those in a clone of
-firru-os-baselines. With `-o sh` the same comparison becomes a review script:
+same way; `firru loot-diff --baseline list` names the stock records firru
+ships, or the runs of a firru-os-baselines clone that `$FIRRU_BASELINES`
+names. With `-o sh` the same comparison becomes a review script:
 
 ```
 # firru edit-services add def/funny.yml TCP_4949 4949/tcp  # unnamed: munin-nodex1; 1 host(s)

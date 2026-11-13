@@ -1,0 +1,11 @@
+Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                                                                                                              
+udp   UNCONN 0      0         127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=586,fd=16)) uid:991 ino:7766 sk:1 cgroup:/system.slice/systemd-resolved.service <->   
+udp   UNCONN 0      0      127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=586,fd=14)) uid:991 ino:7764 sk:2 cgroup:/system.slice/systemd-resolved.service <->   
+udp   UNCONN 0      0            0.0.0.0:33356      0.0.0.0:*    users:(("avahi-daemon",pid=920,fd=14)) uid:108 ino:11455 sk:5 cgroup:/system.slice/avahi-daemon.service <->         
+udp   UNCONN 0      0            0.0.0.0:5353       0.0.0.0:*    users:(("avahi-daemon",pid=920,fd=12)) uid:108 ino:11453 sk:6 cgroup:/system.slice/avahi-daemon.service <->         
+udp   UNCONN 0      0               [::]:56068         [::]:*    users:(("avahi-daemon",pid=920,fd=15)) uid:108 ino:11456 sk:7 cgroup:/system.slice/avahi-daemon.service v6only:1 <->
+udp   UNCONN 0      0               [::]:5353          [::]:*    users:(("avahi-daemon",pid=920,fd=13)) uid:108 ino:11454 sk:8 cgroup:/system.slice/avahi-daemon.service v6only:1 <->
+tcp   LISTEN 0      4096      127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=586,fd=17)) uid:991 ino:7767 sk:3 cgroup:/system.slice/systemd-resolved.service <->   
+tcp   LISTEN 0      4096       127.0.0.1:631        0.0.0.0:*    users:(("cupsd",pid=1203,fd=7)) ino:12741 sk:9 cgroup:/system.slice/cups.service <->                                
+tcp   LISTEN 0      4096   127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=586,fd=15)) uid:991 ino:7765 sk:4 cgroup:/system.slice/systemd-resolved.service <->   
+tcp   LISTEN 0      4096           [::1]:631           [::]:*    users:(("cupsd",pid=1203,fd=6)) ino:12740 sk:a cgroup:/system.slice/cups.service v6only:1 <->                       
