@@ -672,8 +672,9 @@ Examples:
     )
     parser.add_argument("--policy",   "-p", required=True,
                         help="Aerleon host policy YAML")
-    parser.add_argument("--defs",     "-d", default="def",
-                        help="Aerleon definitions directory (default: def/)")
+    parser.add_argument("--defs",     "-d", default=None,
+                        help="Aerleon definitions directory (default: the def/ "
+                             "nearest the policy, then ./def/, then firru's own)")
     parser.add_argument("--format",   "-F", default="bpf",
                         choices=["bpf", "arkime", "both", "nmap"],
                         help="Output format (default: bpf)")
@@ -694,7 +695,8 @@ Examples:
         policy = yaml_handler.load(f)
 
     host_token = policy.get("metadata", {}).get("host")
-    defs       = naming.Naming(args.defs)
+    from firru.defs_dir import near
+    defs       = naming.Naming(near([policy_path], args.defs))
 
     if args.host_ip:
         host_ips = args.host_ip
@@ -704,7 +706,8 @@ Examples:
         host_ips = []
 
     if not host_ips and host_token:
-        print(f"Note: {host_token} resolved to no /32 hosts — relying on destination-address in terms",
+        print(f"Note: {host_token} resolved to no /32 hosts in the definitions "
+              f"(networks.yml, or --host-ip) — relying on destination-address in terms",
               file=sys.stderr)
 
     results = generate_filters(policy, defs, host_ips)

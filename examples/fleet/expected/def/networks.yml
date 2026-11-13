@@ -1,0 +1,21 @@
+networks:
+  dc1:
+    values:
+      - address: 192.168.150.194/32
+  mon1:
+    values:
+      - address: 192.168.150.169/32
+  web1:
+    values:
+      - address: 192.168.150.126/32
+  win1:
+    values:
+      - address: 192.168.150.184/32
+  MONITORING:
+    values:
+      - address: 192.168.150.250/32
+        comment: the munin master
+  ADMIN:
+    values:
+      - address: 192.168.150.0/28
+        comment: admin workstations

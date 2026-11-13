@@ -1,0 +1,69 @@
+# Host: dc1  IPs: 192.168.150.194
+# Policy: policies/pol/dc1.yml
+
+# [allow-tcp-KERBEROS-TCP] tcp/88 restricted to ['ADMIN', 'win1'] — SYN inbound (centralized FW failed, host FW may hold)
+(dst host 192.168.150.194 and tcp dst port 88 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28 or src net 192.168.150.184/32))
+
+# [allow-tcp-KERBEROS-TCP] tcp/88 restricted to ['ADMIN', 'win1'] — SYN-ACK outbound (both firewalls failed)
+(src host 192.168.150.194 and tcp src port 88 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32))
+
+# [allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER] tcp/135 restricted to ['ADMIN', 'win1'] — SYN inbound (centralized FW failed, host FW may hold)
+(dst host 192.168.150.194 and tcp dst port 135 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28 or src net 192.168.150.184/32))
+
+# [allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER] tcp/135 restricted to ['ADMIN', 'win1'] — SYN-ACK outbound (both firewalls failed)
+(src host 192.168.150.194 and tcp src port 135 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32))
+
+# [allow-tcp-LDAP-TCP] tcp/389 restricted to ['ADMIN', 'win1'] — SYN inbound (centralized FW failed, host FW may hold)
+(dst host 192.168.150.194 and tcp dst port 389 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28 or src net 192.168.150.184/32))
+
+# [allow-tcp-LDAP-TCP] tcp/389 restricted to ['ADMIN', 'win1'] — SYN-ACK outbound (both firewalls failed)
+(src host 192.168.150.194 and tcp src port 389 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32))
+
+# [allow-tcp-WINDOWS-SMB] tcp/445 restricted to ['ADMIN', 'win1'] — SYN inbound (centralized FW failed, host FW may hold)
+(dst host 192.168.150.194 and tcp dst port 445 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28 or src net 192.168.150.184/32))
+
+# [allow-tcp-WINDOWS-SMB] tcp/445 restricted to ['ADMIN', 'win1'] — SYN-ACK outbound (both firewalls failed)
+(src host 192.168.150.194 and tcp src port 445 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32))
+
+# [allow-udp-DNS-UDP] udp/53 restricted to ['ADMIN', 'win1'] — response to non-allowed destination
+(src host 192.168.150.194 and udp src port 53 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32))
+
+# [allow-udp-KERBEROS-UDP] udp/88 restricted to ['ADMIN', 'win1'] — response to non-allowed destination
+(src host 192.168.150.194 and udp src port 88 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32))
+
+# [allow-udp-NTP] udp/123 restricted to ['ADMIN', 'win1'] — response to non-allowed destination
+(src host 192.168.150.194 and udp src port 123 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32))
+
+# [allow-udp-LDAP-UDP] udp/389 restricted to ['ADMIN', 'win1'] — response to non-allowed destination
+(src host 192.168.150.194 and udp src port 389 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32))
+
+# [allow-udp-MDNS] udp/5353 restricted to ['MDNS_SOURCES_V4', 'MDNS_SOURCES_V6'] — response to non-allowed destination
+(src host 192.168.150.194 and udp src port 5353 and not (dst net 224.0.0.251/32 or dst net 169.254.0.0/16 or dst net ff02::fb/128 or dst net fe80::/10))
+
+# [allow-udp-LLMNR] udp/5355 restricted to ['LLMNR_SOURCES_V4', 'LLMNR_SOURCES_V6'] — response to non-allowed destination
+(src host 192.168.150.194 and udp src port 5355 and not (dst net 224.0.0.252/32 or dst net 169.254.0.0/16 or dst net ff02::1:3/128 or dst net fe80::/10))
+
+# [uncovered-ports] response on port not in policy — firewall-down detector (covered: tcp=53, 88, 135, 139, 389, 445, 464, 593, 636, 3268-3269, 5985, 9389, 47001, udp=53, 88, 123, 137-138, 389, 464, 5353, 5355)
+(dst host 192.168.150.194 and tcp[13] & 0x12 == 0x02 and not (tcp dst port 53 or tcp dst port 88 or tcp dst port 135 or tcp dst port 139 or tcp dst port 389 or tcp dst port 445 or tcp dst port 464 or tcp dst port 593 or tcp dst port 636 or tcp dst portrange 3268-3269 or tcp dst port 5985 or tcp dst port 9389 or tcp dst port 47001)) or
+    (src host 192.168.150.194 and tcp[13] & 0x12 == 0x12 and not (tcp src port 53 or tcp src port 88 or tcp src port 135 or tcp src port 139 or tcp src port 389 or tcp src port 445 or tcp src port 464 or tcp src port 593 or tcp src port 636 or tcp src portrange 3268-3269 or tcp src port 5985 or tcp src port 9389 or tcp src port 47001)) or
+    (src host 192.168.150.194 and udp and not (udp src port 53 or udp src port 88 or udp src port 123 or udp src portrange 137-138 or udp src port 389 or udp src port 464 or udp src port 5353 or udp src port 5355))
+
+# --- Combined BPF (any violation) ---
+(dst host 192.168.150.194 and tcp dst port 88 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28 or src net 192.168.150.184/32)) or
+(src host 192.168.150.194 and tcp src port 88 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32)) or
+(dst host 192.168.150.194 and tcp dst port 135 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28 or src net 192.168.150.184/32)) or
+(src host 192.168.150.194 and tcp src port 135 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32)) or
+(dst host 192.168.150.194 and tcp dst port 389 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28 or src net 192.168.150.184/32)) or
+(src host 192.168.150.194 and tcp src port 389 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32)) or
+(dst host 192.168.150.194 and tcp dst port 445 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28 or src net 192.168.150.184/32)) or
+(src host 192.168.150.194 and tcp src port 445 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32)) or
+(src host 192.168.150.194 and udp src port 53 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32)) or
+(src host 192.168.150.194 and udp src port 88 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32)) or
+(src host 192.168.150.194 and udp src port 123 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32)) or
+(src host 192.168.150.194 and udp src port 389 and not (dst net 192.168.150.0/28 or dst net 192.168.150.184/32)) or
+(src host 192.168.150.194 and udp src port 5353 and not (dst net 224.0.0.251/32 or dst net 169.254.0.0/16 or dst net ff02::fb/128 or dst net fe80::/10)) or
+(src host 192.168.150.194 and udp src port 5355 and not (dst net 224.0.0.252/32 or dst net 169.254.0.0/16 or dst net ff02::1:3/128 or dst net fe80::/10)) or
+(dst host 192.168.150.194 and tcp[13] & 0x12 == 0x02 and not (tcp dst port 53 or tcp dst port 88 or tcp dst port 135 or tcp dst port 139 or tcp dst port 389 or tcp dst port 445 or tcp dst port 464 or tcp dst port 593 or tcp dst port 636 or tcp dst portrange 3268-3269 or tcp dst port 5985 or tcp dst port 9389 or tcp dst port 47001)) or
+    (src host 192.168.150.194 and tcp[13] & 0x12 == 0x12 and not (tcp src port 53 or tcp src port 88 or tcp src port 135 or tcp src port 139 or tcp src port 389 or tcp src port 445 or tcp src port 464 or tcp src port 593 or tcp src port 636 or tcp src portrange 3268-3269 or tcp src port 5985 or tcp src port 9389 or tcp src port 47001)) or
+    (src host 192.168.150.194 and udp and not (udp src port 53 or udp src port 88 or udp src port 123 or udp src portrange 137-138 or udp src port 389 or udp src port 464 or udp src port 5353 or udp src port 5355))
+

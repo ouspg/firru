@@ -1,0 +1,21 @@
+# Host: mon1  IPs: 192.168.150.169
+# Policy: policies/pol/mon1.yml
+
+# [allow-tcp-MUNIN] tcp/4949 restricted to MONITORING — SYN inbound (centralized FW failed, host FW may hold)
+(dst host 192.168.150.169 and tcp dst port 4949 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.250/32))
+
+# [allow-tcp-MUNIN] tcp/4949 restricted to MONITORING — SYN-ACK outbound (both firewalls failed)
+(src host 192.168.150.169 and tcp src port 4949 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.250/32))
+
+# [uncovered-ports] response on port not in policy — firewall-down detector (covered: tcp=4949, udp=68)
+(dst host 192.168.150.169 and tcp[13] & 0x12 == 0x02 and not (tcp dst port 4949)) or
+    (src host 192.168.150.169 and tcp[13] & 0x12 == 0x12 and not (tcp src port 4949)) or
+    (src host 192.168.150.169 and udp and not (udp src port 68))
+
+# --- Combined BPF (any violation) ---
+(dst host 192.168.150.169 and tcp dst port 4949 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.250/32)) or
+(src host 192.168.150.169 and tcp src port 4949 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.250/32)) or
+(dst host 192.168.150.169 and tcp[13] & 0x12 == 0x02 and not (tcp dst port 4949)) or
+    (src host 192.168.150.169 and tcp[13] & 0x12 == 0x12 and not (tcp src port 4949)) or
+    (src host 192.168.150.169 and udp and not (udp src port 68))
+

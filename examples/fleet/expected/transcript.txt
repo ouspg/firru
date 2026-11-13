@@ -108,11 +108,15 @@ policies/pol/dc1.yml: allow-udp-KERBEROS-UDP source -> [ADMIN, win1]
 policies/pol/dc1.yml: allow-udp-LDAP-UDP source -> [ADMIN, win1]
 policies/pol/dc1.yml: allow-udp-NTP source -> [ADMIN, win1]
 
-== 8. compile
+== 8. compile, and a detector for each restricted term
 dc1.bat
+dc1.bpf
+mon1.bpf
 mon1.nft
+web1.bpf
 web1.nft
 win1.bat
+win1.bpf
 
 == 9. and keep checking: each host against its running firewall
 hosts/dc1/loot-host/firewall.json: 71 term(s) parsed PARTIALLY (ignored: ICMP type, RPC keyword (read as the dynamic range), program, protocol 2, protocol 41, remote keyword, service) — each reads WIDER than the rule it came from, so a widening reported here may be the parser, not the host
