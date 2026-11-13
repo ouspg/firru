@@ -116,6 +116,54 @@ filters:
       - name: allow-icmpv6
         action: accept
         protocol: icmpv6
-# [auto] no egress flows observed — placeholder kept
+# [auto] 12 hits: dc1 (192.168.150.194)
+      - name: allow-tcp-KERBEROS-TCP
+        protocol: tcp
+        destination-port: KERBEROS-TCP
+        destination-address: dc1
+        action: accept
+# [auto] 10 hits: dc1 (192.168.150.194)
+      - name: allow-tcp-LDAP-TCP
+        protocol: tcp
+        destination-port: LDAP-TCP
+        destination-address: dc1
+        action: accept
+# [auto] 3 hits: dc1 (192.168.150.194)
+      - name: allow-tcp-WINDOWS-RPC-ENDPOI
+        protocol: tcp
+        destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+        destination-address: dc1
+        action: accept
+# [auto] 6 hits: dc1 (192.168.150.194)
+      - name: allow-tcp-WINDOWS-SMB
+        protocol: tcp
+        destination-port: WINDOWS-SMB
+        destination-address: dc1
+        action: accept
+# [auto] 40 hits: dc1 (192.168.150.194)
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        destination-address: dc1
+        action: accept
+# [auto] 4 hits: dc1 (192.168.150.194)
+      - name: allow-udp-KERBEROS-UDP
+        protocol: udp
+        destination-port: KERBEROS-UDP
+        destination-address: dc1
+        action: accept
+# [auto] 6 hits: dc1 (192.168.150.194)
+      - name: allow-udp-LDAP-UDP
+        protocol: udp
+        destination-port: LDAP-UDP
+        destination-address: dc1
+        action: accept
+# [auto] 24 hits: dc1 (192.168.150.194)
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        destination-address: dc1
+        action: accept
+# [auto] review terms above, then replace with deny-ANY when ready
       - name: allow-ANY
         action: accept

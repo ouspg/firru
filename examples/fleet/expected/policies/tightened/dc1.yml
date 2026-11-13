@@ -1,5 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/dc1.yml
-# Source suggestions changed: 0 | Dead rules: 2 | Group suggestions: 0
+# Source suggestions changed: 8 | Dead rules: 2 | Group suggestions: 0
 metadata:
   host: dc1
 filters:
@@ -7,6 +7,78 @@ filters:
       targets:
         windows_advfirewall: in mixed block
     terms:
+
+# [auto] 36 flows total | 24 hits: ADMIN (192.168.150.3, 192.168.150.9) | 12 hits: win1 (192.168.150.184) | via: KERBEROS-TCP/tcp/88
+      - name: allow-tcp-KERBEROS-TCP
+        protocol: tcp
+        destination-port: KERBEROS-TCP
+        action: accept
+        source-address:  # was: ANY
+          - ADMIN
+          - win1
+
+# [auto] 9 flows total | 6 hits: ADMIN (192.168.150.3, 192.168.150.9) | 3 hits: win1 (192.168.150.184) | via: WINDOWS-RPC-ENDPOINT-MAPPER/tcp/135
+      - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
+        protocol: tcp
+        destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
+        action: accept
+        source-address:  # was: ANY
+          - ADMIN
+          - win1
+
+# [auto] 30 flows total | 20 hits: ADMIN (192.168.150.3, 192.168.150.9) | 10 hits: win1 (192.168.150.184) | via: LDAP-TCP/tcp/389
+      - name: allow-tcp-LDAP-TCP
+        protocol: tcp
+        destination-port: LDAP-TCP
+        action: accept
+        source-address:  # was: ANY
+          - ADMIN
+          - win1
+
+# [auto] 18 flows total | 12 hits: ADMIN (192.168.150.3, 192.168.150.9) | 6 hits: win1 (192.168.150.184) | via: WINDOWS-SMB/tcp/445
+      - name: allow-tcp-WINDOWS-SMB
+        protocol: tcp
+        destination-port: WINDOWS-SMB
+        action: accept
+        source-address:  # was: ANY
+          - win1
+          - ADMIN
+
+# [auto] 120 flows total | 80 hits: ADMIN (192.168.150.3, 192.168.150.9) | 40 hits: win1 (192.168.150.184) | via: DNS-UDP/udp/53
+      - name: allow-udp-DNS-UDP
+        protocol: udp
+        destination-port: DNS-UDP
+        action: accept
+        source-address:  # was: ANY
+          - ADMIN
+          - win1
+
+# [auto] 12 flows total | 8 hits: ADMIN (192.168.150.3, 192.168.150.9) | 4 hits: win1 (192.168.150.184) | via: KERBEROS-UDP/udp/88
+      - name: allow-udp-KERBEROS-UDP
+        protocol: udp
+        destination-port: KERBEROS-UDP
+        action: accept
+        source-address:  # was: ANY
+          - ADMIN
+          - win1
+
+# [auto] 72 flows total | 48 hits: ADMIN (192.168.150.3, 192.168.150.9) | 24 hits: win1 (192.168.150.184) | via: NTP/udp/123
+      - name: allow-udp-NTP
+        protocol: udp
+        destination-port: NTP
+        action: accept
+        source-address:  # was: ANY
+          - ADMIN
+          - win1
+
+# [auto] 18 flows total | 12 hits: ADMIN (192.168.150.3, 192.168.150.9) | 6 hits: win1 (192.168.150.184) | via: LDAP-UDP/udp/389
+      - name: allow-udp-LDAP-UDP
+        protocol: udp
+        destination-port: LDAP-UDP
+        action: accept
+        source-address:  # was: ANY
+          - ADMIN
+          - win1
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-icmp
@@ -26,39 +98,11 @@ filters:
         source-address: ANY
 
 # [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-KERBEROS-TCP
-        protocol: tcp
-        destination-port: KERBEROS-TCP
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
-        protocol: tcp
-        destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
       - name: allow-tcp-NETBIOS-SSN-LEGACY
         protocol: tcp
         destination-port: NETBIOS-SSN-LEGACY
         action: accept
         source-address: ANY_V4
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-LDAP-TCP
-        protocol: tcp
-        destination-port: LDAP-TCP
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-WINDOWS-SMB
-        protocol: tcp
-        destination-port: WINDOWS-SMB
-        action: accept
-        source-address: ANY
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-tcp-KERBEROS-KPASSWD-TCP
@@ -117,27 +161,6 @@ filters:
         source-address: ANY
 
 # [auto] no flows observed in window — source unchanged
-      - name: allow-udp-DNS-UDP
-        protocol: udp
-        destination-port: DNS-UDP
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-udp-KERBEROS-UDP
-        protocol: udp
-        destination-port: KERBEROS-UDP
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-udp-NTP
-        protocol: udp
-        destination-port: NTP
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
       - name: allow-udp-NETBIOS-NS-LEGACY
         protocol: udp
         destination-port: NETBIOS-NS-LEGACY
@@ -150,13 +173,6 @@ filters:
         destination-port: NETBIOS-DGM-LEGACY
         action: accept
         source-address: ANY_V4
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-udp-LDAP-UDP
-        protocol: udp
-        destination-port: LDAP-UDP
-        action: accept
-        source-address: ANY
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-udp-KERBEROS-KPASSWD-UDP
