@@ -1,0 +1,8 @@
+# Host: web1  IPs: 192.168.150.126
+# Policy: policies/pol/web1.yml
+
+# [uncovered-ports] response on port not in policy — firewall-down detector (covered: tcp=80, udp=68)
+(dst host 192.168.150.126 and tcp[13] & 0x12 == 0x02 and not (tcp dst port 80)) or
+    (src host 192.168.150.126 and tcp[13] & 0x12 == 0x12 and not (tcp src port 80)) or
+    (src host 192.168.150.126 and udp and not (udp src port 68))
+

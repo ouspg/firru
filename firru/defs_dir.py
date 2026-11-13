@@ -38,3 +38,21 @@ def resolve(defs_dir):
         return str(STOCK)
     print(f"firru: definitions directory {defs_dir!r} not found (--defs DIR)", file=sys.stderr)
     sys.exit(2)
+
+
+def near(paths, defs_dir=None):
+    """`defs_dir` if given; else the `def` directory nearest one of `paths`
+    (beside it, or in a parent: a project keeps policies/ and def/ side by
+    side), else `./def`, else the stock definitions. Says which, when it had
+    to look."""
+    if defs_dir:
+        return resolve(defs_dir)
+    for p in paths:
+        for d in Path(p).resolve().parents:
+            if (d / DEFAULT).is_dir():
+                if d != Path.cwd().resolve():
+                    print(f"firru: using the definitions in {d / DEFAULT} "
+                          f"(--defs DIR for others)", file=sys.stderr)
+                return str(d / DEFAULT)
+    return resolve(DEFAULT)
+

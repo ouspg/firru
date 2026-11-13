@@ -13,7 +13,7 @@ UPDATE=
 # What each example keeps: its outputs, not its inputs (loot is in
 # examples/baselines/, flows are generated).
 declare -A KEEP=(
-  [fleet]="review.sh policies/staged policies/tightened policies/pol policies/block-early out"
+  [fleet]="review.sh def policies/staged policies/tightened policies/pol policies/block-early out"
   [fleet-zones]="policies/pol zones/pol out"
 )
 
@@ -29,6 +29,7 @@ for ex in "$@"; do
     mkdir -p "$got/$(dirname "$p")"
     cp -r "$work/$p" "$got/$p"
   done
+  find "$got" -name __pycache__ -prune -exec rm -rf {} +   # def/heuristics.py, once imported
   # The transcript, with this machine's paths taken out. Where the stock def/
   # is depends on the install (inside a wheel, or an editable checkout that
   # need not be this one), so its notice is normalized whatever it names.

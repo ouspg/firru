@@ -1,0 +1,4 @@
+services:
+  MUNIN:
+    - port: 4949
+      protocol: tcp

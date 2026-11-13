@@ -64,11 +64,12 @@ for h in mon1 win1 dc1; do
   { firru diff policies/pol/$h.yml policies/tightened/$h.yml --defs def -o sh || true; } | grep narrowed | sh
 done
 
-step "8. compile"
+step "8. compile, and a detector for each restricted term"
 mkdir -p out
 for p in policies/pol/*.yml; do
   aclgen --base_directory policies/pol --policy_file "$p" --definitions_directory def \
       --output_directory out > aclgen.log 2>&1 || { cat aclgen.log; exit 1; }
+  aerleon-to-bpf --policy "$p" --defs def > "out/$(basename "$p" .yml).bpf"
 done
 ls out
 

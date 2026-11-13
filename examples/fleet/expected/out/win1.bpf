@@ -1,0 +1,29 @@
+# Host: win1  IPs: 192.168.150.184
+# Policy: policies/pol/win1.yml
+
+# [allow-tcp-SSH] tcp/22 restricted to ADMIN — SYN inbound (centralized FW failed, host FW may hold)
+(dst host 192.168.150.184 and tcp dst port 22 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28))
+
+# [allow-tcp-SSH] tcp/22 restricted to ADMIN — SYN-ACK outbound (both firewalls failed)
+(src host 192.168.150.184 and tcp src port 22 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28))
+
+# [allow-udp-MDNS] udp/5353 restricted to ['MDNS_SOURCES_V4', 'MDNS_SOURCES_V6'] — response to non-allowed destination
+(src host 192.168.150.184 and udp src port 5353 and not (dst net 224.0.0.251/32 or dst net 169.254.0.0/16 or dst net ff02::fb/128 or dst net fe80::/10))
+
+# [allow-udp-LLMNR] udp/5355 restricted to ['LLMNR_SOURCES_V4', 'LLMNR_SOURCES_V6'] — response to non-allowed destination
+(src host 192.168.150.184 and udp src port 5355 and not (dst net 224.0.0.252/32 or dst net 169.254.0.0/16 or dst net ff02::1:3/128 or dst net fe80::/10))
+
+# [uncovered-ports] response on port not in policy — firewall-down detector (covered: tcp=22, 135, 139, 445, 5985, 47001, udp=123, 137-138, 5353, 5355)
+(dst host 192.168.150.184 and tcp[13] & 0x12 == 0x02 and not (tcp dst port 22 or tcp dst port 135 or tcp dst port 139 or tcp dst port 445 or tcp dst port 5985 or tcp dst port 47001)) or
+    (src host 192.168.150.184 and tcp[13] & 0x12 == 0x12 and not (tcp src port 22 or tcp src port 135 or tcp src port 139 or tcp src port 445 or tcp src port 5985 or tcp src port 47001)) or
+    (src host 192.168.150.184 and udp and not (udp src port 123 or udp src portrange 137-138 or udp src port 5353 or udp src port 5355))
+
+# --- Combined BPF (any violation) ---
+(dst host 192.168.150.184 and tcp dst port 22 and tcp[13] & 0x12 == 0x02 and not (src net 192.168.150.0/28)) or
+(src host 192.168.150.184 and tcp src port 22 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28)) or
+(src host 192.168.150.184 and udp src port 5353 and not (dst net 224.0.0.251/32 or dst net 169.254.0.0/16 or dst net ff02::fb/128 or dst net fe80::/10)) or
+(src host 192.168.150.184 and udp src port 5355 and not (dst net 224.0.0.252/32 or dst net 169.254.0.0/16 or dst net ff02::1:3/128 or dst net fe80::/10)) or
+(dst host 192.168.150.184 and tcp[13] & 0x12 == 0x02 and not (tcp dst port 22 or tcp dst port 135 or tcp dst port 139 or tcp dst port 445 or tcp dst port 5985 or tcp dst port 47001)) or
+    (src host 192.168.150.184 and tcp[13] & 0x12 == 0x12 and not (tcp src port 22 or tcp src port 135 or tcp src port 139 or tcp src port 445 or tcp src port 5985 or tcp src port 47001)) or
+    (src host 192.168.150.184 and udp and not (udp src port 123 or udp src portrange 137-138 or udp src port 5353 or udp src port 5355))
+

@@ -1,0 +1,490 @@
+# =============================================================================
+# windows-services.yml — Windows Server network port requirements
+#
+# Every entry carries a "# Source:" line. Most point at a section of
+#   KB832017 "Service overview and network port requirements for Windows"
+#   https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/
+#   service-overview-and-network-port-requirements
+# and the rest at another Microsoft document or an RFC. Entries without a
+# source are not shipped; add your own to a separate definitions file.
+#
+# NAME-LEGACY marks a port whose only users Microsoft has deprecated or
+# removed, or that KB832017 itself calls optional now that DNS exists. It
+# should not be open on a current (2025) Windows estate; a policy that needs
+# one is worth a second look, and the suffix makes that visible to a reader
+# who does not know Windows. The "# LEGACY:" line says why.
+#
+# Protocols Linux uses too (DNS, NTP, Kerberos, LDAP, DHCP, RADIUS, HTTP...)
+# are in services.yml; load both. What Samba shares with Windows (NetBIOS,
+# SMB, AD Global Catalog) stays here, as do RDP and WinRM.
+#
+# DYNAMIC RPC PORT NOTE:
+#   Modern  (Server 2008+ / Vista+):      49152–65535
+#   Legacy  (2000 / XP / Server 2003):    1025–5000
+#   Mixed environments: allow both ranges.
+#   Always pin the range on DCs before opening it through any firewall:
+#     HKLM\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters
+#     MaxUserPort, ReservedPorts — see MS KB154596.
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # Active Directory Global Catalog  (plain LDAP/LDAPS are in services.yml)
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Local Security Authority
+  LDAP-GC:
+    - port: 3268
+      protocol: tcp
+      comment: >
+        Global Catalog — required for multi-domain forests so that a DC can
+        resolve objects from other domains without a referral chain. Also used
+        by Offline Files and Roaming User Profiles for Primary Computer
+        determination.
+
+  # Source: KB832017: Local Security Authority
+  LDAP-GC-SSL:
+    - port: 3269
+      protocol: tcp
+      comment: >
+        Global Catalog over SSL — same use-case as port 3268 with transport
+        encryption enforced.
+
+  # ---------------------------------------------------------------------------
+  # NetBIOS  (legacy — naming convention shared with Samba on Linux)
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Computer Browser; Net Logon; Server; Systems Management Server 2.0
+  # LEGACY: NetBIOS ports optional, DNS replaces them (KB832017 Net Logon note 2)
+  NETBIOS-NS-LEGACY:
+    - port: 137
+      protocol: udp
+      comment: >
+        NetBIOS Name Service (NBNS) — legacy name resolution; fallback used
+        by Netlogon, Print Spooler, Event Log (named pipes), and RPC over
+        named pipes. Not required in pure DNS / Server 2008+ forests unless
+        down-level clients or legacy trusts are present. Same port used by
+        Samba on Linux.
+
+  # Source: KB832017: Computer Browser; Distributed File System; License Logging Service; Net Logon
+  # LEGACY: Computer Browser and Remote Mailslots deprecated (Windows Server 2025 deprecated-features list)
+  NETBIOS-DGM-LEGACY:
+    - port: 138
+      protocol: udp
+      comment: >
+        Computer Browser browse-list distribution, DFS-N namespace broadcasts,
+        Netlogon mailslot messages. Generally not required across routed
+        boundaries unless supporting legacy clients or trust fallback.
+
+  # Source: KB832017: Computer Browser; Distributed File System Namespaces; Fax Service; License Logging Service
+  # LEGACY: SMB over NetBT deprecated (Windows Server 2016 deprecated-features list)
+  NETBIOS-SSN-LEGACY:
+    - port: 139
+      protocol: tcp
+      comment: >
+        Legacy SMB-over-NetBIOS (SMB1). Still referenced by Certificate
+        Services, Fax, Event Log (named pipes), Net Logon legacy trust
+        fallback, and RPC over named pipes. Block if all hosts are
+        Vista / Server 2008+ with SMB1 disabled. Same port used by Samba.
+
+  # ---------------------------------------------------------------------------
+  # WINS  (System service: WINS)
+  # Clients resolve names over NETBIOS-NS-LEGACY (udp/137); port 42 is only
+  # WINS server-to-server replication, so allow it between WINS servers, not
+  # from clients. 1512 is the IANA "wins" port but Windows WINS does not use it.
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Windows Internet Name Service (WINS)
+  # LEGACY: WINS deprecated, replace with DNS (Windows Server 2022 deprecated-features list)
+  WINS-REPLICATION-LEGACY:
+    - port: 42
+      protocol: tcp
+    - port: 42
+      protocol: udp
+      comment: WINS replication between WINS servers.
+
+  # ---------------------------------------------------------------------------
+  # Remote access
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: WinRM 2.0
+  WINRM-HTTP:
+    - port: 5985
+      protocol: tcp
+      comment: >
+        WS-Management HTTP — PowerShell remoting, remote Server Manager,
+        monitoring agents. Also used by OMI on Linux. Use WINRM-HTTPS across
+        any untrusted segment.
+
+  # Source: KB832017: WinRM 2.0
+  WINRM-HTTPS:
+    - port: 5986
+      protocol: tcp
+      comment: >
+        WS-Management HTTPS — encrypted listener. Requires a valid server
+        certificate. Preferred over HTTP across any routed boundary.
+
+  # Source: KB832017: RDS
+  RDP:
+    - port: 3389
+      protocol: tcp
+    - port: 3389
+      protocol: udp
+      comment: Remote Desktop Services; UDP carries the RDP UDP transport.
+
+  # ---------------------------------------------------------------------------
+  # RPC  (System service: RpcSs)
+  # Almost every Windows server role depends on these entries.
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Certificate Services; Cluster Service; Distributed File Replication Service; Distributed File System Namespaces
+  WINDOWS-RPC-ENDPOINT-MAPPER:
+    - port: 135
+      protocol: tcp
+      comment: >
+        Entry point for all RPC-based Windows services. A client connects here
+        first to discover which dynamic high port the target service is
+        listening on. Required by: AD replication, Netlogon, DFS-N, DFSR,
+        DTC, Print Spooler, WMI, Certificate Services, Cluster, Hyper-V WMI,
+        Group Policy RSoP, and more. Must be open whenever any RPC-based
+        service is in use.
+
+  # Source: KB832017 "Remote Procedure Call (RPC)" and most role sections: random port 49152-65535
+  WINDOWS-RPC-DYNAMIC:
+    - port: 49152-65535
+      protocol: tcp
+    - port: 49152-65535
+      protocol: udp
+      comment: >
+        RPC dynamic high-port range (Server 2008 / Vista and later). Used by
+        all services that rely on dynamic RPC port assignment. Pin this range
+        on DCs before opening it through any firewall:
+          HKLM\SYSTEM\CurrentControlSet\Services\TCPIP\Parameters
+          MaxUserPort / ReservedPorts — see MS KB154596.
+        A typical narrow pinned range for DC-only traffic is 49152–49200.
+        Assumes the default range. firru-os-baselines measured it on every
+        stock install that records it (`netsh int ipv4 show dynamicport`),
+        but a role can move it: Exchange setup sets TCP to 6005-64325 (UDP
+        49152-64325), where this token is wrong. Synthesis reads each host's
+        own range from its loot and falls back to this default only when the
+        loot has none.
+
+#  WINDOWS-RPC-DYNAMIC-LEGACY:
+#    - port: 1025-5000
+#      protocol: tcp
+#      comment: >
+#        RPC dynamic low-port range (Windows 2000 / XP / Server 2003). Only
+#        needed in mixed environments with legacy OS members. This range
+#        overlaps many well-known application ports — migrate away from it.
+
+  # Source: KB832017: Exchange Server; Remote Procedure Call
+  WINDOWS-RPC-HTTPS:
+    - port: 593
+      protocol: tcp
+      comment: >
+        RPC over HTTPS — allows RPC clients to traverse HTTPS proxies and
+        firewalls. Used by Outlook Anywhere / Exchange and some legacy remote
+        management tools. Rarely needed for pure AD/DC traffic.
+
+  # ---------------------------------------------------------------------------
+  # SMB  (System service: LanmanServer)
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Distributed File System Namespaces; Distributed File System Replication; Fax Service; Hyper-V Live Migration
+  WINDOWS-SMB:
+    - port: 445
+      protocol: tcp
+      comment: >
+        SMB direct over TCP — carries SYSVOL/NETLOGON share access (GPO), AD
+        replication (DFS-N / DFSR), Print Spooler, Cluster node-join, Hyper-V
+        Live Migration, Offline Files, Roaming Profiles, Folder Redirection,
+        License Logging, Certificate Services, Fax, Event Log (named pipes),
+        Net Logon, and all RPC over named pipes traffic. A large fraction of
+        Windows domain traffic flows through this single port. Samba also uses
+        445 — Samba-specific policy belongs in canonical or linux_services.yml.
+
+  # ---------------------------------------------------------------------------
+  # Active Directory — Windows-specific ports
+  # LDAP / Kerberos / DNS ports are in services.yml.
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Active Directory Management Gateway Service; Active Directory Web Services (ADWS)
+  WINDOWS-AD-ADWS:
+    - port: 9389
+      protocol: tcp
+      comment: >
+        Active Directory Web Services (ADWS) and AD Management Gateway
+        Service. Used by the AD PowerShell module (Get-ADUser, Get-ADComputer,
+        etc.) and RSAT tools. Present on all DCs from Server 2008 R2+.
+
+  # ---------------------------------------------------------------------------
+  # DFSR — Distributed File System Replication  (System service: DFSR)
+  # Replaces FRS for SYSVOL replication at Server 2008 R2 DFL and above.
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Distributed File System Replication
+  # LEGACY: Server 2008 / 2008 R2 DCs only
+  WINDOWS-DFSR-RPC-FIXED-LEGACY:
+    - port: 5722
+      protocol: tcp
+      comment: >
+        DFSR fixed RPC port — Server 2008 / 2008 R2 DCs only; not used on
+        Server 2012+. Configure via:
+          dfsrdiag StaticRPC /port:5722 /member:<DC>
+        Open between DCs only.
+
+  # ---------------------------------------------------------------------------
+  # DHCP Server  (System service: DHCPServer)
+  # DHCP-SERVER (67) and DHCPV6-SERVER (547) are in services.yml.
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: DHCP Server
+  WINDOWS-DHCP-MADCAP:
+    - port: 2535
+      protocol: udp
+      comment: >
+        Multicast scope management between DHCP servers. Only required if
+        multicast scopes are configured.
+
+  # Source: KB832017: DHCP Failover
+  WINDOWS-DHCP-FAILOVER:
+    - port: 647
+      protocol: tcp
+      comment: >
+        Between two Windows DHCP Server peers (load balance or hot standby).
+        Open between DHCP server pairs only.
+
+  # ---------------------------------------------------------------------------
+  # Windows Failover Cluster  (System service: ClusSvc)
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Cluster Service; Hyper-V Live Migration
+  WINDOWS-CLUSTER-UDP:
+    - port: 3343
+      protocol: udp
+      comment: >
+        Cluster Service heartbeat over UDP/DTLS — primary intra-cluster
+        channel. Requires DTLS 1.0 or 1.2 (enabled by default). Open between
+        all cluster node IPs. An explicit ICMP echo permit rule is also
+        required for node-join validation.
+
+  # Source: KB832017 "Cluster service": TCP 3343 during node join
+  WINDOWS-CLUSTER-TCP:
+    - port: 3343
+      protocol: tcp
+      comment: Cluster Service over TCP — used during node join operations only.
+
+  # ---------------------------------------------------------------------------
+  # Hyper-V  (Replica + Live Migration)
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Hyper-V service; SharePoint Portal Server; WinRM 1.1 and earlier; Windows Media Services
+  # Owner: services=vmms
+  WINDOWS-HYPERV-REPLICA-HTTP:
+    - port: 80
+      protocol: tcp
+      comment: >
+        Hyper-V Replica Kerberos-authenticated replication channel. Used when
+        certificate-based auth is NOT configured. Shares port with HTTP —
+        restrict by host.
+
+  # Source: KB832017: Exchange Server 2003; HTTP SSL; Hyper-V service; SharePoint Portal Server
+  # Owner: services=vmms
+  WINDOWS-HYPERV-REPLICA-HTTPS:
+    - port: 443
+      protocol: tcp
+      comment: >
+        Hyper-V Replica certificate-authenticated replication channel.
+        Preferred over HTTP for inter-site replication. Shares port with
+        HTTPS — restrict by host.
+
+  # Source: KB832017: Hyper-V Live Migration
+  WINDOWS-HYPERV-LIVE-MIGRATION:
+    - port: 6600
+      protocol: tcp
+      comment: >
+        VM memory/state transfer between Hyper-V hosts. Combine with
+        WINDOWS-SMB (445) for Shared-Nothing Live Migration over SMB Direct.
+        Open between Hyper-V host IPs only.
+
+  # ---------------------------------------------------------------------------
+  # MSMQ — Message Queuing  (System service: MSMQ)
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: Message Queuing
+  WINDOWS-MSMQ-TCP:
+    - port: 1801
+      protocol: tcp
+      comment: >
+        Primary messaging port over TCP — reliable transactional message
+        delivery between MSMQ-enabled applications.
+
+  # Source: KB832017: Message Queuing
+  WINDOWS-MSMQ-UDP:
+    - port: 1801
+      protocol: udp
+      comment: >
+        Primary messaging port over UDP — non-transactional / express messages
+        where delivery guarantee is not required.
+
+  # Source: KB832017: Message Queuing
+  WINDOWS-MSMQ-RPC-DC:
+    - port: 2101
+      protocol: tcp
+      comment: >
+        RPC port for MSMQ to query domain controllers for directory service
+        lookups. Required in domain-joined MSMQ deployments.
+
+  # Source: KB832017: Message Queuing
+  WINDOWS-MSMQ-RPC-MGMT:
+    - port: 2107
+      protocol: tcp
+      comment: Remote management and monitoring via the Message Queuing MMC snap-in.
+
+  # Source: KB832017: Message Queuing
+  WINDOWS-MSMQ-PING:
+    - port: 3527
+      protocol: udp
+      comment: >
+        Connectivity test to remote queue managers before attempting message
+        delivery.
+
+  # Source: KB832017: Message Queuing
+  WINDOWS-MSMQ-RPC-1:
+    - port: 2103
+      protocol: tcp
+      comment: Inter-MSMQ-server RPC communication.
+
+  # Source: KB832017: Message Queuing
+  WINDOWS-MSMQ-RPC-2:
+    - port: 2105
+      protocol: tcp
+      comment: Secondary RPC port for MSMQ server-to-server and management operations.
+
+  # ---------------------------------------------------------------------------
+  # IPAM
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017 "IP Address Management (IPAM)"
+  WINDOWS-IPAM-WCF:
+    - port: 48885
+      protocol: tcp
+      comment: >
+        WCF TCP binding between IPAM client UI and IPAM server for remote
+        management. Default port; configurable.
+
+  # ---------------------------------------------------------------------------
+  # BranchCache
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017 "BranchCache information": UDP 3702
+  WINDOWS-BRANCHCACHE-DISCOVERY:
+    - port: 3702
+      protocol: udp
+      comment: >
+        WS-Discovery for locating cached content on peer clients within the
+        same subnet. Only needed in branch offices using BranchCache
+        distributed cache mode.
+
+  # ---------------------------------------------------------------------------
+  # Legacy / Miscellaneous Windows-specific
+  # ---------------------------------------------------------------------------
+
+  # Source: KB832017: ASP.NET State Service
+  WINDOWS-ASPNET-STATE:
+    - port: 42424
+      protocol: tcp
+      comment: >
+        ASP.NET State Service — out-of-process session state provider for
+        ASP.NET. Open between web tier and dedicated state server hosts only.
+
+  # Source: KB832017: Remote Installation
+  WINDOWS-REMOTE-INSTALL-BINL:
+    - port: 4011
+      protocol: udp
+      comment: >
+        Remote Installation Services (RIS) PXE boot. Legacy (Server 2003 and
+        earlier); superseded by WDS which uses DHCP options 60/66/67.
+
+  # Source: KB832017 "ISA/TMG Server"
+  # LEGACY: ISA Server / TMG discontinued
+  WINDOWS-ISA-CONFIG-DOMAIN-LEGACY:
+    - port: 2171
+      protocol: tcp
+      comment: ISA/TMG Configuration Storage (domain mode). Legacy; ISA/TMG EOL.
+
+  # Source: KB832017 "ISA/TMG Server"
+  # LEGACY: ISA Server / TMG discontinued
+  WINDOWS-ISA-CONFIG-REPL-LEGACY:
+    - port: 2173
+      protocol: tcp
+      comment: ISA/TMG Configuration Storage replication. Legacy.
+
+  # Source: KB832017 "ISA/TMG Server"
+  # LEGACY: ISA Server / TMG discontinued
+  WINDOWS-ISA-CONFIG-WORKGROUP-LEGACY:
+    - port: 2172
+      protocol: tcp
+      comment: ISA/TMG Configuration Storage (workgroup mode). Legacy.
+
+  # Source: KB832017 "ISA/TMG Server"
+  # LEGACY: ISA Server / TMG discontinued
+  WINDOWS-ISA-FIREWALL-CTRL-LEGACY:
+    - port: 3847
+      protocol: tcp
+      comment: ISA/TMG Firewall Control Channel. Legacy.
+
+  # Source: KB832017 "ISA/TMG Server"
+  # LEGACY: ISA Server / TMG discontinued
+  WINDOWS-ISA-WEB-MGMT-LEGACY:
+    - port: 2175
+      protocol: tcp
+      comment: ISA/TMG Web Management OEM interface. Legacy.
+
+  # Source: no Microsoft document; measured listening on a pristine Windows
+  # Server DC (firru baseline). Microsoft's WinRM documentation names only 5985
+  # and 5986 (and 80/443 for the compatibility listeners).
+  WINDOWS-WINRM-UNCONFIGURED:
+    - port: 47001
+      protocol: tcp
+      comment: >
+        Listening on a freshly installed Windows Server, DCs included, before
+        any WinRM listener has been configured (winrm quickconfig /
+        Enable-PSRemoting). Block it on any host where WinRM was not
+        configured on purpose; on a long-running DC it suggests baseline
+        hardening was skipped.
+
+  # Source: KB832017: Microsoft SQL Server
+  MSSQL:
+    - port: 1433
+      protocol: tcp
+      comment: SQL Server default instance.
+
+  # ---------------------------------------------------------------------------
+  # WSUS  (deprecated in the Windows Server 2025 list but still supported, so
+  # not LEGACY)
+  # ---------------------------------------------------------------------------
+
+  # Source: learn.microsoft.com windows-server-update-services/deploy/2-configure-wsus
+  WSUS-HTTP:
+    - port: 8530
+      protocol: tcp
+      comment: Update payloads (HTTP). Clients and downstream WSUS servers.
+
+  # Source: learn.microsoft.com windows-server-update-services/deploy/2-configure-wsus
+  WSUS-HTTPS:
+    - port: 8531
+      protocol: tcp
+      comment: Update metadata (HTTPS). Always the HTTP port plus one.
+
+  # ---------------------------------------------------------------------------
+  # Volume activation
+  # ---------------------------------------------------------------------------
+
+  # Source: learn.microsoft.com windows-server/get-started/kms-activation-planning
+  # ("By default, a KMS host is configured to use TCP on port 1688.")
+  WINDOWS-KMS:
+    - port: 1688
+      protocol: tcp
+      comment: KMS host; clients find it through DNS SRV _vlmcs._tcp.

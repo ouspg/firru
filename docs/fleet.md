@@ -180,6 +180,23 @@ deploy them as you deploy anything else. mon1's munin term:
 ip saddr 192.168.150.250/32 tcp dport 4949 ct state new accept
 ```
 
+The same policy compiles into detectors: one BPF filter per restricted term,
+which matches only traffic the term should have stopped. A packet on one of
+them means a firewall did not hold.
+
+```sh
+aerleon-to-bpf --policy policies/pol/win1.yml --defs def
+```
+
+```
+# [allow-tcp-SSH] tcp/22 restricted to ADMIN — SYN-ACK outbound (both firewalls failed)
+(src host 192.168.150.184 and tcp src port 22 and tcp[13] & 0x12 == 0x12 and not (dst net 192.168.150.0/28))
+```
+
+`--combined` gives one expression for `tcpdump`. Without `--defs` it uses the
+`def/` nearest the policy, so `examples/fleet/expected/` can be read the same
+way.
+
 ## 9. Keep checking
 
 Policy and practice drift apart: someone opens a port by hand, a package adds

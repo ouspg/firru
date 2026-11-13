@@ -28,3 +28,33 @@ def test_installed_location_wins_over_the_checkout(tmp_path, monkeypatch):
 
 def test_the_checkout_resolves_to_the_repo_root():
     assert defs_dir.STOCK == ROOT / 'def' and defs_dir.STOCK_BASELINE == ROOT / 'baseline'
+
+
+class TestNear:
+    """Without --defs, the def/ nearest the policy wins over ./def and the stock
+    definitions: a project keeps policies/ and def/ side by side."""
+
+    def _project(self, root):
+        (root / 'proj' / 'def').mkdir(parents=True)
+        (root / 'proj' / 'policies' / 'pol').mkdir(parents=True)
+        pol = root / 'proj' / 'policies' / 'pol' / 'h1.yml'
+        pol.write_text('{}\n')
+        return pol
+
+    def test_the_def_beside_the_policies_wins_over_cwd(self, tmp_path, monkeypatch):
+        pol = self._project(tmp_path)
+        (tmp_path / 'cwd' / 'def').mkdir(parents=True)
+        monkeypatch.chdir(tmp_path / 'cwd')
+        assert defs_dir.near([pol]) == str(tmp_path / 'proj' / 'def')
+
+    def test_an_explicit_defs_wins(self, tmp_path, monkeypatch):
+        pol = self._project(tmp_path)
+        (tmp_path / 'mine').mkdir()
+        assert defs_dir.near([pol], str(tmp_path / 'mine')) == str(tmp_path / 'mine')
+
+    def test_with_none_near_it_falls_back_to_stock(self, tmp_path, monkeypatch, capsys):
+        pol = tmp_path / 'h1.yml'
+        pol.write_text('{}\n')
+        monkeypatch.chdir(tmp_path)
+        assert defs_dir.near([pol]) == str(defs_dir.STOCK)
+        assert 'stock definitions' in capsys.readouterr().err
