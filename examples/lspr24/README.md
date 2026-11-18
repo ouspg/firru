@@ -17,8 +17,8 @@ What it shows:
   policy can be reconstructed from traffic, SSH was open wider than the hosts'
   own management model, and 47 had services nobody used.
 - **Host state splits what traffic cannot.** The capture names no blocked
-  connection. Joined to the hosts' listening tables, 79,200 unanswered flows
-  turn out to be to ports that *were* listening: the enforcement axis.
+  connection. Joined to the hosts' listening tables, 35,499 unanswered IPv4
+  flows turn out to be to ports that *were* listening: the enforcement axis.
 - **Synthesis on real loot.** 59 hosts, 1,000 sockets, each policy term named by
   a definition with a source, and every port nothing names noted rather than
   opened.
@@ -127,17 +127,21 @@ times in 20.2M rows, and its IPv6 TCP rows, which carry no flags, could not
 show them. What the capture does show is that 38.5% of flows got
 nothing back. Joined to the listening tables, that splits in two:
 
-| inbound TCP | flows | no reply |
-| --- | --- | --- |
-| to a port with **no listener** | 2,606,598 | 480,831 (18.4%) |
-| to a port the loot confirms was **listening** | 1,606,446 | **79,200 (4.9%)** |
+| inbound TCP | family | flows | no reply |
+| --- | --- | --- | --- |
+| to a port with **no listener** | IPv4 | 1,220,362 | 228,219 (18.7%) |
+| | IPv6 | 1,386,236 | 252,612 (18.2%) |
+| to a port the loot confirms was **listening** | IPv4 | 1,187,692 | **35,499 (3.0%)** |
+| | IPv6 | 418,754 | 43,701 (10.4%) |
 
-Without the loot, 560,031 unanswered flows are one pile. With it, 79,200 are
-*something was listening and still did not answer*: the enforcement axis,
+Without the loot, the unanswered flows are one pile. With it, 35,499 IPv4 flows
+are *something was listening and still did not answer*: the enforcement axis,
 recovered from host state the dataset was never asked for. The rate is stable
-across all three days (4.0 / 5.1 / 4.8%), including 03-07, where loot and flows
-overlap exactly. They stay candidates rather than denials: no rule can be
-named as the cause.
+across the exercise windows (2.9% d1, 3.4% night, 2.8% d2). They stay
+candidates rather than denials: no rule can be named as the cause. The IPv6
+rows are reported but not relied on: they carry no TCP header (see the limits
+below), and their no-reply share rises from 8.0% to 12.1% over the same
+windows. `make listening-split` reproduces the table from the measured loot.
 
 ### Synthesis on real loot
 

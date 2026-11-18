@@ -22,7 +22,7 @@ MEASURED ?= loot-ossec
 LOOT     ?= loot-assumed
 NIGHT  ?= night.jsonl
 
-.PHONY: all clean fetch verify-inputs defs stock-defs services identity assumptions flows tighten block-early enforced enforced-diff merged loot-ossec policies ladder
+.PHONY: all clean fetch verify-inputs defs stock-defs services identity assumptions flows tighten block-early enforced enforced-diff merged loot-ossec policies ladder listening-split
 
 # Network object model from the dataset's own asset identity, replacing the
 # flow-derived hostmap and its 893 per-address ext_ tokens.
@@ -149,6 +149,11 @@ merged:
 # The block-early counterfactual: what a stricter variant would have denied,
 # and what it would have cost. Reproduces the exercise evaluation's ladder on
 # public data -- the counterfactual arm only, since nothing here was deployed.
+# The README's table: unanswered inbound TCP, split by whether the measured
+# loot says something was listening, and by address family.
+listening-split:
+	python3 listening_split.py --parquet $(LSPR24) --loot $(MEASURED)/ --defs def/
+
 ladder:
 	python3 ladder.py --parquet $(LSPR24) --loot $(LOOT)/ \
 	    --learn night --eval d2
