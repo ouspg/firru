@@ -55,7 +55,7 @@ filters:
     protocol: tcp
     destination-port: K8S-API-SERVER
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: k8s-control-plane_beg_05_berylia_org
   - name: owncloud_beg_05_berylia_org-allow-tcp-WINDOWS-SMB
     protocol: tcp
@@ -244,7 +244,7 @@ filters:
     comment: 'ANY covers 10 unresolved dst: 10 addresses in 6 blocks, widest /16:
       193.40.0.0/16 (3 dst, 157 hits), 212.7.1.128/29 (2 dst, 152 hits), 2001:1b28:1:5::130/126
       (2 dst, 80 hits), 185.125.190.56/30 (3 dst, 3 hits) -- 10 addresses spread over
-      6 groups, largest 3: too scattered to name, ANY is honest'
+      6 groups, largest 3: too scattered to name, so ANY stays'
     action: accept
     source-address: owncloud_beg_05_berylia_org
   - name: log-accept-ANY-egress

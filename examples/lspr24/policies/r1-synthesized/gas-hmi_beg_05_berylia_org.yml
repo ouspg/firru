@@ -23,13 +23,13 @@ filters:
         action: accept
         source-address:
           - BEG_GT
-# [auto] IPv6 ::/0 (next-router-wo)
+# [auto] IPv4 0.0.0.0/0 (next-router-wo) | IPv6 ::/0 (next-router-wo)
       - name: allow-tcp-TCP_3000
         protocol: tcp
         destination-port: TCP_3000
         action: accept
-        source-address: ANY_V6
-# [auto] IPv6 ::/0 (xrdp)
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (xrdp) | IPv6 ::/0 (xrdp)
       - name: allow-tcp-RDP
         protocol: tcp
         destination-port: RDP

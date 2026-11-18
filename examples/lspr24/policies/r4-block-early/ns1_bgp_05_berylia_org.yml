@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/ns1_bgp_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:04Z to 2024-03-07T05:59:59Z
 # Source suggestions changed: 1 | Dead rules: 1 | Group suggestions: 0
 metadata:
   host: ns1
@@ -51,7 +52,7 @@ filters:
   - name: allow-icmpv6
     action: accept
     protocol: icmpv6
-# [auto] 4571 hits: EXTERNAL (100.100.108.30)
+# [auto] 4571 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514
     protocol: tcp
     destination-port: TCP_1514
@@ -59,7 +60,7 @@ filters:
       (4571 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 915 hits: EXTERNAL (100.100.108.30)
+# [auto] 915 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1515
     protocol: tcp
     destination-port: TCP_1515
@@ -67,7 +68,7 @@ filters:
       (915 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 1444 hits: EXTERNAL (100.95.95.4)
+# [auto] 1444 hits: EXTERNAL (100.95.95.4) [never answered]
   - name: allow-udp-DNS-UDP
     protocol: udp
     destination-port: DNS-UDP

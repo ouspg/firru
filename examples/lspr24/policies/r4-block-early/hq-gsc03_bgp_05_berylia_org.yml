@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/hq-gsc03_bgp_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:01Z to 2024-03-07T05:59:58Z
 # Source suggestions changed: 2 | Dead rules: 0 | Group suggestions: 0
 metadata:
   host: hq-gsc03
@@ -67,7 +68,7 @@ filters:
     - bgp
     - core
     action: accept
-# [auto] 4388 hits: EXTERNAL (100.100.108.30)
+# [auto] 4388 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514
     protocol: tcp
     destination-port: TCP_1514
@@ -75,7 +76,7 @@ filters:
       (4388 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 879 hits: EXTERNAL (100.100.108.30)
+# [auto] 879 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1515
     protocol: tcp
     destination-port: TCP_1515
@@ -95,7 +96,7 @@ filters:
     destination-port: TCP_4533
     destination-address: bgp
     action: accept
-# [auto] 71951 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4)
+# [auto] 71951 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4) [never answered]
   - name: allow-udp-DNS-UDP
     protocol: udp
     destination-port: DNS-UDP
@@ -103,14 +104,14 @@ filters:
       (38629 hits), 2a07:1181:95:95::4/128 (33322 hits) -- 1 of 2 sit in one group,
       so a named group would cover most of this'
     action: accept
-# [auto] 352 hits: EXTERNAL (193.40.133.134, 193.40.134.137, 2001:1b28:1:5::131, 2001:1b28:1:5::132 and 5 more)
+# [auto] 352 hits: EXTERNAL (193.40.133.134, 193.40.134.137, 2001:1b28:1:5::131, 2001:1b28:1:5::132 and 5 more) [never answered]
   - name: allow-udp-NTP
     protocol: udp
     destination-port: NTP
     comment: 'ANY covers 9 unresolved dst: 9 addresses in 6 blocks, widest /5: 2000::/5
       (3 dst, 196 hits), 193.40.132.0/22 (2 dst, 152 hits), 185.125.190.56/30 (3 dst,
       3 hits), 91.189.91.157/32 (1 hit) -- 9 addresses spread over 6 groups, largest
-      3: too scattered to name, ANY is honest'
+      3: too scattered to name, so ANY stays'
     action: accept
 # [auto] review terms above, then replace with deny-ANY when ready; unnamed ports only this allows: tcp/34532 (1 hits, 1 dst) -- name them (firru edit-services add) to get terms
   - name: allow-ANY

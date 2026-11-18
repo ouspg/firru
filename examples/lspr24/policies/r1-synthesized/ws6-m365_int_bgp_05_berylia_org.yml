@@ -15,7 +15,7 @@ filters:
       - name: allow-icmpv6
         protocol: icmpv6
         action: accept
-# [auto] IPv6 ::/0 (init)
+# [auto] IPv4 0.0.0.0/0 (init) | IPv6 ::/0 (init)
 # [auto] unexpected owner: SSH served by init; expected sshd, dropbear, ssh.socket, sshd.socket, ssh.service, sshd.service
       - name: allow-tcp-SSH
         protocol: tcp
@@ -23,7 +23,7 @@ filters:
         action: accept
         source-address:
           - BGP_INT_GT
-# [auto] IPv6 ::/0 (xrdp)
+# [auto] IPv4 0.0.0.0/0 (xrdp) | IPv6 ::/0 (xrdp)
       - name: allow-tcp-RDP
         protocol: tcp
         destination-port: RDP

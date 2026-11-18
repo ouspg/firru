@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/keycloak_bgp_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:08Z to 2024-03-07T05:59:59Z
 # Source suggestions changed: 2 | Dead rules: 0 | Group suggestions: 0
 metadata:
   host: keycloak
@@ -21,7 +22,7 @@ filters:
         protocol: tcp
         destination-port: HTTPS
         action: accept
-        source-address: BGP_GT_OTHER  # was: ANY_V6
+        source-address: BGP_GT_OTHER  # was: ANY
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-loopback
@@ -43,7 +44,7 @@ filters:
         protocol: tcp
         destination-port: TCP_22395
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-udp-KEYCLOAK-PING
@@ -76,7 +77,7 @@ filters:
           - bgp
           - core
         action: accept
-# [auto] 4572 hits: EXTERNAL (100.100.108.30)
+# [auto] 4572 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1514
         protocol: tcp
         destination-port: TCP_1514
@@ -84,7 +85,7 @@ filters:
           (4572 hits) -- a single destination: name it or deny it, ANY is not the
           answer either way'
         action: accept
-# [auto] 915 hits: EXTERNAL (100.100.108.30)
+# [auto] 915 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1515
         protocol: tcp
         destination-port: TCP_1515
@@ -92,7 +93,7 @@ filters:
           (915 hits) -- a single destination: name it or deny it, ANY is not the answer
           either way'
         action: accept
-# [auto] 7418 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+# [auto] 7418 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4) [never answered]
       - name: allow-udp-DNS-UDP
         protocol: udp
         destination-port: DNS-UDP

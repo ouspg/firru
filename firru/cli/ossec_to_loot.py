@@ -52,6 +52,7 @@ import pathlib
 import sys
 
 from firru.ephemeral import parse_range
+from firru.listeners import dual_stack_cidrs
 from firru.tokens import is_loopback
 
 MARKER = "netstat listening ports"
@@ -98,6 +99,15 @@ def flags_for(cidr, port):
     f = ["world-listen"] if cidr in ("0.0.0.0/0", "::/0") else ["specific-ip"]
     f.append("well-known" if port < 1024 else "high-port")
     return sorted(f)
+
+
+def dual_stack(entries):
+    """Neither source here says whether v6only is set: the rootcheck check is
+    net-tools netstat, which writes `:::22` for both kinds of socket, and
+    syscollector reports Windows' dual-mode sockets once, on `::`. So a lone
+    `::/0` listener is read as both families
+    (firru.listeners.dual_stack_cidrs)."""
+    return dual_stack_cidrs(entries, flags_for)
 
 
 def entries_from(body, keep_loopback):
@@ -311,7 +321,7 @@ def main():
         if rng:
             meta["ephemeral"] = {p: rng[p] for p in ("tcp", "udp") if p in rng}
             meta["ephemeral_source"] = "assumed: " + rng["source"]
-        return {"metadata": meta, "listen_ports": entries}
+        return {"metadata": meta, "listen_ports": dual_stack(entries)}
 
     if args.output:
         out = pathlib.Path(args.output)
@@ -319,8 +329,10 @@ def main():
         for host, (ts, entries) in sorted(best.items()):
             (out / f"{filename(host)}.json").write_text(
                 json.dumps(doc(host, ts, entries), indent=2, sort_keys=True) + "\n")
-        total = sum(len(e) for _, e in best.values())
-        print(f"{len(best)} hosts, {total} listening sockets -> {out}")
+        read = sum(len(e) for _, e in best.values())
+        total = sum(len(dual_stack(e)) for _, e in best.values())
+        print(f"{len(best)} hosts, {total} listening sockets -> {out}"
+              + (f" ({total - read} of them IPv4 halves of lone IPv6 wildcards)" if total > read else ""))
         known = sum(1 for h in best if osmap.get(h))
         print(f"  scans read: {sum(scanned.values())}, "
               f"kept the {args.scan} per host")

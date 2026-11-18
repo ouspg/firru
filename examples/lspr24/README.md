@@ -17,9 +17,9 @@ What it shows:
   policy can be reconstructed from traffic, SSH was open wider than the hosts'
   own management model, and 47 had services nobody used.
 - **Host state splits what traffic cannot.** The capture names no blocked
-  connection. Joined to the hosts' listening tables, 79,200 unanswered flows
-  turn out to be to ports that *were* listening: the enforcement axis.
-- **Synthesis on real loot.** 59 hosts, 902 sockets, each policy term named by
+  connection. Joined to the hosts' listening tables, 35,499 unanswered IPv4
+  flows turn out to be to ports that *were* listening: the enforcement axis.
+- **Synthesis on real loot.** 59 hosts, 1,000 sockets, each policy term named by
   a definition with a source, and every port nothing names noted rather than
   opened.
 - **Block-early.** Source tightening denies none of the red team's admitted
@@ -123,29 +123,38 @@ listening service that was tried answered somebody.
 ### Host state splits what traffic cannot
 
 LSPR24's `Conn_state` names no blocked connection: `S0` and `REJ` occur zero
-times in 20.2M rows. What the capture does show is that 38.5% of flows got
+times in 20.2M rows, and its IPv6 TCP rows, which carry no flags, could not
+show them. What the capture does show is that 38.5% of flows got
 nothing back. Joined to the listening tables, that splits in two:
 
-| inbound TCP | flows | no reply |
-| --- | --- | --- |
-| to a port with **no listener** | 2,606,598 | 480,831 (18.4%) |
-| to a port the loot confirms was **listening** | 1,606,446 | **79,200 (4.9%)** |
+| inbound TCP | family | flows | no reply |
+| --- | --- | --- | --- |
+| to a port with **no listener** | IPv4 | 1,220,362 | 228,219 (18.7%) |
+| | IPv6 | 1,386,236 | 252,612 (18.2%) |
+| to a port the loot confirms was **listening** | IPv4 | 1,187,692 | **35,499 (3.0%)** |
+| | IPv6 | 418,754 | 43,701 (10.4%) |
 
-Without the loot, 560,031 unanswered flows are one pile. With it, 79,200 are
-*something was listening and still did not answer*: the enforcement axis,
+Without the loot, the unanswered flows are one pile. With it, 35,499 IPv4 flows
+are *something was listening and still did not answer*: the enforcement axis,
 recovered from host state the dataset was never asked for. The rate is stable
-across all three days (4.0 / 5.1 / 4.8%), including 03-07, where loot and flows
-overlap exactly. They stay candidates rather than denials: no rule can be
-named as the cause.
+across the exercise windows (2.9% d1, 3.4% night, 2.8% d2). They stay
+candidates rather than denials: no rule can be named as the cause. The IPv6
+rows are reported but not relied on: they carry no TCP header (see the limits
+below), and their no-reply share rises from 8.0% to 12.1% over the same
+windows. `make listening-split` reproduces the table from the measured loot.
 
 ### Synthesis on real loot
 
 The Wazuh archive carries the rootcheck `netstat listening ports` check, a
 host's whole listening table on every scan, with process names on most of it.
-`ossec-to-loot` reads it into 59 hosts and 902 sockets: 50 Linux hosts from
+`ossec-to-loot` reads it into 59 hosts and 1,000 sockets: 50 Linux hosts from
 netstat, and 8 Windows hosts and one unknown from syscollector, whose 35
 observed sockets `assumptions.py` fills in to the stock install of each host's
 role (301 listeners, each flagged `inferred`; see the assumptions).
+netstat writes a dual-stack socket and an IPv6-only one the same way, so 98
+of the sockets are the IPv4 half of an IPv6 wildcard with no IPv4 entry of
+its own. 49 of those answered IPv4 in the capture, one was tried and never
+answered, and the other 48 saw no IPv4 traffic.
 
 `def/` starts from firru's stock definitions, where every entry cites its
 source, so terms carry names like `K8S-KUBELET`, `NODE-EXPORTER`,
@@ -279,6 +288,11 @@ attacker's.
   across teams.
 - **One day of loot.** The archive covers 2024-03-07, about 15 hours; flows
   span the week, so loot and flows overlap on one day.
+- **No TCP header on IPv6.** All 2.41M IPv6 TCP rows have every TCP flag at
+  zero and a window of 0: the CICFlowMeter that built the dataset does not
+  parse the TCP header on its IPv6 path. Such a row cannot show a handshake or
+  a refusal, so `lspr24_to_flows.py` records one as answered only when more
+  than one packet came back, and otherwise as unknown, never as refused.
 
 ## The inventory
 

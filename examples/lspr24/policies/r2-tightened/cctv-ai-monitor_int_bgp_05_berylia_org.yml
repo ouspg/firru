@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/cctv-ai-monitor_int_bgp_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:57Z
 # Source suggestions changed: 1 | Dead rules: 0 | Group suggestions: 0
 metadata:
   host: cctv-ai-monitor
@@ -77,7 +78,7 @@ filters:
           2a07:1181:95:95::4/128 (9194 hits) -- a single destination: name it or deny
           it, ANY is not the answer either way'
         action: accept
-# [auto] 4406 hits: EXTERNAL (100.100.108.30)
+# [auto] 4406 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1514
         protocol: tcp
         destination-port: TCP_1514
@@ -85,7 +86,7 @@ filters:
           (4406 hits) -- a single destination: name it or deny it, ANY is not the
           answer either way'
         action: accept
-# [auto] 882 hits: EXTERNAL (100.100.108.30)
+# [auto] 882 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1515
         protocol: tcp
         destination-port: TCP_1515
@@ -93,7 +94,7 @@ filters:
           (882 hits) -- a single destination: name it or deny it, ANY is not the answer
           either way'
         action: accept
-# [auto] 42544 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4)
+# [auto] 42544 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4) [never answered]
       - name: allow-udp-DNS-UDP
         protocol: udp
         destination-port: DNS-UDP

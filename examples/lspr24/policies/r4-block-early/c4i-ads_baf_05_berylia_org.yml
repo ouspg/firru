@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/c4i-ads_baf_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:59Z
 # Source suggestions changed: 3 | Dead rules: 1 | Group suggestions: 0
 metadata:
   host: c4i-ads
@@ -23,14 +24,14 @@ filters:
     protocol: tcp
     destination-port: CEPH-OSD
     action: accept
-    source-address: baf      # was: ANY_V6
+    source-address: baf      # was: ANY
 
-# [auto] 389 flows total | 389 hits: baf (10.5.15.35) | via: UDP_5000/udp/5000
+# [auto] 389 flows total | 389 hits: baf (10.5.15.35) [never answered] | via: UDP_5000/udp/5000
   - name: allow-udp-UDP_5000
     protocol: udp
     destination-port: UDP_5000
     action: accept
-    source-address: baf      # was: ANY_V6
+    source-address: baf      # was: ANY
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -65,7 +66,7 @@ filters:
   - name: allow-icmpv6
     action: accept
     protocol: icmpv6
-# [auto] 345 hits: fw1-baf_5_berylia_org (2a07:1182:5:15::1) | 284 hits: BAF_GT_OTHER (2a07:1182:5:15::250)
+# [auto] 345 hits: fw1-baf_5_berylia_org (2a07:1182:5:15::1) [never answered] | 284 hits: BAF_GT_OTHER (2a07:1182:5:15::250)
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     destination-address:
@@ -84,7 +85,7 @@ filters:
     destination-port: HTTP-ALT
     destination-address: map-ads_baf_05_berylia_org
     action: accept
-# [auto] 283 hits: EXTERNAL (100.100.108.30)
+# [auto] 283 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514
     protocol: tcp
     destination-port: TCP_1514
@@ -92,7 +93,7 @@ filters:
       (283 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 56 hits: EXTERNAL (100.100.108.30)
+# [auto] 56 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1515
     protocol: tcp
     destination-port: TCP_1515
@@ -100,24 +101,24 @@ filters:
       (56 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 5984 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4, 192.5.5.241, 192.36.148.17 and 20 more)
+# [auto] 5984 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4, 192.5.5.241, 192.36.148.17 and 20 more) [never answered]
   - name: allow-udp-DNS-UDP
     protocol: udp
     destination-port: DNS-UDP
     comment: 'ANY covers 24 unresolved dst: 24 addresses in 24 blocks, widest /4:
       100.95.95.4/32 (2960 hits), 2a07:1181:95:95::4/128 (2958 hits), 2001::/20 (11
       dst, 36 hits), 192.0.0.0/4 (11 dst, 30 hits) -- one group per address, so no
-      summary narrows it and ANY is honest'
+      summary narrows it and ANY stays'
     action: accept
-# [auto] 183 hits: EXTERNAL (193.40.134.137, 193.40.133.134, 2a04:6f00:4::141, 2a10:1fc0:1::34f9:5fcf)
+# [auto] 183 hits: EXTERNAL (193.40.134.137, 193.40.133.134, 2a04:6f00:4::141, 2a10:1fc0:1::34f9:5fcf) [never answered]
   - name: allow-udp-NTP
     protocol: udp
     destination-port: NTP
     comment: 'ANY covers 4 unresolved dst: 4 addresses in 4 blocks, widest /32: 193.40.134.137/32
       (48 hits), 193.40.133.134/32 (45 hits), 2a04:6f00:4::141/128 (45 hits), 2a10:1fc0:1::34f9:5fcf/128
-      (45 hits) -- one group per address, so no summary narrows it and ANY is honest'
+      (45 hits) -- one group per address, so no summary narrows it and ANY stays'
     action: accept
-# [auto] 389 hits: baf (10.5.15.31)
+# [auto] 389 hits: baf (10.5.15.31) [never answered]
   - name: allow-udp-UDP_5000
     protocol: udp
     destination-port: UDP_5000

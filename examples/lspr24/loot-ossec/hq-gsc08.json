@@ -205,6 +205,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 19000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "socat",
+        "pid": 1789,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",

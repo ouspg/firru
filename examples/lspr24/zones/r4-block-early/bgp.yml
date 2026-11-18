@@ -186,7 +186,7 @@ filters:
     comment: 'ANY covers 8 unresolved dst: 8 addresses in 5 blocks, widest /16: 193.40.0.0/16
       (2 dst, 152 hits), 2001:1b28:1:5::130/126 (2 dst, 152 hits), 2620:2d:4000:1::3f/128
       (44 hits), 185.125.190.56/30 (3 dst, 3 hits) -- 8 addresses spread over 5 groups,
-      largest 3: too scattered to name, ANY is honest'
+      largest 3: too scattered to name, so ANY stays'
     action: accept
     source-address: hq-gsc01_bgp_05_berylia_org hq-gsc02_bgp_05_berylia_org hq-gsc03_bgp_05_berylia_org
       hq-gsc04_bgp_05_berylia_org hq-gsc05_bgp_05_berylia_org hq-gsc06_bgp_05_berylia_org

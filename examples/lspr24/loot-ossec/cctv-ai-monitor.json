@@ -1,6 +1,23 @@
 {
   "listen_ports": [
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "init",
+        "pid": 1,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "well-known",

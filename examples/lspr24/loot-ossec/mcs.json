@@ -1,6 +1,23 @@
 {
   "listen_ports": [
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "init",
+        "pid": 1,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "well-known",
@@ -120,12 +137,46 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 2377,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
         "world-listen"
       ],
       "port": 2377,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5050,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -154,12 +205,46 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5432,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
         "world-listen"
       ],
       "port": 5432,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 6379,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -188,12 +273,46 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 7946,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
         "world-listen"
       ],
       "port": 7946,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 8000,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -222,12 +341,46 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 8086,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
         "world-listen"
       ],
       "port": 8086,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 8161,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -256,12 +409,46 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 9000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
         "world-listen"
       ],
       "port": 9000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 20000,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -290,7 +477,7 @@
       "protocol": "tcp"
     },
     {
-      "bind_address": "::/0",
+      "bind_address": "0.0.0.0/0",
       "flags": [
         "high-port",
         "world-listen"
@@ -312,7 +499,58 @@
         "high-port",
         "world-listen"
       ],
+      "port": 20260,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
       "port": 20310,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 20310,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 61616,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -1066,6 +1304,23 @@
         "exe": null,
         "name": null,
         "pid": null,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 7946,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "dockerd",
+        "pid": 1145,
         "services": [],
         "user": null
       },

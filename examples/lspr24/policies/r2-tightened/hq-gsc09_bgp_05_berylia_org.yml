@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/hq-gsc09_bgp_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:56Z
 # Source suggestions changed: 2 | Dead rules: 0 | Group suggestions: 0
 metadata:
   host: hq-gsc09
@@ -73,7 +74,7 @@ filters:
         protocol: tcp
         destination-port: TCP_19000
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-udp-NTP
@@ -105,7 +106,7 @@ filters:
           - bgp
           - core
         action: accept
-# [auto] 4397 hits: EXTERNAL (100.100.108.30)
+# [auto] 4397 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1514
         protocol: tcp
         destination-port: TCP_1514
@@ -113,7 +114,7 @@ filters:
           (4397 hits) -- a single destination: name it or deny it, ANY is not the
           answer either way'
         action: accept
-# [auto] 880 hits: EXTERNAL (100.100.108.30)
+# [auto] 880 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1515
         protocol: tcp
         destination-port: TCP_1515
@@ -133,7 +134,7 @@ filters:
         destination-port: TCP_4533
         destination-address: bgp
         action: accept
-# [auto] 72153 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4)
+# [auto] 72153 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4) [never answered]
       - name: allow-udp-DNS-UDP
         protocol: udp
         destination-port: DNS-UDP
@@ -141,14 +142,14 @@ filters:
           100.95.95.4/32 (38735 hits), 2a07:1181:95:95::4/128 (33418 hits) -- 1 of
           2 sit in one group, so a named group would cover most of this'
         action: accept
-# [auto] 354 hits: EXTERNAL (193.40.133.134, 193.40.134.137, 2001:1b28:1:5::131, 2001:1b28:1:5::132 and 6 more)
+# [auto] 354 hits: EXTERNAL (193.40.133.134, 193.40.134.137, 2001:1b28:1:5::131, 2001:1b28:1:5::132 and 6 more) [never answered]
       - name: allow-udp-NTP
         protocol: udp
         destination-port: NTP
         comment: 'ANY covers 10 unresolved dst: 10 addresses in 8 blocks, widest /3:
           192.0.0.0/3 (5 dst, 155 hits), 2001::/19 (3 dst, 153 hits), 2620:2d:4000:1::3f/128
           (45 hits), 185.194.53.27/32 (1 hit) -- 10 addresses spread over 8 groups,
-          largest 2: too scattered to name, ANY is honest'
+          largest 2: too scattered to name, so ANY stays'
         action: accept
 # [auto] review terms above, then replace with deny-ANY when ready
       - name: allow-ANY

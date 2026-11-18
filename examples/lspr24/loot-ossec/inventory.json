@@ -171,6 +171,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 33060,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "mysqld",
+        "pid": 839,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",

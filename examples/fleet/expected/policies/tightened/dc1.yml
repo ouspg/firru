@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/dc1.yml
+# Flows: flows.jsonl, 2026-10-24T00:02:06Z to 2026-10-24T23:57:25Z
 # Source suggestions changed: 8 | Dead rules: 2 | Group suggestions: 0
 metadata:
   host: dc1
@@ -41,8 +42,8 @@ filters:
         destination-port: WINDOWS-SMB
         action: accept
         source-address:  # was: ANY
-          - win1
           - ADMIN
+          - win1
 
 # [auto] 120 flows total | 80 hits: ADMIN (192.168.150.3, 192.168.150.9) | 40 hits: win1 (192.168.150.184) | via: DNS-UDP/udp/53
       - name: allow-udp-DNS-UDP

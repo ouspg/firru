@@ -35,12 +35,12 @@ filters:
         destination-port: HTTPS
         action: accept
         source-address: ANY
-# [auto] IPv6 ::/0 (16f8bed9-b928)
+# [auto] IPv4 0.0.0.0/0 (16f8bed9-b928) | IPv6 ::/0 (16f8bed9-b928)
       - name: allow-tcp-TCP_18336
         protocol: tcp
         destination-port: TCP_18336
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
       - name: drop-ANY
         action: deny
         counter: drop-ANY

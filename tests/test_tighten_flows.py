@@ -194,6 +194,21 @@ class TestIpMatchesSource:
     def test_any_matches_everything(self):
         assert ip_matches_source("10.0.0.9", "ANY", StubAnnotator({}))
 
+    @pytest.mark.parametrize("ip, src, ok", [
+        ("10.0.0.9", "ANY_V6", False), ("2001:db8::9", "ANY_V6", True),
+        ("2001:db8::9", "ANY_V4", False), ("10.0.0.9", "ANY_V4", True),
+        ("10.0.0.9", ["ANY_V4", "ANY_V6"], True), ("not-an-ip", "ANY_V6", True),
+    ])
+    def test_a_family_wildcard_admits_its_own_family(self, ip, src, ok):
+        """An IPv4 flow on an ANY_V6 term is refused: the dual-stack listener
+        recorded as IPv6-only, which tighten used to count as admitted."""
+        assert ip_matches_source(ip, src, StubAnnotator({})) is ok
+
+    def test_a_family_wildcard_beside_a_token_still_checks_the_token(self):
+        ann = StubAnnotator({"10.0.0.9": {"type": "HOST", "host": "h1", "parents": []}})
+        assert ip_matches_source("10.0.0.9", ["ANY_V6", "h1"], ann)
+        assert not ip_matches_source("10.0.0.8", ["ANY_V6", "h1"], ann)
+
     def test_exact_host_token(self):
         ann = StubAnnotator({"10.0.0.9": {"type": "HOST", "host": "h1", "parents": []}})
         assert ip_matches_source("10.0.0.9", "h1", ann)

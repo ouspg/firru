@@ -103,6 +103,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3389,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "xrdp",
+        "pid": 1727,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -296,6 +313,23 @@
         "world-listen"
       ],
       "port": 5353,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "avahi-daemon",
+        "pid": 793,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 47617,
       "process": {
         "cmdline": null,
         "exe": null,

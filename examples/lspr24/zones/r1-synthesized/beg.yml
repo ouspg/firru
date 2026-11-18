@@ -35,18 +35,18 @@ filters:
       k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
       maintenance_beg_05_berylia_org news_beg_05_berylia_org owncloud_beg_05_berylia_org
       salt-master_beg_05_berylia_org
+  - name: gas-historian_beg_05_berylia_org-allow-tcp-MYSQL
+    protocol: tcp
+    destination-port: MYSQL
+    action: accept
+    source-address: ANY
+    destination-address: gas-historian_beg_05_berylia_org
   - name: allow-tcp-MYSQL-from-ANY_V4-shared
     protocol: tcp
     destination-port: MYSQL
     action: accept
     source-address: ANY_V4
     destination-address: inventory_beg_05_berylia_org news_beg_05_berylia_org
-  - name: gas-historian_beg_05_berylia_org-allow-tcp-MYSQL
-    protocol: tcp
-    destination-port: MYSQL
-    action: accept
-    source-address: ANY_V6
-    destination-address: gas-historian_beg_05_berylia_org
   - name: gas-historian_beg_05_berylia_org-allow-tcp-HTTP-ALT
     protocol: tcp
     destination-port: HTTP-ALT
@@ -57,7 +57,7 @@ filters:
     protocol: tcp
     destination-port: MYSQL-X
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: gas-historian_beg_05_berylia_org inventory_beg_05_berylia_org
   - name: allow-udp-IPP-shared
     protocol: udp
@@ -69,7 +69,7 @@ filters:
     protocol: tcp
     destination-port: TCP_3000
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: gas-hmi_beg_05_berylia_org
   - name: gas-hmi_beg_05_berylia_org-allow-tcp-TCP_8000
     protocol: tcp
@@ -89,38 +89,26 @@ filters:
     action: accept
     source-address: ANY
     destination-address: inventory_beg_05_berylia_org maintenance_beg_05_berylia_org
-      news_beg_05_berylia_org
+      news_beg_05_berylia_org owncloud_beg_05_berylia_org
   - name: salt-master_beg_05_berylia_org-allow-tcp-HTTP
     protocol: tcp
     destination-port: HTTP
     action: accept
     source-address: ANY_V4
     destination-address: salt-master_beg_05_berylia_org
-  - name: owncloud_beg_05_berylia_org-allow-tcp-HTTP
-    protocol: tcp
-    destination-port: HTTP
-    action: accept
-    source-address: ANY_V6
-    destination-address: owncloud_beg_05_berylia_org
   - name: allow-tcp-HTTPS-from-ANY-shared
     protocol: tcp
     destination-port: HTTPS
     action: accept
     source-address: ANY
     destination-address: inventory_beg_05_berylia_org maintenance_beg_05_berylia_org
-      news_beg_05_berylia_org
+      news_beg_05_berylia_org owncloud_beg_05_berylia_org
   - name: salt-master_beg_05_berylia_org-allow-tcp-HTTPS
     protocol: tcp
     destination-port: HTTPS
     action: accept
     source-address: ANY_V4
     destination-address: salt-master_beg_05_berylia_org
-  - name: owncloud_beg_05_berylia_org-allow-tcp-HTTPS
-    protocol: tcp
-    destination-port: HTTPS
-    action: accept
-    source-address: ANY_V6
-    destination-address: owncloud_beg_05_berylia_org
   - name: inventory_beg_05_berylia_org-allow-tcp-REDIS
     protocol: tcp
     destination-port: REDIS
@@ -150,7 +138,7 @@ filters:
     protocol: tcp
     destination-port: K8S-API-SERVER
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: k8s-control-plane_beg_05_berylia_org
   - name: allow-tcp-METALLB-METRICS-shared
     protocol: tcp
@@ -170,21 +158,21 @@ filters:
     protocol: tcp
     destination-port: NODE-EXPORTER
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
       k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
   - name: allow-tcp-K8S-KUBELET-shared
     protocol: tcp
     destination-port: K8S-KUBELET
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
       k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
   - name: allow-tcp-K8S-KUBE-PROXY-shared
     protocol: tcp
     destination-port: K8S-KUBE-PROXY
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
       k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
   - name: allow-udp-METALLB-MEMBERLIST-shared

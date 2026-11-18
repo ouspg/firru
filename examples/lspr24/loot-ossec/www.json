@@ -69,12 +69,46 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 555,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "well-known",
         "world-listen"
       ],
       "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 555,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
       "process": {
         "cmdline": null,
         "exe": null,

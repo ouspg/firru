@@ -101,7 +101,7 @@ def test_a_fan_in_is_called_honest_any():
     from collections import Counter
     from firru.cli.tighten import unresolved_note
     out = unresolved_note(Counter(dict.fromkeys(FAN_IN, 1)), _Ann())
-    assert "ANY is honest" in out
+    assert "ANY stays" in out
 
 
 def test_dns_names_win_when_every_address_has_one():
@@ -123,7 +123,7 @@ def test_structure_needs_a_majority_in_one_group_not_merely_a_collapse():
     # majority however the budget is spent.
     scattered = {f"{a}.12.34.{i}": 1
                  for i, a in enumerate((11, 37, 62, 88, 102, 141, 176, 199, 221))}
-    assert "ANY is honest" in _verdict(Counter(scattered), "")
+    assert "ANY stays" in _verdict(Counter(scattered), "")
 
     # Twenty in one /24 and one stray: that is a group worth naming.
     clustered = {f"11.12.34.{i}": 1 for i in range(20)}
@@ -184,3 +184,59 @@ def test_bucket_flow_honors_the_group_weight():
             "dst_port": 443, "n": 17}
     _bucket_flow(flow, {"10.0.0.9"}, defs, ing, eg, ip, ep)
     assert sum(c["10.0.0.1"] for c in ing.values()) == 17
+
+
+XROAD = {"100.98.10.6": 316, "100.98.12.6": 280, "100.98.3.6": 279, "100.98.6.6": 274,
+         "100.98.25.6": 233, "100.98.11.6": 203, "100.98.26.6": 153, "100.98.9.6": 140,
+         "100.98.8.6": 91, "100.98.1.6": 78, "100.98.2.6": 72, "100.98.107.10": 13,
+         "100.98.4.6": 9, "100.98.107.2": 4, "100.98.7.6": 4, "100.98.112.2": 1}
+
+
+def test_heavy_hitters_name_the_peers_that_carried_the_flows():
+    """LSPR24's X-Road federation peers: eight of sixteen addresses carry 87%,
+    the rest fall into two prefixes."""
+    from firru.heavy_hitters import heavy_hitters
+    hh = [(str(net), n) for net, n in heavy_hitters(XROAD)]
+    assert [net for net, _ in hh if net.endswith("/32")] == [
+        "100.98.10.6/32", "100.98.12.6/32", "100.98.3.6/32", "100.98.6.6/32",
+        "100.98.25.6/32", "100.98.11.6/32", "100.98.26.6/32", "100.98.9.6/32"]
+    assert ("100.98.0.0/22", 150) in hh and ("100.98.0.0/17", 122) in hh
+
+
+def test_the_note_is_a_comment_with_shares():
+    from collections import Counter
+    from firru.cli.tighten import heavy_hitter_note
+    out = heavy_hitter_note(Counter(XROAD), _Ann())
+    assert out.startswith("heavy hitters among 16 unresolved src (2150 flows): "
+                          "100.98.10.6 14.7%, 100.98.12.6 13.0%")
+    assert out.endswith("100.98.9.6 6.5%, the other 8 12.7%")
+    assert "/" not in out
+
+
+def test_no_note_when_no_single_address_is_heavy():
+    """Forty clients, one flow each: arbitrary prefix slices are not a finding."""
+    from collections import Counter
+    from firru.cli.tighten import heavy_hitter_note
+    spread = Counter({f"{net}.{n}": 1 for net in ("192.0.2", "198.51.100", "203.0.113")
+                      for n in range(1, 14)})
+    assert heavy_hitter_note(spread, _Ann()) is None
+
+
+def test_a_spread_of_unrelated_clients_has_no_heavy_host():
+    """Forty clients, one flow each: no address reaches 5%, only prefixes do."""
+    from firru.heavy_hitters import heavy_hitters
+    spread = {f"{net}.{n}": 1 for net in ("192.0.2", "198.51.100", "203.0.113")
+              for n in range(1, 14)}
+    assert all(net.prefixlen < 32 for net, _ in heavy_hitters(spread))
+
+
+def test_ipv6_walks_its_own_tree():
+    from firru.heavy_hitters import heavy_hitters
+    hh = heavy_hitters({"2001:db8::1": 90, "2001:db8::2": 5, "192.0.2.1": 5})
+    assert [str(net) for net, _ in hh][:1] == ["2001:db8::1/128"]
+
+
+def test_one_address_is_not_a_note():
+    from collections import Counter
+    from firru.cli.tighten import heavy_hitter_note
+    assert heavy_hitter_note(Counter({"9.9.9.9": 1}), _Ann()) is None

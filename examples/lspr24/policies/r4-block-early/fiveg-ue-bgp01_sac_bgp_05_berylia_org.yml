@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/fiveg-ue-bgp01_sac_bgp_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:24Z to 2024-03-07T05:59:33Z
 # Source suggestions changed: 1 | Dead rules: 0 | Group suggestions: 0
 metadata:
   host: fiveg-ue-bgp01
@@ -11,7 +12,7 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 900 flows total | 900 hits: BGP_INT_GT_OTHER (10.5.13.250) | via: SSH/tcp/22
+# [auto] 900 flows total | 900 hits: BGP_INT_GT_OTHER (10.5.13.250) [never answered] | via: SSH/tcp/22
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH

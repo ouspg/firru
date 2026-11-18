@@ -122,7 +122,7 @@ services:
   TCP_6001:   # Microsoft.Exchange.RpcClientAccess.Service on mail
     - port: 6001
       protocol: tcp
-  TCP_8000:   # python3, dockerd on gas-hmi, mcs
+  TCP_8000:   # dockerd, python3 on gas-hmi, mcs
     - port: 8000
       protocol: tcp
   TCP_8086:   # dockerd on mcs

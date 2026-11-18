@@ -62,10 +62,10 @@ import sys
 
 import yaml
 
-WINDOWS = {                                   # exercise windows, UTC hours
+WINDOWS = {   # the timestamps' local zone, UTC+02, as in lspr24_to_flows.py
     "d1":    ("2024-03-06 10", "2024-03-06 18"),
-    "d2":    ("2024-03-07 08", "2024-03-07 17"),
-    "night": ("2024-03-06 18", "2024-03-07 08"),
+    "d2":    ("2024-03-07 08", "2024-03-07 18"),
+    "night": ("2024-03-06 19", "2024-03-07 08"),
     "all":   (None, None),
 }
 
@@ -155,8 +155,8 @@ def main():
     clause = ""
     if start:
         clause = (f"""and f."mTimestampStart"/1000000
-                      between epoch(timestamp '{start}:00:00')
-                          and epoch(timestamp '{end}:00:00')""")
+                      between epoch(timestamptz '{start}:00:00+02')
+                          and epoch(timestamptz '{end}:00:00+02')""")
 
     # One row per (service, source): was that source ever answered?
     rows = con.execute(f"""

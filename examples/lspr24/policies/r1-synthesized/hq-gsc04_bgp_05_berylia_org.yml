@@ -54,12 +54,12 @@ filters:
         destination-port: TCP_9000
         action: accept
         source-address: ANY
-# [auto] IPv6 ::/0 (socat)
+# [auto] IPv4 0.0.0.0/0 (socat) | IPv6 ::/0 (socat)
       - name: allow-tcp-TCP_19000
         protocol: tcp
         destination-port: TCP_19000
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (ntpd), 10.5.20.13/32 (ntpd), 172.19.0.1/32 (ntpd) | IPv6 2a07:1182:5:f20::13/128 (ntpd), ::/0 (ntpd), fd12:3456:789a:1::1/128 (ntpd), fe80::1/128 (ntpd), fe80::250:56ff:fe89/128 (ntpd), fe80::42:fff:fefd:9/128 (ntpd), fe80::89f:beff:fecb/128 (ntpd), fe80::ec31:a8ff:fe0/128 (ntpd)
       - name: allow-udp-NTP
         protocol: udp
