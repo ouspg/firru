@@ -263,6 +263,8 @@ def iter_flow_groups(path, host_ips=None):
     flows, which is why `_bucket_flow` takes a weight. They also carry
     `unanswered`: how many of the `n` say `responded` false. A flow without
     `responded` is not counted, so `unanswered == n` means every flow said so.
+    And `first` and `last`: the earliest and latest `timestamp` in the group,
+    or None when no flow carries one.
     """
     if is_parquet(path):
         yield from _group_parquet(path, host_ips)
@@ -270,13 +272,16 @@ def iter_flow_groups(path, host_ips=None):
         groups = {}
         for flow in _iter_jsonl(path, host_ips, False):
             key = tuple(flow.get(c) for c in _CORE)
-            g = groups.setdefault(key, [0, 0])
+            g = groups.setdefault(key, [0, 0, None, None])
             g[0] += 1
             g[1] += flow.get("responded") is False
-        for key, (n, unanswered) in groups.items():
+            ts = flow.get("timestamp")
+            if isinstance(ts, (int, float)):
+                g[2] = ts if g[2] is None else min(g[2], ts)
+                g[3] = ts if g[3] is None else max(g[3], ts)
+        for key, (n, unanswered, first, last) in groups.items():
             d = dict(zip(_CORE, key))
-            d["n"] = n
-            d["unanswered"] = unanswered
+            d.update(n=n, unanswered=unanswered, first=first, last=last)
             yield d
 
 
@@ -294,10 +299,12 @@ def _group_parquet(path, host_ips):
     have = {r[0] for r in duckdb.sql(f"DESCRIBE SELECT * FROM {rel}").fetchall()}
     unanswered = ("count(*) FILTER (WHERE responded = false)"
                   if "responded" in have else "0")
-    q = (f"SELECT {cols}, count(*) AS n, {unanswered} AS unanswered FROM {rel}"
-         f"{where} GROUP BY {cols}")
+    first, last = (("min(timestamp)", "max(timestamp)") if "timestamp" in have
+                   else ("NULL", "NULL"))
+    q = (f"SELECT {cols}, count(*) AS n, {unanswered} AS unanswered, "
+         f"{first} AS first, {last} AS last FROM {rel}{where} GROUP BY {cols}")
     res = duckdb.execute(q, params) if params else duckdb.execute(q)
-    names = _CORE + ("n", "unanswered")
+    names = _CORE + ("n", "unanswered", "first", "last")
     while True:
         batch = res.fetchmany(10000)
         if not batch:

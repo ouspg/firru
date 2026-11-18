@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/dc1_int_beg_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:59Z
 # Source suggestions changed: 11 | Dead rules: 6 | Group suggestions: 9
 metadata:
   host: dc1
@@ -37,8 +38,8 @@ filters:
         action: accept
         source-address:  # was: ANY
           - BEG_INT_WS
-          - beg-power-ws
           - adcs-beg
+          - beg-power-ws
           - BEG_INT_GT_OTHER
 
 # [auto] 5 flows total | 5 hits: mail_beg_05_berylia_org (100.97.5.5) [never answered] | via: NETBIOS-SSN-LEGACY/tcp/139
@@ -112,8 +113,8 @@ filters:
         action: accept
         source-address:  # was: ANY
           - BEG_INT_WS
-          - beg-power-ws
           - adcs-beg
+          - beg-power-ws
           - mail_beg_05_berylia_org
 
 # [auto] no flows observed in window — source unchanged

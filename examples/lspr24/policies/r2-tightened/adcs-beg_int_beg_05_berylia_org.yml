@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/adcs-beg_int_beg_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:01Z to 2024-03-07T05:59:46Z
 # Source suggestions changed: 2 | Dead rules: 8 | Group suggestions: 1
 metadata:
   host: adcs-beg

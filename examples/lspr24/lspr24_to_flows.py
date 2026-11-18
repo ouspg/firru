@@ -174,9 +174,12 @@ def row_to_flow(row, max_refusal_pkts=REFUSAL_MAX_PKTS):
 
 
 def _hour_to_micros(hour_str):
-    """'YYYY-MM-DD HH' in the timestamps' local zone -> epoch microseconds."""
+    """'YYYY-MM-DD HH' in the timestamps' local zone (UTC+02) -> epoch
+    microseconds. The zone is fixed: a naive datetime would take the zone of
+    whatever machine runs this, and shift every window outside UTC+02."""
     import datetime
-    dt = datetime.datetime.strptime(hour_str, "%Y-%m-%d %H")
+    dt = datetime.datetime.strptime(hour_str, "%Y-%m-%d %H").replace(
+        tzinfo=datetime.timezone(datetime.timedelta(hours=2)))
     return int(dt.timestamp() * 1_000_000)
 
 

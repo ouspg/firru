@@ -110,6 +110,10 @@ class TestItReadsAsAFlowStore:
         got = list(flows.iter_flows(str(zeek / "conn"), host_ips={"8.8.8.8"}))
         assert [f["dst_port"] for f in got] == [53]
 
+    def test_grouping_carries_first_and_last(self, zeek):
+        got = {g["dst_port"]: (g["first"], g["last"]) for g in flows.iter_flow_groups(str(zeek / "conn"))}
+        assert got[22] == (T0 + 1.5, T0 + 1.5)
+
     def test_grouping_counts_the_unanswered(self, zeek):
         """tcp/443 got no handshake, so its one flow went unanswered."""
         got = {g["dst_port"]: g["unanswered"] for g in flows.iter_flow_groups(str(zeek / "conn"))}

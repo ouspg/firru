@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/k8s-control-plane_beg_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:59Z
 # Source suggestions changed: 6 | Dead rules: 0 | Group suggestions: 0
 metadata:
   host: k8s-control-plane
@@ -23,9 +24,9 @@ filters:
         action: accept
         source-address:  # was: ANY
           - k8s-worker01
-          - k8s-worker04
-          - k8s-worker03
           - k8s-worker02
+          - k8s-worker03
+          - k8s-worker04
 
 # [auto] 1564 flows total | 413 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31) | 394 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33) | 382 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32) | 375 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34) | via: DOCKER-SWARM/tcp/7946
       - name: allow-tcp-METALLB-MEMBERLIST
@@ -34,9 +35,9 @@ filters:
         action: accept
         source-address:  # was: ANY_V4
           - k8s-worker01
-          - k8s-worker04
-          - k8s-worker03
           - k8s-worker02
+          - k8s-worker03
+          - k8s-worker04
 
 # [auto] 377 flows total | 377 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32) | via: NODE-EXPORTER/tcp/9100
       - name: allow-tcp-NODE-EXPORTER
@@ -59,9 +60,9 @@ filters:
         action: accept
         source-address:  # was: ANY_V4
           - k8s-worker01
-          - k8s-worker04
-          - k8s-worker03
           - k8s-worker02
+          - k8s-worker03
+          - k8s-worker04
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-loopback
@@ -136,9 +137,9 @@ filters:
         protocol: '4'
         destination-address:
           - k8s-worker01
-          - k8s-worker04
-          - k8s-worker03
           - k8s-worker02
+          - k8s-worker03
+          - k8s-worker04
         action: accept
 # [auto] 343 hits: beg (2a07:1182:5:20::1) [never answered] | 336 hits: BEG_GT_OTHER (2a07:1182:5:20::60) | 306 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 11 hits: core (fe80::250:56ff:fe89:aa9f)
       - name: allow-icmpv6-ICMPV6
@@ -163,9 +164,9 @@ filters:
         destination-port: DOCKER-SWARM
         destination-address:
           - k8s-worker01
-          - k8s-worker04
-          - k8s-worker03
           - k8s-worker02
+          - k8s-worker03
+          - k8s-worker04
         action: accept
 # [auto] 217 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33) | 59 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31) | 17 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34)
       - name: allow-tcp-K8S-NODEPORT
@@ -173,8 +174,8 @@ filters:
         destination-port: K8S-NODEPORT
         destination-address:
           - k8s-worker01
-          - k8s-worker04
           - k8s-worker03
+          - k8s-worker04
         action: accept
 # [auto] 283 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1514
@@ -198,9 +199,9 @@ filters:
         destination-port: WINDOWS-RPC-DYNAMIC
         destination-address:
           - k8s-worker01
-          - k8s-worker04
-          - k8s-worker03
           - k8s-worker02
+          - k8s-worker03
+          - k8s-worker04
         action: accept
 # [auto] 200419 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4) [never answered]
       - name: allow-udp-DNS-UDP
@@ -216,9 +217,9 @@ filters:
         destination-port: DOCKER-SWARM
         destination-address:
           - k8s-worker01
-          - k8s-worker04
-          - k8s-worker03
           - k8s-worker02
+          - k8s-worker03
+          - k8s-worker04
         action: accept
 # [auto] review terms above, then replace with deny-ANY when ready; unnamed ports only this allows: tcp/10123 (13 hits, 1 dst), tcp/10223 (12 hits, 1 dst), tcp/1059 (6 hits, 1 dst), tcp/1139 (19 hits, 1 dst), tcp/11473 (12 hits, 1 dst), tcp/11690 (8 hits, 1 dst), tcp/11745 (13 hits, 1 dst), tcp/1176 (238 hits, 1 dst) and 189 more -- name them (firru edit-services add) to get terms
       - name: allow-ANY

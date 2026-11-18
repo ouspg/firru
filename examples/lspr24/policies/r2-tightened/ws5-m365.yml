@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/ws5-m365.yml
+# Flows: night.jsonl, none for this host
 # Source suggestions changed: 0 | Dead rules: 3 | Group suggestions: 0
 metadata:
   host: ws5-m365

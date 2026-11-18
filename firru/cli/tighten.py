@@ -278,7 +278,9 @@ def best_tokens(annotations, group_members=None):
             best_coverage = 1  # require ≥ 2 to justify a group token
             best_size     = float('inf')
 
-            for grp in candidate_groups:
+            # Sorted, so a tie between equal groups goes the same way in
+            # every process (set order follows the hash seed).
+            for grp in sorted(candidate_groups):
                 members  = group_members.get(grp, frozenset())
                 coverage = len(members & remaining)
                 excess   = len(members) - len(members & observed)
@@ -316,7 +318,10 @@ def best_tokens(annotations, group_members=None):
         # Too many tokens even with grouping → suggest new group
         return None, sorted(observed), None
 
-    # No group_members available — individual list or suggest
+    # No group_members available — individual list or suggest. Sorted: the
+    # order the addresses arrived in follows the service members' iteration
+    # order, which varies between runs, and the list is written into git.
+    host_tokens = sorted(host_tokens)
     if len(host_tokens) <= INDIVIDUAL_THRESHOLD:
         return host_tokens, None, None
 
@@ -472,7 +477,32 @@ def _bucket_flow(flow, host_ips_set, defs, ingress, egress, ingress_ports, egres
             egress_ports[(proto, svc)][dst_port] += n
 
 
-def collect_flows_from_file(flows_file, host_ips, defs):
+def _widen(span, flow):
+    """Stretch span, a [first, last] list, to cover a flow or a flow group."""
+    a = flow.get("first", flow.get("timestamp"))
+    b = flow.get("last", flow.get("timestamp"))
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
+        return
+    span[0] = a if span[0] is None else min(span[0], a)
+    span[1] = b if span[1] is None else max(span[1], b)
+
+
+def _when(t):
+    """An epoch timestamp as UTC, seconds; milli- or microseconds tolerated."""
+    from datetime import datetime, timezone
+    while t > 1e11:
+        t /= 1000
+    return datetime.fromtimestamp(t, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def window_line(source, span):
+    """The header line that says which flows the comments below count."""
+    if span is None or span[0] is None:
+        return f"Flows: {source}, none for this host"
+    return f"Flows: {source}, {_when(span[0])} to {_when(span[1])}"
+
+
+def collect_flows_from_file(flows_file, host_ips, defs, span=None):
     """
     Read pre-normalised flows from a .jsonl file (process_flow() output).
     Filters to flows involving host_ips.
@@ -486,11 +516,13 @@ def collect_flows_from_file(flows_file, host_ips, defs):
 
     for flow in iter_flow_groups(flows_file, host_ips=host_ips_set):
         _bucket_flow(flow, host_ips_set, defs, ingress, egress, ingress_ports, egress_ports)
+        if span is not None:
+            _widen(span, flow)
 
     return ingress, egress, ingress_ports, egress_ports
 
 
-def collect_flows_multi(flows_file, host_ips_by_token, defs):
+def collect_flows_multi(flows_file, host_ips_by_token, defs, spans=None):
     """
     Bucket a single flows file for many hosts in ONE pass.
 
@@ -541,13 +573,16 @@ def collect_flows_multi(flows_file, host_ips_by_token, defs):
             ingress, egress, ingress_ports, egress_ports = buckets[token]
             _bucket_flow(flow, host_ip_sets[token], defs,
                          ingress, egress, ingress_ports, egress_ports)
+            if spans is not None:
+                _widen(spans.setdefault(token, [None, None]), flow)
 
     print(f"  {scanned} flows in {groups} conversations, "
           f"{matched} involving a known host", file=sys.stderr)
     return buckets
 
 
-def collect_flows(arkime, host_ips, defs, date="48", start_time=None, stop_time=None):
+def collect_flows(arkime, host_ips, defs, date="48", start_time=None, stop_time=None,
+                  span=None):
     """
     Query Arkime for all flows to/from host_ips.
 
@@ -573,6 +608,8 @@ def collect_flows(arkime, host_ips, defs, date="48", start_time=None, stop_time=
         if not flow:
             continue
         _bucket_flow(flow, host_ips_set, defs, ingress, egress, ingress_ports, egress_ports)
+        if span is not None:
+            _widen(span, flow)
 
     return ingress, egress, ingress_ports, egress_ports
 
@@ -1379,13 +1416,14 @@ Examples:
         resolved.append((policy_path, policy, host_token, get_host_ips(host_token, defs)))
 
     prescanned = None
+    spans = {}
     if args.flows_file and not flows_dir and not args.dump_flows:
         print(f"Reading flows from {args.flows_file} (single pass, "
               f"{len(resolved)} hosts) …", file=sys.stderr)
         prescanned = collect_flows_multi(
             args.flows_file,
             {tok: ips for _, _, tok, ips in resolved if ips},
-            defs)
+            defs, spans=spans)
 
     for policy_path, policy, host_token, host_ips in resolved:
       if not host_ips:
@@ -1403,20 +1441,25 @@ Examples:
               print(f"  No flows file for {host_token} ({flows_file}) — skipping", file=sys.stderr)
               continue
           print(f"Reading flows from {flows_file} …", file=sys.stderr)
-          ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(str(flows_file), host_ips, defs)
+          span, source = [None, None], str(flows_file)
+          ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(str(flows_file), host_ips, defs, span=span)
       elif prescanned is not None:
+          span, source = spans.get(host_token), args.flows_file
           empty = (defaultdict(Hits), defaultdict(Hits),
                    defaultdict(Counter), defaultdict(Counter))
           ingress_flows, egress_flows, ingress_ports, egress_ports = \
               prescanned.get(host_token, empty)
       elif args.flows_file:
           print(f"Reading flows from {args.flows_file} …", file=sys.stderr)
-          ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(args.flows_file, host_ips, defs)
+          span, source = [None, None], args.flows_file
+          ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(args.flows_file, host_ips, defs, span=span)
       else:
           window = f"{args.start_time}-{args.stop_time or 'now'}" if args.start_time else f"{args.date}h"
           print(f"Querying Arkime ({window}) …", file=sys.stderr)
+          span, source = [None, None], f"Arkime ({window})"
           ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows(arkime_client, host_ips, defs,
-                                                      args.date, args.start_time, args.stop_time)
+                                                      args.date, args.start_time, args.stop_time,
+                                                      span=span)
 
       # ------------------------------------------------------------------
       # --dump-flows: write raw flows and move on
@@ -1593,6 +1636,7 @@ Examples:
 
       policy.yaml_set_start_comment(
           f"firru tighten output — review and copy changes to policies/pol/{policy_path.name}\n"
+          f"{window_line(source, span)}\n"
           f"Source suggestions changed: {all_n_changed} | "
           f"Dead rules: {len(all_dead_rules)} | "
           f"Group suggestions: {len(all_group_suggest)}"

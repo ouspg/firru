@@ -28,7 +28,7 @@ import sys
 
 DAY = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 random.seed(DAY)
-T0 = 1792800000.0 + (DAY - 1) * 86400  # 2026-10-23T08:00:00Z, then the next day
+T0 = 1792800000.0 + (DAY - 1) * 86400  # 2026-10-24T00:00:00Z, then the next day
 MON1, WIN1, WEB1, DC1 = "192.168.150.169", "192.168.150.184", "192.168.150.126", "192.168.150.194"
 ATTACKER = "203.0.113.99"
 

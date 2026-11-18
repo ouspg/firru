@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/k8s-worker03_beg_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:59Z
 # Source suggestions changed: 6 | Dead rules: 0 | Group suggestions: 0
 metadata:
   host: k8s-worker03
@@ -29,10 +30,10 @@ filters:
         destination-port: METALLB-MEMBERLIST
         action: accept
         source-address:  # was: ANY_V4
-          - k8s-worker01
-          - k8s-worker04
           - k8s-control-plane
+          - k8s-worker01
           - k8s-worker02
+          - k8s-worker04
 
 # [auto] 281 flows total | 281 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32) | via: NODE-EXPORTER/tcp/9100
       - name: allow-tcp-NODE-EXPORTER
@@ -54,10 +55,10 @@ filters:
         destination-port: METALLB-MEMBERLIST
         action: accept
         source-address:  # was: ANY_V4
-          - k8s-worker01
-          - k8s-worker04
           - k8s-control-plane
+          - k8s-worker01
           - k8s-worker02
+          - k8s-worker04
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-loopback
@@ -118,8 +119,8 @@ filters:
         protocol: tcp
         destination-port: BGP
         destination-address:
-          - k8s-worker01
           - k8s-control-plane
+          - k8s-worker01
           - k8s-worker02
         action: accept
 # [auto] 401 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31) | 394 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30) | 385 hits: k8s-worker02_beg_05_berylia_org (100.97.5.32) | 379 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34)
@@ -127,10 +128,10 @@ filters:
         protocol: tcp
         destination-port: DOCKER-SWARM
         destination-address:
-          - k8s-worker01
-          - k8s-worker04
           - k8s-control-plane
+          - k8s-worker01
           - k8s-worker02
+          - k8s-worker04
         action: accept
 # [auto] 8686 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30, 2a07:1182:5:20::30)
       - name: allow-tcp-K8S-API-SERVER
@@ -179,10 +180,10 @@ filters:
         protocol: udp
         destination-port: DOCKER-SWARM
         destination-address:
-          - k8s-worker01
-          - k8s-worker04
           - k8s-control-plane
+          - k8s-worker01
           - k8s-worker02
+          - k8s-worker04
         action: accept
 # [auto] review terms above, then replace with deny-ANY when ready; unnamed ports only this allows: tcp/22910 (170 hits, 1 dst), tcp/28107 (96 hits, 1 dst), tcp/42765 (153 hits, 1 dst) -- name them (firru edit-services add) to get terms
       - name: allow-ANY

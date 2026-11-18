@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/ws1-baf01_int_baf_05_berylia_org.yml
+# Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:59Z
 # Source suggestions changed: 4 | Dead rules: 6 | Group suggestions: 0
 metadata:
   host: ws1-baf01

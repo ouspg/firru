@@ -78,7 +78,7 @@ import json
 import pathlib
 import sys
 
-WINDOWS = {                                    # local time, matching lspr24_to_flows.py
+WINDOWS = {   # the timestamps' local zone, UTC+02, as in lspr24_to_flows.py
     "d1":       ("2024-03-06 10:00", "2024-03-06 18:00"),
     "night":    ("2024-03-06 19:00", "2024-03-07 08:00"),
     "d1+night": ("2024-03-06 10:00", "2024-03-07 08:00"),
@@ -166,8 +166,8 @@ def main():
           select "SrcIP" src, "DstIP" dip, "DstPort" dport, "Label_src" lsrc,
                  "Tot Bwd Pkts" bwd
           from read_parquet({P}) where "Protocol" = 6
-            and to_timestamp("mTimestampStart"/1e6) >= TIMESTAMPTZ '{s}'
-            and to_timestamp("mTimestampStart"/1e6) <  TIMESTAMPTZ '{e}'""")
+            and to_timestamp("mTimestampStart"/1e6) >= TIMESTAMPTZ '{s}+02'
+            and to_timestamp("mTimestampStart"/1e6) <  TIMESTAMPTZ '{e}+02'""")
 
     con.execute("""create view obs as select distinct s.a, s.port, l.src,
       (select min(m.a) from amap m where m.ip = l.src) src_asset

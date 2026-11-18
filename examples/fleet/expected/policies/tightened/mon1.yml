@@ -1,4 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/mon1.yml
+# Flows: flows.jsonl, 2026-10-24T00:08:13Z to 2026-10-24T23:41:11Z
 # Source suggestions changed: 1 | Dead rules: 0 | Group suggestions: 0
 metadata:
   host: mon1
