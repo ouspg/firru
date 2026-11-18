@@ -85,7 +85,7 @@ import re
 import sys
 
 from firru.discovery import get_discovery_list
-from firru.listeners import process_entries, windows_dual_stack
+from firru.listeners import dual_stack_wildcards, process_entries
 from firru.readers import read_files
 from firru.ss import SsParseError
 
@@ -314,7 +314,10 @@ def process_host(entry, loopback=False):
             f"{listenfile}: nothing here could be read as a listener dump. "
             f"That is not a host with no services.")
 
-    entries = windows_dual_stack(inv.listeners) if inv.os == 'windows' else inv.listeners
+    # Sources that spell dual-stack and IPv6-only alike: Windows, and net-tools
+    # netstat when ss is not there to say which.
+    ambiguous = inv.os == 'windows' or ('linux-netstat' in inv.sources and 'ss' not in inv.sources)
+    entries = dual_stack_wildcards(inv.listeners) if ambiguous else inv.listeners
     listen_ports = process_entries(entries, loopback)
 
     metadata = {

@@ -100,6 +100,23 @@ def flags_for(cidr, port):
     return sorted(f)
 
 
+def dual_stack(entries):
+    """A `::/0` listener with no IPv4 entry on the same protocol and port also
+    serves IPv4. Neither source here says whether v6only is set: the rootcheck
+    check is net-tools netstat, which writes `:::22` for both kinds of socket,
+    and syscollector reports Windows' dual-mode sockets once, on `::`. Linux
+    defaults to dual-stack, and the wrong guess the other way blocks IPv4 to a
+    service that answers it (firru.listeners.dual_stack_wildcards)."""
+    v4 = {(e["protocol"], e["port"]) for e in entries
+          if ipaddress.ip_network(e["bind_address"]).version == 4}
+    out = list(entries)
+    for e in entries:
+        if e["bind_address"] == "::/0" and (e["protocol"], e["port"]) not in v4:
+            out.append(dict(e, bind_address="0.0.0.0/0",
+                            flags=flags_for("0.0.0.0/0", e["port"])))
+    return sorted(out, key=lambda e: (e["protocol"], e["port"], e["bind_address"]))
+
+
 def entries_from(body, keep_loopback):
     """The listening table in one record, deduplicated and sorted."""
     seen = {}
@@ -311,7 +328,7 @@ def main():
         if rng:
             meta["ephemeral"] = {p: rng[p] for p in ("tcp", "udp") if p in rng}
             meta["ephemeral_source"] = "assumed: " + rng["source"]
-        return {"metadata": meta, "listen_ports": entries}
+        return {"metadata": meta, "listen_ports": dual_stack(entries)}
 
     if args.output:
         out = pathlib.Path(args.output)

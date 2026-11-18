@@ -102,9 +102,14 @@ def address_to_cidr(la: str, loopback=False):
     return [f"{ip}/{prefix}"]
 
 
-def windows_dual_stack(entries):
+def dual_stack_wildcards(entries):
     """
-    Windows reports a dual-mode socket once, on `::`. Read it as dual-stack.
+    A `::` wildcard whose source cannot say whether v6only is set: dual-stack.
+
+    Two sources write a dual-stack socket and an IPv6-only one the same way.
+    Windows reports a dual-mode socket once, on `::`; net-tools `netstat`
+    writes `:::22` for every IPv6 wildcard (normalize_linux_netstat_entry).
+    `ss` spells the two apart and needs none of this.
 
     `Get-NetTCPConnection` and `Get-NetUDPEndpoint` (loot-host.ps1) list the
     kernel's own listeners -- SMB 445, http.sys 80, WinRM 47001, all owned by
@@ -119,6 +124,10 @@ def windows_dual_stack(entries):
     and nothing changes. A genuinely v6only socket would gain an IPv4 allow it
     does not need: the safe direction to be wrong in, since the other one cuts
     IPv4 off a DC. netstat-shaped loot (PoSh-R2) prints both rows already.
+
+    On Linux the stock default is dual-stack (net.ipv6.bindv6only = 0), and the
+    other direction was seen in practice: a java X-Road server recorded as
+    IPv6-only by netstat answered 2,143 IPv4 flows from its federation peers.
     """
     v4 = set()
     for e in entries:
@@ -137,6 +146,10 @@ def windows_dual_stack(entries):
             e = dict(e, local_address='*')
         out.append(e)
     return out
+
+
+#: The name it had while only Windows needed it.
+windows_dual_stack = dual_stack_wildcards
 
 
 def compute_flags(bind_address: str, user: str, port: int) -> list:
@@ -248,11 +261,11 @@ def normalize_linux_netstat_entry(entry, annotation):
 
     One thing this source cannot tell you, and `ss` can: net-tools writes
     `:::22` for every AF_INET6 wildcard whether or not v6only is set, so a
-    dual-stack socket is indistinguishable from an IPv6-only one and is recorded
-    as IPv6-only. `ss` spells the two apart (`*` against `[::]`, see
-    `address_to_cidr`), which is one more reason it takes precedence. A host
-    read through this source alone may therefore be missing an IPv4 rule for a
-    service that does answer on IPv4.
+    dual-stack socket is indistinguishable from an IPv6-only one. It is
+    recorded as `::` here, and `dual_stack_wildcards` reads it as both families
+    unless the same port also has an IPv4 entry. `ss` spells the two apart
+    (`*` against `[::]`, see `address_to_cidr`), which is one more reason it
+    takes precedence.
     """
     if not entry or entry.get('kind') != 'network':
         return None
