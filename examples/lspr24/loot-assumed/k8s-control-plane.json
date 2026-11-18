@@ -154,6 +154,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 6443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kube-apiserver",
+        "pid": 1132,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -222,6 +239,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 9100,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "node",
+        "pid": 1683,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -273,6 +307,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 10250,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kubelet",
+        "pid": 852,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -284,6 +335,23 @@
         "exe": null,
         "name": "kubelet",
         "pid": 852,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 10256,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "kube-proxy",
+        "pid": 1721,
         "services": [],
         "user": null
       },

@@ -23,7 +23,7 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
-# [auto] IPv6 ::/0 (xrdp)
+# [auto] IPv4 0.0.0.0/0 (xrdp) | IPv6 ::/0 (xrdp)
       - name: allow-tcp-RDP
         protocol: tcp
         destination-port: RDP

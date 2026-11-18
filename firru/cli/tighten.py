@@ -46,6 +46,7 @@ from firru.arkime import ArkimeAPI, build_host_filter, process_flow
 from firru.cli.address_summarizer import (_default_asn_db, summarize,
                                           summarize_asn)
 from firru.comments import TAG_AUTO, detached, tagged, set_term_comment, kept_comments_by_term
+from firru.flows import Hits
 from firru.policy import DIR_IN, DIR_OUT, filter_directions
 
 # ---------------------------------------------------------------------------
@@ -97,7 +98,7 @@ def unresolved_note(ip_counter, annotator, budget=COMMENT_IP_LIMIT,
       named   the addresses have DNS names, so the right fix is an inventory
               entry rather than a firewall edit
       blocks  they have a shape -- a few prefixes, or a few autonomous systems
-      ANY     they have neither, and ANY is the honest answer
+      ANY     they have neither, and ANY is the accurate answer
 
     Nothing here changes a policy. It is a comment.
     """
@@ -126,6 +127,34 @@ def unresolved_note(ip_counter, annotator, budget=COMMENT_IP_LIMIT,
             f"{_verdict(ext, summary, asn_db, noun)}")
 
 
+def heavy_hitter_note(ip_counter, annotator, noun="src"):
+    """Which unresolved peers carried the flows, or None. A comment only.
+
+    The summary groups by prefix or AS and calls a spread "too scattered";
+    this names the single addresses that mattered. On LSPR24 the X-Road
+    server's federation peers: eight of sixteen addresses carry 87% of the
+    flows. Only host-level heavy hitters are named. Prefix-level ones over
+    a spread of unrelated clients are arbitrary slices, and prefix structure
+    is what the summary line already reports, so with no single address at
+    the share there is nothing to say.
+    """
+    ext = external_counts(ip_counter, annotator)
+    if len(ext) < 2:
+        return None
+    from firru.heavy_hitters import heavy_hitters
+    hosts = [(net, n) for net, n in heavy_hitters(ext)
+             if net.prefixlen == net.max_prefixlen]
+    if not hosts:
+        return None
+    total = sum(ext.values())
+    shown = ", ".join(f"{net.network_address} {100 * n / total:.1f}%" for net, n in hosts)
+    rest = total - sum(n for _, n in hosts)
+    others = len(ext) - len(hosts)
+    tail = f", the other {others} {100 * rest / total:.1f}%" if others else ""
+    return (f"heavy hitters among {len(ext)} unresolved {noun} "
+            f"({total} flows): {shown}{tail}")
+
+
 def _verdict(ext, summary, asn_db=None, noun="src"):
     """Which of the answers this is, in the words a reviewer needs.
 
@@ -149,15 +178,15 @@ def _verdict(ext, summary, asn_db=None, noun="src"):
 
     sizes = _group_sizes(ext, asn_db)
     if not sizes:
-        return "one group per address, so no summary narrows it and ANY is honest"
+        return "one group per address, so no summary narrows it and ANY stays"
     biggest = sizes[0]
     if biggest * 2 >= len(ext):
         return (f"{biggest} of {len(ext)} sit in one group, so a named group "
                 f"would cover most of this")
     if sizes[0] == 1:
-        return "one group per address, so no summary narrows it and ANY is honest"
+        return "one group per address, so no summary narrows it and ANY stays"
     return (f"{len(ext)} addresses spread over {len(sizes)} groups, largest {biggest}: "
-            f"too scattered to name, ANY is honest")
+            f"too scattered to name, so ANY stays")
 
 
 def _group_sizes(ext, asn_db):
@@ -402,24 +431,6 @@ def _is_broadcast_or_multicast(ip_str):
         return False
 
 
-class Hits(Counter):
-    """Flows per peer, and in `unanswered` how many of them went unanswered.
-
-    A peer whose every flow went unanswered never used the service: the policy
-    in force refused it, or nothing listened. Tightening still counts it, since
-    the window need not have run under the policy being tightened, and the
-    comment says which peers those were.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.unanswered = Counter()
-
-    def merge(self, other):
-        self.update(other)
-        self.unanswered.update(getattr(other, "unanswered", {}))
-
-
 def _count(bucket, peer, n, unanswered):
     bucket[peer] += n
     if unanswered and isinstance(bucket, Hits):   # a plain Counter keeps hits only
@@ -571,20 +582,36 @@ def collect_flows(arkime, host_ips, defs, date="48", start_time=None, stop_time=
 # ---------------------------------------------------------------------------
 
 def ip_matches_source(ip, source_addr, annotator):
-    """True if ip would be accepted by source_addr token (or list of tokens)."""
+    """True if ip would be accepted by source_addr token (or list of tokens).
+
+    ANY_V4 and ANY_V6 admit their own family only: an IPv4 flow on an ANY_V6
+    term is refused, and counting it as admitted hid exactly the dual-stack
+    listeners recorded as IPv6-only. An address that does not parse passes,
+    the optimistic side, so a pass never overstates a block.
+    """
     if not source_addr:
         return True  # no restriction
 
     tokens = [source_addr] if isinstance(source_addr, str) else list(source_addr)
-    if any(t in ("ANY", "ANY_V4", "ANY_V6") for t in tokens):
+    if "ANY" in tokens:
         return True  # unrestricted
+    try:
+        family = ipaddress.ip_address(ip).version
+    except ValueError:
+        family = None
+    for tok, fam in (("ANY_V4", 4), ("ANY_V6", 6)):
+        if tok in tokens and family in (fam, None):
+            return True
+    named = [t for t in tokens if t not in ("ANY_V4", "ANY_V6")]
+    if not named:
+        return False
 
     ann    = annotator.annotate_ip(ip)
     actual = ann.get("host", "")
     parents = set(ann.get("parents", []))
     covered = {actual} | parents
 
-    return bool(covered & set(tokens))
+    return bool(covered & set(named))
 
 
 def _annotate_token(ip, annotator):
@@ -883,6 +910,9 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
                                    dns_store=dns_store, asn_db=asn_db)
             if note:
                 comment = f"{comment}\n{note}"
+                heavy = heavy_hitter_note(ip_counter, annotator)
+                if heavy:
+                    comment = f"{comment}\n{heavy}"
                 if any_rows is not None:
                     any_rows.append((host_token, term.get("name"),
                                      external_counts(ip_counter, annotator)))

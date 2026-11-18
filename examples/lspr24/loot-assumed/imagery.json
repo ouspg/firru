@@ -120,6 +120,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 18336,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "16f8bed9-b928",
+        "pid": 21067,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -131,6 +148,23 @@
         "exe": null,
         "name": "16f8bed9-b928",
         "pid": 21067,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 48001,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "16f8bed9-b928",
+        "pid": 21013,
         "services": [],
         "user": null
       },

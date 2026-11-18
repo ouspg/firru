@@ -1,6 +1,23 @@
 {
   "listen_ports": [
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 22,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "init",
+        "pid": 1,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "well-known",
@@ -97,6 +114,23 @@
         "exe": null,
         "name": "xrdp-sesman",
         "pid": 1829,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3389,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "xrdp",
+        "pid": 1839,
         "services": [],
         "user": null
       },
@@ -216,6 +250,23 @@
         "exe": null,
         "name": "org",
         "pid": 949,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 45582,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "avahi-daemon",
+        "pid": 948,
         "services": [],
         "user": null
       },

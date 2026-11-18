@@ -131,7 +131,7 @@ filters:
     destination-port: HTTPS
     comment: 'ANY covers 6 unresolved dst: 6 addresses in 6 blocks, widest /15: 1.0.0.0/15
       (2 dst, 2 hits), 8.8.0.0/20 (2 dst, 2 hits), 9.9.9.9/32 (1 hit), 149.112.112.112/32
-      (1 hit) -- one group per address, so no summary narrows it and ANY is honest'
+      (1 hit) -- one group per address, so no summary narrows it and ANY stays'
     action: accept
     source-address: ws1-baf01_int_baf_05_berylia_org
   - name: ws3-baf05_int_baf_05_berylia_org-egress-NTP
@@ -139,7 +139,7 @@ filters:
     destination-port: NTP
     comment: 'ANY covers 3 unresolved dst: 3 addresses in 3 blocks, widest /32: 193.40.134.137/32
       (1 hit), 212.7.1.131/32 (1 hit), 2620:2d:4000:1::3f/128 (1 hit) -- one group
-      per address, so no summary narrows it and ANY is honest'
+      per address, so no summary narrows it and ANY stays'
     action: accept
     source-address: ws3-baf05_int_baf_05_berylia_org
   - name: log-accept-ANY-egress

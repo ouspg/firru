@@ -19,7 +19,7 @@ What it shows:
 - **Host state splits what traffic cannot.** The capture names no blocked
   connection. Joined to the hosts' listening tables, 79,200 unanswered flows
   turn out to be to ports that *were* listening: the enforcement axis.
-- **Synthesis on real loot.** 59 hosts, 902 sockets, each policy term named by
+- **Synthesis on real loot.** 59 hosts, 1,000 sockets, each policy term named by
   a definition with a source, and every port nothing names noted rather than
   opened.
 - **Block-early.** Source tightening denies none of the red team's admitted
@@ -142,10 +142,14 @@ named as the cause.
 
 The Wazuh archive carries the rootcheck `netstat listening ports` check, a
 host's whole listening table on every scan, with process names on most of it.
-`ossec-to-loot` reads it into 59 hosts and 902 sockets: 50 Linux hosts from
+`ossec-to-loot` reads it into 59 hosts and 1,000 sockets: 50 Linux hosts from
 netstat, and 8 Windows hosts and one unknown from syscollector, whose 35
 observed sockets `assumptions.py` fills in to the stock install of each host's
 role (301 listeners, each flagged `inferred`; see the assumptions).
+netstat writes a dual-stack socket and an IPv6-only one the same way, so 98
+of the sockets are the IPv4 half of an IPv6 wildcard with no IPv4 entry of
+its own. 49 of those answered IPv4 in the capture, one was tried and never
+answered, and the other 48 saw no IPv4 traffic.
 
 `def/` starts from firru's stock definitions, where every entry cites its
 source, so terms carry names like `K8S-KUBELET`, `NODE-EXPORTER`,

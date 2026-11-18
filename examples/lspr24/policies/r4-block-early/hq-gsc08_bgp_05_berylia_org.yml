@@ -67,7 +67,7 @@ filters:
     - bgp
     - core
     action: accept
-# [auto] 4387 hits: EXTERNAL (100.100.108.30)
+# [auto] 4387 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514
     protocol: tcp
     destination-port: TCP_1514
@@ -75,7 +75,7 @@ filters:
       (4387 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 878 hits: EXTERNAL (100.100.108.30)
+# [auto] 878 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1515
     protocol: tcp
     destination-port: TCP_1515
@@ -95,7 +95,7 @@ filters:
     destination-port: TCP_4533
     destination-address: bgp
     action: accept
-# [auto] 72349 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4)
+# [auto] 72349 hits: EXTERNAL (100.95.95.4, 2a07:1181:95:95::4) [never answered]
   - name: allow-udp-DNS-UDP
     protocol: udp
     destination-port: DNS-UDP
@@ -103,14 +103,14 @@ filters:
       (38871 hits), 2a07:1181:95:95::4/128 (33478 hits) -- 1 of 2 sit in one group,
       so a named group would cover most of this'
     action: accept
-# [auto] 386 hits: EXTERNAL (193.40.0.5, 193.40.133.134, 193.40.134.137, 2001:1b28:1:5::131 and 7 more)
+# [auto] 386 hits: EXTERNAL (193.40.0.5, 193.40.133.134, 193.40.134.137, 2001:1b28:1:5::131 and 7 more) [never answered]
   - name: allow-udp-NTP
     protocol: udp
     destination-port: NTP
     comment: 'ANY covers 11 unresolved dst: 11 addresses in 8 blocks, widest /3: 192.0.0.0/3
       (4 dst, 229 hits), 2000::/5 (3 dst, 153 hits), 185.125.190.56/30 (3 dst, 3 hits),
       91.189.91.157/32 (1 hit) -- 11 addresses spread over 8 groups, largest 3: too
-      scattered to name, ANY is honest'
+      scattered to name, so ANY stays'
     action: accept
 # [auto] review terms above, then replace with deny-ANY when ready
   - name: allow-ANY

@@ -86,6 +86,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "next-router-wo",
+        "pid": 1705,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -114,6 +131,23 @@
         "exe": null,
         "name": "xrdp-sesman",
         "pid": 1758,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 3389,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "xrdp",
+        "pid": 1768,
         "services": [],
         "user": null
       },
@@ -228,6 +262,23 @@
         "world-listen"
       ],
       "port": 5353,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "avahi-daemon",
+        "pid": 831,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 48329,
       "process": {
         "cmdline": null,
         "exe": null,

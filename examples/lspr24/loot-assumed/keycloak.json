@@ -52,7 +52,7 @@
       "protocol": "tcp"
     },
     {
-      "bind_address": "::/0",
+      "bind_address": "0.0.0.0/0",
       "flags": [
         "well-known",
         "world-listen"
@@ -71,10 +71,61 @@
     {
       "bind_address": "::/0",
       "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 851,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
         "high-port",
         "world-listen"
       ],
       "port": 22395,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 851,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 22395,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 851,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 45755,
       "process": {
         "cmdline": null,
         "exe": null,

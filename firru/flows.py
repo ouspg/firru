@@ -27,6 +27,7 @@ import re
 import json
 import os
 import pathlib
+from collections import Counter
 
 # The columns any flow consumer needs; fqdn is optional (passive DNS).
 _CORE = ("protocol", "src_ip", "dst_ip", "dst_port")
@@ -375,3 +376,21 @@ def _iter_parquet(path, host_ips, with_fqdn):
                 except (TypeError, ValueError):
                     d["dst_port"] = None
             yield d
+
+
+class Hits(Counter):
+    """Flows per peer, and in `unanswered` how many of them went unanswered.
+
+    A peer whose every flow went unanswered never used the service: the policy
+    in force refused it, or nothing listened. Tightening still counts it, since
+    the window need not have run under the policy being tightened, and the
+    comment says which peers those were.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.unanswered = Counter()
+
+    def merge(self, other):
+        self.update(other)
+        self.unanswered.update(getattr(other, "unanswered", {}))

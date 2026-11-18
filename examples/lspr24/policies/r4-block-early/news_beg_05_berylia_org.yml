@@ -65,14 +65,14 @@ filters:
   - name: allow-icmpv6
     action: accept
     protocol: icmpv6
-# [auto] 193 hits: beg (2a07:1182:5:20::1) | 113 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11)
+# [auto] 193 hits: beg (2a07:1182:5:20::1) [never answered] | 113 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered]
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     destination-address:
     - fw1-beg
     - beg
     action: accept
-# [auto] 284 hits: EXTERNAL (100.100.108.30)
+# [auto] 284 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514
     protocol: tcp
     destination-port: TCP_1514
@@ -80,7 +80,7 @@ filters:
       (284 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 56 hits: EXTERNAL (100.100.108.30)
+# [auto] 56 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1515
     protocol: tcp
     destination-port: TCP_1515
@@ -88,7 +88,7 @@ filters:
       (56 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 14287 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+# [auto] 14287 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4) [never answered]
   - name: allow-udp-DNS-UDP
     protocol: udp
     destination-port: DNS-UDP

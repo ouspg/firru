@@ -61,7 +61,7 @@ filters:
       - name: allow-icmpv6
         action: accept
         protocol: icmpv6
-# [auto] 181 hits: beg (2a07:1182:5:20::1) | 137 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) | 84 hits: BEG_GT_OTHER (2a07:1182:5:20::60)
+# [auto] 181 hits: beg (2a07:1182:5:20::1) [never answered] | 137 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 84 hits: BEG_GT_OTHER (2a07:1182:5:20::60)
       - name: allow-icmpv6-ICMPV6
         protocol: icmpv6
         destination-address:
@@ -69,7 +69,7 @@ filters:
           - BEG_GT_OTHER
           - beg
         action: accept
-# [auto] 283 hits: EXTERNAL (100.100.108.30)
+# [auto] 283 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1514
         protocol: tcp
         destination-port: TCP_1514
@@ -77,7 +77,7 @@ filters:
           (283 hits) -- a single destination: name it or deny it, ANY is not the answer
           either way'
         action: accept
-# [auto] 56 hits: EXTERNAL (100.100.108.30)
+# [auto] 56 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1515
         protocol: tcp
         destination-port: TCP_1515
@@ -85,13 +85,13 @@ filters:
           (56 hits) -- a single destination: name it or deny it, ANY is not the answer
           either way'
         action: accept
-# [auto] 1 hits: MGMT_HOSTS (100.97.5.62)
+# [auto] 1 hits: MGMT_HOSTS (100.97.5.62) [never answered]
       - name: allow-tcp-WINDOWS-RPC-DYNAMI
         protocol: tcp
         destination-port: WINDOWS-RPC-DYNAMIC
         destination-address: MGMT_HOSTS
         action: accept
-# [auto] 14094 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+# [auto] 14094 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4) [never answered]
       - name: allow-udp-DNS-UDP
         protocol: udp
         destination-port: DNS-UDP

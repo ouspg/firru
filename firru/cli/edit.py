@@ -319,7 +319,7 @@ def _flow_evidence(flows_file, host_ips):
     a whole-fleet pass over 147M flows is neither needed nor affordable. On a
     per-host JSONL file the filter is a cheap no-op over a small file."""
     from firru.flows import iter_flows
-    from firru.cli.tighten import Hits
+    from firru.flows import Hits
     ev = defaultdict(Hits)
     ips = set(host_ips)
     for flow in iter_flows(flows_file, host_ips=ips):

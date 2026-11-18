@@ -52,12 +52,46 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 911,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "well-known",
         "world-listen"
       ],
       "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 911,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -137,6 +171,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 4000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 910,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -165,6 +216,23 @@
         "exe": null,
         "name": "postgres",
         "pid": 803,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5500,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 911,
         "services": [],
         "user": null
       },
@@ -256,12 +324,46 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5577,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 911,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
         "world-listen"
       ],
       "port": 5577,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 911,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5588,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -341,6 +443,23 @@
       "protocol": "udp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 36640,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 910,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -352,6 +471,23 @@
         "exe": null,
         "name": "java",
         "pid": 910,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 39981,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 912,
         "services": [],
         "user": null
       },

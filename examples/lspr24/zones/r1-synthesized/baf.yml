@@ -38,19 +38,19 @@ filters:
     protocol: tcp
     destination-port: CEPH-OSD
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: c4i-ads_baf_05_berylia_org
   - name: c4i-ads_baf_05_berylia_org-allow-tcp-COCKPIT
     protocol: tcp
     destination-port: COCKPIT
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: c4i-ads_baf_05_berylia_org
   - name: c4i-ads_baf_05_berylia_org-allow-tcp-TCP_9099
     protocol: tcp
     destination-port: TCP_9099
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: c4i-ads_baf_05_berylia_org
   - name: c4i-ads_baf_05_berylia_org-allow-tcp-TCP_9536
     protocol: tcp
@@ -98,7 +98,7 @@ filters:
     protocol: udp
     destination-port: UDP_5000
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: c4i-ads_baf_05_berylia_org
   - name: c4i-ads_baf_05_berylia_org-allow-udp-UDP_5101
     protocol: udp
@@ -110,13 +110,13 @@ filters:
     protocol: udp
     destination-port: UDP_9001
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: c4i-ads_baf_05_berylia_org
   - name: c4i-ads_baf_05_berylia_org-allow-udp-UDP_9101
     protocol: udp
     destination-port: UDP_9101
     action: accept
-    source-address: ANY_V6
+    source-address: ANY
     destination-address: c4i-ads_baf_05_berylia_org
   - name: deny-ext-tcp-SSH
     action: deny

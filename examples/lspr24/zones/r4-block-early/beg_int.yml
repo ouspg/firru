@@ -273,7 +273,7 @@ filters:
     destination-port: HTTPS
     comment: 'ANY covers 6 unresolved dst: 6 addresses in 6 blocks, widest /15: 1.0.0.0/15
       (2 dst, 4 hits), 8.8.0.0/20 (2 dst, 4 hits), 9.9.9.9/32 (2 hits), 149.112.112.112/32
-      (2 hits) -- one group per address, so no summary narrows it and ANY is honest'
+      (2 hits) -- one group per address, so no summary narrows it and ANY stays'
     action: accept
     source-address: ws1-beg02_int_beg_05_berylia_org ws2-beg01_int_beg_05_berylia_org
       ws3-beg03_int_beg_05_berylia_org
@@ -283,7 +283,7 @@ filters:
     comment: 'ANY covers 8 unresolved dst: 8 addresses in 6 blocks, widest /3: 192.0.0.0/3
       (4 dst, 141 hits), 2001:1b28:1:5::132/128 (38 hits), 185.125.190.56/31 (2 dst,
       2 hits), 91.189.91.157/32 (1 hit) -- 8 addresses spread over 6 groups, largest
-      2: too scattered to name, ANY is honest'
+      2: too scattered to name, so ANY stays'
     action: accept
     source-address: ws3-beg01_int_beg_05_berylia_org ws3-beg02_int_beg_05_berylia_org
       ws3-beg03_int_beg_05_berylia_org ws3-beg04_int_beg_05_berylia_org ws3-beg05_int_beg_05_berylia_org

@@ -154,7 +154,7 @@
       "protocol": "tcp"
     },
     {
-      "bind_address": "::/0",
+      "bind_address": "0.0.0.0/0",
       "flags": [
         "high-port",
         "world-listen"
@@ -176,12 +176,63 @@
         "high-port",
         "world-listen"
       ],
+      "port": 7000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 3628,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
       "port": 9090,
       "process": {
         "cmdline": null,
         "exe": null,
         "name": "systemd",
         "pid": 1,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "::/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 9090,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "systemd",
+        "pid": 1,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 9099,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "python3",
+        "pid": 947,
         "services": [],
         "user": null
       },
@@ -477,6 +528,23 @@
       "protocol": "udp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 5000,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 3628,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -545,6 +613,23 @@
       "protocol": "udp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 9001,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 3628,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "high-port",
@@ -568,6 +653,23 @@
         "specific-ip"
       ],
       "port": 9002,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "java",
+        "pid": 3628,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 9101,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -607,6 +709,23 @@
         "exe": null,
         "name": "java",
         "pid": 3628,
+        "services": [],
+        "user": null
+      },
+      "protocol": "udp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 51595,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "avahi-daemon",
+        "pid": 877,
         "services": [],
         "user": null
       },

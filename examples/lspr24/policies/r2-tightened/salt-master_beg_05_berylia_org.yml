@@ -16,14 +16,14 @@ filters:
         action: accept
         source-address: BEG_GT_OTHER  # was: BEG_GT
 
-# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: HTTP/tcp/80
+# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) [900 unanswered] | via: HTTP/tcp/80
       - name: allow-tcp-HTTP
         protocol: tcp
         destination-port: HTTP
         action: accept
         source-address: BEG_INT_GT_OTHER  # was: ANY_V4
 
-# [auto] 1799 flows total | 1799 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250, 10.5.12.250) | via: HTTPS/tcp/443
+# [auto] 1799 flows total | 1799 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250, 10.5.12.250) [900 unanswered] | via: HTTPS/tcp/443
       - name: allow-tcp-HTTPS
         protocol: tcp
         destination-port: HTTPS
@@ -43,9 +43,9 @@ filters:
         destination-port: TCP_4506
         action: accept
         source-address:  # was: ANY_V4
+          - gas-historian
           - gas-hmi
           - gas-maintenance-terminal
-          - gas-historian
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-loopback
@@ -85,7 +85,7 @@ filters:
       - name: allow-icmpv6
         action: accept
         protocol: icmpv6
-# [auto] 323 hits: beg (2a07:1182:5:20::1) | 100 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) | 63 hits: BEG_GT_OTHER (2a07:1182:5:20::60)
+# [auto] 323 hits: beg (2a07:1182:5:20::1) [never answered] | 100 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 63 hits: BEG_GT_OTHER (2a07:1182:5:20::60)
       - name: allow-icmpv6-ICMPV6
         protocol: icmpv6
         destination-address:
@@ -93,7 +93,7 @@ filters:
           - BEG_GT_OTHER
           - beg
         action: accept
-# [auto] 284 hits: EXTERNAL (100.100.108.30)
+# [auto] 284 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1514
         protocol: tcp
         destination-port: TCP_1514
@@ -101,7 +101,7 @@ filters:
           (284 hits) -- a single destination: name it or deny it, ANY is not the answer
           either way'
         action: accept
-# [auto] 56 hits: EXTERNAL (100.100.108.30)
+# [auto] 56 hits: EXTERNAL (100.100.108.30) [never answered]
       - name: allow-tcp-TCP_1515
         protocol: tcp
         destination-port: TCP_1515
@@ -115,7 +115,7 @@ filters:
         destination-port: WINDOWS-RPC-DYNAMIC
         destination-address: gas-hmi_beg_05_berylia_org
         action: accept
-# [auto] 9593 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+# [auto] 9593 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4) [never answered]
       - name: allow-udp-DNS-UDP
         protocol: udp
         destination-port: DNS-UDP

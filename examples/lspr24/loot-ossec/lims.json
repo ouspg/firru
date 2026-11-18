@@ -52,12 +52,46 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 846,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "well-known",
         "world-listen"
       ],
       "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 846,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
       "process": {
         "cmdline": null,
         "exe": null,
@@ -97,6 +131,23 @@
         "exe": null,
         "name": "python",
         "pid": 879,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "high-port",
+        "world-listen"
+      ],
+      "port": 8888,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 846,
         "services": [],
         "user": null
       },

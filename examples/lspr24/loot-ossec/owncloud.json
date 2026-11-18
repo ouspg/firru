@@ -52,6 +52,23 @@
       "protocol": "tcp"
     },
     {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 80,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 891,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
       "bind_address": "::/0",
       "flags": [
         "well-known",
@@ -97,6 +114,23 @@
         "exe": null,
         "name": "smbd",
         "pid": 857,
+        "services": [],
+        "user": null
+      },
+      "protocol": "tcp"
+    },
+    {
+      "bind_address": "0.0.0.0/0",
+      "flags": [
+        "well-known",
+        "world-listen"
+      ],
+      "port": 443,
+      "process": {
+        "cmdline": null,
+        "exe": null,
+        "name": "apache2",
+        "pid": 891,
         "services": [],
         "user": null
       },

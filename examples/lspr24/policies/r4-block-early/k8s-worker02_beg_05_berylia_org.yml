@@ -24,8 +24,8 @@ filters:
     destination-port: BGP
     action: accept
     source-address:      # was: ANY
-    - k8s-worker03
     - k8s-worker04
+    - k8s-worker03
 
 # [auto] 1566 flows total | 416 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34) | 394 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30) | 385 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33) | 371 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31) | via: DOCKER-SWARM/tcp/7946
   - name: allow-tcp-METALLB-MEMBERLIST
@@ -34,9 +34,9 @@ filters:
     action: accept
     source-address:      # was: ANY_V4
     - k8s-worker01
-    - k8s-worker03
     - k8s-worker04
     - k8s-control-plane
+    - k8s-worker03
 
 # [auto] 1022 flows total | 358 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33) | 291 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30) | 291 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31) | 82 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34) | via: DOCKER-SWARM/udp/7946
   - name: allow-udp-METALLB-MEMBERLIST
@@ -45,9 +45,9 @@ filters:
     action: accept
     source-address:      # was: ANY_V4
     - k8s-worker01
-    - k8s-worker03
     - k8s-worker04
     - k8s-control-plane
+    - k8s-worker03
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -87,11 +87,11 @@ filters:
     protocol: '4'
     destination-address:
     - k8s-worker01
-    - k8s-worker03
     - k8s-worker04
     - k8s-control-plane
+    - k8s-worker03
     action: accept
-# [auto] 605 hits: k8s-worker01_beg_05_berylia_org (2a07:1182:5:20::31, fe80::250:56ff:fe89:2819) | 604 hits: k8s-worker03_beg_05_berylia_org (2a07:1182:5:20::33, fe80::250:56ff:fe89:3811) | 564 hits: k8s-worker04_beg_05_berylia_org (2a07:1182:5:20::34, fe80::250:56ff:fe89:f7d1) | 326 hits: beg (2a07:1182:5:20::1) | 279 hits: BEG_GT_OTHER (2a07:1182:5:20::60) | 181 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11)
+# [auto] 605 hits: k8s-worker01_beg_05_berylia_org (2a07:1182:5:20::31, fe80::250:56ff:fe89:2819) | 604 hits: k8s-worker03_beg_05_berylia_org (2a07:1182:5:20::33, fe80::250:56ff:fe89:3811) | 564 hits: k8s-worker04_beg_05_berylia_org (2a07:1182:5:20::34, fe80::250:56ff:fe89:f7d1) | 326 hits: beg (2a07:1182:5:20::1) [never answered] | 279 hits: BEG_GT_OTHER (2a07:1182:5:20::60) | 181 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered]
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     action: accept
@@ -109,9 +109,9 @@ filters:
     destination-port: DOCKER-SWARM
     destination-address:
     - k8s-worker01
-    - k8s-worker03
     - k8s-worker04
     - k8s-control-plane
+    - k8s-worker03
     action: accept
 # [auto] 1559 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30)
   - name: allow-tcp-ETCD-METRICS
@@ -137,9 +137,9 @@ filters:
     destination-port: K8S-KUBELET
     destination-address:
     - k8s-worker01
-    - k8s-worker03
     - k8s-worker04
     - k8s-control-plane
+    - k8s-worker03
     action: accept
 # [auto] 1559 hits: k8s-control-plane_beg_05_berylia_org (100.97.5.30)
   - name: allow-tcp-K8S-SCHEDULER
@@ -153,11 +153,11 @@ filters:
     destination-port: NODE-EXPORTER
     destination-address:
     - k8s-worker01
-    - k8s-worker03
     - k8s-worker04
     - k8s-control-plane
+    - k8s-worker03
     action: accept
-# [auto] 283 hits: EXTERNAL (100.100.108.30)
+# [auto] 283 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514
     protocol: tcp
     destination-port: TCP_1514
@@ -165,7 +165,7 @@ filters:
       (283 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 56 hits: EXTERNAL (100.100.108.30)
+# [auto] 56 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1515
     protocol: tcp
     destination-port: TCP_1515
@@ -178,10 +178,10 @@ filters:
     protocol: tcp
     destination-port: WINDOWS-RPC-DYNAMIC
     destination-address:
-    - k8s-worker03
     - k8s-worker04
+    - k8s-worker03
     action: accept
-# [auto] 25656 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+# [auto] 25656 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4) [never answered]
   - name: allow-udp-DNS-UDP
     protocol: udp
     destination-port: DNS-UDP
@@ -195,9 +195,9 @@ filters:
     destination-port: DOCKER-SWARM
     destination-address:
     - k8s-worker01
-    - k8s-worker03
     - k8s-worker04
     - k8s-control-plane
+    - k8s-worker03
     action: accept
 # [auto] review terms above, then replace with deny-ANY when ready; unnamed ports only this allows: tcp/10249 (6239 hits, 4 dst), tcp/41227 (215 hits, 1 dst), tcp/48045 (140 hits, 1 dst) -- name them (firru edit-services add) to get terms
   - name: allow-ANY

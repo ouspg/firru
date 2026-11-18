@@ -52,6 +52,7 @@ import pathlib
 import sys
 
 from firru.ephemeral import parse_range
+from firru.listeners import dual_stack_cidrs
 from firru.tokens import is_loopback
 
 MARKER = "netstat listening ports"
@@ -101,20 +102,12 @@ def flags_for(cidr, port):
 
 
 def dual_stack(entries):
-    """A `::/0` listener with no IPv4 entry on the same protocol and port also
-    serves IPv4. Neither source here says whether v6only is set: the rootcheck
-    check is net-tools netstat, which writes `:::22` for both kinds of socket,
-    and syscollector reports Windows' dual-mode sockets once, on `::`. Linux
-    defaults to dual-stack, and the wrong guess the other way blocks IPv4 to a
-    service that answers it (firru.listeners.dual_stack_wildcards)."""
-    v4 = {(e["protocol"], e["port"]) for e in entries
-          if ipaddress.ip_network(e["bind_address"]).version == 4}
-    out = list(entries)
-    for e in entries:
-        if e["bind_address"] == "::/0" and (e["protocol"], e["port"]) not in v4:
-            out.append(dict(e, bind_address="0.0.0.0/0",
-                            flags=flags_for("0.0.0.0/0", e["port"])))
-    return sorted(out, key=lambda e: (e["protocol"], e["port"], e["bind_address"]))
+    """Neither source here says whether v6only is set: the rootcheck check is
+    net-tools netstat, which writes `:::22` for both kinds of socket, and
+    syscollector reports Windows' dual-mode sockets once, on `::`. So a lone
+    `::/0` listener is read as both families
+    (firru.listeners.dual_stack_cidrs)."""
+    return dual_stack_cidrs(entries, flags_for)
 
 
 def entries_from(body, keep_loopback):
@@ -336,8 +329,10 @@ def main():
         for host, (ts, entries) in sorted(best.items()):
             (out / f"{filename(host)}.json").write_text(
                 json.dumps(doc(host, ts, entries), indent=2, sort_keys=True) + "\n")
-        total = sum(len(e) for _, e in best.values())
-        print(f"{len(best)} hosts, {total} listening sockets -> {out}")
+        read = sum(len(e) for _, e in best.values())
+        total = sum(len(dual_stack(e)) for _, e in best.values())
+        print(f"{len(best)} hosts, {total} listening sockets -> {out}"
+              + (f" ({total - read} of them IPv4 halves of lone IPv6 wildcards)" if total > read else ""))
         known = sum(1 for h in best if osmap.get(h))
         print(f"  scans read: {sum(scanned.values())}, "
               f"kept the {args.scan} per host")

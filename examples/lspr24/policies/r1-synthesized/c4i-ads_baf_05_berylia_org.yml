@@ -41,25 +41,25 @@ filters:
         destination-port: VNC
         action: accept
         source-address: ANY
-# [auto] IPv6 ::/0 (java)
+# [auto] IPv4 0.0.0.0/0 (java) | IPv6 ::/0 (java)
       - name: allow-tcp-CEPH-OSD
         protocol: tcp
         destination-port: CEPH-OSD
         action: accept
-        source-address: ANY_V6
-# [auto] IPv6 ::/0 (systemd) | aliases: COCKPIT,PROMETHEUS | ambiguous: COCKPIT/PROMETHEUS all claim this port and the owner (systemd) matches none of them; COCKPIT is a guess
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (systemd) | IPv6 ::/0 (systemd) | aliases: COCKPIT,PROMETHEUS | ambiguous: COCKPIT/PROMETHEUS all claim this port and the owner (systemd) matches none of them; COCKPIT is a guess
 # [auto] unexpected owner: COCKPIT served by systemd; expected cockpit-ws, cockpit-tls, cockpit.socket
       - name: allow-tcp-COCKPIT
         protocol: tcp
         destination-port: COCKPIT
         action: accept
-        source-address: ANY_V6
-# [auto] IPv6 ::/0 (python3)
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (python3) | IPv6 ::/0 (python3)
       - name: allow-tcp-TCP_9099
         protocol: tcp
         destination-port: TCP_9099
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (sshd) | IPv6 ::/0 (sshd)
       - name: allow-tcp-TCP_9536
         protocol: tcp
@@ -103,12 +103,12 @@ filters:
         destination-port: RPCBIND
         action: accept
         source-address: ANY
-# [auto] IPv6 ::/0 (java)
+# [auto] IPv4 0.0.0.0/0 (java) | IPv6 ::/0 (java)
       - name: allow-udp-UDP_5000
         protocol: udp
         destination-port: UDP_5000
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
 # [auto] IPv4 10.5.15.32/32 (java)
       - name: allow-udp-UDP_5101
         protocol: udp
@@ -123,18 +123,18 @@ filters:
         source-address:
           - MDNS_SOURCES_V4
           - MDNS_SOURCES_V6
-# [auto] IPv6 ::/0 (java)
+# [auto] IPv4 0.0.0.0/0 (java) | IPv6 ::/0 (java)
       - name: allow-udp-UDP_9001
         protocol: udp
         destination-port: UDP_9001
         action: accept
-        source-address: ANY_V6
-# [auto] IPv6 ::/0 (java)
+        source-address: ANY
+# [auto] IPv4 0.0.0.0/0 (java) | IPv6 ::/0 (java)
       - name: allow-udp-UDP_9101
         protocol: udp
         destination-port: UDP_9101
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
       - name: drop-ANY
         action: deny
         counter: drop-ANY

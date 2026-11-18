@@ -152,6 +152,23 @@ def dual_stack_wildcards(entries):
 windows_dual_stack = dual_stack_wildcards
 
 
+def dual_stack_cidrs(entries, flags=None):
+    """`dual_stack_wildcards` for entries that already carry a `bind_address`
+    CIDR (a `listen_ports` record): a `::/0` listener with no IPv4 entry on the
+    same protocol and port gains a `0.0.0.0/0` twin. `flags(cidr, port)`, if
+    given, recomputes the twin's flags."""
+    v4 = {(e["protocol"], e["port"]) for e in entries
+          if ipaddress.ip_network(e["bind_address"], strict=False).version == 4}
+    out = list(entries)
+    for e in entries:
+        if e["bind_address"] == "::/0" and (e["protocol"], e["port"]) not in v4:
+            twin = dict(e, bind_address="0.0.0.0/0")
+            if flags:
+                twin["flags"] = flags("0.0.0.0/0", e["port"])
+            out.append(twin)
+    return sorted(out, key=lambda e: (e["protocol"], e["port"], e["bind_address"]))
+
+
 def compute_flags(bind_address: str, user: str, port: int) -> list:
     """Derive security-relevant flags from a listen entry."""
     flags = []

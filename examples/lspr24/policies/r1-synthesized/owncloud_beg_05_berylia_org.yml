@@ -23,12 +23,12 @@ filters:
         action: accept
         source-address:
           - BEG_GT
-# [auto] IPv6 ::/0 (apache2) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
+# [auto] IPv4 0.0.0.0/0 (apache2) | IPv6 ::/0 (apache2) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
       - name: allow-tcp-HTTP
         protocol: tcp
         destination-port: HTTP
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (smbd) | IPv6 ::/0 (smbd)
       - name: allow-tcp-NETBIOS-SSN-LEGACY
         protocol: tcp
@@ -36,12 +36,12 @@ filters:
         action: accept
         source-address:
           - BEG_HOSTS
-# [auto] IPv6 ::/0 (apache2) | aliases: HTTPS,WINDOWS-HYPERV-REPLICA-HTTPS
+# [auto] IPv4 0.0.0.0/0 (apache2) | IPv6 ::/0 (apache2) | aliases: HTTPS,WINDOWS-HYPERV-REPLICA-HTTPS
       - name: allow-tcp-HTTPS
         protocol: tcp
         destination-port: HTTPS
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (smbd) | IPv6 ::/0 (smbd)
       - name: allow-tcp-WINDOWS-SMB
         protocol: tcp

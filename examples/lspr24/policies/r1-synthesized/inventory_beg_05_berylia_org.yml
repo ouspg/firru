@@ -47,12 +47,12 @@ filters:
         destination-port: REDIS
         action: accept
         source-address: ANY
-# [auto] IPv6 ::/0 (mysqld)
+# [auto] IPv4 0.0.0.0/0 (mysqld) | IPv6 ::/0 (mysqld)
       - name: allow-tcp-MYSQL-X
         protocol: tcp
         destination-port: MYSQL-X
         action: accept
-        source-address: ANY_V6
+        source-address: ANY
       - name: drop-ANY
         action: deny
         counter: drop-ANY

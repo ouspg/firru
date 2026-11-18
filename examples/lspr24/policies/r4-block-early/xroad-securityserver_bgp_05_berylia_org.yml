@@ -23,14 +23,14 @@ filters:
     protocol: tcp
     destination-port: HTTPS
     action: accept
-    source-address: BGP_GT_OTHER      # was: ANY_V6
+    source-address: BGP_GT_OTHER      # was: ANY
 
 # [auto] 1799 flows total | 1799 hits: BGP_GT_OTHER (2a07:1182:5:30::59, 100.98.5.59) | via: TCP_5588/tcp/5588
   - name: allow-tcp-TCP_5588
     protocol: tcp
     destination-port: TCP_5588
     action: accept
-    source-address: BGP_GT_OTHER      # was: ANY_V6
+    source-address: BGP_GT_OTHER      # was: ANY
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -72,7 +72,7 @@ filters:
     - bgp
     - core
     action: accept
-# [auto] 4553 hits: EXTERNAL (100.100.108.30)
+# [auto] 4553 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514
     protocol: tcp
     destination-port: TCP_1514
@@ -80,7 +80,7 @@ filters:
       (4553 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 909 hits: EXTERNAL (100.100.108.30)
+# [auto] 909 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1515
     protocol: tcp
     destination-port: TCP_1515
@@ -88,7 +88,7 @@ filters:
       (909 hits) -- a single destination: name it or deny it, ANY is not the answer
       either way'
     action: accept
-# [auto] 17538 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4)
+# [auto] 17538 hits: EXTERNAL (2a07:1181:95:95::4, 100.95.95.4) [never answered]
   - name: allow-udp-DNS-UDP
     protocol: udp
     destination-port: DNS-UDP
