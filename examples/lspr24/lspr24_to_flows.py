@@ -58,6 +58,11 @@ schedule, so a policy derived from it does not depend on the dataset's Label
 column (which is circular — Label is defined as "the peer is a red-team host",
 not as a behavioural detection).
 
+TIMES. --window names one; --since and --until take what journalctl takes
+(firru.times): `night`, `"d2 09:00"`, `"2024-03-07 12:00"`, `"-2h"`, with a
+window name standing for a day. Times are in UTC+02 unless they say ` UTC`.
+The window used is printed, in UTC, before any flow.
+
 CAVEAT. Under partial capture an uncaptured return path reads as
 not-responded, the same caveat Arkime and Zeek carry.
 """
@@ -67,8 +72,10 @@ import functools
 import ipaddress
 import json
 import sys
+from datetime import timezone
 
 from firru.flows import zeek_direction_known
+from firru.times import TimeParser
 
 # LSPR24 stores the IANA protocol number; the pipeline wants a name.
 PROTO_NAMES = {1: "icmp", 6: "tcp", 17: "udp", 58: "icmpv6", 132: "sctp"}
@@ -84,14 +91,15 @@ BLOCKED_STATES = frozenset({"S0", "REJ", "RSTOS0", "SH"})
 # see the note on the practice axis above.
 REFUSAL_MAX_PKTS = 1
 
-# Local-time window presets; see the module docstring.
+# Window presets in the timestamps' local zone, UTC+02; see the module docstring.
+ZONE = "+02:00"
 WINDOWS = {
-    "d1":       ("2024-03-06 10", "2024-03-06 18"),
-    "night":    ("2024-03-06 19", "2024-03-07 08"),
-    "d1+night": ("2024-03-06 10", "2024-03-07 08"),
-    "d2":       ("2024-03-07 08", "2024-03-07 18"),
-    "all":      (None, None),
+    "d1":       ("2024-03-06 10:00", "2024-03-06 18:00"),
+    "night":    ("2024-03-06 19:00", "2024-03-07 08:00"),
+    "d1+night": ("2024-03-06 10:00", "2024-03-07 08:00"),
+    "d2":       ("2024-03-07 08:00", "2024-03-07 18:00"),
 }
+TIMES = TimeParser(ZONE, windows=WINDOWS)
 
 # The 12 of 101 columns actually needed; projecting them keeps the 2.8 GB file
 # streamable in a few hundred MB.
@@ -190,28 +198,21 @@ def row_to_flow(row, max_refusal_pkts=REFUSAL_MAX_PKTS):
     return flow
 
 
-def _hour_to_micros(hour_str):
-    """'YYYY-MM-DD HH' in the timestamps' local zone (UTC+02) -> epoch
-    microseconds. The zone is fixed: a naive datetime would take the zone of
-    whatever machine runs this, and shift every window outside UTC+02."""
-    import datetime
-    dt = datetime.datetime.strptime(hour_str, "%Y-%m-%d %H").replace(
-        tzinfo=datetime.timezone(datetime.timedelta(hours=2)))
-    return int(dt.timestamp() * 1_000_000)
+def micros(text, end=False):
+    """A --since/--until value (firru.times, UTC+02 unless it says UTC) as the
+    epoch microseconds LSPR24 timestamps are written in."""
+    return int(TIMES.parse(text, end=end).timestamp() * 1_000_000)
 
 
-def iter_rows(path, start_hr, end_hr, batch_size=131072):
+def iter_rows(path, lo, hi, batch_size=131072):
     """Stream the parquet in batches, yielding row dicts inside the window."""
     try:
         import pyarrow.parquet as pq
     except ImportError:
         sys.exit("lspr24_to_flows.py needs pyarrow: pip install 'firru[lspr24]'")
 
-    # Resolve the window to integer bounds once; comparing per row is otherwise
-    # a datetime construction and strftime across 20M rows.
-    lo = _hour_to_micros(start_hr) if start_hr else None
-    hi = _hour_to_micros(end_hr) if end_hr else None
-
+    # The window arrives as integer bounds (or None for all of it): comparing
+    # per row would otherwise be a datetime construction across 20M rows.
     pf = pq.ParquetFile(path)
     for batch in pf.iter_batches(batch_size=batch_size, columns=COLUMNS):
         if lo is not None:
@@ -229,12 +230,13 @@ def main():
         description=__doc__.splitlines()[1],
         formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("parquet", help="LSPR24 parquet file (lspr24_v2.parquet)")
-    ap.add_argument("--window", choices=sorted(WINDOWS), default="all",
+    ap.add_argument("--window", choices=sorted(WINDOWS) + ["all"], default="all",
                     help="named exercise window (default: all); see the module docstring")
-    ap.add_argument("--start", metavar="'YYYY-MM-DD HH'",
-                    help="explicit window start, overrides --window")
-    ap.add_argument("--end", metavar="'YYYY-MM-DD HH'",
-                    help="explicit window end (exclusive), overrides --window")
+    ap.add_argument("--since", metavar="TIME",
+                    help="window start, as journalctl takes it: a window name, "
+                         "'d2 09:00', '2024-03-07 12:00', '-2h'; overrides --window")
+    ap.add_argument("--until", metavar="TIME",
+                    help="window end (exclusive), same forms; overrides --window")
     ap.add_argument("--refusal-max-pkts", type=int, default=REFUSAL_MAX_PKTS,
                     metavar="N",
                     help="an OTH flow returning at most N packets, one a RST, "
@@ -248,17 +250,26 @@ def main():
                          "zone taken from the org unit in the FQDN (baf/beg/bgp)")
     args = ap.parse_args()
 
-    start_hr, end_hr = WINDOWS[args.window]
-    if args.start or args.end:
-        start_hr, end_hr = args.start, args.end
-        if not (start_hr and end_hr):
-            ap.error("--start and --end must be given together")
+    since = args.since or (args.window if args.window != "all" else None)
+    until = args.until or (args.window if args.window != "all" else None)
+    if bool(since) != bool(until):
+        ap.error("--since and --until go together (or name a --window)")
+    try:
+        lo, hi = (micros(since), micros(until, end=True)) if since else (None, None)
+    except (ValueError, KeyError) as e:
+        ap.error(str(e))
+    if lo is not None and lo >= hi:
+        ap.error(f"the window ends before it starts ({since} .. {until})")
+    print("window: " + ("all of the file" if lo is None else
+          f"{TIMES.parse(since).astimezone(timezone.utc):%Y-%m-%d %H:%M}Z to "
+          f"{TIMES.parse(until, end=True).astimezone(timezone.utc):%Y-%m-%d %H:%M}Z"),
+          file=sys.stderr)
 
     hostmap, zonemap = {}, {}
     out = sys.stdout.write
     count = skipped = 0
 
-    for row in iter_rows(args.parquet, start_hr, end_hr):
+    for row in iter_rows(args.parquet, lo, hi):
         flow = row_to_flow(row, args.refusal_max_pkts)
         if flow is None:
             skipped += 1
