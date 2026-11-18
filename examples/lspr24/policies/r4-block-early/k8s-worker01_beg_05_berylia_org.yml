@@ -116,7 +116,7 @@ filters:
     destination-port: BGP
     destination-address: k8s-control-plane_beg_05_berylia_org
     action: accept
-# [auto] 2184 hits: EXTERNAL (2a07:1181:95:95::4) [never answered]
+# [auto] 2184 hits: EXTERNAL (2a07:1181:95:95::4)
   - name: allow-tcp-DNS-TCP
     protocol: tcp
     destination-port: DNS-TCP

@@ -33,7 +33,7 @@ filters:
         action: accept
         source-address: BEG_GT_OTHER  # was: ANY
 
-# [auto] 900 flows total | 900 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250) [never answered] | via: WINDOWS-SMB/tcp/445
+# [auto] 900 flows total | 900 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250) | via: WINDOWS-SMB/tcp/445
       - name: allow-tcp-WINDOWS-SMB
         protocol: tcp
         destination-port: WINDOWS-SMB
@@ -110,7 +110,7 @@ filters:
           - BEG_GT_OTHER
           - beg
         action: accept
-# [auto] 3112 hits: EXTERNAL (2a07:1181:95:95::4) [never answered]
+# [auto] 3112 hits: EXTERNAL (2a07:1181:95:95::4)
       - name: allow-tcp-DNS-TCP
         protocol: tcp
         destination-port: DNS-TCP

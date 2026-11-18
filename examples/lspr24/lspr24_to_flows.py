@@ -35,6 +35,14 @@ are real sessions that happened to end in a reset. --refusal-max-pkts
 widens or disables it. The raw conn_state is passed through so either
 definition can be recovered downstream.
 
+IPv6 TCP is different. Every one of LSPR24's 2.41M IPv6 TCP rows has all TCP
+flags at zero, a window of 0 and often no payload: the CICFlowMeter that
+produced the dataset does not read the TCP header on its IPv6 path. With no
+flags there is no handshake evidence and no RST test, and the backward count
+comes from the same parser. So an IPv6 TCP row is `responded: true` only when
+more packets came back than a lone refusal sends, and otherwise `null`
+(unknown), never `false`: nothing in the row can show a refusal.
+
 WINDOWS. The exercise is two execution days with an attack-free night between
 them; the 03-01..03-05 run-up is idle (~58 flows/hour) and excluded by every
 preset except `all`. Named presets (UTC+02, the timestamps' local zone):
@@ -117,6 +125,13 @@ def _responded(conn_state, resp_pkts, rst_cnt=0, max_refusal_pkts=REFUSAL_MAX_PK
     return n > 0
 
 
+def _responded_v6_tcp(resp_pkts, max_refusal_pkts=REFUSAL_MAX_PKTS):
+    """IPv6 TCP rows carry no flags (see module docstring): an answer shows as
+    more returned packets than a refusal sends; anything less is unknown."""
+    n = resp_pkts or 0
+    return True if n > max(max_refusal_pkts, 0) else None
+
+
 @functools.lru_cache(maxsize=1 << 16)
 def canonical_ip(ip):
     """RFC 5952 text form, as the flow record requires: LSPR24 writes IPv6
@@ -155,8 +170,10 @@ def row_to_flow(row, max_refusal_pkts=REFUSAL_MAX_PKTS):
         "end_time":   int(last // 1_000_000) if last is not None else None,
         "orig_pkts":  row.get("Tot Fwd Pkts"),
         "resp_pkts":  resp_pkts,
-        "responded":  _responded(conn_state, resp_pkts,
-                                 row.get("RST Flag Cnt"), max_refusal_pkts),
+        "responded":  (_responded_v6_tcp(resp_pkts, max_refusal_pkts)
+                       if proto == "tcp" and ":" in src_ip else
+                       _responded(conn_state, resp_pkts,
+                                  row.get("RST Flag Cnt"), max_refusal_pkts)),
         "conn_state": conn_state,
         "source":     "lspr24",
         "direction_known": zeek_direction_known(conn_state),

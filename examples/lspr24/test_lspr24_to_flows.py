@@ -77,6 +77,31 @@ def test_default_threshold_is_the_unambiguous_one():
     assert REFUSAL_MAX_PKTS == 1
 
 
+def _v6(**kw):
+    return _row(SrcIP="2a07:1182:0005:0020:0000:0000:0000:0031",
+                DstIP="2a07:1181:0095:0095:0000:0000:0000:0004",
+                **{"RST Flag Cnt": 0, **kw})
+
+
+def test_ipv6_tcp_with_nothing_back_is_unknown_not_refused():
+    """CICFlowMeter reads no TCP header on IPv6: no flags, so no evidence of
+    a refusal. 8 packets out, none back, as on LSPR24's k8s-worker01."""
+    assert row_to_flow(_v6(**{"Tot Fwd Pkts": 8, "Tot Bwd Pkts": 0}))["responded"] is None
+
+
+def test_ipv6_tcp_with_one_packet_back_is_unknown_too():
+    """One packet back may be the RST the row cannot show."""
+    assert row_to_flow(_v6(**{"Tot Bwd Pkts": 1}))["responded"] is None
+
+
+def test_ipv6_tcp_answered_is_still_answered():
+    assert row_to_flow(_v6(**{"Tot Bwd Pkts": 5}))["responded"] is True
+
+
+def test_ipv6_udp_keeps_the_packet_test():
+    assert row_to_flow(_v6(Protocol=17, **{"Tot Bwd Pkts": 0}))["responded"] is False
+
+
 def test_addresses_come_out_canonical():
     from lspr24_to_flows import row_to_flow
     f = row_to_flow({"SrcIP": "2A07:1182:0005:0012:0000:0000:0000:0002",

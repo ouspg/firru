@@ -10,14 +10,14 @@ filters:
         nftables: mixed input DROP
     terms:
 
-# [auto] 2715 flows total | 2715 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) [2126 unanswered] | via: SSH/tcp/22
+# [auto] 2715 flows total | 2715 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) [1418 unanswered] | via: SSH/tcp/22
       - name: allow-tcp-SSH
         protocol: tcp
         destination-port: SSH
         action: accept
         source-address: BEG_INT_GT_OTHER  # was: BEG_INT_GT
 
-# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) [1425 unanswered] | via: RDP/tcp/3389
+# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) [713 unanswered] | via: RDP/tcp/3389
       - name: allow-tcp-RDP
         protocol: tcp
         destination-port: RDP

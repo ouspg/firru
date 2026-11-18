@@ -123,7 +123,8 @@ listening service that was tried answered somebody.
 ### Host state splits what traffic cannot
 
 LSPR24's `Conn_state` names no blocked connection: `S0` and `REJ` occur zero
-times in 20.2M rows. What the capture does show is that 38.5% of flows got
+times in 20.2M rows, and its IPv6 TCP rows, which carry no flags, could not
+show them. What the capture does show is that 38.5% of flows got
 nothing back. Joined to the listening tables, that splits in two:
 
 | inbound TCP | flows | no reply |
@@ -283,6 +284,11 @@ attacker's.
   across teams.
 - **One day of loot.** The archive covers 2024-03-07, about 15 hours; flows
   span the week, so loot and flows overlap on one day.
+- **No TCP header on IPv6.** All 2.41M IPv6 TCP rows have every TCP flag at
+  zero and a window of 0: the CICFlowMeter that built the dataset does not
+  parse the TCP header on its IPv6 path. Such a row cannot show a handshake or
+  a refusal, so `lspr24_to_flows.py` records one as answered only when more
+  than one packet came back, and otherwise as unknown, never as refused.
 
 ## The inventory
 

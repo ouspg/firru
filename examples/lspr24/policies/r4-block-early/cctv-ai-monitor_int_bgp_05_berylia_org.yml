@@ -60,7 +60,7 @@ filters:
     - bgp_int
     - core
     action: accept
-# [auto] 9194 hits: EXTERNAL (2a07:1181:95:95::4) [never answered]
+# [auto] 9194 hits: EXTERNAL (2a07:1181:95:95::4)
   - name: allow-tcp-DNS-TCP
     protocol: tcp
     destination-port: DNS-TCP

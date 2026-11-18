@@ -177,7 +177,7 @@ filters:
           - dc1_int_beg_05_berylia_org
           - dc2_int_beg_05_berylia_org
         action: accept
-# [auto] 7 hits: EXTERNAL (2a02:26f0:e2::5f65:8e20) [never answered]
+# [auto] 7 hits: EXTERNAL (2a02:26f0:e2::5f65:8e20)
       - name: allow-tcp-HTTP
         protocol: tcp
         destination-port: HTTP

@@ -17,14 +17,14 @@ filters:
         action: accept
         source-address: BEG_GT_OTHER  # was: BEG_GT
 
-# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) [900 unanswered] | via: HTTP/tcp/80
+# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: HTTP/tcp/80
       - name: allow-tcp-HTTP
         protocol: tcp
         destination-port: HTTP
         action: accept
         source-address: BEG_INT_GT_OTHER  # was: ANY_V4
 
-# [auto] 1799 flows total | 1799 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250, 10.5.12.250) [900 unanswered] | via: HTTPS/tcp/443
+# [auto] 1799 flows total | 1799 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250, 10.5.12.250) | via: HTTPS/tcp/443
       - name: allow-tcp-HTTPS
         protocol: tcp
         destination-port: HTTPS
