@@ -13,7 +13,6 @@ import pytest
 
 from firru.cli.tighten import (
     _bucket_flow,
-    _is_any_source,
     _is_broadcast_or_multicast,
     best_tokens,
     collect_flows_from_file,
@@ -164,17 +163,6 @@ class TestCollectFromFile:
 class TestGetHostIps:
     def test_an_unresolvable_token_yields_nothing_rather_than_raising(self):
         assert get_host_ips("NO_SUCH_HOST", StubDefs()) == []
-
-
-class TestAnySource:
-    @pytest.mark.parametrize("src", [None, "", "ANY", "ANY_V4", "ANY_V6",
-                                     ["NET_APP", "ANY_V6"]])
-    def test_unrestricted_forms(self, src):
-        assert _is_any_source(src)
-
-    @pytest.mark.parametrize("src", ["NET_APP", ["NET_APP", "NET_MGMT"]])
-    def test_restricted_forms(self, src):
-        assert not _is_any_source(src)
 
 
 class StubAnnotator:

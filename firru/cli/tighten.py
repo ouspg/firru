@@ -757,14 +757,6 @@ def find_blocked(ingress_flows, tightened_terms, annotator, defs, ingress_ports)
 # Ingress tightening
 # ---------------------------------------------------------------------------
 
-def _is_any_source(src):
-    """Return True if source-address is an ANY wildcard (or list containing one)."""
-    if not src:
-        return True
-    tokens = [src] if isinstance(src, str) else list(src)
-    return any(t in ("ANY", "ANY_V4", "ANY_V6") for t in tokens)
-
-
 def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=False,
                     ingress_ports=None, dns_store=None, asn_db=None, any_rows=None,
                     host_token=None):
