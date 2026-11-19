@@ -239,7 +239,7 @@ class TestNeverAnswered:
         (line,) = self._sh(tmp_path, capsys, flows, "NET_MGMT")
         assert line.startswith("# firru set-source ")
         assert line.endswith("# widened: would admit "
-                             "3 never-answered flow(s) from 10.9.2.2×3")
+                             "3 never-answered flow(s) from 10.9.2.2 (NET_MGMT)×3")
 
     def test_a_peer_answered_once_is_not(self, tmp_path, capsys):
         flows = self._flows(tmp_path, ("10.9.2.2", 3, False), ("10.9.2.2", 1, True))
@@ -257,7 +257,7 @@ class TestNeverAnswered:
         out = _run(tmp_path, [_t("allow-tcp-SSH", "SSH")],
                    [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")], flows,
                    output="human", capsys=capsys)
-        assert "!! WIDENED: admits 3 never-answered flow(s) from 10.9.2.2×3" in out
+        assert "!! WIDENED: admits 3 never-answered flow(s) from 10.9.2.2 (NET_MGMT)×3" in out
 
 
 class TestShProvenance:
@@ -337,3 +337,25 @@ def test_the_host_is_found_by_its_file_name_when_its_label_is_not_a_token(tmp_pa
     cmd_diff(argparse.Namespace(old=paths[0], new=paths[1], defs=defs, output="sh",
                                 direction="in", flows=flows))
     assert "# narrowed observed (4 flows)" in capsys.readouterr().out
+
+
+def test_cut_peers_are_named_by_the_inventory(tmp_path):
+    from collections import Counter
+    from firru.cli.edit import _name_peers
+    d = tmp_path / "def"
+    d.mkdir()
+    (d / "services.yml").write_text("services:\n  SSH: [{port: 22, protocol: tcp}]\n")
+    (d / "networks.yml").write_text(textwrap.dedent("""\
+        networks:
+          GT1:
+            values:
+              - address: 10.9.1.1/32
+              - address: 2001:db8::11/128
+          NET_MGMT:
+            values:
+              - address: 10.9.0.0/16
+    """))
+    ev = {1: {"cut": Counter({"10.9.1.1": 5, "2001:db8::11": 2, "10.9.2.2": 1,
+                              "192.0.2.7": 3}), "silent": Counter()}}
+    _name_peers(ev, str(d))
+    assert ev[1]["cut"] == Counter({"GT1": 7, "10.9.2.2 (NET_MGMT)": 1, "192.0.2.7": 3})

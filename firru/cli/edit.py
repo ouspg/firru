@@ -492,6 +492,31 @@ def _fmt_silent(silent, limit=3):
     return _fmt_cut(silent, limit).replace("observed flow(s)", "never-answered flow(s)", 1)
 
 
+def _peer_label(ip, annotator):
+    """How a peer reads in a report: a host by its inventory token (its v4
+    and v6 addresses then count together), an address inside a network token
+    as `ip (TOKEN)`, anything else as the address."""
+    a = annotator.annotate_ip(ip)
+    if a["type"] == "HOST":
+        return a["host"]
+    if a["type"] == "GROUP":
+        return f"{ip} ({(a.get('parents') or [a['host']])[0]})"
+    return ip
+
+
+def _name_peers(evidence, defs_dir):
+    """Relabel the peers in each record's `cut` and `silent` by _peer_label.
+    Both are only ever reported, so the addresses are not needed after."""
+    from firru.annotator import PolicyAnnotator
+    annotator = PolicyAnnotator(defs_dir)
+    for rec in evidence.values():
+        for key in ("cut", "silent"):
+            named = Counter()
+            for ip, n in rec[key].items():
+                named[_peer_label(ip, annotator)] += n
+            rec[key] = named
+
+
 def _fmt_cut(cut, limit=3):
     # Deterministic order: count descending, then peer string — so the example
     # list is stable regardless of the order flows were read (Counter ties would
@@ -967,6 +992,8 @@ def _cmd_diff_body(args, defs):
         ev, _ = _host_flow_index(args.flows, (new_doc, old_doc), defs,
                                  getattr(args, "flow_span", None), (args.new, args.old))
     evidence = _diff_evidence(ev, old_doc, new_doc, defs, result) if ev is not None else None
+    if evidence:
+        _name_peers(evidence, args.defs)
     zero_ev = (_zero_evidence(ev, old_doc, defs, _direction_arg(args), result)
                if ev is not None and getattr(args, "zero_evidence", False)
                else None)
