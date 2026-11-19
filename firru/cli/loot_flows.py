@@ -94,7 +94,10 @@ Examples:
     mode = "a" if args.append else "w"
     out_path = Path(args.output)
 
-    print(f"Querying {backend} (date={args.date}) → {out_path} "
+    window = ("all of it" if args.all_time else
+              f"{args.start_time} to {args.stop_time or 'now'}" if args.start_time else
+              f"last {args.date} h")
+    print(f"Querying {backend} ({window}) → {out_path} "
           f"({'append' if args.append else 'overwrite'}) …", file=sys.stderr)
 
     written = skipped = 0
