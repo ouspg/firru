@@ -487,7 +487,7 @@ def window_line(source, span):
     return f"Flows: {source}, {_when(span[0])} to {_when(span[1])}"
 
 
-def collect_flows_from_file(flows_file, host_ips, defs, span=None):
+def collect_flows_from_file(flows_file, host_ips, defs, span=None, window=None):
     """
     Read pre-normalised flows from a .jsonl file (process_flow() output).
     Filters to flows involving host_ips.
@@ -499,7 +499,7 @@ def collect_flows_from_file(flows_file, host_ips, defs, span=None):
     ingress_ports = defaultdict(Counter)
     egress_ports  = defaultdict(Counter)
 
-    for flow in iter_flow_groups(flows_file, host_ips=host_ips_set):
+    for flow in iter_flow_groups(flows_file, host_ips=host_ips_set, span=window):
         _bucket_flow(flow, host_ips_set, defs, ingress, egress, ingress_ports, egress_ports)
         if span is not None:
             _widen(span, flow)
@@ -507,7 +507,7 @@ def collect_flows_from_file(flows_file, host_ips, defs, span=None):
     return ingress, egress, ingress_ports, egress_ports
 
 
-def collect_flows_multi(flows_file, host_ips_by_token, defs, spans=None):
+def collect_flows_multi(flows_file, host_ips_by_token, defs, spans=None, window=None):
     """
     Bucket a single flows file for many hosts in ONE pass.
 
@@ -519,6 +519,8 @@ def collect_flows_multi(flows_file, host_ips_by_token, defs, spans=None):
     destination, egress for the source).
 
     Returns {host_token: (ingress, egress, ingress_ports, egress_ports)}.
+    `window` (start, end) in epoch seconds limits the read to that time;
+    `spans` collects, per host, the first and last flow actually read.
 
     From a parquet store, iter_flow_groups pushes the host-address filter down
     and hands back counted groups, so the cost follows the matched flows; a
@@ -541,7 +543,7 @@ def collect_flows_multi(flows_file, host_ips_by_token, defs, spans=None):
     scanned = matched = groups = 0
     # The fleet IP union pushes down as a parquet predicate; on JSONL it filters
     # in Python, exactly as before.
-    for flow in iter_flow_groups(flows_file, host_ips=set(ip_owner)):
+    for flow in iter_flow_groups(flows_file, host_ips=set(ip_owner), span=window):
         scanned += flow.get("n", 1)
         groups += 1
         owners = ip_owner.get(flow.get("src_ip"))
@@ -1227,7 +1229,25 @@ Examples:
                              "(default $GEOIP_ASN_DB or a local GeoLite2-ASN.mmdb)")
     parser.add_argument("--verbose", "-v", action="store_true",
                         help="In via: annotations, show top source hosts per sub-service")
+    from firru.project import add_window_arguments, flows_for
+    add_window_arguments(parser)
     args = parser.parse_args()
+
+    # A window reads the named flows, or the project's store; against Arkime
+    # it becomes the query's start and stop.
+    try:
+        named = args.flows_file or (args.arkime and "arkime")
+        flows, window, window_label = flows_for(args, named)
+    except ValueError as e:
+        parser.error(str(e))
+    if window and args.arkime:
+        if window[0] is not None:
+            args.start_time = str(int(window[0]))
+        if window[1] is not None:
+            args.stop_time = str(int(window[1]))
+        window = None
+    elif flows and not args.arkime:
+        args.flows_file = flows
 
     # Both only ever affect a comment, so a missing database is not an error.
     dns_store = load_dns_store(args.dns_store)
@@ -1330,7 +1350,7 @@ Examples:
         prescanned = collect_flows_multi(
             args.flows_file,
             {tok: ips for _, _, tok, ips in resolved if ips},
-            defs, spans=spans)
+            defs, spans=spans, window=window)
 
     for policy_path, policy, host_token, host_ips in resolved:
       if not host_ips:
@@ -1352,6 +1372,8 @@ Examples:
           ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(str(flows_file), host_ips, defs, span=span)
       elif prescanned is not None:
           span, source = spans.get(host_token), args.flows_file
+          if window_label:
+              source = f"{source} [{window_label}]"
           empty = (defaultdict(Hits), defaultdict(Hits),
                    defaultdict(Counter), defaultdict(Counter))
           ingress_flows, egress_flows, ingress_ports, egress_ports = \
@@ -1359,7 +1381,10 @@ Examples:
       elif args.flows_file:
           print(f"Reading flows from {args.flows_file} …", file=sys.stderr)
           span, source = [None, None], args.flows_file
-          ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(args.flows_file, host_ips, defs, span=span)
+          if window_label:
+              source = f"{source} [{window_label}]"
+          ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(
+              args.flows_file, host_ips, defs, span=span, window=window)
       else:
           window = f"{args.start_time}-{args.stop_time or 'now'}" if args.start_time else f"{args.date}h"
           print(f"Querying Arkime ({window}) …", file=sys.stderr)

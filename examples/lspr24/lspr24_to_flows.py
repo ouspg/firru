@@ -7,11 +7,13 @@ LSPR24 is the Locked Shields Partner Run 2024 flow dataset: ~20.2M flows over
 2024-03-01..03-07, CICFlowMeter features plus a Zeek `conn_state` and per-host
 FQDNs. It is the one public dataset firru can be driven end-to-end on.
 
-    python lspr24_to_flows.py lspr24_v2.parquet --window night > night.jsonl
-    flows-to-listeners --input night.jsonl --hostnames hosts.json --output loot/
+    python lspr24_to_flows.py data/lspr24_v2.parquet --store data/flows/   # all of it
+    python lspr24_to_flows.py data/lspr24_v2.parquet --window night > night.jsonl
 
-Output is one JSON object per flow, the same shape as firru.arkime.process_flow
-and zeek-to-flows, so flow-verdict and flow_analysis.sql are unchanged:
+--store writes the flows as the hour-partitioned parquet store zeek-to-flows
+writes, which firru tighten and firru diff read for a window
+(`--window night`); without it, one JSON object per flow goes to stdout. Both
+have the shape of firru.arkime.process_flow and zeek-to-flows:
 
     protocol src_ip dst_ip src_port dst_port originator
     timestamp end_time orig_pkts resp_pkts responded conn_state
@@ -45,13 +47,16 @@ more packets came back than a lone refusal sends, and otherwise `null`
 
 WINDOWS. The exercise is two execution days with an attack-free night between
 them; the 03-01..03-05 run-up is idle (~58 flows/hour) and excluded by every
-preset except `all`. Named presets (UTC+02, the timestamps' local zone):
+window. The windows are firru.toml's, beside this script (UTC+02, the
+timestamps' local zone):
 
-    d1        2024-03-06 10:00-18:00   2,234,628 flows, 0.466% red
-    night     2024-03-06 19:00-08:00   3,570,813 flows, 0 red
-    d1+night  2024-03-06 10:00-08:00   both of the above
-    d2        2024-03-07 08:00-18:00   2,259,098 flows, 0.278% red
-    all       everything in the file
+    d1        2024-03-06 10:00-18:00    5,027,792 flows, 4.173% red
+    night     2024-03-06 19:00-08:00    9,385,895 flows, 0.009% red
+    d1+night  2024-03-06 10:00-08:00   15,121,074 flows (18:00-19:00 too)
+    d2        2024-03-07 08:00-18:00    5,099,940 flows, 5.954% red
+    all       everything in the file (the default), 20,227,356 flows
+
+"Red" is a flow with a red-team host at either end (rt_src or rt_dst).
 
 `night` is the natural learning window: it is attack-free by the exercise
 schedule, so a policy derived from it does not depend on the dataset's Label
@@ -63,6 +68,11 @@ TIMES. --window names one; --since and --until take what journalctl takes
 window name standing for a day. Times are in UTC+02 unless they say ` UTC`.
 The window used is printed, in UTC, before any flow.
 
+THE STORE is written in SQL, not row by row: every field above is an
+expression over the dataset's columns, so all 20M rows convert in seconds.
+The two paths are pinned to agree by test_lspr24_to_flows.py, which writes
+both from the same rows.
+
 CAVEAT. Under partial capture an uncaptured return path reads as
 not-responded, the same caveat Arkime and Zeek carry.
 """
@@ -71,11 +81,12 @@ import argparse
 import functools
 import ipaddress
 import json
+import pathlib
 import sys
 from datetime import timezone
 
-from firru.flows import zeek_direction_known
-from firru.times import TimeParser
+from firru import project
+from firru.flows import DIRECTED_STATES, zeek_direction_known
 
 # LSPR24 stores the IANA protocol number; the pipeline wants a name.
 PROTO_NAMES = {1: "icmp", 6: "tcp", 17: "udp", 58: "icmpv6", 132: "sctp"}
@@ -91,23 +102,19 @@ BLOCKED_STATES = frozenset({"S0", "REJ", "RSTOS0", "SH"})
 # see the note on the practice axis above.
 REFUSAL_MAX_PKTS = 1
 
-# Window presets in the timestamps' local zone, UTC+02; see the module docstring.
-ZONE = "+02:00"
-WINDOWS = {
-    "d1":       ("2024-03-06 10:00", "2024-03-06 18:00"),
-    "night":    ("2024-03-06 19:00", "2024-03-07 08:00"),
-    "d1+night": ("2024-03-06 10:00", "2024-03-07 08:00"),
-    "d2":       ("2024-03-07 08:00", "2024-03-07 18:00"),
-}
-TIMES = TimeParser(ZONE, windows=WINDOWS)
+# The windows and their zone, from the firru.toml beside this script, so every
+# script in the example and every firru command run here agree on them.
+PROJECT = project.load(pathlib.Path(__file__).resolve().parent)
+WINDOWS = PROJECT.windows
+TIMES = PROJECT.times()
 
-# The 12 of 101 columns actually needed; projecting them keeps the 2.8 GB file
+# The 13 of 101 columns actually needed; projecting them keeps the 2.8 GB file
 # streamable in a few hundred MB.
 COLUMNS = [
     "SrcIP", "DstIP", "SrcPort", "DstPort", "Protocol",
     "mTimestampStart", "mTimestampLast",
     "Tot Fwd Pkts", "Tot Bwd Pkts", "Conn_state", "RST Flag Cnt",
-    "Segment_src", "Segment_dst", "Label_src", "Label_dst",
+    "Label_src", "Label_dst",
 ]
 
 # Label_src/Label_dst == 1 marks a red-team host, emitted as the record's
@@ -198,6 +205,20 @@ def row_to_flow(row, max_refusal_pkts=REFUSAL_MAX_PKTS):
     return flow
 
 
+def flow_rows(flows, window=None):
+    """SQL for the flow records in `flows`, a store or a JSONL file, cut to a
+    window firru.toml names (or all of them)."""
+    from firru.flows import flow_relation, is_parquet, window_where
+    if is_parquet(flows):
+        rel, columns = flow_relation(flows), {"timestamp", "hour"}
+    else:
+        rel, columns = f"read_json({flows!r}, format='newline_delimited')", {"timestamp"}
+    if not window:
+        return rel
+    span = tuple(t.timestamp() for t in TIMES.window(window))
+    return f"(SELECT * FROM {rel} WHERE {' AND '.join(window_where(span, columns))})"
+
+
 def micros(text, end=False):
     """A --since/--until value (firru.times, UTC+02 unless it says UTC) as the
     epoch microseconds LSPR24 timestamps are written in."""
@@ -225,13 +246,81 @@ def iter_rows(path, lo, hi, batch_size=131072):
         yield from batch.to_pylist()
 
 
+def _sql_list(values):
+    return ", ".join(f"'{v}'" for v in sorted(values))
+
+
+def write_store(path, out, lo=None, hi=None, max_refusal_pkts=REFUSAL_MAX_PKTS):
+    """Write the flows of `path` (epoch microseconds [lo, hi), or all of it) to
+    `out` as an hour-partitioned flow store. Each field is row_to_flow's rule
+    as an SQL expression; test_lspr24_to_flows.py pins the two together."""
+    import duckdb
+    con = duckdb.connect()
+    src = f"read_parquet({str(path)!r})"
+    window = (f' AND "mTimestampStart" >= {int(lo)} AND "mTimestampStart" < {int(hi)}'
+              if lo is not None else "")
+
+    # canonical_ip in SQL is a join: the distinct addresses are few.
+    ips = [r[0] for r in con.sql(
+        f'SELECT DISTINCT "SrcIP" FROM {src} UNION SELECT DISTINCT "DstIP" FROM {src}').fetchall()
+        if r[0]]
+    con.execute("CREATE TABLE canon (raw VARCHAR, ip VARCHAR)")
+    con.executemany("INSERT INTO canon VALUES (?, ?)", [(ip, canonical_ip(ip)) for ip in ips])
+
+    proto = " ".join(f"WHEN {n} THEN '{name}'" for n, name in PROTO_NAMES.items())
+    n_back, rst = 'coalesce(r."Tot Bwd Pkts", 0)', 'coalesce(r."RST Flag Cnt", 0)'
+    refused = (f"{max_refusal_pkts} >= 0 AND {n_back} > 0 AND {n_back} <= {max_refusal_pkts}"
+               f" AND {rst} > 0")
+    label = lambda col: (f'CASE WHEN r."{col}" IS NULL THEN NULL '
+                         f'ELSE CAST(r."{col}" AS VARCHAR) = \'{RED_TEAM_LABEL}\' END')
+    import os
+    os.makedirs(out, exist_ok=True)
+    con.execute(f"""
+        COPY (
+          SELECT
+            CASE r."Protocol" {proto} ELSE CAST(r."Protocol" AS VARCHAR) END AS protocol,
+            s.ip AS src_ip,
+            d.ip AS dst_ip,
+            CAST(r."SrcPort" AS BIGINT) AS src_port,
+            CAST(r."DstPort" AS BIGINT) AS dst_port,
+            s.ip AS originator,
+            r."mTimestampStart" / 1e6 AS timestamp,
+            r."mTimestampLast" / 1e6 AS end_time,
+            CAST(r."Tot Fwd Pkts" AS BIGINT) AS orig_pkts,
+            CAST(r."Tot Bwd Pkts" AS BIGINT) AS resp_pkts,
+            CASE
+              WHEN r."Protocol" = 6 AND contains(s.ip, ':')
+                THEN CASE WHEN {n_back} > greatest({max_refusal_pkts}, 0) THEN true END
+              WHEN r."Conn_state" IN ({_sql_list(RESPONDED_STATES)}) THEN true
+              WHEN r."Conn_state" IN ({_sql_list(BLOCKED_STATES)}) THEN false
+              WHEN {refused} THEN false
+              ELSE {n_back} > 0
+            END AS responded,
+            r."Conn_state" AS conn_state,
+            'lspr24' AS source,
+            coalesce(r."Conn_state" IN ({_sql_list(DIRECTED_STATES)}), false) AS direction_known,
+            {label("Label_src")} AS rt_src,
+            {label("Label_dst")} AS rt_dst,
+            strftime(make_timestamp(CAST(r."mTimestampStart" AS BIGINT)), '%Y-%m-%dT%H') AS hour
+          FROM {src} r
+          JOIN canon s ON s.raw = r."SrcIP"
+          JOIN canon d ON d.raw = r."DstIP"
+          WHERE r."Protocol" IS NOT NULL{window}
+        ) TO {str(out)!r}
+        (FORMAT parquet, PARTITION_BY (hour), OVERWRITE)
+    """)
+    return con.sql(f"SELECT count(*) FROM read_parquet({str(out) + '/**/*.parquet'!r})").fetchall()[0][0]
+
+
 def main():
     ap = argparse.ArgumentParser(
         description=__doc__.splitlines()[1],
         formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("parquet", help="LSPR24 parquet file (lspr24_v2.parquet)")
     ap.add_argument("--window", choices=sorted(WINDOWS) + ["all"], default="all",
-                    help="named exercise window (default: all); see the module docstring")
+                    help="named exercise window (default: all); see firru.toml")
+    ap.add_argument("--store", metavar="DIR",
+                    help="write a parquet flow store here instead of JSONL to stdout")
     ap.add_argument("--since", metavar="TIME",
                     help="window start, as journalctl takes it: a window name, "
                          "'d2 09:00', '2024-03-07 12:00', '-2h'; overrides --window")
@@ -243,11 +332,6 @@ def main():
                          f"counts as refused rather than answered "
                          f"(default {REFUSAL_MAX_PKTS}; -1 restores the plain "
                          "resp_pkts > 0 test)")
-    ap.add_argument("--hostmap", metavar="FILE",
-                    help="also write an IP -> FQDN map here, for flows-to-listeners --hostnames")
-    ap.add_argument("--zonemap", metavar="FILE",
-                    help="also write an FQDN -> {zone} host_metadata.json stub, "
-                         "zone taken from the org unit in the FQDN (baf/beg/bgp)")
     args = ap.parse_args()
 
     since = args.since or (args.window if args.window != "all" else None)
@@ -265,7 +349,11 @@ def main():
           f"{TIMES.parse(until, end=True).astimezone(timezone.utc):%Y-%m-%d %H:%M}Z"),
           file=sys.stderr)
 
-    hostmap, zonemap = {}, {}
+    if args.store:
+        n = write_store(args.parquet, args.store, lo, hi, args.refusal_max_pkts)
+        print(f"# {n} flows -> {args.store} (window={args.window})", file=sys.stderr)
+        return
+
     out = sys.stdout.write
     count = skipped = 0
 
@@ -276,29 +364,6 @@ def main():
             continue
         out(json.dumps(flow) + "\n")
         count += 1
-
-        # LSPR24 carries the FQDN inline on both ends, and the IP -> host
-        # mapping is 1:1 across the whole file, so the inventory falls out
-        # of the same pass.
-        for ip_key, name_key in (("SrcIP", "Segment_src"), ("DstIP", "Segment_dst")):
-            ip, name = row.get(ip_key), row.get(name_key)
-            if ip and name:
-                hostmap.setdefault(canonical_ip(ip), name)
-                if name not in zonemap:
-                    parts = name.split(".")
-                    # dc1.int.baf.05.berylia.org -> baf ; fw1-baf.5.berylia.org -> fw1-baf
-                    if len(parts) >= 4:
-                        zonemap[name] = {"zone": parts[-4]}
-
-    if args.hostmap:
-        with open(args.hostmap, "w") as f:
-            json.dump(hostmap, f, indent=2, sort_keys=True)
-        print(f"# {len(hostmap)} IP -> FQDN mappings -> {args.hostmap}", file=sys.stderr)
-
-    if args.zonemap:
-        with open(args.zonemap, "w") as f:
-            json.dump(zonemap, f, indent=2, sort_keys=True)
-        print(f"# {len(zonemap)} hosts with zones -> {args.zonemap}", file=sys.stderr)
 
     msg = f"# {count} flows emitted (window={args.window})"
     if skipped:

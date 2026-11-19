@@ -2,7 +2,7 @@
 """
 ladder — the block-early counterfactual, on LSPR24 instead of exercise data.
 
-    python3 ladder.py --parquet lspr24_v2.parquet --loot loot-ossec/
+    python3 ladder.py --parquet data/lspr24_v2.parquet --loot loot-ossec/
     python3 ladder.py ... --learn night --eval d2 --protected scored.txt
 
 Answers the question the exercise evaluation asks: of the attacker traffic a
@@ -78,12 +78,7 @@ import json
 import pathlib
 import sys
 
-WINDOWS = {   # the timestamps' local zone, UTC+02, as in lspr24_to_flows.py
-    "d1":       ("2024-03-06 10:00", "2024-03-06 18:00"),
-    "night":    ("2024-03-06 19:00", "2024-03-07 08:00"),
-    "d1+night": ("2024-03-06 10:00", "2024-03-07 08:00"),
-    "d2":       ("2024-03-07 08:00", "2024-03-07 18:00"),
-}
+from lspr24_to_flows import WINDOWS, micros   # firru.toml's windows
 
 
 def load_services(lootdir):
@@ -161,13 +156,12 @@ def main():
                 "from L join amap using (a)")
 
     for name, key in (("learn", args.learn), ("evalw", args.eval)):
-        s, e = WINDOWS[key]
         con.execute(f"""create view {name} as
           select "SrcIP" src, "DstIP" dip, "DstPort" dport, "Label_src" lsrc,
                  "Tot Bwd Pkts" bwd
           from read_parquet({P}) where "Protocol" = 6
-            and to_timestamp("mTimestampStart"/1e6) >= TIMESTAMPTZ '{s}+02'
-            and to_timestamp("mTimestampStart"/1e6) <  TIMESTAMPTZ '{e}+02'""")
+            and "mTimestampStart" >= {micros(key)}
+            and "mTimestampStart" <  {micros(key, end=True)}""")
 
     con.execute("""create view obs as select distinct s.a, s.port, l.src,
       (select min(m.a) from amap m where m.ip = l.src) src_asset

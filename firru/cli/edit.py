@@ -57,6 +57,7 @@ it:
 """
 
 import argparse
+import pathlib
 import sys
 from collections import Counter, defaultdict
 
@@ -306,7 +307,7 @@ def _direction_arg(args):
     return None if d in (None, "both") else d
 
 
-def _flow_evidence(flows_file, host_ips):
+def _flow_evidence(flows_file, host_ips, span=None):
     """``(direction, proto, port) -> Counter(peer_ip)`` from the flow record
     (JSONL or parquet), relative to one host. Peer = the far end: source for
     ingress, destination for egress.
@@ -318,24 +319,26 @@ def _flow_evidence(flows_file, host_ips):
     host against an hour of live traffic decides its block-early posture — where
     a whole-fleet pass over 147M flows is neither needed nor affordable. On a
     per-host JSONL file the filter is a cheap no-op over a small file."""
-    from firru.flows import iter_flows
+    from firru.flows import iter_flow_groups
     from firru.flows import Hits
     ev = defaultdict(Hits)
     ips = set(host_ips)
-    for flow in iter_flows(flows_file, host_ips=ips):
-        port = flow.get("dst_port")
-        proto = flow.get("protocol")
+    # Counted groups, as tighten reads them: one row per conversation rather
+    # than per flow, and `unanswered` from the store's `responded` column.
+    for g in iter_flow_groups(flows_file, host_ips=ips, span=span):
+        port = g.get("dst_port")
+        proto = g.get("protocol")
         if not port or not proto:
             continue
-        if flow.get("dst_ip") in ips:
-            key, peer = (DIR_IN, proto, int(port)), flow.get("src_ip")
-        elif flow.get("src_ip") in ips:
-            key, peer = (DIR_OUT, proto, int(port)), flow.get("dst_ip")
+        if g.get("dst_ip") in ips:
+            key, peer = (DIR_IN, proto, int(port)), g.get("src_ip")
+        elif g.get("src_ip") in ips:
+            key, peer = (DIR_OUT, proto, int(port)), g.get("dst_ip")
         else:
             continue
-        ev[key][peer] += 1
-        if flow.get("responded") is False:
-            ev[key].unanswered[peer] += 1
+        ev[key][peer] += g["n"]
+        if g["unanswered"]:
+            ev[key].unanswered[peer] += g["unanswered"]
     return ev
 
 
@@ -357,23 +360,33 @@ def _admits(peers, ip):
     return False
 
 
-def _host_flow_index(flows_file, docs, defs):
+def _host_flow_index(flows_file, docs, defs, span=None, paths=()):
     """Build the ``(direction, proto, port) -> Counter(peer)`` index once for a
     host, from whichever of ``docs`` names it. Returns (ev, ips) or (None, None)
     when the host has no resolvable addresses — the read is the dominant cost of
-    a --flows diff, so it is done exactly once and shared."""
-    host_token = None
-    for d in docs:
-        host_token = (d.get("metadata") or {}).get("host")
-        if host_token:
-            break
+    a --flows diff, so it is done exactly once and shared.
+
+    The host is named as tighten names it: by a policy file's name where the
+    definitions know it, since files are named by the inventory token, which is
+    unique; metadata.host is the collector's label, which need not be (two
+    zones can each have a `www`)."""
     from firru.cli.tighten import get_host_ips
-    ips = get_host_ips(host_token, defs) if host_token else []
+    candidates = [pathlib.Path(p).stem for p in paths if p]
+    candidates += [(d.get("metadata") or {}).get("host") for d in docs]
+    host_token, ips = None, []
+    for tok in candidates:
+        if not tok:
+            continue
+        host_token = host_token or tok
+        ips = get_host_ips(tok, defs)
+        if ips:
+            host_token = tok
+            break
     if not ips:
         print(f"Warning: no addresses for host token {host_token!r}; "
               f"--flows evidence skipped", file=sys.stderr)
         return None, None
-    return _flow_evidence(flows_file, ips), ips
+    return _flow_evidence(flows_file, ips, span), ips
 
 
 def _diff_evidence(ev, old_doc, new_doc, defs, result):
@@ -477,6 +490,31 @@ def _ev_silent(evidence, term):
 
 def _fmt_silent(silent, limit=3):
     return _fmt_cut(silent, limit).replace("observed flow(s)", "never-answered flow(s)", 1)
+
+
+def _peer_label(ip, annotator):
+    """How a peer reads in a report: a host by its inventory token (its v4
+    and v6 addresses then count together), an address inside a network token
+    as `ip (TOKEN)`, anything else as the address."""
+    a = annotator.annotate_ip(ip)
+    if a["type"] == "HOST":
+        return a["host"]
+    if a["type"] == "GROUP":
+        return f"{ip} ({(a.get('parents') or [a['host']])[0]})"
+    return ip
+
+
+def _name_peers(evidence, defs_dir):
+    """Relabel the peers in each record's `cut` and `silent` by _peer_label.
+    Both are only ever reported, so the addresses are not needed after."""
+    from firru.annotator import PolicyAnnotator
+    annotator = PolicyAnnotator(defs_dir)
+    for rec in evidence.values():
+        for key in ("cut", "silent"):
+            named = Counter()
+            for ip, n in rec[key].items():
+                named[_peer_label(ip, annotator)] += n
+            rec[key] = named
 
 
 def _fmt_cut(cut, limit=3):
@@ -728,7 +766,7 @@ def _file_header(path, limit=4):
     return out[:limit]
 
 
-def _sh_header(old_path, new_path, flows=None, zero_evidence=False):
+def _sh_header(old_path, new_path, flows=None, zero_evidence=False, window=None):
     """Where an -o sh script came from, as '#' lines a shell and `firru mass`
     skip: the two files, the proposal's own header, and the evidence. Inputs
     only, never a time or a version, so the same diff writes the same script.
@@ -739,6 +777,8 @@ def _sh_header(old_path, new_path, flows=None, zero_evidence=False):
         lines.append(f"#   {'to says:' if i == 0 else '':9} {text}")
     if flows:
         lines.append(f"#   evidence: --flows {flows}" + (" --zero-evidence" if zero_evidence else ""))
+        if window:
+            lines.append(f"#   window:   {window}")
     else:
         lines.append("#   evidence: none (no --flows given)")
     return lines
@@ -917,6 +957,12 @@ def _print_diff(name, result, swaps=None, evidence=None, zero_evidence=None):
 
 
 def cmd_diff(args):
+    from firru.project import flows_for
+    try:
+        args.flows, args.flow_span, args.flow_window = flows_for(
+            args, getattr(args, "flows", None))
+    except ValueError as e:
+        sys.exit(f"firru diff: {e}")
     defs = cached_naming(args.defs)
     if getattr(args, "out", None):
         real = sys.stdout
@@ -943,8 +989,11 @@ def _cmd_diff_body(args, defs):
     undefined = _merge_unknown(old_unknown, new_unknown)
     ev = None
     if getattr(args, "flows", None):
-        ev, _ = _host_flow_index(args.flows, (new_doc, old_doc), defs)
+        ev, _ = _host_flow_index(args.flows, (new_doc, old_doc), defs,
+                                 getattr(args, "flow_span", None), (args.new, args.old))
     evidence = _diff_evidence(ev, old_doc, new_doc, defs, result) if ev is not None else None
+    if evidence:
+        _name_peers(evidence, args.defs)
     zero_ev = (_zero_evidence(ev, old_doc, defs, _direction_arg(args), result)
                if ev is not None and getattr(args, "zero_evidence", False)
                else None)
@@ -964,7 +1013,8 @@ def _cmd_diff_body(args, defs):
         _emit_sh(args.old, args.new, args.defs, result, _direction_arg(args),
                  swaps, evidence, zero_ev,
                  header=_sh_header(args.old, args.new, getattr(args, "flows", None),
-                                   getattr(args, "zero_evidence", False)))
+                                   getattr(args, "zero_evidence", False),
+                                   getattr(args, "flow_window", None)))
         if undefined:
             _report_undefined(undefined, args.defs, sh=True)
     else:
@@ -1384,8 +1434,10 @@ def main():
     p_diff.add_argument("--defs", "-d", default="def", help="Aerleon definitions directory")
     p_diff.add_argument("--direction", choices=["in", "out", "both"], default="both",
                         help="Restrict to one side of the policy. Use --direction out\n                             with a generator that proposes only egress: otherwise the\n                             absent ingress filter reads as wholly removed.")
-    p_diff.add_argument("--flows", metavar="JSONL", default=None,
-                        help="Normalized flow JSONL: tag each change observed/unexercised, "
+    p_diff.add_argument("--flows", metavar="FLOWS", default=None,
+                        help="Normalized flows (JSONL, or a parquet store; with a window "
+                             "and no --flows, the project's store): tag each change "
+                             "observed/unexercised, "
                              "and comment out changes the traffic contradicts. Use a window "
                              "*after* NEW was generated and this is holdout validation.")
     p_diff.add_argument("--zero-evidence", action="store_true",
@@ -1403,6 +1455,8 @@ def main():
                              "(one process, defs cached) for a whole fleet.")
     p_diff.add_argument("-o", "--output", choices=["human", "sh"], default="human",
                         help="human report (default) or runnable 'sh' commands")
+    from firru.project import add_window_arguments
+    add_window_arguments(p_diff)
     p_diff.set_defaults(func=cmd_diff)
 
     p_apply = sub.add_parser("apply", help="Apply the machine delta onto a human policy",

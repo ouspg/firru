@@ -193,3 +193,45 @@ def test_the_record_carries_the_contract_fields():
     assert isinstance(f["direction_known"], bool)
     for field in schema["required"]:
         assert field in f, field
+
+
+def test_the_store_says_what_row_to_flow_says(tmp_path):
+    """write_store is row_to_flow in SQL; the same rows must come out the same,
+    every field, the edge cases above included."""
+    import duckdb
+    from lspr24_to_flows import write_store
+    v4, v6 = "10.5.12.3", "2a07:1182:0005:0012:0000:0000:0000:0003"
+    rows = [  # (src, dst, proto, state, fwd, bwd, rst, label_src)
+        (v4, "10.5.12.4", 6, "SF", 3, 4, 0, "0"),
+        (v4, "10.5.12.4", 6, "S0", 1, 0, 0, "1"),
+        (v4, "10.5.12.4", 6, "OTH", 1, 1, 1, "2"),      # lone RST: refused
+        (v4, "10.5.12.4", 6, "OTH", 1, 5, 1, None),     # ended in a reset: answered
+        (v4, "10.5.12.4", 17, None, 1, 0, 0, "0"),
+        (v6, "2a07:1182:0005:0012:0000:0000:0000:0004", 6, "OTH", 2, 1, 0, "0"),  # unknown
+        (v6, "2a07:1182:0005:0012:0000:0000:0000:0004", 6, "OTH", 2, 3, 0, "0"),
+        (v4, "10.5.12.4", 58, "OTH", 1, 1, 0, "0"),
+        ("", "10.5.12.4", 6, "SF", 1, 1, 0, "0"),       # no source: skipped
+    ]
+    recs = [{"SrcIP": s, "DstIP": d, "SrcPort": 40000 + i, "DstPort": 443, "Protocol": p,
+             "mTimestampStart": 1709740800_123456 + i * 3_600_000_000,
+             "mTimestampLast": 1709740801_000000 + i * 3_600_000_000,
+             "Tot Fwd Pkts": f, "Tot Bwd Pkts": b, "Conn_state": st, "RST Flag Cnt": r,
+             "Label_src": l, "Label_dst": "0"}
+            for i, (s, d, p, st, f, b, r, l) in enumerate(rows)]
+    src = tmp_path / "lspr24.parquet"
+    (tmp_path / "rows.json").write_text("\n".join(__import__("json").dumps(r) for r in recs))
+    duckdb.sql(f"COPY (SELECT * FROM read_json('{tmp_path / 'rows.json'}')) TO '{src}' (FORMAT parquet)")
+
+    assert write_store(src, tmp_path / "store") == len(rows) - 1
+    rel = duckdb.sql(f"SELECT * EXCLUDE (hour) FROM read_parquet('{tmp_path}/store/**/*.parquet')")
+    got = {r["src_port"]: r for r in (dict(zip(rel.columns, row)) for row in rel.fetchall())}
+    for rec in recs:
+        want = row_to_flow(rec)
+        if want is None:
+            assert rec["SrcPort"] not in got
+            continue
+        have = got[rec["SrcPort"]]
+        # The store keeps the fraction of a second the JSONL truncates.
+        assert int(have.pop("timestamp")) == want.pop("timestamp")
+        assert int(have.pop("end_time")) == want.pop("end_time")
+        assert {k: have[k] for k in want} == want, rec

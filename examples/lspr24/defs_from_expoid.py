@@ -3,7 +3,7 @@
 defs_from_expoid — build the network object model from the dataset's own asset
 identity instead of inferring it from traffic.
 
-    python3 defs_from_expoid.py --parquet lspr24_v2.parquet --out def/
+    python3 defs_from_expoid.py --parquet data/lspr24_v2.parquet --out def/
 
 It writes `def/` in place, replacing the `hostmap-to-defs` output and leaving
 `services.yml` alone. That directory had to invent an identity for every

@@ -239,7 +239,7 @@ class TestNeverAnswered:
         (line,) = self._sh(tmp_path, capsys, flows, "NET_MGMT")
         assert line.startswith("# firru set-source ")
         assert line.endswith("# widened: would admit "
-                             "3 never-answered flow(s) from 10.9.2.2×3")
+                             "3 never-answered flow(s) from 10.9.2.2 (NET_MGMT)×3")
 
     def test_a_peer_answered_once_is_not(self, tmp_path, capsys):
         flows = self._flows(tmp_path, ("10.9.2.2", 3, False), ("10.9.2.2", 1, True))
@@ -257,7 +257,7 @@ class TestNeverAnswered:
         out = _run(tmp_path, [_t("allow-tcp-SSH", "SSH")],
                    [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")], flows,
                    output="human", capsys=capsys)
-        assert "!! WIDENED: admits 3 never-answered flow(s) from 10.9.2.2×3" in out
+        assert "!! WIDENED: admits 3 never-answered flow(s) from 10.9.2.2 (NET_MGMT)×3" in out
 
 
 class TestShProvenance:
@@ -290,3 +290,72 @@ class TestShProvenance:
 
     def test_the_same_diff_writes_the_same_script(self, tmp_path, capsys):
         assert self._script(tmp_path, capsys) == self._script(tmp_path, capsys)
+
+
+class TestWindow:
+    """--window reads the project's store, only that window's flows count, and
+    the script header says which window."""
+
+    def test_a_window_counts_only_its_flows_and_is_in_the_header(self, tmp_path, capsys,
+                                                                 monkeypatch):
+        monkeypatch.delenv("FIRRU_PROJECT", raising=False)
+        (tmp_path / "firru.toml").write_text(
+            '[flows]\nstore = "flows.jsonl"\n'
+            '[windows]\nnight = ["2030-01-21 19:00", "2030-01-22 08:00"]\n')
+        lines = []
+        for hour, n in (("2030-01-21T18:30:00", 5), ("2030-01-21T20:00:00", 2)):
+            t = __import__("datetime").datetime.fromisoformat(hour + "+00:00").timestamp()
+            lines += [json.dumps({"protocol": "tcp", "dst_port": 22, "src_ip": "10.9.1.1",
+                                  "dst_ip": "10.0.0.5", "timestamp": t})] * n
+        (tmp_path / "flows.jsonl").write_text("\n".join(lines) + "\n")
+        monkeypatch.chdir(tmp_path)
+        defs = _defs(tmp_path)
+        old = _pol(tmp_path, "old.yml", [_t("allow-tcp-SSH", "SSH")])
+        new = _pol(tmp_path, "new.yml", [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")])
+        cmd_diff(argparse.Namespace(old=old, new=new, defs=defs, output="sh",
+                                    direction="in", flows=None, window="night",
+                                    since=None, until=None))
+        out = capsys.readouterr().out
+        assert "# narrowed observed (2 flows)" in out
+        assert "#   window:   --window night: 2030-01-21 19:00Z to 2030-01-22 08:00Z" in out
+
+
+def test_the_host_is_found_by_its_file_name_when_its_label_is_not_a_token(tmp_path, capsys):
+    # metadata.host is the collector's label (`dc1`); the file is named by the
+    # inventory token. Looking up only the label skipped all evidence.
+    defs = _defs(tmp_path)
+    paths = []
+    for fname, terms in (("old", [_t("allow-tcp-SSH", "SSH")]),
+                         ("new", [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")])):
+        d = tmp_path / fname
+        d.mkdir()
+        p = _pol(d, "H1.yml", terms)
+        text = open(p).read()
+        open(p, "w").write(text.replace("metadata: {host: H1}", "metadata: {host: dc1}"))
+        paths.append(p)
+    flows = _flows(tmp_path, ("tcp", 22, "10.9.1.1", 4))
+    cmd_diff(argparse.Namespace(old=paths[0], new=paths[1], defs=defs, output="sh",
+                                direction="in", flows=flows))
+    assert "# narrowed observed (4 flows)" in capsys.readouterr().out
+
+
+def test_cut_peers_are_named_by_the_inventory(tmp_path):
+    from collections import Counter
+    from firru.cli.edit import _name_peers
+    d = tmp_path / "def"
+    d.mkdir()
+    (d / "services.yml").write_text("services:\n  SSH: [{port: 22, protocol: tcp}]\n")
+    (d / "networks.yml").write_text(textwrap.dedent("""\
+        networks:
+          GT1:
+            values:
+              - address: 10.9.1.1/32
+              - address: 2001:db8::11/128
+          NET_MGMT:
+            values:
+              - address: 10.9.0.0/16
+    """))
+    ev = {1: {"cut": Counter({"10.9.1.1": 5, "2001:db8::11": 2, "10.9.2.2": 1,
+                              "192.0.2.7": 3}), "silent": Counter()}}
+    _name_peers(ev, str(d))
+    assert ev[1]["cut"] == Counter({"GT1": 7, "10.9.2.2 (NET_MGMT)": 1, "192.0.2.7": 3})

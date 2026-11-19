@@ -245,7 +245,7 @@ def flow_relation(path, with_fqdn=False, name_map=None):
             f"(SELECT * FROM read_parquet({src!r}) WHERE {ZEEK_KEEP_ROW}) c {join})")
 
 
-def iter_flow_groups(path, host_ips=None):
+def iter_flow_groups(path, host_ips=None, span=None):
     """Yield distinct (protocol, src_ip, dst_ip, dst_port) with a count `n`.
 
     Everything that buckets flows for tightening does the same thing to each
@@ -265,12 +265,15 @@ def iter_flow_groups(path, host_ips=None):
     `responded` is not counted, so `unanswered == n` means every flow said so.
     And `first` and `last`: the earliest and latest `timestamp` in the group,
     or None when no flow carries one.
+
+    `span` is (start, end) in epoch seconds, either None for open: only flows
+    with a `timestamp` in [start, end) are read (see window_where).
     """
     if is_parquet(path):
-        yield from _group_parquet(path, host_ips)
+        yield from _group_parquet(path, host_ips, span)
     else:
         groups = {}
-        for flow in _iter_jsonl(path, host_ips, False):
+        for flow in _iter_jsonl(path, host_ips, False, span):
             key = tuple(flow.get(c) for c in _CORE)
             g = groups.setdefault(key, [0, 0, None, None])
             g[0] += 1
@@ -285,18 +288,20 @@ def iter_flow_groups(path, host_ips=None):
             yield d
 
 
-def _group_parquet(path, host_ips):
+def _group_parquet(path, host_ips, span=None):
     import duckdb
 
     rel = flow_relation(path)
-    where, params = "", []
+    have = {r[0] for r in duckdb.sql(f"DESCRIBE SELECT * FROM {rel}").fetchall()}
+    clauses, params = [], []
     if host_ips:
         ips = list(host_ips)
         ph = ", ".join(["?"] * len(ips))
-        where = f" WHERE src_ip IN ({ph}) OR dst_ip IN ({ph})"
+        clauses.append(f"(src_ip IN ({ph}) OR dst_ip IN ({ph}))")
         params = ips + ips
+    clauses += window_where(span, have)
+    where = (" WHERE " + " AND ".join(clauses)) if clauses else ""
     cols = ", ".join(_CORE)
-    have = {r[0] for r in duckdb.sql(f"DESCRIBE SELECT * FROM {rel}").fetchall()}
     unanswered = ("count(*) FILTER (WHERE responded = false)"
                   if "responded" in have else "0")
     first, last = (("min(timestamp)", "max(timestamp)") if "timestamp" in have
@@ -319,16 +324,55 @@ def _group_parquet(path, host_ips):
             yield d
 
 
-def iter_flows(path, host_ips=None, with_fqdn=False):
+def iter_flows(path, host_ips=None, with_fqdn=False, span=None):
     """Yield flow dicts from `path`, optionally filtered to flows that touch
-    `host_ips` (as src or dst). Parquet pushes the filter down; JSONL scans."""
+    `host_ips` (as src or dst) and to a `span` of time (see iter_flow_groups).
+    Parquet pushes both filters down; JSONL scans."""
     if is_parquet(path):
-        yield from _iter_parquet(path, host_ips, with_fqdn)
+        yield from _iter_parquet(path, host_ips, with_fqdn, span)
     else:
-        yield from _iter_jsonl(path, host_ips, with_fqdn)
+        yield from _iter_jsonl(path, host_ips, with_fqdn, span)
 
 
-def _iter_jsonl(path, host_ips, with_fqdn):
+def window_where(span, columns):
+    """SQL predicates for a (start, end) span over a relation with `columns`.
+
+    `timestamp` decides. A store partitioned by `hour` also gets a predicate
+    on that column, which duckdb resolves from the directory names alone, so
+    the hours outside the window are never opened. The partition bound is a
+    day wider than the window on each side: stores written before their hours
+    were named in UTC carry the writing machine's zone, up to 14 hours off,
+    and `timestamp` trims to the exact second either way.
+    """
+    if not span:
+        return []
+    lo, hi = span
+    out = []
+    if lo is not None:
+        out.append(f"timestamp >= {float(lo)!r}")
+    if hi is not None:
+        out.append(f"timestamp < {float(hi)!r}")
+    if "hour" in columns:
+        from datetime import datetime, timezone
+        hour = lambda t: datetime.fromtimestamp(t, timezone.utc).strftime("%Y-%m-%dT%H")
+        if lo is not None:
+            out.append(f"hour >= '{hour(lo - 86400)}'")
+        if hi is not None:
+            out.append(f"hour <= '{hour(hi + 86400)}'")
+    return out
+
+
+def _in_span(flow, span):
+    if not span:
+        return True
+    ts = flow.get("timestamp")
+    if not isinstance(ts, (int, float)):
+        return False
+    lo, hi = span
+    return (lo is None or ts >= lo) and (hi is None or ts < hi)
+
+
+def _iter_jsonl(path, host_ips, with_fqdn, span=None):
     ipset = set(host_ips) if host_ips is not None else None
     with open(path) as f:
         for line in f:
@@ -342,10 +386,12 @@ def _iter_jsonl(path, host_ips, with_fqdn):
             if ipset is not None and flow.get("src_ip") not in ipset \
                     and flow.get("dst_ip") not in ipset:
                 continue
+            if not _in_span(flow, span):
+                continue
             yield flow
 
 
-def _iter_parquet(path, host_ips, with_fqdn):
+def _iter_parquet(path, host_ips, with_fqdn, span=None):
     import duckdb
 
     rel = flow_relation(path, with_fqdn=with_fqdn)
@@ -360,13 +406,16 @@ def _iter_parquet(path, host_ips, with_fqdn):
             cols.append("fqdn")
 
     select = ", ".join(cols)
-    where = ""
-    params = []
+    clauses, params = [], []
     if host_ips:
         ips = list(host_ips)
         placeholders = ", ".join(["?"] * len(ips))
-        where = f" WHERE src_ip IN ({placeholders}) OR dst_ip IN ({placeholders})"
+        clauses.append(f"(src_ip IN ({placeholders}) OR dst_ip IN ({placeholders}))")
         params = ips + ips
+    if span:
+        have = {r[0] for r in duckdb.sql(f"DESCRIBE SELECT * FROM {rel}").fetchall()}
+        clauses += window_where(span, have)
+    where = (" WHERE " + " AND ".join(clauses)) if clauses else ""
 
     q = f"SELECT {select} FROM {rel}{where}"
     res = duckdb.execute(q, params) if params else duckdb.execute(q)

@@ -3,7 +3,7 @@
 listening_split — the README's table: unanswered inbound TCP, split by whether
 the measured loot says something was listening.
 
-    python3 listening_split.py --parquet lspr24_v2.parquet --loot loot-ossec/ --defs def/
+    python3 listening_split.py --parquet data/lspr24_v2.parquet --loot loot-ossec/ --defs def/
 
 Inbound TCP is every TCP row whose destination is an inventory address.
 Listening is what flows_to_enforced.py means by it: the host, protocol and port
@@ -13,7 +13,7 @@ Split by family, because the IPv6 rows cannot show a reply reliably: the
 CICFlowMeter that built the dataset does not parse the TCP header on its IPv6
 path (see lspr24_to_flows.py). The IPv4 rows are the ones that carry the
 argument; the IPv6 rows are reported, not relied on. Windows are
-lspr24_to_flows.py's, in the timestamps' local zone, UTC+02.
+firru.toml's, in the timestamps' local zone, UTC+02.
 """
 
 import argparse
@@ -53,7 +53,7 @@ def main():
             "select v6, listening, count(*), sum(silent::int) from t group by all order by 2, 1").fetchall():
         where = "listening  " if listening else "no listener"
         print(f"  {where}          {'IPv6' if v6 else 'IPv4'}   {n:>10,}   {z:>8,} ({100 * z / n:.1f}%)")
-    print("listening, by exercise window (lspr24_to_flows.py's):")
+    print("listening, by exercise window (firru.toml's):")
     for name in ("d1", "night", "d2"):
         lo, hi = micros(name), micros(name, end=True)
         for v6, n, z in con.execute(f"""select v6, count(*), sum(silent::int) from t

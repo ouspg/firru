@@ -2,7 +2,7 @@
 """
 block_early — the R4 variant: drop every service the evidence never touched.
 
-    python3 block_early.py --flows night.jsonl --loot loot-ossec/ \
+    python3 block_early.py --flows data/flows/ --window night --loot loot-ossec/ \
         --defs def/ --policy policies/r2-tightened --out policies/r4-block-early
 
 R2 narrows a service's sources to what the window showed. R4 goes one step
@@ -17,12 +17,12 @@ close it -- which is a policy decision an operator makes and can be argued
 with, not an inference about what was already running. Same input, opposite
 epistemic status, which is why they are separate tools.
 
-ONE PASS. The obvious route is `firru diff --zero-evidence` per host, but each
-invocation re-reads the whole flow file; on LSPR24 that is 2.6 GB times 59
-hosts and does not finish. Evidence is a property of (service, window), not of
-the host being processed, so it is gathered once and applied to every policy.
-That also puts the flow source behind one function, which is where a Zeek
-parquet store plugs in when it replaces the single-file input.
+ONE PASS. The other route is `firru diff --zero-evidence` per host. On the
+flow store that is about a second a host; it did not finish on the old
+single-file JSONL, which every invocation re-read whole. Evidence is a
+property of (service, window), not of the host being processed, so it is
+gathered once here and applied to every policy, and the flow source stays
+behind one function.
 """
 
 import argparse
@@ -33,7 +33,7 @@ import sys
 import yaml
 from ruyaml import YAML
 
-from lspr24_to_flows import canonical_ip
+from lspr24_to_flows import WINDOWS, canonical_ip, flow_rows
 from firru.policy import DIR_IN, filter_directions
 from flows_to_enforced import inventory, listeners, service_tokens
 
@@ -74,15 +74,16 @@ def ports_of_token(defs):
     return {t: expand(t) for t in set(raw) | set(groups)}
 
 
-def evidence(flows, listen, owner):
+def evidence(flows, listen, owner, window=None):
     """
-    (token, proto, port) that saw at least one inbound flow in the learn file.
+    (token, proto, port) that saw at least one inbound flow in the learn window.
 
-    The learn file is the one `firru tighten` read for R2 (night.jsonl), so R4
-    is R2's own evidence with the zero-evidence services removed: a service
-    tighten marked "no flows observed" is exactly a service this drops. An
-    earlier version re-read the parquet with its own window bounds, which did
-    not match lspr24_to_flows.py', and kept services alive on flows R2 never saw.
+    The learn window is the one `firru tighten` read for R2 (--window night,
+    firru.toml's), so R4 is R2's own evidence with the zero-evidence services
+    removed: a service tighten marked "no flows observed" is exactly a service
+    this drops. An earlier version re-read the parquet with its own window
+    bounds, which did not match lspr24_to_flows.py's, and kept services alive
+    on flows R2 never saw.
 
     The single pass the module docstring is about. The flow source is this
     function and nothing else, so a Zeek parquet store replaces it without
@@ -100,9 +101,7 @@ def evidence(flows, listen, owner):
                     [(t, p, n) for t, s in listen.items() for p, n in sorted(s)])
     rows = con.execute(f"""
         select distinct a.tok, s.proto, s.port
-          from read_json({flows!r}, format='newline_delimited',
-                         columns={{'protocol': 'VARCHAR', 'dst_ip': 'VARCHAR',
-                                   'dst_port': 'INTEGER'}}) f
+          from {flow_rows(flows, window)} f
           join addrs a on a.ip = f.dst_ip
           join svc s on s.tok = a.tok and s.port = f.dst_port
                     and s.proto = f.protocol""").fetchall()
@@ -111,9 +110,11 @@ def evidence(flows, listen, owner):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[1])
-    ap.add_argument("--flows", required=True, metavar="JSONL",
-                    help="the learn file R2 was tightened against (night.jsonl); "
-                         "a service with no inbound flow in it is dropped")
+    ap.add_argument("--flows", required=True, metavar="FLOWS",
+                    help="the flows R2 was tightened against, a store or JSONL; "
+                         "a service with no inbound flow in the window is dropped")
+    ap.add_argument("--window", choices=sorted(WINDOWS),
+                    help="the learn window, as R2's (default: all of --flows)")
     ap.add_argument("--loot", default="loot-ossec", metavar="DIR")
     ap.add_argument("--defs", default="def", metavar="DIR")
     ap.add_argument("--policy", required=True, metavar="DIR",
@@ -124,7 +125,8 @@ def main():
     defs = pathlib.Path(args.defs)
     owner, meta = inventory(defs)
     listen, names = listeners(args.loot, meta)
-    used = evidence(args.flows, listen, owner)
+    used = evidence(args.flows, listen, owner, args.window)
+    learn = pathlib.Path(args.flows).name + (f" --window {args.window}" if args.window else "")
     token_ports = ports_of_token(defs)
 
     out = pathlib.Path(args.out)
@@ -160,13 +162,13 @@ def main():
                     dropped_by_host[tok] += 1
             f["terms"] = terms
         doc.setdefault("metadata", {})["variant"] = (
-            f"r4-block-early (learn file: {pathlib.Path(args.flows).name}) — services with no "
+            f"r4-block-early (learn: {learn}) — services with no "
             f"observed client are removed, not merely narrowed")
         with open(out / path.name, "w") as fh:
             _rt.dump(doc, fh)
 
     print(f"{len(list(out.glob('*.yml')))} policies -> {out}  "
-          f"(learn file: {args.flows})")
+          f"(learn: {learn})")
     print(f"  accept terms kept    {kept}")
     print(f"  accept terms dropped {dropped}  "
           f"across {len(dropped_by_host)} hosts")

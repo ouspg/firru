@@ -1,3 +1,5 @@
+# Downloaded or rebuilt from the dataset: the two files and the flow store.
+data/
 loot-synth/
 lspr24_v2.parquet
 ossec-archive-host-logs.json

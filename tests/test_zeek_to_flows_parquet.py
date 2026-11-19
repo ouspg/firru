@@ -109,6 +109,23 @@ class TestTheFlowsThemselves:
         parts = glob.glob(os.path.join(out, "**", "*.parquet"), recursive=True)
         assert parts and all("hour=" in p for p in parts)
 
+    def test_partitions_are_named_in_utc_whatever_the_machines_zone(self, zeek, tmp_path,
+                                                                    monkeypatch):
+        # duckdb's strftime(to_timestamp(...)) formats in the session's zone,
+        # which is the machine's. 1776862800 is 2026-04-22 13:00Z.
+        import glob, os, time
+        conn_dir, _ = zeek
+        monkeypatch.setenv("TZ", "Pacific/Kiritimati")      # UTC+14
+        time.tzset()
+        try:
+            out = tmp_path / "s7tz"
+            write_parquet_store([conn_dir], str(out))
+        finally:
+            monkeypatch.undo()
+            time.tzset()
+        parts = glob.glob(os.path.join(out, "**", "*.parquet"), recursive=True)
+        assert any("hour=2026-04-22T13" in p for p in parts), parts
+
     def test_fqdn_column_exists_even_without_dns(self, zeek, tmp_path):
         """A store appended by both a --dns and a non---dns run reads as one glob."""
         conn_dir, _ = zeek

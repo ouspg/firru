@@ -1,0 +1,20 @@
+k8s-worker01_beg_05_berylia_org: d2 against r2-tightened, 4 narrowed terms
+  03-07 08:00-09:00  0 of 4 contradicted
+  03-07 09:00-10:00  1 of 4 contradicted
+      tcp-K8S-KUBELET          cuts     15   k8s-control-plane_beg_05_berylia_org 15
+  03-07 10:00-11:00  1 of 4 contradicted
+      tcp-K8S-KUBELET          cuts     12   k8s-control-plane_beg_05_berylia_org 12
+  03-07 11:00-12:00  1 of 4 contradicted
+      tcp-K8S-KUBELET          cuts     29   k8s-control-plane_beg_05_berylia_org 29
+  03-07 12:00-13:00  1 of 4 contradicted
+      tcp-K8S-KUBELET          cuts     31   k8s-control-plane_beg_05_berylia_org 31
+  03-07 13:00-14:00  1 of 4 contradicted
+      tcp-K8S-KUBELET          cuts     12   k8s-control-plane_beg_05_berylia_org 12
+  03-07 14:00-15:00  1 of 4 contradicted
+      tcp-K8S-KUBELET          cuts     48   k8s-control-plane_beg_05_berylia_org 48
+  03-07 15:00-16:00  1 of 4 contradicted
+      tcp-K8S-KUBELET          cuts      8   k8s-control-plane_beg_05_berylia_org 8
+  03-07 16:00-17:00  0 of 4 contradicted
+  03-07 17:00-18:00  0 of 4 contradicted
+  cut across d2: 155 flows from 1 peer
+      k8s-control-plane_beg_05_berylia_org      7/10 hours     155 flows   tcp-K8S-KUBELET

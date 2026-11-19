@@ -1,11 +1,11 @@
 # firru tighten output — review and copy changes to policies/pol/fiveg-ue-bgp01_sac_bgp_05_berylia_org.yml
-# Flows: night.jsonl, 2024-03-06T17:00:24Z to 2024-03-07T05:59:33Z
+# Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:24Z to 2024-03-07T05:59:33Z
 # Source suggestions changed: 1 | Log-drop candidates: 0
 metadata:
   host: fiveg-ue-bgp01
   zone: bgp_sac
-  variant: 'r4-block-early (learn file: night.jsonl) — services with no observed client
-    are removed, not merely narrowed'
+  variant: 'r4-block-early (learn: flows --window night) — services with no observed
+    client are removed, not merely narrowed'
 filters:
 - header:
     targets:

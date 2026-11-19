@@ -3,7 +3,7 @@
 assumptions — apply assumptions.yml: everything the case study assumes.
 
     python3 assumptions.py --loot loot-ossec/ --defs def/ \
-        --assumptions assumptions.yml --out loot-assumed/ [--flows night.jsonl]
+        --assumptions assumptions.yml --out loot-assumed/ [--flows data/flows/ --window night]
 
 The dataset records listening sockets and traffic. It does not record a host's
 dynamic port range, the Windows services that never changed while syscollector
@@ -84,8 +84,10 @@ def main():
     ap.add_argument("--defs", required=True, metavar="DIR")
     ap.add_argument("--assumptions", required=True, metavar="FILE")
     ap.add_argument("--out", required=True, metavar="DIR")
-    ap.add_argument("--flows", metavar="JSONL",
-                    help="check the Windows fill against these flows")
+    ap.add_argument("--flows", metavar="FLOWS",
+                    help="check the Windows fill against these flows (a store or JSONL)")
+    ap.add_argument("--window", metavar="NAME",
+                    help="only the flows of this firru.toml window")
     args = ap.parse_args()
 
     a = yaml.safe_load(pathlib.Path(args.assumptions).read_text())
@@ -161,13 +163,15 @@ def main():
           f"{len(m['addresses'])} addresses")
 
     if args.flows and filled:
-        check(args.flows, filled, out, pathlib.Path(args.defs), hm)
+        check(args.flows, filled, out, pathlib.Path(args.defs), hm, args.window)
     return 0
 
 
-def check(flows, filled, out, defs, hm):
+def check(flows, filled, out, defs, hm, window=None):
     """Filled-in ports against what answered, per Windows host."""
     import duckdb
+    from lspr24_to_flows import flow_rows
+    rows = flow_rows(flows, window)
     nets = yaml.safe_load((defs / "networks.yml").read_text())["networks"]
     con = duckdb.connect()
     print("\nWindows fill against the flows (TCP ports that answered):")
@@ -183,9 +187,8 @@ def check(flows, filled, out, defs, hm):
             continue
         ph = ",".join("?" * len(addrs))
         answered = {p for (p,) in con.execute(
-            f"select distinct dst_port from read_json(?, format='newline_delimited', "
-            f"columns={{'dst_ip':'VARCHAR','dst_port':'INTEGER','protocol':'VARCHAR','responded':'BOOLEAN'}}) "
-            f"where protocol='tcp' and responded and dst_ip in ({ph})", [flows, *addrs]).fetchall()
+            f"select distinct dst_port from {rows} "
+            f"where protocol='tcp' and responded and dst_ip in ({ph})", addrs).fetchall()
             if not dyn[0] <= p <= dyn[1]}
         quiet = sorted(p for proto, p in inferred if proto == "tcp" and p not in answered)
         unexplained = sorted(p for p in answered if ("tcp", p) not in listening)

@@ -1,5 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/fiveg-ue-bgp02_sac_bgp_05_berylia_org.yml
-# Flows: night.jsonl, 2024-03-06T17:00:26Z to 2024-03-07T05:59:35Z
+# Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:26Z to 2024-03-07T05:59:35Z
 # Source suggestions changed: 1 | Log-drop candidates: 0
 metadata:
   host: fiveg-ue-bgp02
