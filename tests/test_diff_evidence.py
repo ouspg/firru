@@ -258,3 +258,35 @@ class TestNeverAnswered:
                    [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")], flows,
                    output="human", capsys=capsys)
         assert "!! WIDENED: admits 3 never-answered flow(s) from 10.9.2.2×3" in out
+
+
+class TestShProvenance:
+    """An -o sh script says where it came from: the two files, the proposal's
+    own header (tighten writes its flow window there), and the evidence."""
+
+    def _script(self, tmp_path, capsys, flows=None):
+        defs = _defs(tmp_path)
+        old = _pol(tmp_path, "old.yml", [_t("allow-tcp-SSH", "SSH")])
+        new = _pol(tmp_path, "new.yml", [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")])
+        body = open(new).read()
+        open(new, "w").write("# firru tighten output\n# Flows: night.jsonl, 2030-01-21T17:00:00Z to 2030-01-22T06:00:00Z\n" + body)
+        cmd_diff(argparse.Namespace(old=old, new=new, defs=defs, output="sh",
+                                    direction="in", flows=flows))
+        return capsys.readouterr().out.splitlines()
+
+    def test_the_header_names_files_window_and_evidence(self, tmp_path, capsys):
+        lines = self._script(tmp_path, capsys)
+        head = [l for l in lines if l.startswith("#")]
+        assert any(l.endswith("old.yml") and "from:" in l for l in head)
+        assert any("Flows: night.jsonl, 2030-01-21T17:00:00Z" in l for l in head)
+        assert head[-1].endswith("evidence: none (no --flows given)")
+
+    def test_it_is_comments_only_and_stays_out_of_a_grep(self, tmp_path, capsys):
+        lines = self._script(tmp_path, capsys, flows=_flows(tmp_path, ("tcp", 22, "10.9.1.1", 4)))
+        narrowed = [l for l in lines if "narrowed" in l]
+        assert narrowed and not any(l.startswith("#") for l in narrowed)
+        from firru.cli.mass import iter_commands
+        assert len(list(iter_commands(lines))) == len([l for l in lines if not l.startswith("#")])
+
+    def test_the_same_diff_writes_the_same_script(self, tmp_path, capsys):
+        assert self._script(tmp_path, capsys) == self._script(tmp_path, capsys)
