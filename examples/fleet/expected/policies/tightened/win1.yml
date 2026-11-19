@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/win1.yml
 # Flows: flows.jsonl, 2026-10-24T00:05:13Z to 2026-10-24T23:57:25Z
-# Source suggestions changed: 1 | Dead rules: 2 | Group suggestions: 0
+# Source suggestions changed: 1 | Dead rules: 2
 metadata:
   host: win1
 filters:

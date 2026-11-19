@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/dc1.yml
 # Flows: flows.jsonl, 2026-10-24T00:02:06Z to 2026-10-24T23:57:25Z
-# Source suggestions changed: 8 | Dead rules: 2 | Group suggestions: 0
+# Source suggestions changed: 8 | Dead rules: 2
 metadata:
   host: dc1
 filters:

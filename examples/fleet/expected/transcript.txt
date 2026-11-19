@@ -47,11 +47,11 @@ Host: web1  IPs: ['192.168.150.126']
 Host: win1  IPs: ['192.168.150.184']
   ingress: 16 flows across 1 service buckets
   egress:  105 flows across 8 service buckets
-Written: policies/tightened/dc1.yml  (8 changed, 2 dead, 0 group suggestions)
+Written: policies/tightened/dc1.yml  (8 changed, 2 dead)
 Written: policies/tightened/dc1.dead.yml  (2 dead-rule candidates)
-Written: policies/tightened/mon1.yml  (1 changed, 0 dead, 0 group suggestions)
-Written: policies/tightened/web1.yml  (0 changed, 0 dead, 0 group suggestions)
-Written: policies/tightened/win1.yml  (1 changed, 2 dead, 0 group suggestions)
+Written: policies/tightened/mon1.yml  (1 changed, 0 dead)
+Written: policies/tightened/web1.yml  (0 changed, 0 dead)
+Written: policies/tightened/win1.yml  (1 changed, 2 dead)
 Written: policies/tightened/win1.dead.yml  (2 dead-rule candidates)
 mon1:
   narrowed (1) — fewer peers, safe to apply (--narrow):

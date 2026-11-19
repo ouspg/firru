@@ -50,7 +50,7 @@ def test_tighten_preserves_human_and_score_lines():
     in_terms = y.load(POL)["terms"]
 
     # No flows observed → the "source unchanged" [auto] path.
-    tightened, _, _, _ = tighten_ingress(
+    tightened, _, _ = tighten_ingress(
         in_terms, ingress_flows={}, annotator=StubAnnotator(), defs=StubDefs()
     )
 
@@ -87,8 +87,8 @@ def test_a_term_with_no_source_tightens_like_an_any_term():
     terms = y.load("terms:\n  - name: t\n    protocol: tcp\n    destination-port: POSTGRES\n"
                    "    action: accept\n")["terms"]
     flows = {("tcp", "POSTGRES"): {"10.0.0.7": 3}}
-    tightened, _, _, _ = tighten_ingress(terms, ingress_flows=flows,
-                                         annotator=Host(), defs=StubDefs())
+    tightened, _, _ = tighten_ingress(terms, ingress_flows=flows,
+                                      annotator=Host(), defs=StubDefs())
     buf = io.StringIO()
     y.dump({"terms": tightened}, buf)
     assert "source-address: app1  # was: ANY" in buf.getvalue()
