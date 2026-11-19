@@ -201,26 +201,28 @@ The flows are one store of the whole dataset (`make flows`: 20M flows, 0.4 GB,
 written in about 20 seconds), and each command reads the window it is given,
 by the names in `firru.toml`. Tightening above is `firru tighten --window
 night`. The same store answers the question before a deploy: what would the
-tightened policy have done to traffic it was not tightened on? `make hourly`
-diffs a host's synthesized policy against its night-tightened one over each
-hour of d2, a second or so per hour:
+tightened policy have done to traffic it was not tightened on?
 
-```
-d2 09:00-10:00
-    allow-tcp-DNS-TCP  observed (565 flows)
-    allow-tcp-KERBEROS-TCP  !! CONTRADICTED: cuts 526 observed flow(s)
-    allow-tcp-LDAP-TCP  !! CONTRADICTED: cuts 554 observed flow(s)
-    allow-tcp-LDAPS  !! CONTRADICTED: cuts 530 observed flow(s)
-    allow-udp-DNS-UDP  observed (11265 flows)
-    allow-udp-LDAP-UDP  !! CONTRADICTED: cuts 1 observed flow(s)
-    allow-udp-NTP  observed (300 flows)
-```
+`make hourly` asks it of five hosts, for each hour of d2 (`hourly.py`, which
+is `firru diff --flows` once an hour), and ends with who was cut in most hours.
+The results are in [`hourly/`](hourly/). Each host shows a different kind of
+miss:
 
-For dc1, every hour of d2 contradicts four to six of its seven narrowings.
-Most of the cut flows come from one green-team entry, `BEG_GT_OTHER`: the
-organisers reach the directory by day on ports they left alone at night, so
-the night's source sets leave them out. `firru diff -o sh` comments such a
-narrowing out rather than emitting it, and `HOST=` picks another host.
+| host | cut on d2 | mostly |
+| --- | --- | --- |
+| dc1 (Windows DC) | 15,380 flows, 7 peers | the organisers' `BEG_GT_OTHER` every hour on Kerberos and LDAP, and the other DC, dc2, in 8 of 10 hours |
+| salt-master | 2,480 flows, 4 peers | the organisers every hour, and the gas-hmi minion on 4505 in 9 of 10 |
+| k8s-worker01 | 155 flows, 1 peer | the cluster's own control plane, on the kubelet, in 7 of 10 hours |
+| gas-hmi (OT) | 1,137 flows, 1 peer | the `BEG_GT` band, in half the hours |
+| www | 5,707 flows, 51 peers | its users: the internet the night did not show; 234 of the flows are red team |
+
+The night is quiet in a way the day is not: it shows the services' own
+clients, and not the organisers' daytime checks, the second domain
+controller's replication or a control plane's periodic calls. A peer cut in
+most hours is the window's gap, not noise, and `firru diff -o sh` comments
+out a narrowing it contradicts instead of emitting it. On www the cut is the
+point only for the red-team share; narrowing a public web server to the
+clients of one night closes it to its users.
 
 ### Block-early
 

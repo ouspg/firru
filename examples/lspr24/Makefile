@@ -6,7 +6,7 @@
 #   make all            everything committed here, from those two files
 #   make ladder         the block-early counterfactual against red-team traffic
 #   make enforced-diff  the synthesized policy against what the network did
-#   make hourly         d2 an hour at a time against the night-tightened policy
+#   make hourly         d2 an hour at a time, for the hosts in hourly/
 #
 # Committed, because regenerating them needs the 7 GB download and the point
 # is that a reader who has not downloaded anything can inspect the output:
@@ -24,7 +24,13 @@ LOOT     ?= loot-assumed
 # The window tightening learns from, one of firru.toml's.
 LEARN  ?= night
 
-.PHONY: all clean fetch verify-inputs defs stock-defs services identity assumptions flows tighten block-early enforced enforced-diff merged loot-ossec policies ladder listening-split hourly
+.PHONY: help all clean fetch verify-inputs defs stock-defs services identity assumptions flows tighten block-early enforced enforced-diff merged loot-ossec policies ladder listening-split hourly
+
+# A bare `make` prints the targets above. It used to run the first target,
+# `defs`, which rewrites committed definitions and leaves the rest stale.
+.DEFAULT_GOAL := help
+help:
+	@sed -n '/^#   make /p' Makefile
 
 # Network object model from the dataset's own asset identity, replacing the
 # flow-derived hostmap and its 893 per-address ext_ tokens.
@@ -166,18 +172,16 @@ ladder:
 	python3 ladder.py --parquet $(LSPR24) --loot $(LOOT)/ \
 	    --learn $(LEARN) --eval d2
 
-# The check before a deploy, an hour at a time: what the policy tightened on
-# the night would have done to each hour of d2, for one host. A narrowing the
-# hour's traffic contradicts would have cut those flows.
-HOST ?= dc1_int_beg_05_berylia_org
+# The check before a deploy, an hour at a time: what each host's policy
+# tightened on the learn window would have cut from each hour of d2, and who
+# was cut in most hours. Committed for a few representative hosts, so the
+# result can be read without the dataset: the Windows domain controller, and
+# Linux management, OT, web and cluster hosts.
+HOURLY_HOSTS ?= dc1_int_beg_05_berylia_org salt-master_beg_05_berylia_org \
+    gas-hmi_beg_05_berylia_org www_bgp_05_berylia_org k8s-worker01_beg_05_berylia_org
 hourly: flows
-	@for h in 08 09 10 11 12 13 14 15 16 17; do \
-	  next=$$(printf %02d $$((10#$$h + 1))); \
-	  echo "d2 $$h:00-$$next:00"; \
-	  firru diff policies/r1-synthesized/$(HOST).yml policies/r2-tightened/$(HOST).yml \
-	      --defs def/ --direction in --since "d2 $$h:00" --until "d2 $$next:00" \
-	    | sed -nE 's/^ *> ([^ ]+) .*  (observed \([0-9]+ flows\)|unexercised|!! CONTRADICTED: cuts [0-9]+ observed flow\(s\)).*/    \1  \2/p'; \
-	done
+	python3 hourly.py --old policies/r1-synthesized --new policies/r2-tightened \
+	    --window d2 --defs def/ --out hourly/ $(HOURLY_HOSTS)
 
 
 # Everything `make all` writes, so that `make clean all` followed by

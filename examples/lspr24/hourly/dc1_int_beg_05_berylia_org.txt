@@ -1,0 +1,65 @@
+dc1_int_beg_05_berylia_org: d2 against r2-tightened, 7 narrowed terms
+  03-07 08:00-09:00  4 of 7 contradicted
+      tcp-KERBEROS-TCP         cuts     92   BEG_GT_OTHER 92
+      tcp-LDAP-TCP             cuts     96   BEG_GT_OTHER 92, owncloud_beg_05_berylia_org 4
+      tcp-LDAPS                cuts     90   BEG_GT_OTHER 90
+      udp-DNS-UDP              cuts     42   2a07:1181:95:95::2 42
+  03-07 09:00-10:00  4 of 7 contradicted
+      tcp-KERBEROS-TCP         cuts    526   BEG_GT_OTHER 526
+      tcp-LDAP-TCP             cuts    554   BEG_GT_OTHER 523, owncloud_beg_05_berylia_org 26, k8s-worker02_beg_05_berylia_org 5
+      tcp-LDAPS                cuts    530   BEG_GT_OTHER 522, dc2_int_beg_05_berylia_org 8
+      udp-LDAP-UDP             cuts      1   dc2_int_beg_05_berylia_org 1
+  03-07 10:00-11:00  5 of 7 contradicted
+      tcp-KERBEROS-TCP         cuts    552   BEG_GT_OTHER 552
+      tcp-LDAP-TCP             cuts    597   BEG_GT_OTHER 552, k8s-worker02_beg_05_berylia_org 27, owncloud_beg_05_berylia_org 18
+      tcp-LDAPS                cuts    571   BEG_GT_OTHER 555, dc2_int_beg_05_berylia_org 16
+      udp-DNS-UDP              cuts      6   2a07:1181:95:95::2 6
+      udp-LDAP-UDP             cuts      3   dc2_int_beg_05_berylia_org 3
+  03-07 11:00-12:00  5 of 7 contradicted
+      tcp-KERBEROS-TCP         cuts    467   BEG_GT_OTHER 466, dc2_int_beg_05_berylia_org 1
+      tcp-LDAP-TCP             cuts    495   BEG_GT_OTHER 465, k8s-worker02_beg_05_berylia_org 24, owncloud_beg_05_berylia_org 6
+      tcp-LDAPS                cuts    475   BEG_GT_OTHER 467, dc2_int_beg_05_berylia_org 8
+      udp-DNS-UDP              cuts    831   2a07:1181:95:95::2 831
+      udp-LDAP-UDP             cuts      2   dc2_int_beg_05_berylia_org 2
+  03-07 12:00-13:00  4 of 7 contradicted
+      tcp-KERBEROS-TCP         cuts    160   BEG_GT_OTHER 160
+      tcp-LDAP-TCP             cuts    212   BEG_GT_OTHER 159, owncloud_beg_05_berylia_org 45, k8s-worker02_beg_05_berylia_org 8
+      tcp-LDAPS                cuts    175   BEG_GT_OTHER 160, dc2_int_beg_05_berylia_org 15
+      udp-DNS-UDP              cuts  2,005   2a07:1181:95:95::2 2005
+  03-07 13:00-14:00  6 of 7 contradicted
+      tcp-DNS-TCP              cuts     10   beg-power-ws_int_beg_05_berylia_org 10
+      tcp-KERBEROS-TCP         cuts    525   BEG_GT_OTHER 525
+      tcp-LDAP-TCP             cuts    585   BEG_GT_OTHER 524, owncloud_beg_05_berylia_org 36, k8s-worker02_beg_05_berylia_org 25
+      tcp-LDAPS                cuts    552   BEG_GT_OTHER 526, dc2_int_beg_05_berylia_org 26
+      udp-DNS-UDP              cuts      4   2a07:1181:95:95::2 4
+      udp-LDAP-UDP             cuts      2   dc2_int_beg_05_berylia_org 1, fw1-beg_05_berylia_org 1
+  03-07 14:00-15:00  4 of 7 contradicted
+      tcp-KERBEROS-TCP         cuts    554   BEG_GT_OTHER 554
+      tcp-LDAP-TCP             cuts    603   BEG_GT_OTHER 552, k8s-worker02_beg_05_berylia_org 28, owncloud_beg_05_berylia_org 23
+      tcp-LDAPS                cuts    562   BEG_GT_OTHER 554, dc2_int_beg_05_berylia_org 8
+      udp-DNS-UDP              cuts      4   2a07:1181:95:95::2 4
+  03-07 15:00-16:00  5 of 7 contradicted
+      tcp-KERBEROS-TCP         cuts    554   BEG_GT_OTHER 552, dc2_int_beg_05_berylia_org 2
+      tcp-LDAP-TCP             cuts    588   BEG_GT_OTHER 555, k8s-worker02_beg_05_berylia_org 27, owncloud_beg_05_berylia_org 6
+      tcp-LDAPS                cuts    554   BEG_GT_OTHER 554
+      udp-DNS-UDP              cuts     13   2a07:1181:95:95::2 13
+      udp-LDAP-UDP             cuts      2   dc2_int_beg_05_berylia_org 2
+  03-07 16:00-17:00  5 of 7 contradicted
+      tcp-KERBEROS-TCP         cuts    557   BEG_GT_OTHER 554, dc2_int_beg_05_berylia_org 3
+      tcp-LDAP-TCP             cuts    587   BEG_GT_OTHER 553, k8s-worker02_beg_05_berylia_org 28, owncloud_beg_05_berylia_org 6
+      tcp-LDAPS                cuts    552   BEG_GT_OTHER 552
+      udp-DNS-UDP              cuts      8   2a07:1181:95:95::2 8
+      udp-LDAP-UDP             cuts      1   dc2_int_beg_05_berylia_org 1
+  03-07 17:00-18:00  4 of 7 contradicted
+      tcp-KERBEROS-TCP         cuts     24   BEG_GT_OTHER 24
+      tcp-LDAP-TCP             cuts     31   BEG_GT_OTHER 24, owncloud_beg_05_berylia_org 6, k8s-worker02_beg_05_berylia_org 1
+      tcp-LDAPS                cuts     24   BEG_GT_OTHER 24
+      udp-DNS-UDP              cuts      2   2a07:1181:95:95::2 2
+  cut across d2: 15,380 flows from 7 peers
+      BEG_GT_OTHER                             10/10 hours  12,008 flows   tcp-KERBEROS-TCP tcp-LDAP-TCP tcp-LDAPS
+      owncloud_beg_05_berylia_org              10/10 hours     176 flows   tcp-LDAP-TCP
+      2a07:1181:95:95::2                        9/10 hours   2,915 flows   udp-DNS-UDP
+      k8s-worker02_beg_05_berylia_org           9/10 hours     173 flows   tcp-LDAP-TCP
+      dc2_int_beg_05_berylia_org                8/10 hours      97 flows   tcp-KERBEROS-TCP tcp-LDAPS udp-LDAP-UDP
+      beg-power-ws_int_beg_05_berylia_org       1/10 hours      10 flows   tcp-DNS-TCP
+      fw1-beg_05_berylia_org                    1/10 hours       1 flows   udp-LDAP-UDP
