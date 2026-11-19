@@ -59,7 +59,7 @@ resolve-identity --loot loot-ossec/ --defs def/ --assert identity-assertions.yml
 python lspr24_to_flows.py lspr24_v2.parquet --window night > night.jsonl
 python3 assumptions.py --loot loot-ossec/ --defs def/ --assumptions assumptions.yml \
     --out loot-assumed/ --flows night.jsonl         # everything assumed, checked
-python3 services_from_loot.py --loot loot-assumed/ --defs def/
+suggest-services --input loot-assumed/ --defs def/ --yaml def/services-observed.yml
 firru synth --input loot-assumed/ --defs def/ --meta def/host_metadata.json \
     --output policies/r1-synthesized/
 firru tighten --policy policies/r1-synthesized --defs def/ \
@@ -160,9 +160,11 @@ answered, and the other 48 saw no IPv4 traffic.
 source, so terms carry names like `K8S-KUBELET`, `NODE-EXPORTER`,
 `METALLB-MEMBERLIST` and `DNP3` rather than numbers. Where two names claim a
 port (Docker Swarm and MetalLB on 7946), the listening process decides. What
-nothing names, `services_from_loot.py` writes to `def/services-observed.yml`
-as `TCP_<port>`, with the process and host as the only evidence: 57 ports,
-most of them Exchange's internal ones. Another 49 it leaves unnamed on purpose
+nothing names, `suggest-services` writes to `def/services-observed.yml`: 57
+ports. Eighteen get a name (nine tokens) from evidence that holds beyond
+these hosts: Exchange's internal ports from the stock Exchange baselines, and
+Connected Devices Platform from firru's curated table. The other 39 are
+`TCP_<port>` or `UDP_<port>`, with the process and host as the only evidence. Another 49 it leaves unnamed on purpose
 and lists why: 28 bind only to loopback, so no term could ever match them, and
 21 are in the host's dynamic range, where a port is a client socket the
 snapshot caught. A tightened
@@ -263,7 +265,7 @@ assumptions applied, and the policies are built from the latter.
 | Who the green team is | `<ZONE>_GT_OTHER` in `def/networks.yml` | The dataset labels organiser traffic (`Label_src=2`). Used to *name* those hosts, never to score a policy. |
 | Where a green-team band would be | `<ZONE>_GT` in `def/networks.yml` | A convention (the top addresses of each subnet), kept apart from `_GT_OTHER` because on this dataset it is wrong: it reaches 0 of the 16 labelled IPv4 hosts. |
 | This site's own services | `def/services-site.yml` | One: Keycloak's cluster transport on udp/46655, seen on the keycloak host and nowhere else. |
-| Ports nobody named | `def/services-observed.yml` | Named `TCP_<port>` with the process and host as the evidence, so the claim is visibly weaker than a registry name. |
+| Ports nobody named | `def/services-observed.yml` | Named by a stock-install baseline or firru's curated table where one covers the port; otherwise `TCP_<port>`, with the process and host as the evidence, so the claim is visibly weaker than a registry name. |
 
 The `Label` column is used for nothing else. It is exactly `(Label_src == 1
 or Label_dst == 1)`, *the peer is a red-team host*, not any behaviour, so an
