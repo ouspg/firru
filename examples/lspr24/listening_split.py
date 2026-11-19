@@ -20,7 +20,7 @@ import argparse
 import pathlib
 
 import flows_to_enforced as fe
-from lspr24_to_flows import WINDOWS
+from lspr24_to_flows import micros
 
 
 def main():
@@ -41,7 +41,7 @@ def main():
                     sorted({(t, p) for t, s in listen.items() for proto, p in s if proto == "tcp"}))
     con.execute(f"""create table t as select
           (f."DstIP" like '%:%') v6, (s.tok is not null) listening,
-          make_timestamp(f."mTimestampStart"::bigint + 7200000000) local_ts,
+          f."mTimestampStart" ts,
           f."Tot Bwd Pkts" = 0 silent
         from read_parquet({args.parquet!r}) f
         join addrs a on a.ip = f."DstIP"
@@ -55,10 +55,10 @@ def main():
         print(f"  {where}          {'IPv6' if v6 else 'IPv4'}   {n:>10,}   {z:>8,} ({100 * z / n:.1f}%)")
     print("listening, by exercise window (lspr24_to_flows.py's):")
     for name in ("d1", "night", "d2"):
-        start, end = WINDOWS[name]
+        lo, hi = micros(name), micros(name, end=True)
         for v6, n, z in con.execute(f"""select v6, count(*), sum(silent::int) from t
-                where listening and local_ts >= timestamp '{start}:00:00'
-                and local_ts < timestamp '{end}:00:00' group by v6 order by v6""").fetchall():
+                where listening and ts >= {lo} and ts < {hi}
+                group by v6 order by v6""").fetchall():
             print(f"  {name:6} {'IPv6' if v6 else 'IPv4'}  {n:>10,}   {z:>8,} ({100 * z / n:.1f}%)")
 
 
