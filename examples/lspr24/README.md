@@ -78,6 +78,7 @@ firru merge-zones --hosts 'policies/<variant>/*.yml' --defs def/ --outdir zones/
 | `policies/r2-tightened/` | sources narrowed against the night window: 180 terms, each with `# was:`, and beside them `*.blocked.yml` (27 hosts: flows the narrowing would deny); a term nothing matched says `log-drop candidate` |
 | `policies/r3-apparent/` | INFERRED from traffic: the policy that appears to have been running |
 | `policies/r4-block-early/` | r2 with every service the night window never saw removed: 269 of 460 terms, on 51 hosts |
+| `reports/` | precomputed reports, so the results read without the dataset: `hourly/`, one host's d2 an hour at a time (`make hourly`) |
 | `zones/<variant>/` | each variant merged per network, the form a firewall takes |
 
 Every policy and zone file compiles with Aerleon against `def/`. Files are
@@ -205,8 +206,8 @@ tightened policy have done to traffic it was not tightened on?
 
 `make hourly` asks it of five hosts, for each hour of d2 (`hourly.py`, which
 is `firru diff --flows` once an hour), and ends with who was cut in most hours.
-The results are in [`hourly/`](hourly/). Each host shows a different kind of
-miss:
+The results are in [`reports/hourly/`](reports/hourly/). Each host shows a
+different kind of miss:
 
 | host | cut on d2 | mostly |
 | --- | --- | --- |

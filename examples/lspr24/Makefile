@@ -6,7 +6,7 @@
 #   make all            everything committed here, from those two files
 #   make ladder         the block-early counterfactual against red-team traffic
 #   make enforced-diff  the synthesized policy against what the network did
-#   make hourly         d2 an hour at a time, for the hosts in hourly/
+#   make hourly         d2 an hour at a time, for the hosts in reports/hourly/
 #
 # Committed, because regenerating them needs the 7 GB download and the point
 # is that a reader who has not downloaded anything can inspect the output:
@@ -182,7 +182,7 @@ HOURLY_HOSTS ?= dc1_int_beg_05_berylia_org salt-master_beg_05_berylia_org \
     gas-hmi_beg_05_berylia_org www_bgp_05_berylia_org k8s-worker01_beg_05_berylia_org
 hourly: flows
 	python3 hourly.py --old policies/r1-synthesized --new policies/r2-tightened \
-	    --window d2 --defs def/ --out hourly/ $(HOURLY_HOSTS)
+	    --window d2 --defs def/ --out reports/hourly/ $(HOURLY_HOSTS)
 
 
 # Everything `make all` writes, so that `make clean all` followed by
