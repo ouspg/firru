@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/mon1.yml
 # Flows: flows.jsonl, 2026-10-24T00:08:13Z to 2026-10-24T23:41:11Z
-# Source suggestions changed: 1 | Dead rules: 0 | Group suggestions: 0
+# Source suggestions changed: 1 | Log-drop candidates: 1
 metadata:
   host: mon1
 filters:
@@ -31,7 +31,7 @@ filters:
         protocol: icmpv6
         action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-DHCP-CLIENT
         protocol: udp
         destination-port: DHCP-CLIENT

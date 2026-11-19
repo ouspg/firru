@@ -50,7 +50,7 @@ def test_tighten_preserves_human_and_score_lines():
     in_terms = y.load(POL)["terms"]
 
     # No flows observed → the "source unchanged" [auto] path.
-    tightened, _, _, _ = tighten_ingress(
+    tightened, _, _ = tighten_ingress(
         in_terms, ingress_flows={}, annotator=StubAnnotator(), defs=StubDefs()
     )
 
@@ -64,6 +64,26 @@ def test_tighten_preserves_human_and_score_lines():
     # Stale [auto] evidence replaced by the fresh [auto] line
     assert "900 flows" not in out
     assert "[auto] no flows observed in window" in out
+
+
+def test_a_term_nothing_matched_is_a_log_drop_candidate_whatever_its_source():
+    # One window without a flow does not show the service is unused, so the
+    # finding is "log-drop it first", never "drop it"; and a listener left at
+    # ANY that nothing reached is the same finding as a narrowed one.
+    y = _yaml()
+    terms = y.load("terms:\n"
+                   "  - name: allow-tcp-POSTGRES\n    protocol: tcp\n"
+                   "    destination-port: POSTGRES\n    source-address: NET_APP\n"
+                   "    action: accept\n"
+                   "  - name: allow-tcp-SSH\n    protocol: tcp\n"
+                   "    destination-port: SSH\n    action: accept\n"
+                   "  - name: drop-ANY\n    action: deny\n")["terms"]
+    tightened, unused, _ = tighten_ingress(terms, ingress_flows={},
+                                           annotator=StubAnnotator(), defs=StubDefs())
+    assert [u["svc"] for u in unused] == ["POSTGRES", "SSH"]
+    buf = io.StringIO()
+    y.dump({"terms": tightened}, buf)
+    assert buf.getvalue().count("; log-drop candidate") == 2
 
 
 def test_the_next_terms_auto_line_does_not_travel_with_this_term():
@@ -87,8 +107,8 @@ def test_a_term_with_no_source_tightens_like_an_any_term():
     terms = y.load("terms:\n  - name: t\n    protocol: tcp\n    destination-port: POSTGRES\n"
                    "    action: accept\n")["terms"]
     flows = {("tcp", "POSTGRES"): {"10.0.0.7": 3}}
-    tightened, _, _, _ = tighten_ingress(terms, ingress_flows=flows,
-                                         annotator=Host(), defs=StubDefs())
+    tightened, _, _ = tighten_ingress(terms, ingress_flows=flows,
+                                      annotator=Host(), defs=StubDefs())
     buf = io.StringIO()
     y.dump({"terms": tightened}, buf)
     assert "source-address: app1  # was: ANY" in buf.getvalue()

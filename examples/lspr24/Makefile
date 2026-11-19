@@ -42,9 +42,11 @@ stock-defs:
 
 # Name the ports the loot shows that no definition file names, so
 # terms carry a token rather than a bare number. Depends on the loot, not on
-# the parquet. Run it after `loot-ossec`, before `policies`.
+# the parquet. Run it after `loot-ossec`, before `policies`. The baselines are
+# the ones firru ships, so another machine's checkout cannot change the names.
 services:
-	python3 services_from_loot.py --loot $(LOOT)/ --defs def/
+	FIRRU_BASELINES=$$(python3 -c 'from firru.defs_dir import STOCK_BASELINE; print(STOCK_BASELINE)') \
+	suggest-services --input $(LOOT)/ --defs def/ --yaml def/services-observed.yml
 
 # Bind loot to the inventory by evidence: by name where the collector's label
 # is unique, by the host's own address where it is not, by assertion where

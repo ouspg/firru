@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/lims_bgp_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:55Z
-# Source suggestions changed: 3 | Dead rules: 0 | Group suggestions: 0
+# Source suggestions changed: 3 | Log-drop candidates: 2
 metadata:
   host: lims
   zone: bgp
@@ -48,7 +48,7 @@ filters:
     protocol: icmpv6
     action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: drop-ANY
     action: deny
     counter: drop-ANY

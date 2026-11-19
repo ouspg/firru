@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/gas-hmi_beg_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:01Z to 2024-03-07T05:59:55Z
-# Source suggestions changed: 4 | Dead rules: 2 | Group suggestions: 0
+# Source suggestions changed: 4 | Log-drop candidates: 3
 metadata:
   host: gas-hmi
   zone: beg
@@ -55,7 +55,7 @@ filters:
     protocol: icmpv6
     action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: drop-ANY
     action: deny
     counter: drop-ANY

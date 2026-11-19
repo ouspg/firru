@@ -23,7 +23,7 @@ from aerleon import api
 from aerleon.lib import naming
 from ruyaml import YAML
 
-from firru.cli.listeners_to_aerleon import synth_host
+from firru.cli.synth import synth_host
 
 
 @pytest.fixture(scope="module")

@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/siem-server.yml
 # Flows: night.jsonl, none for this host
-# Source suggestions changed: 0 | Dead rules: 1 | Group suggestions: 0
+# Source suggestions changed: 0 | Log-drop candidates: 5
 metadata:
   host: siem-server
   zone: core
@@ -27,7 +27,7 @@ filters:
     protocol: icmpv6
     action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: drop-ANY
     action: deny
     counter: drop-ANY

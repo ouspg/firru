@@ -46,11 +46,12 @@ filters:
         source-address:
           - BAF_INT_GT
 # [auto] IPv4 0.0.0.0/0 (svchost C:\WINDOWS\system32\svchost.exe CDPSvc)
-      - name: allow-tcp-TCP_5040
+      - name: allow-tcp-WINDOWS-CDP
         protocol: tcp
-        destination-port: TCP_5040
+        destination-port: WINDOWS-CDP
         action: accept
-        source-address: ANY_V4
+        source-address:
+          - BAF_INT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
       - name: allow-tcp-WINRM-HTTP
         protocol: tcp
@@ -97,11 +98,12 @@ filters:
         source-address:
           - BAF_INT_GT
 # [auto] IPv4 0.0.0.0/0 (svchost C:\WINDOWS\system32\svchost.exe CDPSvc)
-      - name: allow-udp-UDP_5050
+      - name: allow-udp-WINDOWS-CDP
         protocol: udp
-        destination-port: UDP_5050
+        destination-port: WINDOWS-CDP
         action: accept
-        source-address: ANY_V4
+        source-address:
+          - BAF_INT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (svchost C:\WINDOWS\system32\svchost.exe Dnscache) | IPv6 ::/0 (svchost C:\WINDOWS\system32\svchost.exe Dnscache)
       - name: allow-udp-MDNS
         protocol: udp

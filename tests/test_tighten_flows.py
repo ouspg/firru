@@ -13,7 +13,6 @@ import pytest
 
 from firru.cli.tighten import (
     _bucket_flow,
-    _is_any_source,
     _is_broadcast_or_multicast,
     best_tokens,
     collect_flows_from_file,
@@ -166,17 +165,6 @@ class TestGetHostIps:
         assert get_host_ips("NO_SUCH_HOST", StubDefs()) == []
 
 
-class TestAnySource:
-    @pytest.mark.parametrize("src", [None, "", "ANY", "ANY_V4", "ANY_V6",
-                                     ["NET_APP", "ANY_V6"]])
-    def test_unrestricted_forms(self, src):
-        assert _is_any_source(src)
-
-    @pytest.mark.parametrize("src", ["NET_APP", ["NET_APP", "NET_MGMT"]])
-    def test_restricted_forms(self, src):
-        assert not _is_any_source(src)
-
-
 class StubAnnotator:
     """annotate_ip returns whatever the test set up for that address."""
 
@@ -230,31 +218,31 @@ def host(name, parents=()):
 
 class TestBestTokens:
     def test_no_relevant_annotations_means_no_tightening(self):
-        assert best_tokens([]) == (None, None, None)
+        assert best_tokens([]) == (None, None)
 
     def test_a_single_host_becomes_its_own_token(self):
-        toks, suggest, note = best_tokens([host("h1")])
-        assert toks == ["h1"] and suggest is None
+        toks, note = best_tokens([host("h1")])
+        assert toks == ["h1"] and note is None
 
     def test_an_external_source_blocks_tightening_entirely(self):
         # One address off the estate and the rule has to stay ANY, however many
         # internal sources sit beside it. This is the rule that produced the
         # most widenings on real estates, so it gets a test of its own.
-        toks, suggest, note = best_tokens([host("h1"), {"type": "EXTERNAL"}])
-        assert toks is None and suggest is None and note is None
+        toks, note = best_tokens([host("h1"), {"type": "EXTERNAL"}])
+        assert toks is None and note is None
 
     def test_duplicate_hosts_collapse(self):
-        toks, _, _ = best_tokens([host("h1"), host("h1")])
+        toks, _ = best_tokens([host("h1"), host("h1")])
         assert toks == ["h1"]
 
     def test_a_few_hosts_are_listed_individually_without_groups(self):
-        toks, suggest, _ = best_tokens([host("h1"), host("h2")])
-        assert sorted(toks) == ["h1", "h2"] and suggest is None
+        toks, note = best_tokens([host("h1"), host("h2")])
+        assert sorted(toks) == ["h1", "h2"] and note is None
 
     def test_a_group_covering_exactly_the_observed_hosts_is_used(self):
         anns = [host("h1", ["NET_APP"]), host("h2", ["NET_APP"])]
         members = {"NET_APP": frozenset({"h1", "h2"})}
-        toks, suggest, note = best_tokens(anns, members)
+        toks, note = best_tokens(anns, members)
         assert toks == ["NET_APP"]
         assert note is None  # nothing extra permitted
 
@@ -263,22 +251,19 @@ class TestBestTokens:
         # ones. Listing the two is tighter, so the group must lose.
         anns = [host("h1", ["NET_APP"]), host("h2", ["NET_APP"])]
         members = {"NET_APP": frozenset({"h1", "h2", "x1", "x2", "x3"})}
-        toks, suggest, note = best_tokens(anns, members)
+        toks, note = best_tokens(anns, members)
         assert sorted(toks) == ["h1", "h2"]
 
     def test_using_a_looser_group_is_recorded_as_excess(self):
         anns = [host("h1", ["NET_APP"]), host("h2", ["NET_APP"])]
         members = {"NET_APP": frozenset({"h1", "h2", "x1"})}
-        toks, suggest, note = best_tokens(anns, members)
+        toks, note = best_tokens(anns, members)
         assert toks == ["NET_APP"]
         assert note and "x1" in note
-        assert suggest == ["h1", "h2"]   # the tighter set, for groups.yml
 
-    def test_too_many_individual_hosts_suggests_a_group_instead(self):
+    def test_too_many_individual_hosts_keep_the_term_at_any(self):
         anns = [host(f"h{i}") for i in range(20)]
-        toks, suggest, _ = best_tokens(anns)
-        assert toks is None
-        assert suggest and len(suggest) == 20
+        assert best_tokens(anns) == (None, None)
 
 
 def test_a_windows_egress_filter_is_egress(tmp_path):

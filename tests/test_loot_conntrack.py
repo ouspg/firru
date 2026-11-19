@@ -18,7 +18,7 @@ import subprocess
 
 import pytest
 
-from firru.cli.conntrack_flows import parse, snapshot, to_flow
+from firru.cli.loot_conntrack import parse, snapshot, to_flow
 
 
 def flow(line):
@@ -226,7 +226,7 @@ class TestTheSnapshotAsksForOptionsItMayNotGet:
             def communicate(self):
                 return '', ''
 
-        import firru.cli.conntrack_flows as m
+        import firru.cli.loot_conntrack as m
         original = subprocess.Popen
         subprocess.Popen = FakePopen
         try:
@@ -245,7 +245,7 @@ class TestStdoutIsNothingButFlows:
             'dport=34846 [ASSURED] mark=0 use=1\n')
 
     def test_every_stdout_line_is_a_flow_record(self, monkeypatch, capsys):
-        from firru.cli import conntrack_flows
+        from firru.cli import loot_conntrack
 
         class FakePopen:
             def __init__(self, cmd, **kw):
@@ -257,7 +257,7 @@ class TestStdoutIsNothingButFlows:
         monkeypatch.setattr(subprocess, 'Popen', FakePopen)
         monkeypatch.setattr('sys.argv', ['loot-conntrack', '--snapshot-only'])
 
-        assert conntrack_flows.main() == 0
+        assert loot_conntrack.main() == 0
         out = capsys.readouterr()
 
         lines = [l for l in out.out.splitlines() if l.strip()]
@@ -278,7 +278,7 @@ class TestSavedTextReadsLikeTheLiveTable:
               'shown.\n')
 
     def test_a_saved_table_becomes_flows(self, tmp_path, monkeypatch, capsys):
-        from firru.cli import conntrack_flows
+        from firru.cli import loot_conntrack
 
         saved = tmp_path / 'conntrack'
         saved.write_text(self.TEXT)
@@ -289,7 +289,7 @@ class TestSavedTextReadsLikeTheLiveTable:
         monkeypatch.setattr(subprocess, 'Popen', no_conntrack)
         monkeypatch.setattr('sys.argv', ['loot-conntrack', str(saved)])
 
-        assert conntrack_flows.main() == 0
+        assert loot_conntrack.main() == 0
         lines = capsys.readouterr().out.splitlines()
         assert len(lines) == 2
         assert json.loads(lines[0])['dst_port'] == 993

@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/gas-historian_beg_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:20Z to 2024-03-07T05:59:57Z
-# Source suggestions changed: 1 | Dead rules: 2 | Group suggestions: 0
+# Source suggestions changed: 1 | Log-drop candidates: 6
 metadata:
   host: gas-historian
   zone: beg
@@ -32,14 +32,14 @@ filters:
         protocol: icmpv6
         action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-MYSQL
         protocol: tcp
         destination-port: MYSQL
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-RDP
         protocol: tcp
         destination-port: RDP
@@ -47,28 +47,28 @@ filters:
         source-address:
           - BEG_GT
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-HTTP-ALT
         protocol: tcp
         destination-port: HTTP-ALT
         action: accept
         source-address: ANY_V4
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-MYSQL-X
         protocol: tcp
         destination-port: MYSQL-X
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-IPP
         protocol: udp
         destination-port: IPP
         action: accept
         source-address: ANY_V4
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-MDNS
         protocol: udp
         destination-port: MDNS

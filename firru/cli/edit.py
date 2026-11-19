@@ -89,7 +89,7 @@ from firru.policy import (
     term_surface_keys,
 )
 from firru.scoring import load_scoring
-from firru.cli.score_policy import annotate_policy
+from firru.cli.score import annotate_policy
 
 yaml_handler = YAML()
 yaml_handler.indent(mapping=2, sequence=4, offset=2)
@@ -191,7 +191,7 @@ def _load_side(path, defs_dir, zone_prefix=None, allow_ruleset=False):
     import json as _json
     if str(path).endswith(".json"):
         from pathlib import Path as _Path
-        from firru.cli.listeners_to_aerleon import synth_host
+        from firru.cli.synth import synth_host
         with open(path, encoding="utf-8-sig") as f:
             data = _json.load(f)
         from firru.cli.winfw_to_aerleon import is_winfw
@@ -235,7 +235,7 @@ def _load_side(path, defs_dir, zone_prefix=None, allow_ruleset=False):
                                      expected=load_expected(defs_dir),
                                      profile=load_profile(resolve(defs_dir)))
         doc.setdefault("metadata", {})["source"] = "loot"
-        from firru.cli.listeners_to_aerleon import synth_entries
+        from firru.cli.synth import synth_entries
         dynamic = synth_entries(data, cached_naming(defs_dir), all_meta, _Path(path).stem)[4]
         if dynamic:
             doc["metadata"]["dynamic_left_out"] = len(dynamic)

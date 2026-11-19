@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/keycloak_bgp_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:08Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 2 | Dead rules: 0 | Group suggestions: 0
+# Source suggestions changed: 2 | Log-drop candidates: 2
 metadata:
   host: keycloak
   zone: bgp
@@ -39,14 +39,14 @@ filters:
         protocol: icmpv6
         action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-TCP_22395
         protocol: tcp
         destination-port: TCP_22395
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-KEYCLOAK-PING
         protocol: udp
         destination-port: KEYCLOAK-PING

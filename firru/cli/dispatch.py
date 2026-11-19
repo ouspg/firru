@@ -29,8 +29,8 @@ _ALIASES = {"set-dest": "set-destination"}
 
 # Verbs that map straight to a module main().
 _MODULES = {
-    "synth":             "firru.cli.listeners_to_aerleon",  # loot JSON -> staged policy YAML
-    "score":             "firru.cli.score_policy",          # annotate [score] notes
+    "synth":             "firru.cli.synth",                 # loot JSON -> staged policy YAML
+    "score":             "firru.cli.score",                 # annotate [score] notes
     "tighten":           "firru.cli.tighten",               # tighten sources from flows
     "merge-zones":       "firru.cli.merge_zones",           # per-host -> per-zone policy
     "annotate-services": "firru.cli.annotate_services",     # refresh [auto] evidence in def/

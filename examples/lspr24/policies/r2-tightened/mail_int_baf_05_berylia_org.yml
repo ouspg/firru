@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/mail_int_baf_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:01Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 10 | Dead rules: 6 | Group suggestions: 0
+# Source suggestions changed: 10 | Log-drop candidates: 20
 metadata:
   host: mail
   zone: baf_int
@@ -92,21 +92,21 @@ filters:
         protocol: icmpv6
         action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-TCP_81
         protocol: tcp
         destination-port: TCP_81
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
         protocol: tcp
         destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-NETBIOS-SSN-LEGACY
         protocol: tcp
         destination-port: NETBIOS-SSN-LEGACY
@@ -114,147 +114,91 @@ filters:
         source-address:
           - BAF_INT_HOSTS
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-TCP_444
         protocol: tcp
         destination-port: TCP_444
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_475
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+      - name: allow-tcp-MSEXCHANGEDELIVERY
         protocol: tcp
-        destination-port: TCP_475
+        destination-port: MSEXCHANGEDELIVERY
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_476
-        protocol: tcp
-        destination-port: TCP_476
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_477
-        protocol: tcp
-        destination-port: TCP_477
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-RPC-HTTPS
         protocol: tcp
         destination-port: WINDOWS-RPC-HTTPS
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_717
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+      - name: allow-tcp-MSEXCHANGEFRONTENDTRANSPORT
         protocol: tcp
-        destination-port: TCP_717
+        destination-port: MSEXCHANGEFRONTENDTRANSPORT
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_808
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+      - name: allow-tcp-SMSVCHOST
         protocol: tcp
-        destination-port: TCP_808
+        destination-port: SMSVCHOST
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_890
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+      - name: allow-tcp-MSEXCHANGEADTOPOLOGY
         protocol: tcp
-        destination-port: TCP_890
+        destination-port: MSEXCHANGEADTOPOLOGY
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_2525
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+      - name: allow-tcp-EDGETRANSPORT
         protocol: tcp
-        destination-port: TCP_2525
+        destination-port: EDGETRANSPORT
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-TCP_3800
         protocol: tcp
         destination-port: TCP_3800
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_3801
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+      - name: allow-tcp-HOSTCONTROLLERSERVICE
         protocol: tcp
-        destination-port: TCP_3801
+        destination-port: HOSTCONTROLLERSERVICE
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_3803
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+      - name: allow-tcp-NODERUNNER
         protocol: tcp
-        destination-port: TCP_3803
+        destination-port: NODERUNNER
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_3823
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+      - name: allow-tcp-MSEXCHANGERPC
         protocol: tcp
-        destination-port: TCP_3823
+        destination-port: MSEXCHANGERPC
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_3828
-        protocol: tcp
-        destination-port: TCP_3828
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_3843
-        protocol: tcp
-        destination-port: TCP_3843
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_3863
-        protocol: tcp
-        destination-port: TCP_3863
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_3867
-        protocol: tcp
-        destination-port: TCP_3867
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_3875
-        protocol: tcp
-        destination-port: TCP_3875
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
-      - name: allow-tcp-TCP_6001
-        protocol: tcp
-        destination-port: TCP_6001
-        action: accept
-        source-address: ANY
-
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-NTP
         protocol: udp
         destination-port: NTP
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-NETBIOS-NS-LEGACY
         protocol: udp
         destination-port: NETBIOS-NS-LEGACY
@@ -262,7 +206,7 @@ filters:
         source-address:
           - BAF_INT_HOSTS
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-NETBIOS-DGM-LEGACY
         protocol: udp
         destination-port: NETBIOS-DGM-LEGACY
@@ -270,7 +214,7 @@ filters:
         source-address:
           - BAF_INT_HOSTS
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-RDP
         protocol: udp
         destination-port: RDP
@@ -278,7 +222,7 @@ filters:
         source-address:
           - BAF_INT_GT
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-MDNS
         protocol: udp
         destination-port: MDNS
@@ -287,7 +231,7 @@ filters:
           - MDNS_SOURCES_V4
           - MDNS_SOURCES_V6
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-LLMNR
         protocol: udp
         destination-port: LLMNR

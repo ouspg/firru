@@ -123,7 +123,7 @@ def test_without_any_hints_the_choice_is_what_best_token_always_made(defs):
 # --- end to end --------------------------------------------------------------
 
 def test_synthesis_names_the_port_after_its_owner(defs, owners):
-    from firru.cli.listeners_to_aerleon import synth_host
+    from firru.cli.synth import synth_host
 
     def port_name(process):
         data = {"metadata": {"hostname": "h1.example.org", "os": "linux"},
@@ -210,7 +210,7 @@ def test_expect_does_not_change_which_name_wins(defs, owners):
 def test_synthesis_puts_the_surprise_on_its_own_comment_line(defs, owners, expected):
     import io
     from ruyaml import YAML
-    from firru.cli.listeners_to_aerleon import synth_host
+    from firru.cli.synth import synth_host
     data = {"metadata": {"hostname": "h1.example.org", "os": "linux"},
             "listen_ports": [{"protocol": "tcp", "port": 8080, "bind_address": "0.0.0.0/0",
                               "process": {"name": "python3"}}]}

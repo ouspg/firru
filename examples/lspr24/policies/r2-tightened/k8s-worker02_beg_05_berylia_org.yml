@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/k8s-worker02_beg_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:57Z
-# Source suggestions changed: 4 | Dead rules: 0 | Group suggestions: 0
+# Source suggestions changed: 4 | Log-drop candidates: 4
 metadata:
   host: k8s-worker02
   zone: beg
@@ -63,28 +63,28 @@ filters:
         protocol: icmpv6
         action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-METALLB-METRICS
         protocol: tcp
         destination-port: METALLB-METRICS
         action: accept
         source-address: ANY_V4
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-NODE-EXPORTER
         protocol: tcp
         destination-port: NODE-EXPORTER
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-K8S-KUBELET
         protocol: tcp
         destination-port: K8S-KUBELET
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-K8S-KUBE-PROXY
         protocol: tcp
         destination-port: K8S-KUBE-PROXY

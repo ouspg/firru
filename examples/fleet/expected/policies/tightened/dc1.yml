@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/dc1.yml
 # Flows: flows.jsonl, 2026-10-24T00:02:06Z to 2026-10-24T23:57:25Z
-# Source suggestions changed: 8 | Dead rules: 2 | Group suggestions: 0
+# Source suggestions changed: 8 | Log-drop candidates: 15
 metadata:
   host: dc1
 filters:
@@ -91,98 +91,98 @@ filters:
         protocol: icmpv6
         action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-DNS-TCP
         protocol: tcp
         destination-port: DNS-TCP
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-NETBIOS-SSN-LEGACY
         protocol: tcp
         destination-port: NETBIOS-SSN-LEGACY
         action: accept
         source-address: ANY_V4
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-KERBEROS-KPASSWD-TCP
         protocol: tcp
         destination-port: KERBEROS-KPASSWD-TCP
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-RPC-HTTPS
         protocol: tcp
         destination-port: WINDOWS-RPC-HTTPS
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-LDAPS
         protocol: tcp
         destination-port: LDAPS
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-LDAP-GC
         protocol: tcp
         destination-port: LDAP-GC
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-LDAP-GC-SSL
         protocol: tcp
         destination-port: LDAP-GC-SSL
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINRM-HTTP
         protocol: tcp
         destination-port: WINRM-HTTP
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-AD-ADWS
         protocol: tcp
         destination-port: WINDOWS-AD-ADWS
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
         protocol: tcp
         destination-port: WINDOWS-WINRM-UNCONFIGURED
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-NETBIOS-NS-LEGACY
         protocol: udp
         destination-port: NETBIOS-NS-LEGACY
         action: accept
         source-address: ANY_V4
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-NETBIOS-DGM-LEGACY
         protocol: udp
         destination-port: NETBIOS-DGM-LEGACY
         action: accept
         source-address: ANY_V4
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-KERBEROS-KPASSWD-UDP
         protocol: udp
         destination-port: KERBEROS-KPASSWD-UDP
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-MDNS
         protocol: udp
         destination-port: MDNS
@@ -191,7 +191,7 @@ filters:
           - MDNS_SOURCES_V4
           - MDNS_SOURCES_V6
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-LLMNR
         protocol: udp
         destination-port: LLMNR

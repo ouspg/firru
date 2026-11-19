@@ -7,7 +7,7 @@ import textwrap
 import pytest
 from aerleon.lib import naming
 
-from firru.cli.listeners_to_aerleon import build_service_surface, synth_host
+from firru.cli.synth import build_service_surface, synth_host
 
 
 @pytest.fixture(scope="module")

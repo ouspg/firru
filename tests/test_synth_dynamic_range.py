@@ -5,7 +5,7 @@ import pathlib
 import pytest
 from aerleon.lib import naming
 
-from firru.cli.listeners_to_aerleon import synth_entries
+from firru.cli.synth import synth_entries
 
 DEF = pathlib.Path(__file__).parent.parent / "def"
 

@@ -45,14 +45,14 @@ def test_edit_verb_delegates_to_edit(monkeypatch):
 
 
 def test_module_verb_delegates(monkeypatch):
-    """`firru score …` reaches score_policy.main with argv rewritten."""
+    """`firru score …` reaches score.main with argv rewritten."""
     seen = {}
 
     def fake_main():
         seen["argv"] = list(sys.argv)
         return 0
 
-    monkeypatch.setattr("firru.cli.score_policy.main", fake_main)
+    monkeypatch.setattr("firru.cli.score.main", fake_main)
     rc = _run(["score", "--scoring", "s.yml", "pol/"], monkeypatch)
     assert rc == 0
     assert seen["argv"] == ["firru score", "--scoring", "s.yml", "pol/"]

@@ -75,21 +75,9 @@ filters:
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery) | IPv6 ::/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery)
-      - name: allow-tcp-TCP_475
+      - name: allow-tcp-MSEXCHANGEDELIVERY
         protocol: tcp
-        destination-port: TCP_475
-        action: accept
-        source-address: ANY
-# [auto] IPv4 0.0.0.0/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery) | IPv6 ::/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery)
-      - name: allow-tcp-TCP_476
-        protocol: tcp
-        destination-port: TCP_476
-        action: accept
-        source-address: ANY
-# [auto] IPv4 0.0.0.0/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery) | IPv6 ::/0 (MSExchangeDelivery C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeDelivery.exe MSExchangeDelivery)
-      - name: allow-tcp-TCP_477
-        protocol: tcp
-        destination-port: TCP_477
+        destination-port: MSEXCHANGEDELIVERY
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport) | IPv6 ::/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport)
@@ -105,27 +93,27 @@ filters:
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport) | IPv6 ::/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport)
-      - name: allow-tcp-TCP_717
+      - name: allow-tcp-MSEXCHANGEFRONTENDTRANSPORT
         protocol: tcp
-        destination-port: TCP_717
+        destination-port: MSEXCHANGEFRONTENDTRANSPORT
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (SMSvcHost C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SMSvcHost.exe NetPipeActivator NetTcpActivator NetTcpPortSharing) | IPv6 ::/0 (SMSvcHost C:\Windows\Microsoft.NET\Framework64\v4.0.30319\SMSvcHost.exe NetPipeActivator NetTcpActivator NetTcpPortSharing)
-      - name: allow-tcp-TCP_808
+      - name: allow-tcp-SMSVCHOST
         protocol: tcp
-        destination-port: TCP_808
+        destination-port: SMSVCHOST
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (Microsoft.Exchange.Directory.TopologyService C:\Program Files\Microsoft\Exchange Server\V15\Bin\Microsoft.Exchange.Directory.TopologyService.exe MSExchangeADTopology) | IPv6 ::/0 (Microsoft.Exchange.Directory.TopologyService C:\Program Files\Microsoft\Exchange Server\V15\Bin\Microsoft.Exchange.Directory.TopologyService.exe MSExchangeADTopology)
-      - name: allow-tcp-TCP_890
+      - name: allow-tcp-MSEXCHANGEADTOPOLOGY
         protocol: tcp
-        destination-port: TCP_890
+        destination-port: MSEXCHANGEADTOPOLOGY
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (EdgeTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\edgetransport.exe) | IPv6 ::/0 (EdgeTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\edgetransport.exe)
-      - name: allow-tcp-TCP_2525
+      - name: allow-tcp-EDGETRANSPORT
         protocol: tcp
-        destination-port: TCP_2525
+        destination-port: EDGETRANSPORT
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\System32\svchost.exe TermService) | IPv6 ::/0 (svchost C:\Windows\System32\svchost.exe TermService)
@@ -142,51 +130,15 @@ filters:
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (hostcontrollerservice C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\HostController\hostcontrollerservice.exe HostControllerService) | IPv6 ::/0 (hostcontrollerservice C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\HostController\hostcontrollerservice.exe HostControllerService)
-      - name: allow-tcp-TCP_3801
+      - name: allow-tcp-HOSTCONTROLLERSERVICE
         protocol: tcp
-        destination-port: TCP_3801
+        destination-port: HOSTCONTROLLERSERVICE
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
-      - name: allow-tcp-TCP_3803
+      - name: allow-tcp-NODERUNNER
         protocol: tcp
-        destination-port: TCP_3803
-        action: accept
-        source-address: ANY
-# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\ResourceProfile\contentengine\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\ResourceProfile\contentengine\NodeRunner.exe)
-      - name: allow-tcp-TCP_3823
-        protocol: tcp
-        destination-port: TCP_3823
-        action: accept
-        source-address: ANY
-# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\ResourceProfile\contentengine\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\ResourceProfile\contentengine\NodeRunner.exe)
-      - name: allow-tcp-TCP_3828
-        protocol: tcp
-        destination-port: TCP_3828
-        action: accept
-        source-address: ANY
-# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
-      - name: allow-tcp-TCP_3843
-        protocol: tcp
-        destination-port: TCP_3843
-        action: accept
-        source-address: ANY
-# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
-      - name: allow-tcp-TCP_3863
-        protocol: tcp
-        destination-port: TCP_3863
-        action: accept
-        source-address: ANY
-# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
-      - name: allow-tcp-TCP_3867
-        protocol: tcp
-        destination-port: TCP_3867
-        action: accept
-        source-address: ANY
-# [auto] IPv4 0.0.0.0/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe) | IPv6 ::/0 (noderunner C:\Program Files\Microsoft\Exchange Server\V15\Bin\Search\Ceres\Runtime\1.0\NodeRunner.exe)
-      - name: allow-tcp-TCP_3875
-        protocol: tcp
-        destination-port: TCP_3875
+        destination-port: NODERUNNER
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
@@ -197,9 +149,9 @@ filters:
         source-address:
           - BAF_INT_GT
 # [auto] IPv4 0.0.0.0/0 (Microsoft.Exchange.RpcClientAccess.Service C:\Program Files\Microsoft\Exchange Server\V15\bin\Microsoft.Exchange.RpcClientAccess.Service.exe MSExchangeRPC) | IPv6 ::/0 (Microsoft.Exchange.RpcClientAccess.Service C:\Program Files\Microsoft\Exchange Server\V15\bin\Microsoft.Exchange.RpcClientAccess.Service.exe MSExchangeRPC)
-      - name: allow-tcp-TCP_6001
+      - name: allow-tcp-MSEXCHANGERPC
         protocol: tcp
-        destination-port: TCP_6001
+        destination-port: MSEXCHANGERPC
         action: accept
         source-address: ANY
 # [auto] IPv4 0.0.0.0/0 (msexchangerepl C:\Program Files\Microsoft\Exchange Server\V15\Bin\msexchangerepl.exe MSExchangeRepl) | IPv6 ::/0 (msexchangerepl C:\Program Files\Microsoft\Exchange Server\V15\Bin\msexchangerepl.exe MSExchangeRepl)

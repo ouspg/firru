@@ -201,7 +201,7 @@ def test_an_ordinary_web_server_on_443_is_not_a_contradiction():
 def _synth(tmp_path, defs_dir, os_name, ports):
     import json
     from aerleon.lib import naming
-    from firru.cli.listeners_to_aerleon import synth_host
+    from firru.cli.synth import synth_host
     data = {"metadata": {"hostname": "h1.example.org", "os": os_name},
             "listen_ports": [{"protocol": "tcp", "port": p,
                               "bind_address": "0.0.0.0/0",
@@ -253,7 +253,7 @@ def test_the_diff_path_keeps_what_synthesis_drops(tmp_path, defs_dir):
     """
     import json
     from aerleon.lib import naming
-    from firru.cli.listeners_to_aerleon import synth_host
+    from firru.cli.synth import synth_host
     data = {"metadata": {"hostname": "h1.example.org", "os": "linux"},
             "listen_ports": [{"protocol": "tcp", "port": 42424,
                               "bind_address": "0.0.0.0/0",

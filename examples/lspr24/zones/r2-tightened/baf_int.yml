@@ -39,21 +39,9 @@ filters:
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_475
+  - name: mail_int_baf_05_berylia_org-allow-tcp-MSEXCHANGEDELIVERY
     protocol: tcp
-    destination-port: TCP_475
-    action: accept
-    source-address: ANY
-    destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_476
-    protocol: tcp
-    destination-port: TCP_476
-    action: accept
-    source-address: ANY
-    destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_477
-    protocol: tcp
-    destination-port: TCP_477
+    destination-port: MSEXCHANGEDELIVERY
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
@@ -63,27 +51,27 @@ filters:
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_717
+  - name: mail_int_baf_05_berylia_org-allow-tcp-MSEXCHANGEFRONTENDTRANSPORT
     protocol: tcp
-    destination-port: TCP_717
+    destination-port: MSEXCHANGEFRONTENDTRANSPORT
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_808
+  - name: mail_int_baf_05_berylia_org-allow-tcp-SMSVCHOST
     protocol: tcp
-    destination-port: TCP_808
+    destination-port: SMSVCHOST
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_890
+  - name: mail_int_baf_05_berylia_org-allow-tcp-MSEXCHANGEADTOPOLOGY
     protocol: tcp
-    destination-port: TCP_890
+    destination-port: MSEXCHANGEADTOPOLOGY
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_2525
+  - name: mail_int_baf_05_berylia_org-allow-tcp-EDGETRANSPORT
     protocol: tcp
-    destination-port: TCP_2525
+    destination-port: EDGETRANSPORT
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
@@ -93,57 +81,21 @@ filters:
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3801
+  - name: mail_int_baf_05_berylia_org-allow-tcp-HOSTCONTROLLERSERVICE
     protocol: tcp
-    destination-port: TCP_3801
+    destination-port: HOSTCONTROLLERSERVICE
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3803
+  - name: mail_int_baf_05_berylia_org-allow-tcp-NODERUNNER
     protocol: tcp
-    destination-port: TCP_3803
+    destination-port: NODERUNNER
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3823
+  - name: mail_int_baf_05_berylia_org-allow-tcp-MSEXCHANGERPC
     protocol: tcp
-    destination-port: TCP_3823
-    action: accept
-    source-address: ANY
-    destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3828
-    protocol: tcp
-    destination-port: TCP_3828
-    action: accept
-    source-address: ANY
-    destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3843
-    protocol: tcp
-    destination-port: TCP_3843
-    action: accept
-    source-address: ANY
-    destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3863
-    protocol: tcp
-    destination-port: TCP_3863
-    action: accept
-    source-address: ANY
-    destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3867
-    protocol: tcp
-    destination-port: TCP_3867
-    action: accept
-    source-address: ANY
-    destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_3875
-    protocol: tcp
-    destination-port: TCP_3875
-    action: accept
-    source-address: ANY
-    destination-address: mail_int_baf_05_berylia_org
-  - name: mail_int_baf_05_berylia_org-allow-tcp-TCP_6001
-    protocol: tcp
-    destination-port: TCP_6001
+    destination-port: MSEXCHANGERPC
     action: accept
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org
@@ -154,23 +106,11 @@ filters:
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
       ws3-baf05_int_baf_05_berylia_org
-  - name: ws1-baf01_int_baf_05_berylia_org-allow-tcp-TCP_5040
-    protocol: tcp
-    destination-port: TCP_5040
-    action: accept
-    source-address: ANY_V4
-    destination-address: ws1-baf01_int_baf_05_berylia_org
   - name: ws1-baf01_int_baf_05_berylia_org-allow-tcp-WINDOWS-WINRM-UNCONFIGURED
     protocol: tcp
     destination-port: WINDOWS-WINRM-UNCONFIGURED
     action: accept
     source-address: ANY
-    destination-address: ws1-baf01_int_baf_05_berylia_org
-  - name: ws1-baf01_int_baf_05_berylia_org-allow-udp-UDP_5050
-    protocol: udp
-    destination-port: UDP_5050
-    action: accept
-    source-address: ANY_V4
     destination-address: ws1-baf01_int_baf_05_berylia_org
   - name: ws3-baf05_int_baf_05_berylia_org-allow-udp-IPP
     protocol: udp
@@ -236,6 +176,13 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: SSH
+  - name: deny-ext-tcp-WINDOWS-CDP
+    action: deny
+    destination-address: ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: WINDOWS-CDP
   - name: deny-ext-tcp-WINDOWS-RPC-DYNAMIC
     action: deny
     destination-address: mail_int_baf_05_berylia_org
@@ -278,6 +225,13 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: udp
     destination-port: RDP
+  - name: deny-ext-udp-WINDOWS-CDP
+    action: deny
+    destination-address: ws1-baf01_int_baf_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: WINDOWS-CDP
   - name: drop-ghost-hosts
     action: deny
     destination-address: baf_int

@@ -185,20 +185,6 @@ filters:
     action: accept
     source-address: ANY
     destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
-  - name: allow-tcp-TCP_5040-shared
-    protocol: tcp
-    destination-port: TCP_5040
-    action: accept
-    source-address: ANY_V4
-    destination-address: ws1-beg01_int_beg_05_berylia_org ws1-beg02_int_beg_05_berylia_org
-      ws2-beg01_int_beg_05_berylia_org
-  - name: allow-udp-UDP_5050-shared
-    protocol: udp
-    destination-port: UDP_5050
-    action: accept
-    source-address: ANY_V4
-    destination-address: ws1-beg01_int_beg_05_berylia_org ws1-beg02_int_beg_05_berylia_org
-      ws2-beg01_int_beg_05_berylia_org
   - name: allow-udp-IPP-shared
     protocol: udp
     destination-port: IPP
@@ -264,6 +250,14 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: SSH
+  - name: deny-ext-tcp-WINDOWS-CDP
+    action: deny
+    destination-address: ws1-beg01_int_beg_05_berylia_org ws1-beg02_int_beg_05_berylia_org
+      ws2-beg01_int_beg_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: tcp
+    destination-port: WINDOWS-CDP
   - name: deny-ext-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
     action: deny
     destination-address: adcs-beg_int_beg_05_berylia_org
@@ -315,6 +309,14 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: udp
     destination-port: RDP
+  - name: deny-ext-udp-WINDOWS-CDP
+    action: deny
+    destination-address: ws1-beg01_int_beg_05_berylia_org ws1-beg02_int_beg_05_berylia_org
+      ws2-beg01_int_beg_05_berylia_org
+    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
+      \ traffic observed; host firewall handles intra-zone access"
+    protocol: udp
+    destination-port: WINDOWS-CDP
   - name: drop-ghost-hosts
     action: deny
     destination-address: beg_int

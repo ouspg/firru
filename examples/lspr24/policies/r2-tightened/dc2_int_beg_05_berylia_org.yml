@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/dc2_int_beg_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 11 | Dead rules: 6 | Group suggestions: 9
+# Source suggestions changed: 11 | Log-drop candidates: 12
 metadata:
   host: dc2
   zone: beg_int
@@ -141,14 +141,14 @@ filters:
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-KERBEROS-KPASSWD-TCP
         protocol: tcp
         destination-port: KERBEROS-KPASSWD-TCP
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-RPC-HTTPS
         protocol: tcp
         destination-port: WINDOWS-RPC-HTTPS
@@ -162,14 +162,14 @@ filters:
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-LDAP-GC-SSL
         protocol: tcp
         destination-port: LDAP-GC-SSL
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-RDP
         protocol: tcp
         destination-port: RDP
@@ -177,21 +177,21 @@ filters:
         source-address:
           - BEG_INT_GT
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
         protocol: tcp
         destination-port: WINDOWS-WINRM-UNCONFIGURED
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-KERBEROS-UDP
         protocol: udp
         destination-port: KERBEROS-UDP
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-NETBIOS-NS-LEGACY
         protocol: udp
         destination-port: NETBIOS-NS-LEGACY
@@ -199,7 +199,7 @@ filters:
         source-address:
           - BEG_INT_HOSTS
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-NETBIOS-DGM-LEGACY
         protocol: udp
         destination-port: NETBIOS-DGM-LEGACY
@@ -207,14 +207,14 @@ filters:
         source-address:
           - BEG_INT_HOSTS
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-KERBEROS-KPASSWD-UDP
         protocol: udp
         destination-port: KERBEROS-KPASSWD-UDP
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-RDP
         protocol: udp
         destination-port: RDP
@@ -222,7 +222,7 @@ filters:
         source-address:
           - BEG_INT_GT
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-MDNS
         protocol: udp
         destination-port: MDNS
@@ -231,7 +231,7 @@ filters:
           - MDNS_SOURCES_V4
           - MDNS_SOURCES_V6
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-LLMNR
         protocol: udp
         destination-port: LLMNR

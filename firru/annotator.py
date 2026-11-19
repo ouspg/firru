@@ -8,6 +8,7 @@ parent groups. Used by tighten.py to suggest source restrictions.
 
 import ipaddress
 from firru.prefixes import PrefixTree
+from firru.service_naming import _is_auto
 from aerleon.lib import naming
 
 
@@ -43,25 +44,33 @@ class PolicyAnnotator:
         self._port_map     = self._build_port_map()  # (port, proto) -> token
 
     def _build_port_map(self) -> dict:
-        """Reverse map (port, proto) -> service token, built once at init."""
-        port_map = {}
+        """Reverse map (port, proto) -> service token, built once at init.
+
+        Where several tokens name a port, the choice is synthesis's
+        (service_naming.best_token): a real name over a TCP_/UDP_ placeholder,
+        then the token naming the fewest ports, then the name. So HTTPS wins
+        443/tcp over WINDOWS-HYPERV-REPLICATION, never the order the
+        definition files were read in.
+        """
+        best = {}
         for token in self.naming.GetServiceNames():
             try:
                 entries = self.naming.GetService(token)
             except Exception:
                 continue
+            ports = []
             for entry in entries:
                 try:
                     port_str, proto = entry.split('/')
-                    if '-' in port_str:
-                        lo, hi = port_str.split('-')
-                        for p in range(int(lo), int(hi) + 1):
-                            port_map.setdefault((p, proto.lower()), token)
-                    else:
-                        port_map.setdefault((int(port_str), proto.lower()), token)
+                    lo, _, hi = port_str.partition('-')
+                    ports += [(p, proto.lower()) for p in range(int(lo), int(hi or lo) + 1)]
                 except Exception:
                     continue
-        return port_map
+            rank = (_is_auto(token), len(ports), token)
+            for key in ports:
+                if key not in best or rank < best[key]:
+                    best[key] = rank
+        return {key: rank[2] for key, rank in best.items()}
 
     def annotate_port(self, port: int, proto: str) -> str | None:
         """Return the service token for (port, proto), or None if unknown."""

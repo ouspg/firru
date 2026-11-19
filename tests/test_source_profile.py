@@ -6,7 +6,7 @@ what holds on any network.
 import textwrap
 
 from firru import src_heuristics as sh
-from firru.cli.listeners_to_aerleon import listen_to_term
+from firru.cli.synth import listen_to_term
 
 
 def entry(cidr="0.0.0.0/0"):
@@ -118,7 +118,7 @@ DC_LOOT = {"metadata": {"hostname": "dc", "os": "windows"}, "listen_ports": [
 
 def synth(profile):
     from aerleon.lib import naming
-    from firru.cli.listeners_to_aerleon import synth_host
+    from firru.cli.synth import synth_host
     from firru.defs_dir import STOCK
     _, pol, _ = synth_host(dict(DC_LOOT), naming.Naming(str(STOCK)), profile=profile)
     return pol

@@ -4,7 +4,7 @@ import textwrap
 from aerleon.lib import naming
 from ruyaml import YAML
 
-from firru.cli.score_policy import annotate_policy
+from firru.cli.score import annotate_policy
 
 
 def _defs(tmp_path):

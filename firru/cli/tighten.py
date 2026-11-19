@@ -7,7 +7,6 @@ produces a tightened policy. Outputs:
 
   policies/tighten/<hostname>.yml        — tightened policy (review + adopt)
   policies/tighten/<hostname>.blocked.yml — flows observed but blocked by proposal
-  policies/tighten/<hostname>.groups.yml  — suggested new group defs (when needed)
 
 Ingress: replaces ANY source-address with observed source tokens where possible.
 Egress:  replaces allow-ANY stub with terms derived from observed destinations.
@@ -31,7 +30,6 @@ Usage:
 import argparse
 import ipaddress
 import json
-import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -42,7 +40,7 @@ from ruyaml import YAML
 from ruyaml.comments import CommentedMap, CommentedSeq
 
 from firru.annotator import PolicyAnnotator
-from firru.arkime import ArkimeAPI, build_host_filter, process_flow
+from firru.arkime import ArkimeAPI, process_flow
 from firru.cli.address_summarizer import (_default_asn_db, summarize,
                                           summarize_asn)
 from firru.comments import TAG_AUTO, detached, tagged, set_term_comment, kept_comments_by_term
@@ -205,12 +203,6 @@ def _group_sizes(ext, asn_db):
     return prefix_group_sizes(ext)
 
 
-def _group_count(summary):
-    """The group count out of a summarizer lead line, or None."""
-    m = re.search(r"in (\d+) (?:block|AS)", summary)
-    return int(m.group(1)) if m else None
-
-
 # ---------------------------------------------------------------------------
 # Token consolidation
 # ---------------------------------------------------------------------------
@@ -218,13 +210,10 @@ def _group_count(summary):
 def best_tokens(annotations, group_members=None):
     """
     Given annotate_ip() results for a set of IPs, return:
-        (token_list, suggest_group_members, excess_note)
+        (token_list, excess_note)
 
-    token_list            — aerleon token(s) to put in source-address, or None
-    suggest_group_members — observed host tokens to emit as a tighter group
-                            suggestion in .groups.yml (set whenever a broader
-                            group is used OR when threshold is exceeded)
-    excess_note           — human-readable string about over-permitted hosts, or None
+    token_list  — aerleon token(s) to put in source-address, or None
+    excess_note — human-readable string about over-permitted hosts, or None
 
     Strategy:
     1. Any EXTERNAL source → keep ANY unchanged
@@ -232,19 +221,17 @@ def best_tokens(annotations, group_members=None):
     3. Greedy set cover using actual group membership (parents lists).
        Groups are only used if ALL observed hosts they cover are genuine members
        (no fabricated over-permission).  For each group chosen, the unobserved
-       members of that group also gain access — this is noted in excess_note and
-       the exact observed set is always emitted to .groups.yml so the operator
-       can create a tighter group when ready.
+       members of that group also gain access — this is noted in excess_note.
        Remaining uncovered hosts are listed individually.
        Total token count must fit within INDIVIDUAL_THRESHOLD.
-    4. > threshold, no cover → suggest new group only
+    4. > threshold, no cover → keep ANY unchanged
     """
     relevant = [a for a in annotations if a["type"] in ("HOST", "GROUP", "EXTERNAL")]
     if not relevant:
-        return None, None, None
+        return None, None
 
     if any(a["type"] == "EXTERNAL" for a in relevant):
-        return None, None, None  # external present → can't tighten below ANY
+        return None, None  # external present → can't tighten below ANY
 
     host_tokens = []
     for a in relevant:
@@ -256,10 +243,10 @@ def best_tokens(annotations, group_members=None):
             host_tokens.append(tok)
 
     if not host_tokens:
-        return None, None, None
+        return None, None
 
     if len(host_tokens) == 1:
-        return host_tokens, None, None
+        return host_tokens, None
 
     observed = frozenset(host_tokens)
 
@@ -311,21 +298,19 @@ def best_tokens(annotations, group_members=None):
                 remaining.clear()
 
         if len(chosen) <= INDIVIDUAL_THRESHOLD:
-            excess_note     = "\n".join(excess_parts) or None
-            suggest_members = sorted(observed) if excess_parts else None
-            return chosen, suggest_members, excess_note
+            return chosen, "\n".join(excess_parts) or None
 
-        # Too many tokens even with grouping → suggest new group
-        return None, sorted(observed), None
+        # Too many tokens even with grouping → ANY
+        return None, None
 
-    # No group_members available — individual list or suggest. Sorted: the
+    # No group_members available — individual list or ANY. Sorted: the
     # order the addresses arrived in follows the service members' iteration
     # order, which varies between runs, and the list is written into git.
     host_tokens = sorted(host_tokens)
     if len(host_tokens) <= INDIVIDUAL_THRESHOLD:
-        return host_tokens, None, None
+        return host_tokens, None
 
-    return None, host_tokens, None
+    return None, None
 
 
 # ---------------------------------------------------------------------------
@@ -535,14 +520,9 @@ def collect_flows_multi(flows_file, host_ips_by_token, defs, spans=None):
 
     Returns {host_token: (ingress, egress, ingress_ports, egress_ports)}.
 
-    TODO(parquet): this still line-scans a JSONL dump, parsing every record even
-    for a fleet that touches a fraction of it. As the flow record grows, back
-    this with a columnar store (the demo's verdict vector is already parquet):
-    push the host-address filter down as a predicate on src_ip/dst_ip and read
-    only (src_ip, dst_ip, protocol, dst_port) instead of decoding whole JSON
-    objects, so cost scales with matched flows, not with the file. Keep the
-    JSONL path for the small/no-dependency case. The bucketing below is already
-    single-pass and store-agnostic; only the read loop changes.
+    From a parquet store, iter_flow_groups pushes the host-address filter down
+    and hands back counted groups, so the cost follows the matched flows; a
+    JSONL dump is still parsed line by line.
     """
     from firru.flows import iter_flow_groups
 
@@ -772,14 +752,6 @@ def find_blocked(ingress_flows, tightened_terms, annotator, defs, ingress_ports)
 # Ingress tightening
 # ---------------------------------------------------------------------------
 
-def _is_any_source(src):
-    """Return True if source-address is an ANY wildcard (or list containing one)."""
-    if not src:
-        return True
-    tokens = [src] if isinstance(src, str) else list(src)
-    return any(t in ("ANY", "ANY_V4", "ANY_V6") for t in tokens)
-
-
 def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=False,
                     ingress_ports=None, dns_store=None, asn_db=None, any_rows=None,
                     host_token=None):
@@ -788,13 +760,12 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
 
     Returns:
         terms          — CommentedSeq of tightened terms
-        group_suggest  — {port_label: [individual_tokens]} for .groups.yml
-        dead_rules     — list of dicts: terms with tightened source but zero traffic
-                         (NoPair(policy_term, traffic_in_window) = dead rule candidate)
+        unused         — list of dicts: accept terms nothing matched in the window,
+                         each a log-drop candidate
+        n_changed      — how many terms got a new source
     """
     terms         = CommentedSeq()
-    group_suggest = {}
-    dead_rules    = []
+    unused        = []
 
     changed    = CommentedSeq()
     unchanged  = CommentedSeq()
@@ -899,19 +870,21 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
         if not svc or ip_counter is None:
             set_term_comment(
                 new_term,
-                [tagged(TAG_AUTO, "no flows observed in window — source unchanged")],
+                [tagged(TAG_AUTO, "no flows observed in window — source unchanged"
+                        + ("; log-drop candidate" if svc else ""))],
                 kept_map.get(term.get("name"), []),
             )
-            # Dead-rule detection: no flows observed for a term with a specific source.
+            # One window without a flow is not proof the service is unused:
+            # the term goes to log-drop, where what it would refuse is still
+            # recorded, before anyone drops it. Its source does not matter;
+            # a listener at ANY that nothing reached is the same finding.
             if svc:
-                src = term.get("source-address")
-                if not _is_any_source(src):
-                    dead_rules.append({
-                        "name":   term.get("name", ""),
-                        "proto":  proto,
-                        "svc":    svc,
-                        "source": src,
-                    })
+                unused.append({
+                    "name":   term.get("name", ""),
+                    "proto":  proto,
+                    "svc":    svc,
+                    "source": term.get("source-address", "ANY"),
+                })
             unchanged.append(new_term)
             continue
 
@@ -921,11 +894,7 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
         if port_summary:
             comment = f"{comment} | {port_summary}"
 
-        token_list, suggest_members, excess_note = best_tokens(annotations, annotator.group_members)
-
-        if suggest_members:
-            label = f"{proto}-{svc}"
-            group_suggest[label] = sorted(set(suggest_members))
+        token_list, excess_note = best_tokens(annotations, annotator.group_members)
 
         old_src = term.get("source-address")
         was_changed = False
@@ -969,7 +938,7 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
     for t in deny_terms:
         terms.append(t)
 
-    return terms, group_suggest, dead_rules, n_changed
+    return terms, unused, n_changed
 
 
 # ---------------------------------------------------------------------------
@@ -1016,7 +985,7 @@ def build_egress_terms(egress_flows, annotator, defs, dns_store=None, asn_db=Non
             continue
 
         comment, annotations, raw_ips = summarise_annotations(ip_counter, annotator)
-        token_list, _, _ = best_tokens(annotations, annotator.group_members)
+        token_list, _ = best_tokens(annotations, annotator.group_members)
 
         term_name = (
             f"allow-{proto}-{svc}"
@@ -1102,68 +1071,6 @@ def build_blocked_yaml(blocked):
                 else str(b["proposed_src"])
             )
         doc["blocked"].append(entry)
-
-    return doc
-
-
-# ---------------------------------------------------------------------------
-# Group suggestion YAML builder
-# ---------------------------------------------------------------------------
-
-def build_groups_yaml(group_suggest):
-    """Return a stub networks YAML with suggested new group definitions."""
-    doc = CommentedMap()
-    doc.yaml_set_start_comment(
-        "Suggested new network group definitions.\n"
-        "Review, name appropriately, and add to def/ before rerunning tighten."
-    )
-    doc["networks"] = CommentedMap()
-
-    for label, members in sorted(group_suggest.items()):
-        token = f"SUGGEST_{label.upper().replace('-', '_')}"
-        entry = CommentedMap()
-        entry.yaml_set_start_comment(f"observed sources for {label}: {', '.join(members)}")
-        entry["values"] = [{"address": m} for m in members]
-        doc["networks"][token] = entry
-
-    return doc
-
-
-# ---------------------------------------------------------------------------
-# Dead-rule YAML builder
-# ---------------------------------------------------------------------------
-
-def build_dead_yaml(dead_rules):
-    """
-    Return a CommentedMap YAML doc listing dead-rule candidates.
-
-    A dead rule is an ingress accept term whose source-address has already been
-    tightened (not ANY) but which matched zero observed traffic in the lookback
-    window.  NoPair(policy_term, traffic_in_window).
-
-    Remediation options per entry:
-      - Remove the term if the service is decommissioned.
-      - Widen the lookback window if traffic is infrequent.
-      - Verify the source host is still active / reachable.
-    """
-    doc = CommentedMap()
-    doc.yaml_set_start_comment(
-        "Dead-rule candidates — NoPair(policy_term, traffic_in_window).\n"
-        "Each term below has a tightened source-address but zero observed traffic\n"
-        "in the lookback window.  Options: remove, widen window, or re-check host."
-    )
-    doc["dead_rules"] = CommentedSeq()
-
-    for d in dead_rules:
-        entry = CommentedMap()
-        if d["name"]:
-            entry["name"] = d["name"]
-        entry["protocol"] = d["proto"]
-        entry["service"]  = d["svc"]
-        entry["source"]   = (
-            d["source"] if isinstance(d["source"], str) else list(d["source"])
-        )
-        doc["dead_rules"].append(entry)
 
     return doc
 
@@ -1532,8 +1439,7 @@ Examples:
       # ------------------------------------------------------------------
       # Rebuild policy
       # ------------------------------------------------------------------
-      all_group_suggest = {}
-      all_dead_rules    = []
+      all_unused        = []
       all_n_changed     = 0
       new_filters = CommentedSeq()
       all_ingress_terms = CommentedSeq()
@@ -1560,13 +1466,12 @@ Examples:
                   any_rows=any_rows, host_token=host_token)
           else:
               in_terms = filt.get("terms", [])
-              tightened, group_suggest, dead_rules, n_changed = tighten_ingress(
+              tightened, unused, n_changed = tighten_ingress(
                   in_terms, ingress_flows, annotator, defs, verbose=args.verbose,
                   ingress_ports=ingress_ports, dns_store=dns_store, asn_db=asn_db,
                   any_rows=any_rows, host_token=host_token,
               )
-              all_group_suggest.update(group_suggest)
-              all_dead_rules.extend(dead_rules)
+              all_unused.extend(unused)
               all_n_changed += n_changed
               new_filt["terms"] = tightened
               for t in tightened:
@@ -1610,15 +1515,11 @@ Examples:
                         f"src {src:50s}  {b['reason']}")
               if len(blocked) > 20:
                   print(f"  … and {len(blocked)-20} more")
-          if all_dead_rules:
-              print(f"\n--- Dead-rule candidates ({len(all_dead_rules)}) ---")
-              for d in all_dead_rules:
+          if all_unused:
+              print(f"\n--- Log-drop candidates, no flows in the window ({len(all_unused)}) ---")
+              for d in all_unused:
                   name = f"  [{d['name']}]" if d["name"] else ""
                   print(f"  {d['proto']}/{d['svc']:20s}  src: {d['source']}{name}")
-          if all_group_suggest:
-              print(f"\n--- Group suggestions ---")
-              for label, members in all_group_suggest.items():
-                  print(f"  {label}: {members}")
           continue
 
       # ------------------------------------------------------------------
@@ -1627,8 +1528,6 @@ Examples:
       stem        = policy_path.stem
       out_policy  = outdir / f"{stem}.yml"
       out_blocked = outdir / f"{stem}.blocked.yml"
-      out_groups  = outdir / f"{stem}.groups.yml"
-      out_dead    = outdir / f"{stem}.dead.yml"
 
       if out_policy.exists() and not args.overwrite:
           print(f"  {stem}: output exists — skipping (use --overwrite)", file=sys.stderr)
@@ -1638,14 +1537,13 @@ Examples:
           f"firru tighten output — review and copy changes to policies/pol/{policy_path.name}\n"
           f"{window_line(source, span)}\n"
           f"Source suggestions changed: {all_n_changed} | "
-          f"Dead rules: {len(all_dead_rules)} | "
-          f"Group suggestions: {len(all_group_suggest)}"
+          f"Log-drop candidates: {len(all_unused)}"
       )
       with open(out_policy, "w") as f:
           yaml_handler.dump(policy, f)
       print(f"Written: {out_policy}  "
-            f"({all_n_changed} changed, {len(all_dead_rules)} dead, "
-            f"{len(all_group_suggest)} group suggestions)")
+            f"({all_n_changed} changed, {len(all_unused)} log-drop "
+            f"candidate{'' if len(all_unused) == 1 else 's'})")
 
       if blocked:
           with open(out_blocked, "w") as f:
@@ -1654,22 +1552,6 @@ Examples:
       else:
           if out_blocked.exists():
               out_blocked.unlink()
-
-      if all_group_suggest:
-          with open(out_groups, "w") as f:
-              yaml_handler.dump(build_groups_yaml(all_group_suggest), f)
-          print(f"Written: {out_groups}  ({len(all_group_suggest)} suggested groups)")
-      else:
-          if out_groups.exists():
-              out_groups.unlink()
-
-      if all_dead_rules:
-          with open(out_dead, "w") as f:
-              yaml_handler.dump(build_dead_yaml(all_dead_rules), f)
-          print(f"Written: {out_dead}  ({len(all_dead_rules)} dead-rule candidates)")
-      else:
-          if out_dead.exists():
-              out_dead.unlink()
 
     if any_rows is not None:
         report = any_rollup(any_rows, asn_db=asn_db, dns_store=dns_store)

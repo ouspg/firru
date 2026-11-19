@@ -1,7 +1,7 @@
 import json
 from collections import Counter
 
-from firru.cli.unknown_services import (
+from firru.cli.audit_services import (
     CLIENT_TARGET_PORTS,
     audit_against_flows,
     emit_edit_sh,

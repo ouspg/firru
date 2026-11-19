@@ -15,7 +15,6 @@ Usage:
 import argparse
 import ipaddress
 import json
-import re
 import sys
 from collections import Counter
 
@@ -85,19 +84,6 @@ def load_known_services(defs_folder):
 
 # --- Core Logic ---
 
-
-def sanitize_ss_line(line):
-    """
-    Specifically targets the process name inside the users:(("...")) block.
-    Only replaces spaces/colons within the quotes to prevent jc parsing errors.
-    """
-    def clean_proc_name(match):
-        full_users_block = match.group(0)
-        proc_name = match.group(1)
-        sanitized_name = re.sub(r'[:\s]', '_', proc_name)
-        return full_users_block.replace(f'"{proc_name}"', f'"{sanitized_name}"')
-
-    return re.sub(r'users:\(\(\"([^\"]+)\"', clean_proc_name, line)
 
 def build_new_services(ss_files, known_services=None):
     """
