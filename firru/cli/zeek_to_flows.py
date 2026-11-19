@@ -281,7 +281,9 @@ def write_parquet_store(conn_paths, out_dir, dns_paths=None, dns_window=300,
     con.execute(f"""
         COPY (
           SELECT {_SQL_COLUMNS} {fqdn},
-                 strftime(to_timestamp(c.ts), '%Y-%m-%dT%H') AS hour
+                 -- named in UTC: to_timestamp alone formats in the
+                 -- session's zone, which is the machine's
+                 strftime(to_timestamp(c.ts) AT TIME ZONE 'UTC', '%Y-%m-%dT%H') AS hour
           FROM (SELECT * FROM read_parquet({src!r}) WHERE {_SQL_KEEP_ROW}) c
           {join}
         ) TO {str(out_dir)!r}
