@@ -25,8 +25,9 @@ class FakeViewer:
                           reverse=p["order"].endswith("desc"))
         else:
             assert p["bounding"] == "first"
+            # stopTime is inclusive, as on 6.4.0
             rows = [s for s in self.sessions
-                    if p["startTime"] * 1000 <= s["firstPacket"] < p["stopTime"] * 1000]
+                    if p["startTime"] * 1000 <= s["firstPacket"] <= p["stopTime"] * 1000]
         page = rows[p.get("start", 0):p.get("start", 0) + p["length"]]
 
         class R:
@@ -73,6 +74,13 @@ def test_the_fields_asked_for_are_the_fields_process_flow_reads():
            "protocol": ["udp"], "firstPacket": 1_776_150_000_123, "lastPacket": 1_776_150_001_000}
     f = process_flow(udp)
     assert f["responded"] is True and f["timestamp"] == 1_776_150_000
+
+
+def test_the_tunnel_a_capture_came_over_is_not_the_protocol():
+    s = {"source": {"ip": "10.0.0.1"}, "destination": {"ip": "10.0.0.2"},
+         "protocol": ["sctp", "gre"], "firstPacket": 0}
+    assert process_flow(s)["protocol"] == "sctp"
+    assert process_flow({**s, "protocol": ["gre"]})["protocol"] == "gre"
 
 
 def test_a_crowded_slice_is_halved_until_paging_stays_shallow(monkeypatch):

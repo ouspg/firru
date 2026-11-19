@@ -148,8 +148,12 @@ class ArkimeAPI:
 
         # Time slices, each paged from offset 0, with the session counted in
         # the slice its first packet falls in (bounding=first): measured on
-        # 6.4.0, abutting [t, t+3600] slices add up to the whole window, where
-        # the default bounding counts a long session in every slice it spans.
+        # 6.4.0, abutting slices add up to the whole window, where the default
+        # bounding counts a long session in every slice it spans. stopTime is
+        # inclusive, so a session starting on the boundary millisecond comes
+        # back from both slices; each slice keeps [a, b) and drops it.
+        if "firstPacket" not in fields:
+            fields = [*fields, "firstPacket"]
         count = 0
         pending = [(t, min(t + SLICE_SECONDS, hi)) for t in range(lo, hi, SLICE_SECONDS)]
         while pending:
@@ -174,6 +178,8 @@ class ArkimeAPI:
                 if not sessions:
                     break
                 for s in sessions:
+                    if s.get("firstPacket", 0) >= b * 1000:
+                        continue
                     yield s
                     count += 1
                     if max_sessions and count >= max_sessions:
@@ -215,7 +221,8 @@ def process_flow(s: dict) -> dict | None:
     elif 'icmp' in protos:
         proto = 'icmp'
     elif protos:
-        proto = '_'.join(protos)
+        # a capture fed over a GRE tunnel lists gre on every session
+        proto = '_'.join([p for p in protos if p != 'gre'] or protos)
     else:
         return None
 
