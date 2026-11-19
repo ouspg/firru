@@ -710,8 +710,42 @@ def _scoring_vetoes(term, host_scoring, defs):
 # diff
 # ---------------------------------------------------------------------------
 
+def _file_header(path, limit=4):
+    """The leading comment lines of a policy file, without their '#': where a
+    generated proposal says what made it (tighten writes its flow window
+    there). Only the file's own header, never a term's comments."""
+    out = []
+    try:
+        with open(path, encoding="utf-8-sig") as f:
+            for line in f:
+                if not line.startswith("#"):
+                    break
+                text = line[1:].strip()
+                if text:
+                    out.append(text)
+    except OSError:
+        pass
+    return out[:limit]
+
+
+def _sh_header(old_path, new_path, flows=None, zero_evidence=False):
+    """Where an -o sh script came from, as '#' lines a shell and `firru mass`
+    skip: the two files, the proposal's own header, and the evidence. Inputs
+    only, never a time or a version, so the same diff writes the same script.
+    It avoids the class and evidence words (narrowed, observed, ...) that
+    readers grep for, so a filtered script is only the commands."""
+    lines = ["# firru diff -o sh", f"#   from:     {old_path}", f"#   to:       {new_path}"]
+    for i, text in enumerate(_file_header(new_path)):
+        lines.append(f"#   {'to says:' if i == 0 else '':9} {text}")
+    if flows:
+        lines.append(f"#   evidence: --flows {flows}" + (" --zero-evidence" if zero_evidence else ""))
+    else:
+        lines.append("#   evidence: none (no --flows given)")
+    return lines
+
+
 def _emit_sh(old_path, new_path, defs_dir, result, direction=None, swaps=None,
-             evidence=None, zero_evidence=None):
+             evidence=None, zero_evidence=None, header=None):
     """Emit runnable firru commands that turn OLD into NEW, one per change,
     each naming its term so `| grep SERVICE | sh` applies a subset. Each line
     carries its class as a trailing comment, so `| grep narrowed | sh` takes
@@ -722,6 +756,8 @@ def _emit_sh(old_path, new_path, defs_dir, result, direction=None, swaps=None,
     line re-opens the side the diff deliberately left out.
     """
     d = f" --defs {defs_dir}" + (f" --direction {direction}" if direction else "")
+    for line in header or ():
+        print(line)
     for side, open_name, term_name in swaps or ():
         print(f"# terminal ({side}): {old_path} stays open — {open_name!r} accepts whatever "
               f"the terms above did not match. {new_path} ends in {term_name!r}.")
@@ -926,7 +962,9 @@ def _cmd_diff_body(args, defs):
                 f"which is documenting the world instead of intending it. Read "
                 f"the drift without -o sh and decide term by term.")
         _emit_sh(args.old, args.new, args.defs, result, _direction_arg(args),
-                 swaps, evidence, zero_ev)
+                 swaps, evidence, zero_ev,
+                 header=_sh_header(args.old, args.new, getattr(args, "flows", None),
+                                   getattr(args, "zero_evidence", False)))
         if undefined:
             _report_undefined(undefined, args.defs, sh=True)
     else:
