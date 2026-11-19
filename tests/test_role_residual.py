@@ -10,7 +10,7 @@ import pytest
 from aerleon.lib import naming, policy_builder
 
 from firru import aerleon_caps
-from firru.cli.listeners_to_aerleon import load_role, pick_role, synth_host
+from firru.cli.synth import load_role, pick_role, synth_host
 from firru.cli.loot_diff import diff_baseline, residual_docs
 
 

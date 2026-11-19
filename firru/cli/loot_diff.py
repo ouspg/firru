@@ -1187,7 +1187,7 @@ def _output(args, result):
         emit_sh(result, args.old, args.new, args.defs)
     elif args.output == 'yaml':
         from aerleon.lib import naming
-        from firru.cli.listeners_to_aerleon import emit_surface
+        from firru.cli.synth import emit_surface
         try:
             defs = naming.Naming(args.defs)
         except Exception as e:

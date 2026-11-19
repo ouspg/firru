@@ -7,7 +7,7 @@ but the bind is also evidence the host was configured correctly, which is the
 resolved form of the operator taxonomy's configuration-issue case, so the loot
 must keep it whether or not anything downstream reads it.
 
-The regression these pin: `listeners_to_aerleon` used to read `bind_address`
+The regression these pin: `synth` used to read `bind_address`
 only to choose the address family, so a loopback-only listener produced an
 ordinary accept term. Nothing caught it because the `ss` collector filters
 loopback at capture, so no loot from that path ever exercised it -- but loot
@@ -18,7 +18,7 @@ does. On the LSPR24 OSSEC archive it is 27% of listeners.
 
 import pytest
 
-import firru.cli.listeners_to_aerleon as l2a
+import firru.cli.synth as l2a
 
 
 def entry(cidr, name="svc", port=443):
