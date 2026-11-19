@@ -290,3 +290,31 @@ class TestShProvenance:
 
     def test_the_same_diff_writes_the_same_script(self, tmp_path, capsys):
         assert self._script(tmp_path, capsys) == self._script(tmp_path, capsys)
+
+
+class TestWindow:
+    """--window reads the project's store, only that window's flows count, and
+    the script header says which window."""
+
+    def test_a_window_counts_only_its_flows_and_is_in_the_header(self, tmp_path, capsys,
+                                                                 monkeypatch):
+        monkeypatch.delenv("FIRRU_PROJECT", raising=False)
+        (tmp_path / "firru.toml").write_text(
+            '[flows]\nstore = "flows.jsonl"\n'
+            '[windows]\nnight = ["2030-01-21 19:00", "2030-01-22 08:00"]\n')
+        lines = []
+        for hour, n in (("2030-01-21T18:30:00", 5), ("2030-01-21T20:00:00", 2)):
+            t = __import__("datetime").datetime.fromisoformat(hour + "+00:00").timestamp()
+            lines += [json.dumps({"protocol": "tcp", "dst_port": 22, "src_ip": "10.9.1.1",
+                                  "dst_ip": "10.0.0.5", "timestamp": t})] * n
+        (tmp_path / "flows.jsonl").write_text("\n".join(lines) + "\n")
+        monkeypatch.chdir(tmp_path)
+        defs = _defs(tmp_path)
+        old = _pol(tmp_path, "old.yml", [_t("allow-tcp-SSH", "SSH")])
+        new = _pol(tmp_path, "new.yml", [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")])
+        cmd_diff(argparse.Namespace(old=old, new=new, defs=defs, output="sh",
+                                    direction="in", flows=None, window="night",
+                                    since=None, until=None))
+        out = capsys.readouterr().out
+        assert "# narrowed observed (2 flows)" in out
+        assert "#   window:   --window night: 2030-01-21 19:00Z to 2030-01-22 08:00Z" in out
