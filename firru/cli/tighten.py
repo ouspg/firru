@@ -20,14 +20,17 @@ Usage:
         --policy  policies/pol/myhost_example_org.yml \\
         --defs    def/ \\
         --arkime  http://localhost:8005/api \\
-        --user    admin --password secret \\
         --date    48
+
+    The password comes from ~/.netrc ($NETRC; firru.credentials),
+    or is asked for.
 
     # Dry-run: print summary only, no files written
     firru tighten --policy ... --defs ... --arkime ... --dry-run
 """
 
 import argparse
+import os
 import ipaddress
 import json
 import sys
@@ -35,12 +38,11 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from aerleon.lib import naming
-from requests.auth import HTTPBasicAuth, HTTPDigestAuth
 from ruyaml import YAML
 from ruyaml.comments import CommentedMap, CommentedSeq
 
 from firru.annotator import PolicyAnnotator
-from firru.arkime import ArkimeAPI, process_flow
+from firru.arkime import ArkimeAPI, SESSION_FIELDS, process_flow
 from firru.cli.address_summarizer import (_default_asn_db, summarize,
                                           summarize_asn)
 from firru.comments import TAG_AUTO, detached, tagged, set_term_comment, kept_comments_by_term
@@ -66,11 +68,6 @@ INDIVIDUAL_THRESHOLD = 5
 # Max IPs to show in a comment
 COMMENT_IP_LIMIT = 4
 
-ARKIME_FIELDS = [
-    "source.ip", "destination.ip",
-    "source.port", "destination.port",
-    "protocol", "tcpflags.syn", "tcpflags.syn-ack", "tags",
-]
 
 # ---------------------------------------------------------------------------
 # What ANY means, when the sources cannot be tokenized
@@ -585,7 +582,7 @@ def collect_flows(arkime, host_ips, defs, date="48", start_time=None, stop_time=
     ip_filter = " || ".join(
         f"ip == {ip}" for ip in host_ips
     )
-    for raw in arkime.search(ip_filter, fields=ARKIME_FIELDS, **time_kwargs):
+    for raw in arkime.search(ip_filter, fields=SESSION_FIELDS, **time_kwargs):
         flow = process_flow(raw)
         if not flow:
             continue
@@ -1163,6 +1160,18 @@ def load_dns_store(path):
     return {ip: name for ip, (name, _) in best.items()} or None
 
 
+def _extent(flows):
+    """', 2024-03-01 17:00Z to 2024-03-07 18:00Z' for a parquet store, by its
+    first and last flow; '' for anything else."""
+    from firru.flows import is_parquet, flow_relation
+    if not is_parquet(flows):
+        return ""
+    import duckdb
+    from firru.project import describe
+    lo, hi = duckdb.sql(f"SELECT min(timestamp), max(timestamp) FROM {flow_relation(flows)}").fetchall()[0]
+    return f", {describe((lo, hi))}" if lo is not None else ""
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Narrow each term's sources to the peers seen in traffic, from a\n"
@@ -1172,8 +1181,7 @@ def main():
         epilog="""
 Examples:
   firru tighten --policy policies/pol/myhost_example_org.yml \\
-          --defs def/ --arkime http://arkime:8005 \\
-          --user admin --password secret
+          --defs def/ --arkime http://arkime:8005/api
 
   # Last 24 hours only
   firru tighten --policy ... --date 24
@@ -1185,27 +1193,32 @@ Examples:
     parser.add_argument("--policy",   "-p", required=True, nargs='+',
                         help="Host policy YAML(s), directory, or glob pattern")
     parser.add_argument("--defs",     "-d", default="def",
-                        help="Aerleon definitions directory (default: def/)")
+                        help="Aerleon definitions directory (default: def/, else the "
+                             "project's def/, else firru's stock definitions)")
     parser.add_argument("--arkime",   "-a", default=None,
                         help="Arkime API base URL, e.g. http://localhost:8005/api")
     parser.add_argument("--flows-file", "-f", default=None,
                         help="Pre-dumped flows .jsonl file or directory of per-host .flows.jsonl files")
     parser.add_argument("--dump-flows", action="store_true",
                         help="Dump per-host flows to <outdir>/<host_token>.flows.jsonl and exit")
-    parser.add_argument("--user",     "-u", default="admin",
-                        help="Arkime username (default: admin)")
+    parser.add_argument("--user",     "-u", default=None,
+                        help="Arkime username (default: the netrc entry's, else admin)")
     parser.add_argument("--password", "-P", default=None,
-                        help="Arkime password (prompted if not given)")
+                        help="Arkime password (default: the netrc entry ($NETRC, firru.toml's [arkime] netrc, ~/.netrc), else asked for; "
+                             "a command line is visible to others)")
     parser.add_argument("--basic-auth", action="store_true",
                         help="Use HTTP basic auth instead of digest auth")
-    parser.add_argument("--date",       default="48",
-                        help="Arkime lookback window in hours, e.g. 48 (default: 48)")
+    parser.add_argument("--date",       default=None,
+                        help="Arkime lookback window in hours, e.g. 48 (default: 48; for "
+                             "the project's [arkime], all of it, since an imported "
+                             "capture keeps its own times)")
     parser.add_argument("--start-time", default=None,
                         help="Start of time range, e.g. 2024-03-01 or Unix epoch")
     parser.add_argument("--stop-time",  default=None,
                         help="End of time range (default: now)")
-    parser.add_argument("--outdir",   "-o", default="policies/tighten",
-                        help="Output directory (default: policies/tighten/)")
+    parser.add_argument("--outdir",   "-o", default=None,
+                        help="Output directory (default: the project's proposals/, "
+                             "else policies/tighten/)")
     parser.add_argument("--overwrite", action="store_true",
                         help="Overwrite existing tighten output")
     parser.add_argument("--dry-run",  action="store_true",
@@ -1235,11 +1248,39 @@ Examples:
 
     # A window reads the named flows, or the project's store; against Arkime
     # it becomes the query's start and stop.
+    from firru.project import find
     try:
+        project = find()
+    except ValueError as e:
+        parser.error(str(e))
+    asked = any((args.window, args.since, args.until, args.date, args.start_time))
+    from_project = None
+    try:
+        if not args.flows_file and not args.arkime:
+            # Nothing named: the project's store, else its Arkime.
+            if project is not None and project.store is not None:
+                args.flows_file = os.path.relpath(project.store)
+                from_project = "store"
+            elif project is not None and project.arkime:
+                args.arkime = project.arkime.url
+                from_project = "arkime"
         named = args.flows_file or (args.arkime and "arkime")
         flows, window, window_label = flows_for(args, named)
     except ValueError as e:
         parser.error(str(e))
+    if args.date is None:
+        # Relative to now is wrong for an imported capture, which keeps its
+        # own times, so the project's Arkime is read whole unless a window says.
+        args.date = "-1" if from_project == "arkime" else "48"
+    if from_project and not asked:
+        where = args.flows_file if from_project == "store" else args.arkime
+        print(f"No window given: reading all of {where}{_extent(args.flows_file) if from_project == 'store' else ''}"
+              f" (--window, --since/--until to narrow it)", file=sys.stderr)
+    if args.outdir is None:
+        args.outdir = (os.path.relpath(project.root / "proposals") if project is not None
+                       else "policies/tighten")
+    from firru.defs_dir import resolve
+    args.defs = resolve(args.defs)
     if window and args.arkime:
         if window[0] is not None:
             args.start_time = str(int(window[0]))
@@ -1269,12 +1310,18 @@ Examples:
     # ------------------------------------------------------------------
     # Credentials (only needed for live Arkime)
     # ------------------------------------------------------------------
-    password = args.password
-    if args.arkime and password is None and not args.dry_run:
-        import getpass
-        password = getpass.getpass(f"Arkime password for {args.user}: ")
-
-    auth = (HTTPBasicAuth if args.basic_auth else HTTPDigestAuth)(args.user, password or "") if args.arkime else None
+    auth = None
+    if args.arkime:
+        from firru.credentials import http_auth
+        from firru.project import find, service_key
+        project = find()
+        try:
+            auth = http_auth(args.arkime, args.user, args.password,
+                             args.basic_auth or service_key(project, "arkime", "auth") == "basic",
+                             prompt=not args.dry_run,
+                             netrc=service_key(project, "arkime", "netrc"))
+        except ValueError as e:
+            parser.error(str(e))
 
     # ------------------------------------------------------------------
     # Resolve policy file list (glob/dir/explicit/bare-token)
@@ -1386,7 +1433,8 @@ Examples:
           ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(
               args.flows_file, host_ips, defs, span=span, window=window)
       else:
-          window = f"{args.start_time}-{args.stop_time or 'now'}" if args.start_time else f"{args.date}h"
+          window = (f"{args.start_time}-{args.stop_time or 'now'}" if args.start_time
+                    else "all of it" if args.date == "-1" else f"{args.date}h")
           print(f"Querying Arkime ({window}) …", file=sys.stderr)
           span, source = [None, None], f"Arkime ({window})"
           ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows(arkime_client, host_ips, defs,
@@ -1402,7 +1450,7 @@ Examples:
           time_kwargs = dict(date=args.date, start_time=args.start_time, stop_time=args.stop_time)
           written = 0
           with open(out_flows, 'w') as fh:
-              for raw in arkime_client.search(ip_filter, fields=ARKIME_FIELDS, **time_kwargs):
+              for raw in arkime_client.search(ip_filter, fields=SESSION_FIELDS, **time_kwargs):
                   flow = process_flow(raw)
                   if flow:
                       fh.write(json.dumps(flow) + '\n')
@@ -1521,7 +1569,7 @@ Examples:
           print("--- Tightened source summary ---")
           for t in all_ingress_terms:
               src = t.get("source-address", "ANY")
-              print(f"  {t.get('protocol')}/{t.get('destination-port'):20s}  src: {src}")
+              print(f"  {t.get('protocol')}/{t.get('destination-port') or '':20s}  src: {src}")
           print(f"\n--- Egress terms ---")
           for filt in policy.get("filters", []):
               targets = filt.get("header", {}).get("targets", {})

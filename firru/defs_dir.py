@@ -1,10 +1,11 @@
 """Where the service and network definitions come from.
 
-Every command takes --defs DIR, by default `def` in the working directory (a
-project's own definitions). Without one, firru's stock definitions (`def/`
-beside the package) are what there is: a first run in an empty directory
-should work, and say which definitions it used. A directory named explicitly
-and missing is an error, not a fallback.
+Every command takes --defs DIR, by default `def` in the working directory,
+else, inside a project (firru.project), the project's own `def/`, so any
+directory of the project works. Without either, firru's stock definitions
+(`def/` beside the package) are what there is: a first run in an empty
+directory should work, and say which definitions it used. A directory named
+explicitly and missing is an error, not a fallback.
 """
 import os
 import sys
@@ -32,6 +33,11 @@ def resolve(defs_dir):
     exit with a message otherwise."""
     if os.path.isdir(defs_dir):
         return defs_dir
+    if defs_dir == DEFAULT:
+        from firru.project import find
+        project = find()
+        if project is not None and (project.root / DEFAULT).is_dir():
+            return os.path.relpath(project.root / DEFAULT)
     if defs_dir == DEFAULT and STOCK.is_dir():
         print(f"firru: no ./{DEFAULT}/, using the stock definitions in {STOCK}"
               f" (--defs DIR for a project's own)", file=sys.stderr)
