@@ -97,7 +97,6 @@ supplies it.
 | `fqdn` | the name the destination was reached by | a naming layer, where one is installed (none ships with this release: `zeek-to-flows` writes it null in a parquet store, so the store's schema does not vary) |
 | `rt_src`, `rt_dst` | the endpoint is red team | `flow-verdict --rt-ips` |
 | `src_zone`, `dst_zone`, `intra_zone` | the endpoint's zone | `flow-verdict --defs`, from `{ZONE}_HOSTS` membership |
-| `src_token`, `dst_token`, `src_groups`, `dst_groups` | the aerleon definition the endpoint resolves to | `annotate-flows --defs` |
 
 ### How red team gets known
 
