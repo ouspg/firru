@@ -62,12 +62,7 @@ import sys
 
 import yaml
 
-WINDOWS = {   # the timestamps' local zone, UTC+02, as in lspr24_to_flows.py
-    "d1":    ("2024-03-06 10", "2024-03-06 18"),
-    "d2":    ("2024-03-07 08", "2024-03-07 18"),
-    "night": ("2024-03-06 19", "2024-03-07 08"),
-    "all":   (None, None),
-}
+from lspr24_to_flows import WINDOWS, micros   # firru.toml's windows
 
 
 def inventory(defs):
@@ -131,7 +126,7 @@ def main():
     ap.add_argument("--loot", default="loot-ossec", metavar="DIR")
     ap.add_argument("--defs", default="def", metavar="DIR")
     ap.add_argument("--out", required=True, metavar="DIR")
-    ap.add_argument("--window", choices=sorted(WINDOWS), default="all")
+    ap.add_argument("--window", choices=sorted(WINDOWS) + ["all"], default="all")
     ap.add_argument("--min-tries", type=int, default=1, metavar="N",
                     help="distinct sources that must have been refused before "
                          "a deny is emitted (default 1: a second source "
@@ -151,12 +146,10 @@ def main():
     con.executemany("insert into svc values (?,?,?)",
                     [(t, p, n) for t, s in listen.items() for p, n in sorted(s)])
 
-    start, end = WINDOWS[args.window]
     clause = ""
-    if start:
-        clause = (f"""and f."mTimestampStart"/1000000
-                      between epoch(timestamptz '{start}:00:00+02')
-                          and epoch(timestamptz '{end}:00:00+02')""")
+    if args.window != "all":
+        clause = (f"""and f."mTimestampStart" >= {micros(args.window)}
+                      and f."mTimestampStart" <  {micros(args.window, end=True)}""")
 
     # One row per (service, source): was that source ever answered?
     rows = con.execute(f"""

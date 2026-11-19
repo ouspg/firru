@@ -1,5 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/ns1_bgp_05_berylia_org.yml
-# Flows: night.jsonl, 2024-03-06T17:00:04Z to 2024-03-07T05:59:59Z
+# Flows: flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:04Z to 2024-03-07T05:59:59Z
 # Source suggestions changed: 1 | Log-drop candidates: 4
 metadata:
   host: ns1

@@ -1,0 +1,16 @@
+# The LSPR24 case study as a firru project. Commands run here find this file
+# and read their flows and windows from it (firru/project.py).
+
+[flows]
+# All of the dataset as one store, written by `make flows` (not committed).
+store    = "flows"
+# The zone the dataset's own times are written in; the windows below too.
+timezone = "+02:00"
+
+[windows]
+# Two execution days with an attack-free night between them. The 03-01..03-05
+# run-up is idle (~58 flows an hour) and in no window.
+d1         = ["2024-03-06 10:00", "2024-03-06 18:00"]
+night      = ["2024-03-06 19:00", "2024-03-07 08:00"]
+"d1+night" = ["2024-03-06 10:00", "2024-03-07 08:00"]
+d2         = ["2024-03-07 08:00", "2024-03-07 18:00"]

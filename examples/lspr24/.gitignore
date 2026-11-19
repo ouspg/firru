@@ -1,5 +1,6 @@
 loot-synth/
 lspr24_v2.parquet
 ossec-archive-host-logs.json
+flows/
 night.jsonl
 d2.jsonl

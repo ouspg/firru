@@ -1,5 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/siem-server.yml
-# Flows: night.jsonl, none for this host
+# Flows: flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], none for this host
 # Source suggestions changed: 0 | Log-drop candidates: 5
 metadata:
   host: siem-server

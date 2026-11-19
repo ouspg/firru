@@ -35,7 +35,7 @@ policy can narrow to.
 ## Run it
 
 Besides firru's own requirements (see its README), `make` and `curl`, and
-about 15 GB of disk: 7.8 GB of dataset and the outputs.
+about 9 GB of disk: 7.8 GB of dataset, the flow store and the outputs.
 
 ```sh
 git clone https://github.com/ouspg/firru && cd firru
@@ -43,9 +43,10 @@ pip install '.[lspr24]'
 cd examples/lspr24
 make fetch                # the two dataset files from the record, 7.8 GB
 make verify-inputs        # the publisher's MD5s, pinned in INPUTS.md5
-make all                  # about 10 minutes
+make all                  # about a minute
 make ladder               # the block-early counterfactual
 make enforced-diff        # the synthesized policy against what the network did
+make hourly               # d2, an hour at a time, against the night-tightened policy
 ```
 
 `make all` is these steps, each a firru command or a script here:
@@ -56,16 +57,16 @@ python3 defs_from_expoid.py --parquet lspr24_v2.parquet --out def/ \
     --green-label Label_src=2                       # inventory, from the dataset
 ossec-to-loot ossec-archive-host-logs.json --output loot-ossec/   # real loot
 resolve-identity --loot loot-ossec/ --defs def/ --assert identity-assertions.yml
-python lspr24_to_flows.py lspr24_v2.parquet --window night > night.jsonl
+python lspr24_to_flows.py lspr24_v2.parquet --store flows   # all 20M flows, ~20 s
 python3 assumptions.py --loot loot-ossec/ --defs def/ --assumptions assumptions.yml \
-    --out loot-assumed/ --flows night.jsonl         # everything assumed, checked
+    --out loot-assumed/ --flows flows/ --window night   # everything assumed, checked
 suggest-services --input loot-assumed/ --defs def/ --yaml def/services-observed.yml
 firru synth --input loot-assumed/ --defs def/ --meta def/host_metadata.json \
     --output policies/r1-synthesized/
 firru tighten --policy policies/r1-synthesized --defs def/ \
-    --flows-file night.jsonl --outdir policies/r2-tightened
+    --window night --outdir policies/r2-tightened      # flows: firru.toml's store
 python3 flows_to_enforced.py ... --out policies/r3-apparent/
-python3 block_early.py --flows night.jsonl ... --out policies/r4-block-early/
+python3 block_early.py --flows flows/ --window night ... --out policies/r4-block-early/
 firru merge-zones --hosts 'policies/<variant>/*.yml' --defs def/ --outdir zones/<variant>
 ```
 
@@ -187,13 +188,39 @@ and that is the right answer rather than a failure: their clients are the
 exercise's simulated internet, addresses with no asset behind them. An
 address resolves to nothing, so the term stays open; minting a token per
 address would only look tighter, since the address is a different host next
-week. Group suggestion fired 19 times, all on the Windows hosts, where several
-directory services share one set of clients.
+week.
 
 The durable name for an external peer is a name, not an address. LSPR24
 cannot demonstrate that: its flow table carries no DNS payload, and the only
 naming material in the record is a few hundred SNI and HTTP host headers in
 `eve.log`.
+
+### The next day, an hour at a time
+
+The flows are one store of the whole dataset (`make flows`: 20M flows, 0.4 GB,
+written in about 20 seconds), and each command reads the window it is given,
+by the names in `firru.toml`. Tightening above is `firru tighten --window
+night`. The same store answers the question before a deploy: what would the
+tightened policy have done to traffic it was not tightened on? `make hourly`
+diffs a host's synthesized policy against its night-tightened one over each
+hour of d2, a second or so per hour:
+
+```
+d2 09:00-10:00
+    allow-tcp-DNS-TCP  observed (565 flows)
+    allow-tcp-KERBEROS-TCP  !! CONTRADICTED: cuts 526 observed flow(s)
+    allow-tcp-LDAP-TCP  !! CONTRADICTED: cuts 554 observed flow(s)
+    allow-tcp-LDAPS  !! CONTRADICTED: cuts 530 observed flow(s)
+    allow-udp-DNS-UDP  observed (11265 flows)
+    allow-udp-LDAP-UDP  !! CONTRADICTED: cuts 1 observed flow(s)
+    allow-udp-NTP  observed (300 flows)
+```
+
+For dc1, every hour of d2 contradicts four to six of its seven narrowings.
+Most of the cut flows come from one green-team entry, `BEG_GT_OTHER`: the
+organisers reach the directory by day on ports they left alone at night, so
+the night's source sets leave them out. `firru diff -o sh` comments such a
+narrowing out rather than emitting it, and `HOST=` picks another host.
 
 ### Block-early
 
@@ -256,7 +283,7 @@ assumptions applied, and the policies are built from the latter.
 
 | assumption | where | why it holds |
 | --- | --- | --- |
-| The overnight window is the learning window | `lspr24_to_flows.py --window night` | Red is not scheduled overnight, so the choice does not depend on the dataset's `Label`. It is not literally clean: 863 of its 9.4M flows involve a red-team peer, none reaching a named internal host. |
+| The overnight window is the learning window | `night` in `firru.toml`, read with `--window night` | Red is not scheduled overnight, so the choice does not depend on the dataset's `Label`. It is not literally clean: 863 of its 9.4M flows involve a red-team peer, none reaching a named internal host. |
 | Which inventory host each loot file is | `identity-assertions.yml`; `via` in `def/host_metadata.json` | 51 of 59 bind by unique name and 6 by the loot's own address; 2 are asserted, each with its evidence. |
 | Each host's dynamic port range | `dynamic_ranges` in `assumptions.yml`; `metadata.ephemeral_source` in the loot | The archive records none. The OS defaults are what every stock install in firru-os-baselines has (102 Linux runs; 19 of 20 Windows runs). `mail` is an Exchange server, and Exchange moves TCP to 6005-64325, as the stock Exchange install shows. |
 | The Windows services syscollector never saw change | `windows` in `assumptions.yml`; `inferred` and `inferred_from` on each filled-in listener | Each Windows host is the stock install of its role (DC, CA, Exchange member, domain workstation) plus the layers its traffic shows (OpenSSH, RDP, WinRM), each measured on its own. `assumptions.py --flows` checks it: every port that answered overnight is explained except one: `tcp/134` on both domain controllers, which the green-team checker opens about once a minute (Zeek `RSTO`: the handshake completed, then the checker reset it). Something listened there that neither the loot nor any baseline knows; it is left unexplained rather than assumed, so the policies deny it and tighten's would-block report shows it. |

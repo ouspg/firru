@@ -6,6 +6,7 @@
 #   make all            everything committed here, from those two files
 #   make ladder         the block-early counterfactual against red-team traffic
 #   make enforced-diff  the synthesized policy against what the network did
+#   make hourly         d2 an hour at a time against the night-tightened policy
 #
 # Committed, because regenerating them needs the 7 GB download and the point
 # is that a reader who has not downloaded anything can inspect the output:
@@ -20,9 +21,10 @@ OSSEC  ?= ossec-archive-host-logs.json
 # applied, and everything downstream reads that.
 MEASURED ?= loot-ossec
 LOOT     ?= loot-assumed
-NIGHT  ?= night.jsonl
+# The window tightening learns from, one of firru.toml's.
+LEARN  ?= night
 
-.PHONY: all clean fetch verify-inputs defs stock-defs services identity assumptions flows tighten block-early enforced enforced-diff merged loot-ossec policies ladder listening-split
+.PHONY: all clean fetch verify-inputs defs stock-defs services identity assumptions flows tighten block-early enforced enforced-diff merged loot-ossec policies ladder listening-split hourly
 
 # Network object model from the dataset's own asset identity, replacing the
 # flow-derived hostmap and its 893 per-address ext_ tokens.
@@ -92,9 +94,9 @@ loot-ossec:
 # the Windows services syscollector never saw change, the blue team's own
 # management sources. Each with its source and reasoning in assumptions.yml;
 # --flows checks the Windows fill against what answered.
-assumptions: $(NIGHT)
+assumptions: flows
 	python3 assumptions.py --loot $(MEASURED)/ --defs def/ \
-	    --assumptions assumptions.yml --out $(LOOT)/ --flows $(NIGHT)
+	    --assumptions assumptions.yml --out $(LOOT)/ --flows flows/ --window $(LEARN)
 
 
 # --overwrite because synth skips a host whose policy already exists, which
@@ -103,18 +105,23 @@ policies: assumptions services identity
 	firru synth --input $(LOOT)/ --defs def/ --overwrite \
 	    --meta def/host_metadata.json --output policies/r1-synthesized/
 
-# The flow window the tightening step learns from: attack-free, so a source
-# set derived from it is not shaped by the intrusion. 2.6 GB, not committed --
-# it is an intermediate, and 4 minutes to rebuild.
-flows: $(NIGHT)
-$(NIGHT):
-	python lspr24_to_flows.py $(LSPR24) --window night > $@
+# All of the dataset's flows as the store firru.toml names: 20M flows, 0.4 GB,
+# about 20 seconds to rebuild, not committed. Commands then read one window of
+# it, so the window is chosen where it is used, not when the file is written.
+flows: flows/.complete
+flows/.complete: $(LSPR24)
+	rm -rf flows
+	python lspr24_to_flows.py $(LSPR24) --store flows
+	touch $@
 
-# Narrow each term's sources to what the window actually shows, and report
-# what that would have blocked and which rules never matched.
-tighten: $(NIGHT)
+# Narrow each term's sources to what the learn window shows, and report what
+# that would have blocked and which rules never matched. The window is
+# attack-free, so a source set derived from it is not shaped by the intrusion.
+# No --flows-file: with a window and none named, tighten reads firru.toml's
+# store.
+tighten: flows
 	firru tighten --policy policies/r1-synthesized --defs def/ \
-	    --flows-file $(NIGHT) --outdir policies/r2-tightened --overwrite
+	    --window $(LEARN) --outdir policies/r2-tightened --overwrite
 
 # Reconstruct the policy that appears to have been running, from the listening
 # table plus which flows got an answer, and diff it against what the sockets
@@ -133,10 +140,9 @@ enforced-diff: enforced
 
 # R4, the block-early bet as policy rather than as a rate: every service the
 # learn window showed no client for is removed, not merely narrowed. One pass
-# over the flows for all 59 hosts -- `firru diff --zero-evidence` per host
-# re-reads the whole flow file each time and does not finish.
-block-early: $(NIGHT)
-	python3 block_early.py --flows $(NIGHT) --loot $(LOOT)/ --defs def/ \
+# over the flows for all 59 hosts.
+block-early: flows
+	python3 block_early.py --flows flows/ --window $(LEARN) --loot $(LOOT)/ --defs def/ \
 	    --policy policies/r2-tightened --out policies/r4-block-early
 
 # Per-zone firewall policy for each variant, which is the form a firewall
@@ -158,7 +164,20 @@ listening-split:
 
 ladder:
 	python3 ladder.py --parquet $(LSPR24) --loot $(LOOT)/ \
-	    --learn night --eval d2
+	    --learn $(LEARN) --eval d2
+
+# The check before a deploy, an hour at a time: what the policy tightened on
+# the night would have done to each hour of d2, for one host. A narrowing the
+# hour's traffic contradicts would have cut those flows.
+HOST ?= dc1_int_beg_05_berylia_org
+hourly: flows
+	@for h in 08 09 10 11 12 13 14 15 16 17; do \
+	  next=$$(printf %02d $$((10#$$h + 1))); \
+	  echo "d2 $$h:00-$$next:00"; \
+	  firru diff policies/r1-synthesized/$(HOST).yml policies/r2-tightened/$(HOST).yml \
+	      --defs def/ --direction in --since "d2 $$h:00" --until "d2 $$next:00" \
+	    | sed -nE 's/^ *> ([^ ]+) .*  (observed \([0-9]+ flows\)|unexercised|!! CONTRADICTED: cuts [0-9]+ observed flow\(s\)).*/    \1  \2/p'; \
+	done
 
 
 # Everything `make all` writes, so that `make clean all` followed by
@@ -167,6 +186,6 @@ ladder:
 # identity-assertions.yml, def/services-site.yml) produce. The datasets
 # themselves are kept.
 clean:
-	rm -rf $(MEASURED)/ $(LOOT)/ policies/ zones/ $(NIGHT) loot-synth/
+	rm -rf $(MEASURED)/ $(LOOT)/ policies/ zones/ flows/ loot-synth/
 	rm -f def/networks.yml def/host_metadata.json def/services-observed.yml \
 	    $(addprefix def/,$(STOCK_DEFS))
