@@ -673,7 +673,8 @@ Examples:
                         choices=["bpf", "arkime", "both", "nmap"],
                         help="Output format (default: bpf)")
     parser.add_argument("--combined", "-c", action="store_true",
-                        help="Emit only the combined OR expression, suitable for shell embedding")
+                        help="Emit only the combined OR expression, suitable for shell "
+                             "embedding: Arkime's with --format arkime, else BPF")
     parser.add_argument("--host-ip",  "-H", nargs="+", default=None,
                         help="Override host IP(s) instead of resolving from defs")
     parser.add_argument("--from-ip",  "-I", default=None,
@@ -710,9 +711,13 @@ Examples:
         print("# No violation filters generated (no source-restricted terms found)")
         return
 
-    # --combined: just the single ORed BPF expression, nothing else
+    # --combined: just the single ORed expression, nothing else: Arkime's with
+    # --format arkime, else BPF (it printed BPF whatever --format said)
     if args.combined:
-        print(" or\n".join(r["bpf"] for r in results))
+        if args.format == "arkime":
+            print(" ||\n".join(r["arkime"] for r in results))
+        else:
+            print(" or\n".join(r["bpf"] for r in results))
         return
 
     if args.format == "nmap":
