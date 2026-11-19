@@ -520,14 +520,9 @@ def collect_flows_multi(flows_file, host_ips_by_token, defs, spans=None):
 
     Returns {host_token: (ingress, egress, ingress_ports, egress_ports)}.
 
-    TODO(parquet): this still line-scans a JSONL dump, parsing every record even
-    for a fleet that touches a fraction of it. As the flow record grows, back
-    this with a columnar store (the demo's verdict vector is already parquet):
-    push the host-address filter down as a predicate on src_ip/dst_ip and read
-    only (src_ip, dst_ip, protocol, dst_port) instead of decoding whole JSON
-    objects, so cost scales with matched flows, not with the file. Keep the
-    JSONL path for the small/no-dependency case. The bucketing below is already
-    single-pass and store-agnostic; only the read loop changes.
+    From a parquet store, iter_flow_groups pushes the host-address filter down
+    and hands back counted groups, so the cost follows the matched flows; a
+    JSONL dump is still parsed line by line.
     """
     from firru.flows import iter_flow_groups
 
