@@ -2,7 +2,7 @@
 """
 block_early — the R4 variant: drop every service the evidence never touched.
 
-    python3 block_early.py --flows flows/ --window night --loot loot-ossec/ \
+    python3 block_early.py --flows data/flows/ --window night --loot loot-ossec/ \
         --defs def/ --policy policies/r2-tightened --out policies/r4-block-early
 
 R2 narrows a service's sources to what the window showed. R4 goes one step

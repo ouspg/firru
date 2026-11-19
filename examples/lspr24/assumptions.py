@@ -3,7 +3,7 @@
 assumptions — apply assumptions.yml: everything the case study assumes.
 
     python3 assumptions.py --loot loot-ossec/ --defs def/ \
-        --assumptions assumptions.yml --out loot-assumed/ [--flows flows/ --window night]
+        --assumptions assumptions.yml --out loot-assumed/ [--flows data/flows/ --window night]
 
 The dataset records listening sockets and traffic. It does not record a host's
 dynamic port range, the Windows services that never changed while syscollector

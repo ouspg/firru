@@ -7,8 +7,8 @@ LSPR24 is the Locked Shields Partner Run 2024 flow dataset: ~20.2M flows over
 2024-03-01..03-07, CICFlowMeter features plus a Zeek `conn_state` and per-host
 FQDNs. It is the one public dataset firru can be driven end-to-end on.
 
-    python lspr24_to_flows.py lspr24_v2.parquet --store flows/          # all of it
-    python lspr24_to_flows.py lspr24_v2.parquet --window night > night.jsonl
+    python lspr24_to_flows.py data/lspr24_v2.parquet --store data/flows/   # all of it
+    python lspr24_to_flows.py data/lspr24_v2.parquet --window night > night.jsonl
 
 --store writes the flows as the hour-partitioned parquet store zeek-to-flows
 writes, which firru tighten and firru diff read for a window

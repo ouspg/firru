@@ -53,20 +53,20 @@ make hourly               # d2, an hour at a time, against the night-tightened p
 
 ```sh
 cp <firru>/def/{services,windows-services,cloud-native,base-networks}.yml def/
-python3 defs_from_expoid.py --parquet lspr24_v2.parquet --out def/ \
+python3 defs_from_expoid.py --parquet data/lspr24_v2.parquet --out def/ \
     --green-label Label_src=2                       # inventory, from the dataset
-ossec-to-loot ossec-archive-host-logs.json --output loot-ossec/   # real loot
+ossec-to-loot data/ossec-archive-host-logs.json --output loot-ossec/   # real loot
 resolve-identity --loot loot-ossec/ --defs def/ --assert identity-assertions.yml
-python lspr24_to_flows.py lspr24_v2.parquet --store flows   # all 20M flows, ~20 s
+python lspr24_to_flows.py data/lspr24_v2.parquet --store data/flows   # 20M flows, ~20 s
 python3 assumptions.py --loot loot-ossec/ --defs def/ --assumptions assumptions.yml \
-    --out loot-assumed/ --flows flows/ --window night   # everything assumed, checked
+    --out loot-assumed/ --flows data/flows/ --window night   # all assumed, checked
 suggest-services --input loot-assumed/ --defs def/ --yaml def/services-observed.yml
 firru synth --input loot-assumed/ --defs def/ --meta def/host_metadata.json \
     --output policies/r1-synthesized/
 firru tighten --policy policies/r1-synthesized --defs def/ \
     --window night --outdir policies/r2-tightened      # flows: firru.toml's store
 python3 flows_to_enforced.py ... --out policies/r3-apparent/
-python3 block_early.py --flows flows/ --window night ... --out policies/r4-block-early/
+python3 block_early.py --flows data/flows/ --window night ... --out policies/r4-block-early/
 firru merge-zones --hosts 'policies/<variant>/*.yml' --defs def/ --outdir zones/<variant>
 ```
 

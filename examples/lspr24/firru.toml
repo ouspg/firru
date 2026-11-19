@@ -2,8 +2,9 @@
 # and read their flows and windows from it (firru/project.py).
 
 [flows]
-# All of the dataset as one store, written by `make flows` (not committed).
-store    = "flows"
+# All of the dataset as one store, written by `make flows` (not committed;
+# data/ is what is downloaded or rebuilt from it).
+store    = "data/flows"
 # The zone the dataset's own times are written in; the windows below too.
 timezone = "+02:00"
 

@@ -3,7 +3,7 @@
 listening_split — the README's table: unanswered inbound TCP, split by whether
 the measured loot says something was listening.
 
-    python3 listening_split.py --parquet lspr24_v2.parquet --loot loot-ossec/ --defs def/
+    python3 listening_split.py --parquet data/lspr24_v2.parquet --loot loot-ossec/ --defs def/
 
 Inbound TCP is every TCP row whose destination is an inventory address.
 Listening is what flows_to_enforced.py means by it: the host, protocol and port

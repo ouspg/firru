@@ -15,8 +15,8 @@
 # policies/ and zones/ (the four variants).
 
 # Point these at your copies, e.g. make LSPR24=~/Downloads/lspr24_v2.parquet
-LSPR24 ?= lspr24_v2.parquet
-OSSEC  ?= ossec-archive-host-logs.json
+LSPR24 ?= data/lspr24_v2.parquet
+OSSEC  ?= data/ossec-archive-host-logs.json
 # loot-ossec/ is the measured record; loot-assumed/ is it with assumptions.yml
 # applied, and everything downstream reads that.
 MEASURED ?= loot-ossec
@@ -85,7 +85,8 @@ ZENODO = https://zenodo.org/api/records/14900873/files
 fetch:
 	@for f in $(LSPR24) $(OSSEC); do \
 	  [ -s "$$f" ] && { echo "have $$f"; continue; }; \
-	  echo "fetching $$f"; curl -fL --retry 3 -o "$$f.part" "$(ZENODO)/$$f/content" && mv "$$f.part" "$$f"; \
+	  mkdir -p "$$(dirname "$$f")"; b=$$(basename "$$f"); \
+	  echo "fetching $$b"; curl -fL --retry 3 -o "$$f.part" "$(ZENODO)/$$b/content" && mv "$$f.part" "$$f"; \
 	done
 
 # Everything committed is reproduced by this from the two dataset files plus
@@ -102,7 +103,7 @@ loot-ossec:
 # --flows checks the Windows fill against what answered.
 assumptions: flows
 	python3 assumptions.py --loot $(MEASURED)/ --defs def/ \
-	    --assumptions assumptions.yml --out $(LOOT)/ --flows flows/ --window $(LEARN)
+	    --assumptions assumptions.yml --out $(LOOT)/ --flows data/flows/ --window $(LEARN)
 
 
 # --overwrite because synth skips a host whose policy already exists, which
@@ -114,10 +115,10 @@ policies: assumptions services identity
 # All of the dataset's flows as the store firru.toml names: 20M flows, 0.4 GB,
 # about 20 seconds to rebuild, not committed. Commands then read one window of
 # it, so the window is chosen where it is used, not when the file is written.
-flows: flows/.complete
-flows/.complete: $(LSPR24)
-	rm -rf flows
-	python lspr24_to_flows.py $(LSPR24) --store flows
+flows: data/flows/.complete
+data/flows/.complete: $(LSPR24)
+	rm -rf data/flows
+	python lspr24_to_flows.py $(LSPR24) --store data/flows
 	touch $@
 
 # Narrow each term's sources to what the learn window shows, and report what
@@ -148,7 +149,7 @@ enforced-diff: enforced
 # learn window showed no client for is removed, not merely narrowed. One pass
 # over the flows for all 59 hosts.
 block-early: flows
-	python3 block_early.py --flows flows/ --window $(LEARN) --loot $(LOOT)/ --defs def/ \
+	python3 block_early.py --flows data/flows/ --window $(LEARN) --loot $(LOOT)/ --defs def/ \
 	    --policy policies/r2-tightened --out policies/r4-block-early
 
 # Per-zone firewall policy for each variant, which is the form a firewall
@@ -190,6 +191,6 @@ hourly: flows
 # identity-assertions.yml, def/services-site.yml) produce. The datasets
 # themselves are kept.
 clean:
-	rm -rf $(MEASURED)/ $(LOOT)/ policies/ zones/ flows/ loot-synth/
+	rm -rf $(MEASURED)/ $(LOOT)/ policies/ zones/ data/flows/ loot-synth/
 	rm -f def/networks.yml def/host_metadata.json def/services-observed.yml \
 	    $(addprefix def/,$(STOCK_DEFS))

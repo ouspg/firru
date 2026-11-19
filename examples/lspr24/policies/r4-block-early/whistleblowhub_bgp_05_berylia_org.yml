@@ -1,5 +1,5 @@
 # firru tighten output — review and copy changes to policies/pol/whistleblowhub_bgp_05_berylia_org.yml
-# Flows: flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:09Z to 2024-03-07T05:59:50Z
+# Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:09Z to 2024-03-07T05:59:50Z
 # Source suggestions changed: 3 | Log-drop candidates: 0
 metadata:
   host: whistleblowhub

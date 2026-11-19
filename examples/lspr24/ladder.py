@@ -2,7 +2,7 @@
 """
 ladder — the block-early counterfactual, on LSPR24 instead of exercise data.
 
-    python3 ladder.py --parquet lspr24_v2.parquet --loot loot-ossec/
+    python3 ladder.py --parquet data/lspr24_v2.parquet --loot loot-ossec/
     python3 ladder.py ... --learn night --eval d2 --protected scored.txt
 
 Answers the question the exercise evaluation asks: of the attacker traffic a

@@ -2,7 +2,7 @@
 """
 flows_to_enforced — reconstruct the policy that appears to have been running.
 
-    python3 flows_to_enforced.py --parquet lspr24_v2.parquet --loot loot-ossec/ \
+    python3 flows_to_enforced.py --parquet data/lspr24_v2.parquet --loot loot-ossec/ \
         --defs def/ --out policies/r3-apparent/
     firru diff policies/r1-synthesized policies/r3-apparent --defs def/
 
