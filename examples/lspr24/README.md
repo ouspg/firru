@@ -73,10 +73,10 @@ firru merge-zones --hosts 'policies/<variant>/*.yml' --defs def/ --outdir zones/
 | --- | --- |
 | `loot-ossec/` | the measured loot, as the archive has it |
 | `loot-assumed/` | the same with `assumptions.yml` applied: what the policies are built from |
-| `policies/r1-synthesized/` | from the sockets: 468 service terms over 59 hosts |
+| `policies/r1-synthesized/` | from the sockets: 460 service terms over 59 hosts |
 | `policies/r2-tightened/` | sources narrowed against the night window: 180 terms, each with `# was:`, and beside them `*.blocked.yml` (27 hosts: flows the narrowing would deny); a term nothing matched says `log-drop candidate` |
 | `policies/r3-apparent/` | INFERRED from traffic: the policy that appears to have been running |
-| `policies/r4-block-early/` | r2 with every service the night window never saw removed: 277 of 468 terms, on 51 hosts |
+| `policies/r4-block-early/` | r2 with every service the night window never saw removed: 269 of 460 terms, on 51 hosts |
 | `zones/<variant>/` | each variant merged per network, the form a firewall takes |
 
 Every policy and zone file compiles with Aerleon against `def/`. Files are
@@ -181,7 +181,7 @@ Kubernetes worker reads:
 
 ### Tightening, and why most terms keep ANY
 
-Tightening narrowed 180 of the 468 terms, onto the green-team hosts, the
+Tightening narrowed 180 of the 460 terms, onto the green-team hosts, the
 cluster members and the zone groups the inventory defines. 216 kept `ANY`,
 and that is the right answer rather than a failure: their clients are the
 exercise's simulated internet, addresses with no asset behind them. An

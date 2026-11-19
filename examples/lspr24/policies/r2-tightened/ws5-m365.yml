@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/ws5-m365.yml
 # Flows: night.jsonl, none for this host
-# Source suggestions changed: 0 | Dead rules: 3 | Group suggestions: 0
+# Source suggestions changed: 0 | Log-drop candidates: 3
 metadata:
   host: ws5-m365
   zone: beg
@@ -25,7 +25,7 @@ filters:
         protocol: icmpv6
         action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-SSH
         protocol: tcp
         destination-port: SSH
@@ -33,7 +33,7 @@ filters:
         source-address:
           - MGMT_HOSTS
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-RDP
         protocol: tcp
         destination-port: RDP
@@ -41,7 +41,7 @@ filters:
         source-address:
           - MGMT_HOSTS
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-MDNS
         protocol: udp
         destination-port: MDNS

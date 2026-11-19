@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/ws2-beg02_int_beg_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:56Z
-# Source suggestions changed: 3 | Dead rules: 0 | Group suggestions: 0
+# Source suggestions changed: 3 | Log-drop candidates: 1
 metadata:
   host: ws2-beg02
   zone: beg_int
@@ -46,7 +46,7 @@ filters:
         protocol: icmpv6
         action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
         protocol: tcp
         destination-port: WINDOWS-WINRM-UNCONFIGURED

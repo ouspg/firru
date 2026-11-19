@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/maintenance_beg_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:03Z to 2024-03-07T05:59:58Z
-# Source suggestions changed: 3 | Dead rules: 0 | Group suggestions: 0
+# Source suggestions changed: 3 | Log-drop candidates: 0
 metadata:
   host: maintenance
   zone: beg

@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/hq-gsc06_bgp_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:00Z to 2024-03-07T05:59:58Z
-# Source suggestions changed: 2 | Dead rules: 0 | Group suggestions: 0
+# Source suggestions changed: 2 | Log-drop candidates: 6
 metadata:
   host: hq-gsc06
   zone: bgp
@@ -41,42 +41,42 @@ filters:
         protocol: icmpv6
         action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-TCP_4532
         protocol: tcp
         destination-port: TCP_4532
         action: accept
         source-address: ANY_V4
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-TCP_4533
         protocol: tcp
         destination-port: TCP_4533
         action: accept
         source-address: ANY_V4
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-VNC
         protocol: tcp
         destination-port: VNC
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-TCP_9000
         protocol: tcp
         destination-port: TCP_9000
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-TCP_19000
         protocol: tcp
         destination-port: TCP_19000
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-NTP
         protocol: udp
         destination-port: NTP

@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/ws2-beg01_int_beg_05_berylia_org.yml
 # Flows: night.jsonl, 2024-03-06T17:00:02Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 4 | Dead rules: 6 | Group suggestions: 0
+# Source suggestions changed: 4 | Log-drop candidates: 11
 metadata:
   host: ws2-beg01
   zone: beg_int
@@ -50,7 +50,7 @@ filters:
     protocol: icmpv6
     action: accept
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: allow-udp-RDP
     protocol: udp
     destination-port: RDP
@@ -58,7 +58,7 @@ filters:
     source-address:
     - BEG_INT_GT
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: deny-udp-SSDP
     protocol: udp
     destination-port: SSDP
