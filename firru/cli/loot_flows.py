@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
 """
-dump-flows — Dump Arkime sessions to a .jsonl file for offline use.
+loot-flows — Dump Arkime sessions to a .jsonl file for offline use.
 
-Collects all flows visible in Arkime and writes them as newline-delimited JSON
-(one normalised flow dict per line). The output can be fed to tighten via
---flows-file when Arkime is no longer accessible.
+Collects the flows Arkime's viewer API returns and writes them as
+newline-delimited JSON (one normalised flow dict per line). The output can be
+fed to tighten via --flows-file when Arkime is no longer accessible.
 
 Usage:
-    # Dump everything from the last 48 hours
-    dump-flows --arkime http://localhost:8005/api --user admin --password x
+    # Dump everything from the last 48 hours; the password comes from
+    # ~/.netrc ($NETRC; firru.credentials), or is asked for
+    loot-flows --arkime http://localhost:8005/api
 
-    # Dump only flows involving known hosts (smaller file)
-    dump-flows --arkime ... --defs def/ --hosts-only
+    # An imported pcap keeps its capture time: name the window, or take all
+    loot-flows --arkime ... --start-time 2026-04-14T06:00:00Z --stop-time 2026-04-14T14:00:00Z
+    loot-flows --arkime ... --all
 
     # Append to an existing file (e.g. run twice a day during exercise)
-    dump-flows --arkime ... --output flows.jsonl --append
+    loot-flows --arkime ... --output flows.jsonl --append
+
+For a bulk record, convert the capture with Zeek instead (zeek-to-flows): the
+viewer pages a window an hour at a time, about 170 sessions a second.
 """
 
 import argparse
@@ -22,15 +27,7 @@ import json
 import sys
 from pathlib import Path
 
-from requests.auth import HTTPBasicAuth, HTTPDigestAuth
-
-from firru.arkime import ArkimeAPI, ESClient, process_flow
-
-ARKIME_FIELDS = [
-    "source.ip", "destination.ip",
-    "source.port", "destination.port",
-    "protocol", "tcpflags.syn", "tcpflags.syn-ack", "tags",
-]
+from firru.arkime import ArkimeAPI, SESSION_FIELDS, process_flow
 
 
 def main():
@@ -39,29 +36,22 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  dump-flows --arkime http://localhost:8005/api --user admin --password x
+  loot-flows --arkime http://localhost:8005/api
 
   # Incremental: run daily, append to same file
-  dump-flows --arkime ... --date 24 --output flows.jsonl --append
+  loot-flows --arkime ... --date 24 --output flows.jsonl --append
         """,
     )
     parser.add_argument("--arkime",    "-a", default=None,
-                        help="Arkime viewer API base URL, e.g. http://localhost:8005/api")
-    parser.add_argument("--user",      "-u", default="admin")
-    parser.add_argument("--password",  "-P", default=None)
+                        help="Arkime viewer API base URL, e.g. http://localhost:8005/api "
+                             "(default: firru.toml's [arkime] url)")
+    parser.add_argument("--user",      "-u", default=None,
+                        help="default: the netrc entry's, else admin")
+    parser.add_argument("--password",  "-P", default=None,
+                        help="default: the netrc entry ($NETRC, firru.toml's [arkime] netrc, ~/.netrc), else asked for "
+                             "(a command line is visible to others)")
     parser.add_argument("--basic-auth", action="store_true",
                         help="Use HTTP basic auth instead of digest auth")
-    parser.add_argument("--es", default=None,
-                        help="Read SPI directly from Elasticsearch/OpenSearch "
-                             "(e.g. http://localhost:9200) — scroll API, no viewer "
-                             "rate limit. Use instead of --arkime for bulk dumps.")
-    parser.add_argument("--es-index", default="arkime_sessions3-*",
-                        help="Session index pattern (default: arkime_sessions3-*)")
-    parser.add_argument("--es-user", default=None,
-                        help="ES/OpenSearch user (omit for a no-security node)")
-    parser.add_argument("--es-password", default=None)
-    parser.add_argument("--es-insecure", action="store_true",
-                        help="Do not verify TLS certificate (self-signed ES)")
     parser.add_argument("--date",       default="48",
                         help="Lookback window in hours, e.g. 48 (default: 48). "
                              "NOTE: wrong knob for imported pcap — its sessions keep "
@@ -72,8 +62,8 @@ Examples:
     parser.add_argument("--stop-time",  default=None,
                         help="Range end (default: now); same formats as --start-time")
     parser.add_argument("--all", dest="all_time", action="store_true",
-                        help="No time window — dump the whole index. Cleanest when "
-                             "ES holds only the slice you imported.")
+                        help="No time window: from the first session Arkime holds "
+                             "to the last")
     parser.add_argument("--expression", "-e", default="",
                         help="Optional Arkime filter expression")
     parser.add_argument("--output",    "-o", default="flows.jsonl",
@@ -82,43 +72,32 @@ Examples:
                         help="Append to existing output file instead of overwriting")
     args = parser.parse_args()
 
-    if not args.arkime and not args.es:
-        parser.error("one of --arkime (viewer API) or --es (direct SPI read) is required")
-    if args.arkime and args.es:
-        parser.error("use either --arkime or --es, not both")
-
-    if args.es:
-        if args.expression:
-            print("Note: --expression is ignored with --es (ES reads the whole "
-                  "time window; filter downstream).", file=sys.stderr)
-        es_auth = (args.es_user, args.es_password) if args.es_user else None
-        source = ESClient(args.es, index=args.es_index, auth=es_auth,
-                          verify=not args.es_insecure)
-        sessions = source.search(date="all" if args.all_time else args.date,
-                                 start_time=args.start_time,
-                                 stop_time=args.stop_time)
-        if args.start_time:
-            from firru.arkime import _to_epoch
-            print(f"  window: {args.start_time} .. {args.stop_time or 'now'}  "
-                  f"(epoch {_to_epoch(args.start_time)}..{_to_epoch(args.stop_time) if args.stop_time else 'now'}, "
-                  f"overlap on firstPacket/lastPacket)", file=sys.stderr)
-        backend = f"ES {args.es} [{args.es_index}]"
-    else:
-        password = args.password
-        if password is None:
-            import getpass
-            password = getpass.getpass(f"Arkime password for {args.user}: ")
-        auth = (HTTPBasicAuth if args.basic_auth else HTTPDigestAuth)(args.user, password)
-        sessions = ArkimeAPI(args.arkime, auth).search(
-            args.expression, fields=ARKIME_FIELDS,
-            date="-1" if args.all_time else args.date,
-            start_time=args.start_time, stop_time=args.stop_time)
-        backend = f"Arkime viewer {args.arkime}"
+    from firru.project import find, service_key
+    project = find()
+    if not args.arkime:
+        args.arkime = service_key(project, "arkime", "url")
+        if not args.arkime:
+            parser.error("--arkime, or an [arkime] url in firru.toml, is required")
+    from firru.credentials import http_auth
+    try:
+        auth = http_auth(args.arkime, args.user, args.password,
+                         args.basic_auth or service_key(project, "arkime", "auth") == "basic",
+                         netrc=service_key(project, "arkime", "netrc"))
+    except ValueError as e:
+        parser.error(str(e))
+    sessions = ArkimeAPI(args.arkime, auth).search(
+        args.expression, fields=SESSION_FIELDS,
+        date="-1" if args.all_time else args.date,
+        start_time=args.start_time, stop_time=args.stop_time)
+    backend = f"Arkime viewer {args.arkime}"
 
     mode = "a" if args.append else "w"
     out_path = Path(args.output)
 
-    print(f"Querying {backend} (date={args.date}) → {out_path} "
+    window = ("all of it" if args.all_time else
+              f"{args.start_time} to {args.stop_time or 'now'}" if args.start_time else
+              f"last {args.date} h")
+    print(f"Querying {backend} ({window}) → {out_path} "
           f"({'append' if args.append else 'overwrite'}) …", file=sys.stderr)
 
     written = skipped = 0

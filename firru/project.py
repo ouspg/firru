@@ -8,15 +8,23 @@ a def/ directory, so a firru checkout (which has one) is not taken for a
 project.
 
     [flows]
-    store    = "flows"           # a flow store, relative to the project
+    store    = "data/flows"      # a flow store or a JSONL file, relative to the project;
+                                 # --flows-file / --flows name another
     timezone = "+02:00"          # the zone the windows below are written in
+
+    [arkime]                     # a service: url, auth, and where its login is
+    url   = "https://arkime.example:8005/api"
+    auth  = "digest"             # or "basic"
+    netrc = "~/.netrc-arkime"    # default $NETRC, else ~/.netrc
 
     [windows]
     night = ["2024-03-06 19:00", "2024-03-07 08:00"]
 
 The zone is a fixed offset, UTC unless the file names one, and never the
 machine's (firru.times). Windows are named once here and used by name:
-`--window night`, `--since "night 23:00"`.
+`--window night`, `--since "night 23:00"`. A password never goes here, since a
+project is copied and shared: `netrc` names the file holding it, which is
+your own (firru.credentials).
 """
 
 import os
@@ -27,6 +35,16 @@ from datetime import timezone
 from firru.times import TimeParser
 
 MARKER = "firru.toml"
+
+#: How a service checks the login netrc holds for it.
+AUTH_KINDS = ("digest", "basic")
+
+
+class Service:
+    """A service a project names: where it is, and how to log in to it."""
+
+    def __init__(self, url, auth="digest", netrc=None):
+        self.url, self.auth, self.netrc = url, auth, netrc
 
 
 class Project:
@@ -40,6 +58,7 @@ class Project:
             raise ValueError(f"{self.path}: [flows] must be a table")
         store = flows.get("store")
         self.store = (self.root / store) if store else None
+        self.arkime = self.service("arkime")
         self.zone = flows.get("timezone", "UTC")
         windows = self.config.get("windows") or {}
         for name, span in windows.items():
@@ -48,6 +67,20 @@ class Project:
                 raise ValueError(f"{self.path}: window {name!r} must be "
                                  f"[\"start\", \"end\"], got {span!r}")
         self.windows = {name: tuple(span) for name, span in windows.items()}
+
+    def service(self, name):
+        """A service table ([arkime], later [firewalls.<name>]): its url, auth
+        kind and netrc file, or None when the project names none."""
+        table = self.config.get(name)
+        if not table:
+            return None
+        if not isinstance(table, dict) or not table.get("url"):
+            raise ValueError(f"{self.path}: [{name}] needs a url")
+        auth = table.get("auth", "digest")
+        if auth not in AUTH_KINDS:
+            raise ValueError(f"{self.path}: [{name}] auth must be one of "
+                             f"{', '.join(AUTH_KINDS)}, got {auth!r}")
+        return Service(table["url"], auth, table.get("netrc"))
 
     @property
     def path(self):
@@ -59,6 +92,13 @@ class Project:
             return TimeParser(self.zone, windows=self.windows, now=now)
         except ValueError as e:
             raise ValueError(f"{self.path}: {e}") from None
+
+
+def service_key(project, name, key):
+    """`key` (url, auth, netrc) of the project's [name] service, or None
+    without a project or such a service."""
+    service = project.service(name) if project is not None else None
+    return getattr(service, key) if service is not None else None
 
 
 def load(root):
