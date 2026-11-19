@@ -773,12 +773,12 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
 
     Returns:
         terms          — CommentedSeq of tightened terms
-        dead_rules     — list of dicts: terms with tightened source but zero traffic
-                         (NoPair(policy_term, traffic_in_window) = dead rule candidate)
+        unused         — list of dicts: accept terms nothing matched in the window,
+                         each a log-drop candidate
         n_changed      — how many terms got a new source
     """
     terms         = CommentedSeq()
-    dead_rules    = []
+    unused        = []
 
     changed    = CommentedSeq()
     unchanged  = CommentedSeq()
@@ -883,19 +883,21 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
         if not svc or ip_counter is None:
             set_term_comment(
                 new_term,
-                [tagged(TAG_AUTO, "no flows observed in window — source unchanged")],
+                [tagged(TAG_AUTO, "no flows observed in window — source unchanged"
+                        + ("; log-drop candidate" if svc else ""))],
                 kept_map.get(term.get("name"), []),
             )
-            # Dead-rule detection: no flows observed for a term with a specific source.
+            # One window without a flow is not proof the service is unused:
+            # the term goes to log-drop, where what it would refuse is still
+            # recorded, before anyone drops it. Its source does not matter;
+            # a listener at ANY that nothing reached is the same finding.
             if svc:
-                src = term.get("source-address")
-                if not _is_any_source(src):
-                    dead_rules.append({
-                        "name":   term.get("name", ""),
-                        "proto":  proto,
-                        "svc":    svc,
-                        "source": src,
-                    })
+                unused.append({
+                    "name":   term.get("name", ""),
+                    "proto":  proto,
+                    "svc":    svc,
+                    "source": term.get("source-address", "ANY"),
+                })
             unchanged.append(new_term)
             continue
 
@@ -949,7 +951,7 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
     for t in deny_terms:
         terms.append(t)
 
-    return terms, dead_rules, n_changed
+    return terms, unused, n_changed
 
 
 # ---------------------------------------------------------------------------
@@ -1082,45 +1084,6 @@ def build_blocked_yaml(blocked):
                 else str(b["proposed_src"])
             )
         doc["blocked"].append(entry)
-
-    return doc
-
-
-# ---------------------------------------------------------------------------
-# Dead-rule YAML builder
-# ---------------------------------------------------------------------------
-
-def build_dead_yaml(dead_rules):
-    """
-    Return a CommentedMap YAML doc listing dead-rule candidates.
-
-    A dead rule is an ingress accept term whose source-address has already been
-    tightened (not ANY) but which matched zero observed traffic in the lookback
-    window.  NoPair(policy_term, traffic_in_window).
-
-    Remediation options per entry:
-      - Remove the term if the service is decommissioned.
-      - Widen the lookback window if traffic is infrequent.
-      - Verify the source host is still active / reachable.
-    """
-    doc = CommentedMap()
-    doc.yaml_set_start_comment(
-        "Dead-rule candidates — NoPair(policy_term, traffic_in_window).\n"
-        "Each term below has a tightened source-address but zero observed traffic\n"
-        "in the lookback window.  Options: remove, widen window, or re-check host."
-    )
-    doc["dead_rules"] = CommentedSeq()
-
-    for d in dead_rules:
-        entry = CommentedMap()
-        if d["name"]:
-            entry["name"] = d["name"]
-        entry["protocol"] = d["proto"]
-        entry["service"]  = d["svc"]
-        entry["source"]   = (
-            d["source"] if isinstance(d["source"], str) else list(d["source"])
-        )
-        doc["dead_rules"].append(entry)
 
     return doc
 
@@ -1489,7 +1452,7 @@ Examples:
       # ------------------------------------------------------------------
       # Rebuild policy
       # ------------------------------------------------------------------
-      all_dead_rules    = []
+      all_unused        = []
       all_n_changed     = 0
       new_filters = CommentedSeq()
       all_ingress_terms = CommentedSeq()
@@ -1516,12 +1479,12 @@ Examples:
                   any_rows=any_rows, host_token=host_token)
           else:
               in_terms = filt.get("terms", [])
-              tightened, dead_rules, n_changed = tighten_ingress(
+              tightened, unused, n_changed = tighten_ingress(
                   in_terms, ingress_flows, annotator, defs, verbose=args.verbose,
                   ingress_ports=ingress_ports, dns_store=dns_store, asn_db=asn_db,
                   any_rows=any_rows, host_token=host_token,
               )
-              all_dead_rules.extend(dead_rules)
+              all_unused.extend(unused)
               all_n_changed += n_changed
               new_filt["terms"] = tightened
               for t in tightened:
@@ -1565,9 +1528,9 @@ Examples:
                         f"src {src:50s}  {b['reason']}")
               if len(blocked) > 20:
                   print(f"  … and {len(blocked)-20} more")
-          if all_dead_rules:
-              print(f"\n--- Dead-rule candidates ({len(all_dead_rules)}) ---")
-              for d in all_dead_rules:
+          if all_unused:
+              print(f"\n--- Log-drop candidates, no flows in the window ({len(all_unused)}) ---")
+              for d in all_unused:
                   name = f"  [{d['name']}]" if d["name"] else ""
                   print(f"  {d['proto']}/{d['svc']:20s}  src: {d['source']}{name}")
           continue
@@ -1578,7 +1541,6 @@ Examples:
       stem        = policy_path.stem
       out_policy  = outdir / f"{stem}.yml"
       out_blocked = outdir / f"{stem}.blocked.yml"
-      out_dead    = outdir / f"{stem}.dead.yml"
 
       if out_policy.exists() and not args.overwrite:
           print(f"  {stem}: output exists — skipping (use --overwrite)", file=sys.stderr)
@@ -1588,12 +1550,13 @@ Examples:
           f"firru tighten output — review and copy changes to policies/pol/{policy_path.name}\n"
           f"{window_line(source, span)}\n"
           f"Source suggestions changed: {all_n_changed} | "
-          f"Dead rules: {len(all_dead_rules)}"
+          f"Log-drop candidates: {len(all_unused)}"
       )
       with open(out_policy, "w") as f:
           yaml_handler.dump(policy, f)
       print(f"Written: {out_policy}  "
-            f"({all_n_changed} changed, {len(all_dead_rules)} dead)")
+            f"({all_n_changed} changed, {len(all_unused)} log-drop "
+            f"candidate{'' if len(all_unused) == 1 else 's'})")
 
       if blocked:
           with open(out_blocked, "w") as f:
@@ -1602,14 +1565,6 @@ Examples:
       else:
           if out_blocked.exists():
               out_blocked.unlink()
-
-      if all_dead_rules:
-          with open(out_dead, "w") as f:
-              yaml_handler.dump(build_dead_yaml(all_dead_rules), f)
-          print(f"Written: {out_dead}  ({len(all_dead_rules)} dead-rule candidates)")
-      else:
-          if out_dead.exists():
-              out_dead.unlink()
 
     if any_rows is not None:
         report = any_rollup(any_rows, asn_db=asn_db, dns_store=dns_store)

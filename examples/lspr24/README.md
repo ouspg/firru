@@ -74,7 +74,7 @@ firru merge-zones --hosts 'policies/<variant>/*.yml' --defs def/ --outdir zones/
 | `loot-ossec/` | the measured loot, as the archive has it |
 | `loot-assumed/` | the same with `assumptions.yml` applied: what the policies are built from |
 | `policies/r1-synthesized/` | from the sockets: 468 service terms over 59 hosts |
-| `policies/r2-tightened/` | sources narrowed against the night window: 180 terms, each with `# was:`; beside them `*.blocked.yml` (27 hosts: flows the narrowing would deny) and `*.dead.yml` (23 hosts: rules nothing matched) |
+| `policies/r2-tightened/` | sources narrowed against the night window: 180 terms, each with `# was:`, and beside them `*.blocked.yml` (27 hosts: flows the narrowing would deny); a term nothing matched says `log-drop candidate` |
 | `policies/r3-apparent/` | INFERRED from traffic: the policy that appears to have been running |
 | `policies/r4-block-early/` | r2 with every service the night window never saw removed: 277 of 468 terms, on 51 hosts |
 | `zones/<variant>/` | each variant merged per network, the form a firewall takes |

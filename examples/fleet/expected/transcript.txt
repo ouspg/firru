@@ -47,12 +47,10 @@ Host: web1  IPs: ['192.168.150.126']
 Host: win1  IPs: ['192.168.150.184']
   ingress: 16 flows across 1 service buckets
   egress:  105 flows across 8 service buckets
-Written: policies/tightened/dc1.yml  (8 changed, 2 dead)
-Written: policies/tightened/dc1.dead.yml  (2 dead-rule candidates)
-Written: policies/tightened/mon1.yml  (1 changed, 0 dead)
-Written: policies/tightened/web1.yml  (0 changed, 0 dead)
-Written: policies/tightened/win1.yml  (1 changed, 2 dead)
-Written: policies/tightened/win1.dead.yml  (2 dead-rule candidates)
+Written: policies/tightened/dc1.yml  (8 changed, 15 log-drop candidates)
+Written: policies/tightened/mon1.yml  (1 changed, 1 log-drop candidate)
+Written: policies/tightened/web1.yml  (0 changed, 1 log-drop candidate)
+Written: policies/tightened/win1.yml  (1 changed, 10 log-drop candidates)
 mon1:
   narrowed (1) — fewer peers, safe to apply (--narrow):
     > allow-tcp-MUNIN          tcp/4949               source ANY -> MONITORING  observed (288 flows)

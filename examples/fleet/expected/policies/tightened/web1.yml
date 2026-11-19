@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/web1.yml
 # Flows: flows.jsonl, 2026-10-24T00:00:50Z to 2026-10-24T23:57:21Z
-# Source suggestions changed: 0 | Dead rules: 0
+# Source suggestions changed: 0 | Log-drop candidates: 1
 metadata:
   host: web1
 filters:
@@ -32,7 +32,7 @@ filters:
         action: accept
         source-address: ANY
 
-# [auto] no flows observed in window — source unchanged
+# [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-DHCP-CLIENT
         protocol: udp
         destination-port: DHCP-CLIENT
