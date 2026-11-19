@@ -40,7 +40,7 @@ from ruyaml import YAML
 from ruyaml.comments import CommentedMap, CommentedSeq
 
 from firru.annotator import PolicyAnnotator
-from firru.arkime import ArkimeAPI, build_host_filter, process_flow
+from firru.arkime import ArkimeAPI, process_flow
 from firru.cli.address_summarizer import (_default_asn_db, summarize,
                                           summarize_asn)
 from firru.comments import TAG_AUTO, detached, tagged, set_term_comment, kept_comments_by_term

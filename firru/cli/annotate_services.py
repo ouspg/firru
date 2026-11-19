@@ -115,11 +115,6 @@ def _raw_comment(node, key):
     return slots[2].value
 
 
-def _eol_comment(node, key):
-    """Just the end-of-line comment text on a mapping key, or ''."""
-    return _raw_comment(node, key).partition("\n")[0].strip()
-
-
 def _set_eol_comment(node, key, text, tail=""):
     """
     Set a mapping key's end-of-line comment, preserving any comment block that

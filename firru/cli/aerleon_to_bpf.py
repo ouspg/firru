@@ -635,12 +635,6 @@ def emit_nmap(results, from_ip=None):
         print(f"# ({skipped} terms skipped — {from_ip} is in the allowed set for those)")
 
 
-def _fmt_ranges_str(ports):
-    """Helper used by emit_nmap for the covered-ports comment."""
-    return ", ".join(str(lo) if lo == hi else f"{lo}-{hi}"
-                     for lo, hi in _port_ranges(sorted(ports)))
-
-
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------

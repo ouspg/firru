@@ -221,11 +221,6 @@ def process_flow(s: dict) -> dict | None:
     }
 
 
-def build_host_filter(host_ips: list) -> str:
-    """Build an Arkime expression matching any flow destined for host_ips."""
-    return " || ".join(f"ip.dst == {ip}" for ip in host_ips)
-
-
 # Session SPI fields process_flow() consumes. Requesting these whole parent
 # objects from _source is enough; Arkime stores them as nested objects, so the
 # scroll hit's _source is shaped exactly like a viewer session dict.
