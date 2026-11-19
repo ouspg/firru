@@ -318,3 +318,22 @@ class TestWindow:
         out = capsys.readouterr().out
         assert "# narrowed observed (2 flows)" in out
         assert "#   window:   --window night: 2030-01-21 19:00Z to 2030-01-22 08:00Z" in out
+
+
+def test_the_host_is_found_by_its_file_name_when_its_label_is_not_a_token(tmp_path, capsys):
+    # metadata.host is the collector's label (`dc1`); the file is named by the
+    # inventory token. Looking up only the label skipped all evidence.
+    defs = _defs(tmp_path)
+    paths = []
+    for fname, terms in (("old", [_t("allow-tcp-SSH", "SSH")]),
+                         ("new", [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")])):
+        d = tmp_path / fname
+        d.mkdir()
+        p = _pol(d, "H1.yml", terms)
+        text = open(p).read()
+        open(p, "w").write(text.replace("metadata: {host: H1}", "metadata: {host: dc1}"))
+        paths.append(p)
+    flows = _flows(tmp_path, ("tcp", 22, "10.9.1.1", 4))
+    cmd_diff(argparse.Namespace(old=paths[0], new=paths[1], defs=defs, output="sh",
+                                direction="in", flows=flows))
+    assert "# narrowed observed (4 flows)" in capsys.readouterr().out

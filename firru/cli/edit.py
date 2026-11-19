@@ -57,6 +57,7 @@ it:
 """
 
 import argparse
+import pathlib
 import sys
 from collections import Counter, defaultdict
 
@@ -359,18 +360,28 @@ def _admits(peers, ip):
     return False
 
 
-def _host_flow_index(flows_file, docs, defs, span=None):
+def _host_flow_index(flows_file, docs, defs, span=None, paths=()):
     """Build the ``(direction, proto, port) -> Counter(peer)`` index once for a
     host, from whichever of ``docs`` names it. Returns (ev, ips) or (None, None)
     when the host has no resolvable addresses — the read is the dominant cost of
-    a --flows diff, so it is done exactly once and shared."""
-    host_token = None
-    for d in docs:
-        host_token = (d.get("metadata") or {}).get("host")
-        if host_token:
-            break
+    a --flows diff, so it is done exactly once and shared.
+
+    The host is named as tighten names it: by a policy file's name where the
+    definitions know it, since files are named by the inventory token, which is
+    unique; metadata.host is the collector's label, which need not be (two
+    zones can each have a `www`)."""
     from firru.cli.tighten import get_host_ips
-    ips = get_host_ips(host_token, defs) if host_token else []
+    candidates = [pathlib.Path(p).stem for p in paths if p]
+    candidates += [(d.get("metadata") or {}).get("host") for d in docs]
+    host_token, ips = None, []
+    for tok in candidates:
+        if not tok:
+            continue
+        host_token = host_token or tok
+        ips = get_host_ips(tok, defs)
+        if ips:
+            host_token = tok
+            break
     if not ips:
         print(f"Warning: no addresses for host token {host_token!r}; "
               f"--flows evidence skipped", file=sys.stderr)
@@ -954,7 +965,7 @@ def _cmd_diff_body(args, defs):
     ev = None
     if getattr(args, "flows", None):
         ev, _ = _host_flow_index(args.flows, (new_doc, old_doc), defs,
-                                 getattr(args, "flow_span", None))
+                                 getattr(args, "flow_span", None), (args.new, args.old))
     evidence = _diff_evidence(ev, old_doc, new_doc, defs, result) if ev is not None else None
     zero_ev = (_zero_evidence(ev, old_doc, defs, _direction_arg(args), result)
                if ev is not None and getattr(args, "zero_evidence", False)
