@@ -19,6 +19,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport) | IPv6 ::/0 (MSExchangeFrontendTransport C:\Program Files\Microsoft\Exchange Server\V15\Bin\MSExchangeFrontendTransport.exe MSExchangeFrontEndTransport)
       - name: allow-tcp-SMTP
         protocol: tcp
@@ -123,6 +125,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
       - name: allow-tcp-TCP_3800
         protocol: tcp
@@ -148,6 +152,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (Microsoft.Exchange.RpcClientAccess.Service C:\Program Files\Microsoft\Exchange Server\V15\bin\Microsoft.Exchange.RpcClientAccess.Service.exe MSExchangeRPC) | IPv6 ::/0 (Microsoft.Exchange.RpcClientAccess.Service C:\Program Files\Microsoft\Exchange Server\V15\bin\Microsoft.Exchange.RpcClientAccess.Service.exe MSExchangeRPC)
       - name: allow-tcp-MSEXCHANGERPC
         protocol: tcp
@@ -187,6 +193,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe Dnscache) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe Dnscache)
       - name: allow-udp-MDNS
         protocol: udp

@@ -1,6 +1,6 @@
 metadata:
   host: ns1
-  zone: bgp
+  zone: bgp_5
 filters:
   - header:
       targets:
@@ -22,7 +22,8 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BGP_GT
+          - BGP_5_GT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (unbound) | IPv6 ::/0 (unbound)
       - name: allow-tcp-DNS-TCP
         protocol: tcp

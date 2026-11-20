@@ -5,22 +5,22 @@ blocked:
   - protocol: tcp
     service: HTTP
     src_ip: 100.97.5.60
-    src_token: BEG_GT_OTHER
+    src_token: BEG_5_GT
 # 6295 hits | reason: port not in policy (443)
   - protocol: tcp
     service: HTTPS
     src_ip: 2a07:1182:5:20::60
-    src_token: BEG_GT_OTHER
+    src_token: BEG_5_GT
 # 6291 hits | reason: port not in policy (80)
   - protocol: tcp
     service: HTTP
     src_ip: 2a07:1182:5:20::60
-    src_token: BEG_GT_OTHER
+    src_token: BEG_5_GT
 # 6290 hits | reason: port not in policy (443)
   - protocol: tcp
     service: HTTPS
     src_ip: 100.97.5.60
-    src_token: BEG_GT_OTHER
+    src_token: BEG_5_GT
 # 1560 hits | reason: port not in policy (10257)
   - protocol: tcp
     service: K8S-CONTROLLER-MANAGER

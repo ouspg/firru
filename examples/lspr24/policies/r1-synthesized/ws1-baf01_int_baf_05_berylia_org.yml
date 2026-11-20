@@ -19,6 +19,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (svchost C:\WINDOWS\system32\svchost.exe RpcEptMapper RpcSs) | IPv6 ::/0 (svchost C:\WINDOWS\system32\svchost.exe RpcEptMapper RpcSs)
       - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
         protocol: tcp
@@ -45,6 +47,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (svchost C:\WINDOWS\system32\svchost.exe CDPSvc)
       - name: allow-tcp-WINDOWS-CDP
         protocol: tcp
@@ -59,6 +63,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
       - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
         protocol: tcp
@@ -97,6 +103,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (svchost C:\WINDOWS\system32\svchost.exe CDPSvc)
       - name: allow-udp-WINDOWS-CDP
         protocol: udp

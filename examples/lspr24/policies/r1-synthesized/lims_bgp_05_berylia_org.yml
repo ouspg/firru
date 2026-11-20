@@ -1,6 +1,6 @@
 metadata:
   host: lims
-  zone: bgp
+  zone: bgp_5
 filters:
   - header:
       targets:
@@ -22,7 +22,8 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BGP_GT
+          - BGP_5_GT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (apache2) | IPv6 ::/0 (apache2) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
       - name: allow-tcp-HTTP
         protocol: tcp

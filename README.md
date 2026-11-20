@@ -26,9 +26,9 @@ third. A reviewer turns those three into firewall rules and reads nothing else.
 **A real exercise network** ([examples/lspr24/](examples/lspr24/), public CC0
 data from the Locked Shields 2024 partner run). firru read real listening-socket
 logs and 20.2M flows, wrote policy, and compared the policy with what the
-network did. SSH was open wider than the hosts' own management model on all 54
-hosts whose policy can be reconstructed, and 47 of them ran services nobody
-used. Removing the unused services would have blocked 10.9% of the red team's
+network did. On all 54 hosts whose policy can be reconstructed, SSH admitted
+more than the sources the traffic shows administering the hosts, and 47 of them
+ran services nobody used. Removing the unused services would have blocked 10.9% of the red team's
 admitted traffic, and narrowing sources would have blocked none. The rest came
 in over public services that no ingress rule can close. The derived results are
 committed, so they can be read without the 7 GB download.

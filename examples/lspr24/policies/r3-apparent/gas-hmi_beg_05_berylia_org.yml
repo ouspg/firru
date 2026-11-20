@@ -1,6 +1,6 @@
 metadata:
   host: gas-hmi
-  zone: beg
+  zone: beg_17
   provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
 filters:
 - header:

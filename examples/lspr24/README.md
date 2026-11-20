@@ -14,8 +14,8 @@ below can be read without the 7 GB download; `make all` regenerates all of it.
 What it shows:
 
 - **Policy against practice.** On every one of the 54 hosts whose running
-  policy can be reconstructed from traffic, SSH was open wider than the hosts'
-  own management model, and 47 had services nobody used.
+  policy can be reconstructed from traffic, SSH admitted more than the sources
+  the traffic shows administering the hosts, and 47 had services nobody used.
 - **Host state splits what traffic cannot.** The capture names no blocked
   connection. Joined to the hosts' listening tables, 35,499 unanswered IPv4
   flows turn out to be to ports that *were* listening: the enforcement axis.
@@ -75,7 +75,7 @@ firru merge-zones --hosts 'policies/<variant>/*.yml' --defs def/ --outdir zones/
 | `loot-ossec/` | the measured loot, as the archive has it |
 | `loot-assumed/` | the same with `assumptions.yml` applied: what the policies are built from |
 | `policies/r1-synthesized/` | from the sockets: 460 service terms over 59 hosts |
-| `policies/r2-tightened/` | sources narrowed against the night window: 180 terms, each with `# was:`, and beside them `*.blocked.yml` (27 hosts: flows the narrowing would deny); a term nothing matched says `log-drop candidate` |
+| `policies/r2-tightened/` | sources narrowed against the night window: 178 terms, each with `# was:`, and beside them `*.blocked.yml` (27 hosts: flows the narrowing would deny); a term nothing matched says `log-drop candidate` |
 | `policies/r3-apparent/` | INFERRED from traffic: the policy that appears to have been running |
 | `policies/r4-block-early/` | r2 with every service the night window never saw removed: 269 of 460 terms, on 51 hosts |
 | `reports/` | precomputed reports, so the results read without the dataset: `hourly/`, one host's d2 an hour at a time (`make hourly`) |
@@ -98,17 +98,15 @@ compares it with the synthesized one. One host of the 54 it can be built for:
 ```
 alert-system:
   widened (1) — grants new peers, REVIEW:
-    ! allow-tcp-SSH            tcp/22                 source BGP_GT -> ANY
-  address family (1) — coverage changed:
-    # allow-tcp-SSH            tcp/22                 v4 -> v4+v6
+    ! allow-tcp-SSH            tcp/22                 source [BGP_5_GT, MGMT_HOSTS] -> ANY
   removed (3) — no longer observed, advisory (scoring vetoes):
     - allow-tcp-REDIS          tcp/6379
     - allow-tcp-TCP_5001       tcp/5001
     - allow-tcp-TCP_5002       tcp/5002
 ```
 
-All 54 widened terms have that shape: SSH answered sources outside the hosts'
-management model (the green-team proxies and MGMT_HOSTS). Whatever the blue
+All 54 widened terms have that shape: SSH answered sources other than the hosts'
+administrators (the green-team hosts and MGMT_HOSTS). Whatever the blue
 team ran, it did not restrict administrative access anywhere the capture can
 see. The 47 hosts with removed terms are the block-early bet stated per host:
 services synthesis has to decide about that no client used.
@@ -183,8 +181,8 @@ Kubernetes worker reads:
 
 ### Tightening, and why most terms keep ANY
 
-Tightening narrowed 180 of the 460 terms, onto the green-team hosts, the
-cluster members and the zone groups the inventory defines. 216 kept `ANY`,
+Tightening narrowed 178 of the 460 terms, onto the green-team hosts, the
+cluster members and the zone groups the inventory defines. 200 kept `ANY`,
 and that is the right answer rather than a failure: their clients are the
 exercise's simulated internet, addresses with no asset behind them. An
 address resolves to nothing, so the term stays open; minting a token per
@@ -211,15 +209,17 @@ different kind of miss:
 
 | host | cut on d2 | mostly |
 | --- | --- | --- |
-| dc1 (Windows DC) | 15,380 flows, 7 peers | the organisers' `BEG_GT_OTHER` every hour on Kerberos and LDAP, and the other DC, dc2, in 8 of 10 hours |
-| salt-master | 2,480 flows, 4 peers | the organisers every hour, and the gas-hmi minion on 4505 in 9 of 10 |
-| k8s-worker01 | 155 flows, 1 peer | the cluster's own control plane, on the kubelet, in 7 of 10 hours |
-| gas-hmi (OT) | 1,137 flows, 1 peer | the `BEG_GT` band, in half the hours |
-| www | 5,707 flows, 51 peers | its users: the internet the night did not show; 234 of the flows are red team |
+| dc1 (Windows DC) | 15,572 flows, 9 peers | the organisers every hour on Kerberos and LDAP, from the DMZ (`BEG_5_GT`), the other DC, dc2, in 8 of 10 hours, and SSH from its subnet's management entry point in 5 |
+| salt-master | 1,421 flows, 5 peers | the organisers every hour, and the gas-hmi minion on 4505 in 9 of 10 |
+| k8s-worker01 | 217 flows, 2 peers | the cluster's own control plane, on the kubelet, in 7 of 10 hours |
+| gas-hmi (OT) | 1,199 flows, 1 peer | its subnet's management entry point, on SSH and the HMI's web ports, in 7 of 10 hours |
+| www | 5,778 flows, 52 peers | its users: the internet the night did not show; 234 of the flows are red team |
 
 The night is quiet in a way the day is not: it shows the services' own
 clients, and not the organisers' daytime checks, the second domain
-controller's replication or a control plane's periodic calls. A peer cut in
+controller's replication, a control plane's periodic calls or daytime
+administration: SSH from MGMT_HOSTS or a subnet's entry point is cut on all
+five hosts. A peer cut in
 most hours is the window's gap, not noise, and `firru diff -o sh` comments
 out a narrowing it contradicts instead of emitting it. On www the cut is the
 point only for the red-team share; narrowing a public web server to the
@@ -291,9 +291,9 @@ assumptions applied, and the policies are built from the latter.
 | Each host's dynamic port range | `dynamic_ranges` in `assumptions.yml`; `metadata.ephemeral_source` in the loot | The archive records none. The OS defaults are what every stock install in firru-os-baselines has (102 Linux runs; 19 of 20 Windows runs). `mail` is an Exchange server, and Exchange moves TCP to 6005-64325, as the stock Exchange install shows. |
 | The Windows services syscollector never saw change | `windows` in `assumptions.yml`; `inferred` and `inferred_from` on each filled-in listener | Each Windows host is the stock install of its role (DC, CA, Exchange member, domain workstation) plus the layers its traffic shows (OpenSSH, RDP, WinRM), each measured on its own. `assumptions.py --flows` checks it: every port that answered overnight is explained except one: `tcp/134` on both domain controllers, which the green-team checker opens about once a minute (Zeek `RSTO`: the handshake completed, then the checker reset it). Something listened there that neither the loot nor any baseline knows; it is left unexplained rather than assumed, so the policies deny it and tighten's would-block report shows it. |
 | The blue team's own management sources | `mgmt_hosts` in `assumptions.yml`, MGMT_HOSTS in `def/networks.yml` | Of the 28 sources answered on SSH or RDP overnight, 25 are the green team, which the inventory names; the interior ones reach 26 hosts each on both, administration as well as scoring. The other three: the DMZ firewall's own address (administration through its NAT) and two exterior addresses. Over all windows 173 internal sources reached SSH or RDP: users and lateral movement inside the zones, not management. |
-| Who may administer a host | `def/heuristics.py` | Locked Shields' management model: SSH, RDP and WinRM from the zone's green-team band and MGMT_HOSTS; NetBIOS and WS-Discovery from the zone's own hosts, since neither has a reason to cross a zone. |
-| Who the green team is | `<ZONE>_GT_OTHER` in `def/networks.yml` | The dataset labels organiser traffic (`Label_src=2`). Used to *name* those hosts, never to score a policy. |
-| Where a green-team band would be | `<ZONE>_GT` in `def/networks.yml` | A convention (the top addresses of each subnet), kept apart from `_GT_OTHER` because on this dataset it is wrong: it reaches 0 of the 16 labelled IPv4 hosts. |
+| Each subnet's management entry point | `zone_mgmt` in `assumptions.yml`; `<ZONE>_MGMT`, or `<ZONE>_<n>_MGMT` where a zone has several, in `def/networks.yml` | The top address of each internal subnet opens SSH, RDP and VNC to the hosts in that subnet and nowhere else, on both days and never at night: 64,159 answered flows from nine addresses, all labelled blue team. No asset is named at any of them, so the data shows that they carry management, not who operates them. |
+| Who may administer a host | `def/heuristics.py` | The administrators the traffic shows, per zone: SSH, RDP and WinRM from the zone's green-team hosts, the management entry point of the host's own subnet and MGMT_HOSTS. NetBIOS and WS-Discovery come from the zone's own hosts, since neither has a reason to cross a zone. |
+| Who the green team is | `<ZONE>_GT` in `def/networks.yml` | The dataset labels organiser traffic (`Label_src=2`). Used to *name* those hosts, never to score a policy. |
 | This site's own services | `def/services-site.yml` | One: Keycloak's cluster transport on udp/46655, seen on the keycloak host and nowhere else. |
 | Ports nobody named | `def/services-observed.yml` | Named by a stock-install baseline or firru's curated table where one covers the port; otherwise `TCP_<port>`, with the process and host as the evidence, so the claim is visibly weaker than a registry name. |
 
@@ -329,22 +329,35 @@ attacker's.
 ## The inventory
 
 The object model is read out of the dataset's own asset identifiers
-(`Expoid_src`/`Expoid_dst`) by `defs_from_expoid.py`: 147 assets in 10 zones,
+(`Expoid_src`/`Expoid_dst`) by `defs_from_expoid.py`: 147 assets in 19 zones,
 with short-name aliases where a first label is unambiguous. An address with no
 asset behind it stays unnamed on purpose.
 
-**Zones, segments, and why terms name `_HOSTS`.** A zone is one network
-(`beg_int`); a segment is the zones sharing a name (`beg`). `beg` spans an
-interior 10.5.12.0/24 and an exterior 100.97.5.0/24, and the management hosts
-of one are not those of the other, so anything scoped to the segment hands
-every interior host the exterior's administrators.
+**Zones are subnets.** Each internal subnet has its own management entry point,
+and every management flow from one reaches a host in its own /24 and no other
+(`zone_mgmt` in `assumptions.yml`). So a /24 is a network of its own. The asset
+names group hosts more coarsely: `int.beg` holds 10.5.12, 10.5.19 and 10.5.22.
+A zone is therefore the named zone where it has one subnet (`baf_int`), and the
+named zone with the subnet's third octet where it has several (`beg_int_12`).
+The data shows that `int.beg` has three subnets, not what each one is for.
+
+A host with addresses in more than one subnet routes between them: a boundary
+device, in no zone. There are nine: the three zone firewalls, `rtu`, and the
+5G core (amf, smf, the two UPFs, webui). Each keeps a host policy of its own,
+its own input rules, and is where a zone's policy would be enforced, so
+`merge-zones` leaves it out of every zone. A subnet whose every member is a
+boundary device is a transit network and no zone either: 10.5.16, 10.5.18,
+100.99.5 and the firewalls' link networks. `fw2-baf` and `fw1-bgp` are
+firewalls by name, but the capture shows each with one address, so they are
+one-host zones on their link networks. A host reaching its own firewall
+inside a zone meets the firewall's input rules, not the zone's.
 
 | token | holds | use it? |
 | --- | --- | --- |
-| `beg_int` | the zone's address space, as prefixes | rarely |
-| `BEG_INT_HOSTS` | the hosts that exist, `_WS` and `_GT_OTHER` by reference | yes: this is what terms name |
-| `BEG_INT_WS` | its workstations | by reference |
-| `BEG_ALL_HOSTS` | every zone of a segment | for segment-wide rules |
+| `beg_int_12` | the zone's address space, as prefixes | rarely |
+| `BEG_INT_12_HOSTS` | the hosts that exist, `_WS` and `_GT` by reference | yes: this is what terms name |
+| `BEG_INT_12_WS` | its workstations | by reference |
+| `BEG_ALL_HOSTS` | every zone of a segment (`beg`) | for segment-wide rules |
 
 The prefix token exists to be had: `merge-zones` asks whether a source falls
 inside a zone, which a union of /32s cannot answer. A term sourced from it

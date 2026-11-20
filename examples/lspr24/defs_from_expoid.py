@@ -83,8 +83,8 @@ def render_networks(nets, notes, sections):
 
     Written out rather than handed to a YAML dumper because the comments are
     the readable half of this file -- which FQDN a token came from, which
-    canonical token an alias points at, how a band was derived. A dumper drops
-    all of it and quotes the addresses besides.
+    canonical token an alias points at, where the green team came from. A
+    dumper drops all of it and quotes the addresses besides.
     """
     lines = [HEADER]
     current = None
@@ -135,27 +135,12 @@ def main():
     ap.add_argument("--out", default="def", metavar="DIR",
                     help="definitions directory to write into (default: def/, "
                          "replacing the hostmap-derived model in place)")
-    ap.add_argument("--gt-top", type=int, default=3, metavar="N",
-                    help="green team occupies the top N usable addresses of "
-                         "each of a zone's subnets, broadcast excluded: .252-"
-                         ".254 at the default 3, .254 alone at 1")
-    ap.add_argument("--gt-hosts", metavar="LIST",
-                    help="the band as explicit host octets (e.g. 59,60,250) "
-                         "instead of a top-of-subnet rule, for a site that "
-                         "does not put its management hosts at the top")
-    ap.add_argument("--green-label", metavar="COL=VAL", default=None,
-                    help="a column identifying green-team sources, e.g. "
-                         "Label_src=2. Populates <ZONE>_GT_OTHER with them "
-                         "and scores the <ZONE>_GT convention against them. "
-                         "The band is never built from it: whether the "
-                         "convention finds the management hosts is the "
-                         "question, and asking the answer first would make "
-                         "it unanswerable")
-    ap.add_argument("--gt-all", action="store_true",
-                    help="include the whole band, not just addresses the "
-                         "capture actually shows")
+    ap.add_argument("--green-label", metavar="COL=VAL", default="Label_src=2",
+                    help="the column identifying green-team sources (default "
+                         "Label_src=2, LSPR24's organiser label); <ZONE>_GT "
+                         "holds each zone's")
     ap.add_argument("--bt-vpn", metavar="CIDR",
-                    help="blue-team VPN range, added to MGMT_HOSTS")
+                    help="a blue-team access range, added to MGMT_HOSTS")
     args = ap.parse_args()
 
     import duckdb
@@ -184,17 +169,53 @@ def main():
     # produced carried no zone at all.
     short = collections.Counter(f.split(".")[0] for f in by_asset)
 
+    # Zones are subnets. Each internal subnet has its own management entry
+    # point, which reaches the hosts of that /24 and no other (assumptions.yml),
+    # so a /24 is a network of its own, and the zone a name label gives
+    # (int.beg) can hold several. A host's zone is its named zone where that
+    # has one subnet, else the named zone and the subnet's third octet
+    # (beg_int_12). A host with addresses in more than one /24 routes between
+    # them: a boundary device, in no zone. It keeps a policy of its own and is
+    # where zone policy would be enforced. A subnet whose every member is a
+    # boundary device is a transit network, and not a zone either.
+    v4_of = {f: {a.rsplit(".", 1)[0] for a in addrs if ":" not in a}
+             for f, addrs in by_asset.items()}
+    boundary = {f for f, nets24 in v4_of.items() if len(nets24) > 1}
+    named_subnets = collections.defaultdict(set)
+    for f, nets24 in v4_of.items():
+        if f not in boundary:
+            named_subnets[zone_of(f)] |= nets24
+    for nz, nets24 in named_subnets.items():
+        octets = [n.split(".")[2] for n in nets24]
+        if len(nets24) > 1 and len(set(octets)) != len(octets):
+            raise SystemExit(f"defs_from_expoid: {nz} has two subnets with one "
+                             f"third octet: {sorted(nets24)}")
+    members_of = collections.defaultdict(set)
+    for f, nets24 in v4_of.items():
+        for n in nets24:
+            members_of[n].add(f)
+    transit = sorted(n for n, ms in members_of.items() if ms <= boundary)
+
+    def host_zone(fqdn):
+        if fqdn in boundary:
+            return None
+        nz, nets24 = zone_of(fqdn), v4_of[fqdn]
+        if len(named_subnets[nz]) <= 1 or not nets24:
+            return nz
+        return f"{nz}_{next(iter(nets24)).split('.')[2]}"
+
     nets, meta, notes, sections = {}, {}, {}, {}
-    gt_other = {}
     ASSETS = ("One token per asset, holding every address the capture shows it\n"
               "using. A short-name alias follows each host whose first label is\n"
               "unambiguous, so loot naming a host either way resolves.")
     for fqdn in sorted(by_asset):
         token = fqdn.replace(".", "_")
-        zone = zone_of(fqdn)
+        zone = host_zone(fqdn)
         nets[token] = {"values": [{"address": a} for a in sorted(by_asset[fqdn])]}
         meta[token] = {"zone": zone, "segment": segment_of(fqdn)}
-        # `gt` is filled in below, once we know which zones have a band.
+        if fqdn in boundary:
+            meta[token]["boundary"] = True
+        # `gt` is filled in below, once the green-team hosts are known.
         notes[token], sections[token] = fqdn, ASSETS
         s0 = fqdn.split(".")[0]
         if short[s0] == 1 and s0 != token:
@@ -204,13 +225,15 @@ def main():
             # list and would otherwise synthesize every host twice.
             meta[s0] = {"zone": zone, "segment": segment_of(fqdn),
                         "alias_of": token}
+            if fqdn in boundary:
+                meta[s0]["boundary"] = True
             notes[s0], sections[s0] = f"alias of {token}", ASSETS
 
     # Zone groups:
     #
     #   <zone>              the zone's ADDRESS SPACE, as prefixes
-    #   <ZONE>_HOSTS        the hosts actually in it, WS and GT_OTHER included
-    #                       by reference
+    #   <ZONE>_HOSTS        the hosts actually in it, WS and GT included by
+    #                       reference
     #   <ZONE>_WS           its workstations
     #   <SEGMENT>_ALL_HOSTS every zone of a segment, where a segment has more
     #                       than one
@@ -228,7 +251,7 @@ def main():
     by_zone = collections.defaultdict(list)
     zone_of_seg = collections.defaultdict(set)
     for token, m in meta.items():
-        if "alias_of" not in m:
+        if "alias_of" not in m and m["zone"]:
             by_zone[m["zone"]].append(token)
             zone_of_seg[m["segment"]].add(m["zone"])
 
@@ -257,7 +280,8 @@ def main():
                 "included by reference so a change in either follows.")
     zone_addrs = collections.defaultdict(set)
     for fqdn, addrs in by_asset.items():
-        zone_addrs[zone_of(fqdn)] |= addrs
+        if host_zone(fqdn):
+            zone_addrs[host_zone(fqdn)] |= addrs
 
     for zone, members in sorted(by_zone.items()):
         Z = zone.upper()
@@ -276,7 +300,6 @@ def main():
         vals = [{"name": t} for t in rest]
         if ws:
             vals.append({"name": f"{Z}_WS"})
-        gt_other.setdefault(zone, [])          # filled in below; referenced now
         nets[f"{Z}_HOSTS"] = {"values": vals}
         notes[f"{Z}_HOSTS"] = f"{len(members)} hosts"
         sections[f"{Z}_HOSTS"] = GROUPSEC
@@ -288,116 +311,66 @@ def main():
             notes[f"{seg.upper()}_ALL_HOSTS"] = f"{len(zones)} zones"
             sections[f"{seg.upper()}_ALL_HOSTS"] = GROUPSEC
 
-    # The management heuristic's source tokens, in the exercise's own shape:
+    # The management heuristic's source tokens:
     #
-    #   <SEGMENT>_GT  the green team's presence in that segment -- by
-    #                 convention the top addresses of each of its subnets
-    #   BT_VPN        the blue team's own management range
+    #   <ZONE>_GT     the green team's hosts in that zone, as the dataset
+    #                 labels them (--green-label)
+    #   <ZONE>_MGMT   a zone's management entry points, when assumed
+    #                 (assumptions.py; not written here)
+    #   BT_VPN        a blue-team access range, when one is given
     #   MGMT_HOSTS    the blue team's access, which is BT_VPN
     #
-    # A management term names both: `BEG_INT_GT, MGMT_HOSTS` reads as "the
-    # green team's hosts in my own segment, plus the blue team". They are two
-    # different parties and neither contains the other, so MGMT_HOSTS must not
-    # be the union of the bands -- that was an earlier mistake here, and it
-    # made the first token of every management term redundant.
+    # A management term names all three: `BEG_INT_GT, BEG_INT_MGMT, MGMT_HOSTS`
+    # reads as "the green team's hosts in my own zone, the zone's management
+    # entry point, plus the blue team". None contains another, so MGMT_HOSTS
+    # must not be their union.
     #
     # Synthesis emits terms sourced from these, so an inventory that omits them
     # produces policies referencing undefined tokens. That fails at merge or
     # compile rather than at synthesis, which is why it went unnoticed: the
     # hostmap-derived def/ defines none of them.
-    if args.gt_hosts:
-        octets = sorted({int(x) for x in args.gt_hosts.split(",") if x.strip()})
-    else:
-        # Top n *usable* addresses: .252-.254 for n=3, not .253-.255. The
-        # broadcast address is excluded because no host holds it -- it survives
-        # the seen-in-capture filter only because traffic is sent to it, and a
-        # management-source token listing a broadcast address is inert at best
-        # and misleading at worst.
-        octets = list(range(255 - args.gt_top, 255))
-
-    def band_of(addrs):
-        """The band octets applied to every /24 the given addresses fall in."""
-        nets = {a.rsplit(".", 1)[0] for a in addrs if ":" not in a}
-        return sorted(f"{net}.{h}" for net in nets for h in octets)
-
-    # The band must come from addresses the capture shows, not from asset
-    # addresses: the management hosts at the top of each subnet are
-    # infrastructure and carry no Expoid, so filtering to named assets finds
-    # none of them.
-    seen_any = {r[0] for r in con.execute(f"""select distinct src from (
-        select "SrcIP" src from read_parquet({P})
-        union select "DstIP" src from read_parquet({P})) where src is not null""").fetchall()}
-    BANDDESC = (f"host octets {','.join(str(o) for o in octets)} of each subnet"
-                if args.gt_hosts else
-                f"the top {args.gt_top} usable addresses of each subnet")
     MGMTSEC = ("The management heuristic's sources, per ZONE: a segment spans\n"
                "several networks and the management hosts of one are not the\n"
-               "management hosts of another.\n"
-               "\n"
-               "<ZONE>_GT is " + BANDDESC + ", restricted to addresses the\n"
-               "capture actually shows. THIS IS A CONVENTION, NOT AN\n"
-               "OBSERVATION -- nothing in the data says the management hosts\n"
-               "sit there; it is where a previous exercise put them.\n"
-               "\n"
-               "<ZONE>_GT_OTHER is the opposite kind of claim: green-team\n"
-               "hosts the inventory itself identifies. Fact, not convention.\n"
-               "Where both exist the second is the one to trust, and the gap\n"
-               "between them is how far the convention travelled.")
-    gt_members, no_band = [], []
-    for zone in sorted(zone_addrs):
-        band = [a for a in band_of(zone_addrs[zone])
-                if a in seen_any or args.gt_all]
-        if not band:
-            # No token rather than a fallback. Defining `core_GT` as the core
-            # segment would make a management-source token silently mean
-            # "every host here"; an undefined token fails loudly instead.
-            no_band.append(zone)
-            continue
-        nets[f"{zone.upper()}_GT"] = {"values": [{"address": a} for a in band]}
-        sections[f"{zone.upper()}_GT"] = MGMTSEC
-        notes[f"{zone.upper()}_GT"] = (f"{len(band)} observed across "
-                               f"{len({a.rsplit('.', 1)[0] for a in band})} subnets")
-        gt_members.append(f"{zone.upper()}_GT")
+               "management hosts of another. <ZONE>_GT holds the zone's\n"
+               "green-team hosts as the dataset labels their traffic.")
 
-    # LSPR24 does not identify a blue-team VPN range; the exercise had a clean
-    # /24, possibly shared across teams. Left empty unless one is supplied, so
-    # the token exists and the policies compile either way.
+    # LSPR24 identifies no blue-team access range. Left empty unless one is
+    # supplied, so the token exists and the policies compile either way.
     if args.bt_vpn:
         nets["BT_VPN"] = {"values": [{"address": args.bt_vpn}]}
         sections["BT_VPN"] = MGMTSEC
 
-    # <ZONE>_GT_OTHER: green-team hosts the dataset itself identifies, as
-    # opposed to the band, which is where a convention says they should be.
-    # LSPR24 labels organiser traffic as Label_src=2. Used to populate the
-    # token AND to score the band against it -- the same ground truth doing
-    # both jobs, which is the only honest way to report a convention.
-    truth = set()
-    if args.green_label:
-        col, _, want = args.green_label.partition("=")
-        truth = {r[0] for r in con.execute(
-            f'select distinct "SrcIP" from read_parquet({P}) where "{col}" = ?',
-            [want or "2"]).fetchall()}
-        for zone in sorted(zone_addrs):
-            # Both families: a green-team host has an IPv6 address as well,
-            # and leaving it out made tightening fall back to the segment's
-            # whole address space for every term it reached.
-            nets_z = [ipaddress.ip_network(n) for n in prefixes(zone_addrs[zone])]
-            mine = sorted((a for a in truth
-                           if any(ipaddress.ip_address(a) in n for n in nets_z
-                                  if n.version == ipaddress.ip_address(a).version)),
-                          key=lambda a: (ipaddress.ip_address(a).version,
-                                         ipaddress.ip_address(a)))
-            if not mine:
-                continue
-            Z = zone.upper()
-            nets[f"{Z}_GT_OTHER"] = {"values": [{"address": a} for a in mine]}
-            notes[f"{Z}_GT_OTHER"] = f"{len(mine)} from {col}"
-            sections[f"{Z}_GT_OTHER"] = MGMTSEC
-            nets[f"{Z}_HOSTS"]["values"].append({"name": f"{Z}_GT_OTHER"})
+    col, _, want = args.green_label.partition("=")
+    green = {r[0] for r in con.execute(
+        f'select distinct "SrcIP" from read_parquet({P}) where "{col}" = ?',
+        [want or "2"]).fetchall()}
+    gt_members = []
+    for zone in sorted(zone_addrs):
+        # Both families: a green-team host has an IPv6 address as well, and
+        # leaving it out made tightening fall back to the segment's whole
+        # address space for every term it reached.
+        nets_z = [ipaddress.ip_network(n) for n in prefixes(zone_addrs[zone])]
+        mine = sorted((a for a in green
+                       if any(ipaddress.ip_address(a) in n for n in nets_z
+                              if n.version == ipaddress.ip_address(a).version)),
+                      key=lambda a: (ipaddress.ip_address(a).version,
+                                     ipaddress.ip_address(a)))
+        if not mine:
+            # No token rather than a fallback: a zone with no labelled
+            # green-team host gets `gt: null` below, and its management terms
+            # name MGMT_HOSTS alone.
+            continue
+        Z = zone.upper()
+        nets[f"{Z}_GT"] = {"values": [{"address": a} for a in mine]}
+        notes[f"{Z}_GT"] = f"{len(mine)} from {col}"
+        sections[f"{Z}_GT"] = MGMTSEC
+        if f"{Z}_HOSTS" in nets:
+            nets[f"{Z}_HOSTS"]["values"].append({"name": f"{Z}_GT"})
+        gt_members.append(f"{Z}_GT")
 
-    # Every host learns whether its own zone has a band. `gt: null` is a
-    # statement, not a gap: it tells synthesis to name MGMT_HOSTS alone rather
-    # than a token the inventory does not define.
+    # Every host learns whether its own zone has green-team hosts. `gt: null`
+    # is a statement, not a gap: it tells synthesis to name MGMT_HOSTS alone
+    # rather than a token the inventory does not define.
     have = {t[:-3].lower() for t in gt_members}
     for token, m in meta.items():
         z = m.get("zone")
@@ -410,7 +383,7 @@ def main():
 
     # MGMT_HOSTS is the blue team's own access and nothing else. LSPR24 does
     # not identify one, so it is empty here and every management term names
-    # only the green-team band -- which is the dataset's limitation stated
+    # only the green-team hosts -- which is the dataset's limitation stated
     # plainly rather than a union quietly standing in for it.
     nets["MGMT_HOSTS"] = {"values": [{"name": "BT_VPN"}] if args.bt_vpn else []}
     sections["MGMT_HOSTS"] = MGMTSEC
@@ -423,32 +396,15 @@ def main():
     aliases = sum(1 for m in meta.values() if "alias_of" in m)
     print(f"{len(by_asset)} assets, {addrs} addresses -> {out}")
     print(f"  zone tokens: {len(by_zone)}  ({', '.join(sorted(by_zone))})")
+    print(f"  boundary devices: {len(boundary)}  "
+          f"({', '.join(sorted(f.split('.')[0] for f in boundary))})")
+    print(f"  transit networks: {', '.join(transit) or 'none'}")
     print(f"  short-name aliases: {aliases}")
-    band_all = {v["address"] for t in gt_members for v in nets[t]["values"]}
-    print(f"  <ZONE>_GT: {BANDDESC}"
-          f" ({len(band_all)} addresses)")
-    if no_band:
-        print(f"  no band observed, no token emitted: {', '.join(no_band)}")
-    print(f"  <ZONE>_GT tokens: {', '.join(gt_members)}")
+    print(f"  <ZONE>_GT from {args.green_label}: "
+          + (", ".join(f"{t} ({len(nets[t]['values'])})" for t in gt_members) or "none"))
     print(f"  MGMT_HOSTS = "
           + ("BT_VPN " + args.bt_vpn if args.bt_vpn else
              "EMPTY -- this dataset identifies no blue-team range"))
-
-    # Scoring the convention against ground truth, where the dataset has any.
-    # The band is a guess about where a site puts its management hosts; on a
-    # dataset that labels them, that guess is checkable, and an unchecked
-    # convention silently carried from one exercise to another is exactly the
-    # failure this whole example is about.
-    if truth:
-        col = args.green_label.partition("=")[0]
-        v4 = {a for a in truth if ":" not in a}
-        hit, miss = band_all & truth, v4 - band_all
-        print(f"  band scored against {args.green_label}: "
-              f"{len(hit)}/{len(v4)} IPv4 ground-truth sources in the band")
-        if miss:
-            octs = collections.Counter(a.rsplit(".", 1)[1] for a in miss)
-            print("    missed, by host octet: "
-                  + ", ".join(f".{o} x{n}" for o, n in octs.most_common()))
     print(f"  total tokens: {len(nets)}")
 
 

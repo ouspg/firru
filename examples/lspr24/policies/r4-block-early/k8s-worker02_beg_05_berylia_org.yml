@@ -3,7 +3,7 @@
 # Source suggestions changed: 4 | Log-drop candidates: 4
 metadata:
   host: k8s-worker02
-  zone: beg
+  zone: beg_5
   variant: 'r4-block-early (learn: flows --window night) — services with no observed
     client are removed, not merely narrowed'
 filters:
@@ -12,12 +12,12 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 1800 flows total | 1800 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
+# [auto] 1800 flows total | 1800 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
     action: accept
-    source-address: BEG_GT_OTHER      # was: BEG_GT
+    source-address: BEG_5_GT      # was: BEG_5_GT, MGMT_HOSTS
 
 # [auto] 620 flows total | 369 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34, 2a07:1182:5:20::34) | 251 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33, 2a07:1182:5:20::33) | via: BGP/tcp/179
   - name: allow-tcp-BGP
@@ -92,7 +92,7 @@ filters:
     - k8s-worker03
     - k8s-worker04
     action: accept
-# [auto] 605 hits: k8s-worker01_beg_05_berylia_org (2a07:1182:5:20::31, fe80::250:56ff:fe89:2819) | 604 hits: k8s-worker03_beg_05_berylia_org (2a07:1182:5:20::33, fe80::250:56ff:fe89:3811) | 564 hits: k8s-worker04_beg_05_berylia_org (2a07:1182:5:20::34, fe80::250:56ff:fe89:f7d1) | 326 hits: beg (2a07:1182:5:20::1) [never answered] | 279 hits: BEG_GT_OTHER (2a07:1182:5:20::60) | 181 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered]
+# [auto] 605 hits: k8s-worker01_beg_05_berylia_org (2a07:1182:5:20::31, fe80::250:56ff:fe89:2819) | 604 hits: k8s-worker03_beg_05_berylia_org (2a07:1182:5:20::33, fe80::250:56ff:fe89:3811) | 564 hits: k8s-worker04_beg_05_berylia_org (2a07:1182:5:20::34, fe80::250:56ff:fe89:f7d1) | 326 hits: beg_5 (2a07:1182:5:20::1) [never answered] | 279 hits: BEG_5_GT (2a07:1182:5:20::60) | 181 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered]
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     action: accept

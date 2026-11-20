@@ -5,7 +5,7 @@ blocked:
   - protocol: tcp
     service: WINDOWS-SMB
     src_ip: 2a07:1182:5:11::250
-    src_token: BAF_INT_GT_OTHER
+    src_token: BAF_INT_GT
 # 2 hits | reason: port not in policy (52595,58336,58752)
   - protocol: udp
     service: WINDOWS-RPC-DYNAMIC

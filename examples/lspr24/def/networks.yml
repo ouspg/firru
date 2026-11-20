@@ -1179,20 +1179,23 @@ networks:
   # <ZONE>_HOSTS below. merge-zones needs the prefix to decide
   # whether a source is intra-zone, which a union of /32s cannot
   # answer, so this spelling is the one it resolves.
-  baf:   # 12 prefixes
+  baf_105:   # 2 prefixes
+    values:
+      - address: 100.96.105.0/24
+      - address: fe80::/64
+  baf_15:   # 3 prefixes
+    values:
+      - address: 10.5.15.0/24
+      - address: 2a07:1182:5:15::/64
+      - address: fe80::/64
+  baf_5:   # 3 prefixes
+    values:
+      - address: 100.96.5.0/24
+      - address: 2a07:1182:5:10::/64
+      - address: fe80::/64
+  baf_9:   # 1 prefixes
     values:
       - address: 10.5.9.0/24
-      - address: 10.5.11.0/24
-      - address: 10.5.15.0/24
-      - address: 10.5.16.0/24
-      - address: 100.96.5.0/24
-      - address: 100.96.105.0/24
-      - address: 2a07:1182:5:10::/64
-      - address: 2a07:1182:5:11::/64
-      - address: 2a07:1182:5:15::/64
-      - address: 2a07:1182:5:1ffe::/64
-      - address: 2a07:1182:5:1fff::/64
-      - address: fe80::/64
   baf_confidential:   # 2 prefixes
     values:
       - address: 10.5.33.0/24
@@ -1202,59 +1205,58 @@ networks:
       - address: 10.5.11.0/24
       - address: 2a07:1182:5:11::/64
       - address: fe80::/64
-  beg:   # 13 prefixes
+  beg_17:   # 3 prefixes
     values:
-      - address: 10.5.12.0/24
       - address: 10.5.17.0/24
-      - address: 10.5.19.0/24
-      - address: 100.97.5.0/24
-      - address: 100.97.105.0/24
-      - address: 2a07:1182:5:12::/64
       - address: 2a07:1182:5:17::/64
-      - address: 2a07:1182:5:19::/64
-      - address: 2a07:1182:5:20::/64
-      - address: 2a07:1182:5:22::/64
-      - address: 2a07:1182:5:2ffe::/64
-      - address: 2a07:1182:5:2fff::/64
       - address: fe80::/64
-  beg_int:   # 7 prefixes
+  beg_5:   # 3 prefixes
+    values:
+      - address: 100.97.5.0/24
+      - address: 2a07:1182:5:20::/64
+      - address: fe80::/64
+  beg_int_12:   # 3 prefixes
     values:
       - address: 10.5.12.0/24
-      - address: 10.5.18.0/24
-      - address: 10.5.19.0/24
-      - address: 10.5.22.0/24
       - address: 2a07:1182:5:12::/64
+      - address: fe80::/64
+  beg_int_19:   # 1 prefixes
+    values:
+      - address: 10.5.19.0/24
+  beg_int_22:   # 3 prefixes
+    values:
+      - address: 10.5.22.0/24
       - address: 2a07:1182:5:22::/64
       - address: fe80::/64
-  bgp:   # 13 prefixes
+  bgp_105:   # 3 prefixes
     values:
-      - address: 10.5.16.0/24
-      - address: 10.5.20.0/24
-      - address: 100.98.5.0/24
       - address: 100.98.105.0/24
-      - address: 100.99.105.0/24
-      - address: 2a07:1182:5:13::/64
-      - address: 2a07:1182:5:30::/64
-      - address: 2a07:1182:5:f20::/64
       - address: 2a07:1182:5:3ffe::/64
       - address: 2a07:1182:5:3fff::/64
-      - address: 2a07:1182:5:4ffe::/64
-      - address: 2a07:1182:5:4fff::/64
+  bgp_20:   # 3 prefixes
+    values:
+      - address: 10.5.20.0/24
+      - address: 2a07:1182:5:f20::/64
+      - address: fe80::/64
+  bgp_5:   # 4 prefixes
+    values:
+      - address: 100.98.5.0/24
+      - address: 2a07:1182:5:13::/64
+      - address: 2a07:1182:5:30::/64
       - address: fe80::/64
   bgp_int:   # 3 prefixes
     values:
       - address: 10.5.13.0/24
       - address: 2a07:1182:5:13::/64
       - address: fe80::/64
-  bgp_sac:   # 7 prefixes
+  bgp_sac_14:   # 3 prefixes
+    values:
+      - address: 10.5.14.0/24
+      - address: 2a07:1182:5:14::/64
+      - address: fe80::/64
+  bgp_sac_8:   # 1 prefixes
     values:
       - address: 10.5.8.0/24
-      - address: 10.5.14.0/24
-      - address: 10.5.16.0/24
-      - address: 100.99.5.0/24
-      - address: 2a07:1182:5:14::/64
-      - address: 2a07:1182:5:40::/64
-      - address: fe80::/64
   core:   # 2 prefixes
     values:
       - address: 10.230.105.0/24
@@ -1268,26 +1270,26 @@ networks:
   # name -- the hosts that exist, rather than the space they sit
   # in. Workstations and the inventory's green-team hosts are
   # included by reference so a change in either follows.
-  BAF_HOSTS:   # 30 hosts
+  BAF_105_HOSTS:   # 1 hosts
+    values:
+      - fw2-baf_5_berylia_org
+  BAF_15_HOSTS:   # 2 hosts
+    values:
+      - c4i-ads_baf_05_berylia_org
+      - map-ads_baf_05_berylia_org
+      - BAF_15_GT
+  BAF_5_HOSTS:   # 22 hosts
     values:
       - access_baf_05_berylia_org
       - adfs_baf_05_berylia_org
       - av_baf_05_berylia_org
       - borderguard_baf_05_berylia_org
-      - c4i-ads_baf_05_berylia_org
       - cloakkey_baf_05_berylia_org
       - code_baf_05_berylia_org
       - cyberdev_baf_05_berylia_org
       - devops_baf_05_berylia_org
       - elearning_baf_05_berylia_org
-      - fiveg-ue-baf01_baf_05_berylia_org
-      - fiveg-ue-baf02_baf_05_berylia_org
-      - fiveg-ue-baf03_baf_05_berylia_org
-      - fiveg-upf-baf_baf_05_berylia_org
-      - fw1-baf_5_berylia_org
-      - fw2-baf_5_berylia_org
       - incident-report_baf_05_berylia_org
-      - map-ads_baf_05_berylia_org
       - ns1_baf_05_berylia_org
       - ns2_baf_05_berylia_org
       - passengers_baf_05_berylia_org
@@ -1300,7 +1302,12 @@ networks:
       - vaccination_baf_05_berylia_org
       - wap_baf_05_berylia_org
       - www_baf_05_berylia_org
-      - BAF_GT_OTHER
+      - BAF_5_GT
+  BAF_9_HOSTS:   # 3 hosts
+    values:
+      - fiveg-ue-baf01_baf_05_berylia_org
+      - fiveg-ue-baf02_baf_05_berylia_org
+      - fiveg-ue-baf03_baf_05_berylia_org
   BAF_CONFIDENTIAL_HOSTS:   # 3 hosts
     values:
       - baf-ws1-conf_confidential_baf_05_berylia_org
@@ -1335,13 +1342,15 @@ networks:
       - ticketdesk_int_baf_05_berylia_org
       - wsus_int_baf_05_berylia_org
       - BAF_INT_WS
-      - BAF_INT_GT_OTHER
-  BEG_HOSTS:   # 17 hosts
+      - BAF_INT_GT
+  BEG_17_HOSTS:   # 3 hosts
     values:
-      - fw1-beg_05_berylia_org
       - gas-historian_beg_05_berylia_org
       - gas-hmi_beg_05_berylia_org
       - gas-maintenance-terminal_beg_05_berylia_org
+      - BEG_17_GT
+  BEG_5_HOSTS:   # 13 hosts
+    values:
       - inventory_beg_05_berylia_org
       - k8s-control-plane_beg_05_berylia_org
       - k8s-worker01_beg_05_berylia_org
@@ -1355,8 +1364,8 @@ networks:
       - ns2_beg_05_berylia_org
       - owncloud_beg_05_berylia_org
       - salt-master_beg_05_berylia_org
-      - BEG_GT_OTHER
-  BEG_INT_WS:   # 20 workstations
+      - BEG_5_GT
+  BEG_INT_12_WS:   # 20 workstations
     values:
       - ws1-beg01_int_beg_05_berylia_org
       - ws1-beg02_int_beg_05_berylia_org
@@ -1378,25 +1387,29 @@ networks:
       - ws4-beg03_int_beg_05_berylia_org
       - ws4-beg04_int_beg_05_berylia_org
       - ws4-beg05_int_beg_05_berylia_org
-  BEG_INT_HOSTS:   # 29 hosts
+  BEG_INT_12_HOSTS:   # 24 hosts
     values:
       - adcs-beg_int_beg_05_berylia_org
-      - beg-power-ws_int_beg_05_berylia_org
       - dc1_int_beg_05_berylia_org
       - dc2_int_beg_05_berylia_org
-      - ied_int_beg_05_berylia_org
       - lemonldapng_int_beg_05_berylia_org
-      - rtu-host_int_beg_05_berylia_org
-      - rtu_int_beg_05_berylia_org
-      - sp7_int_beg_05_berylia_org
-      - BEG_INT_WS
-      - BEG_INT_GT_OTHER
-  BGP_HOSTS:   # 24 hosts
+      - BEG_INT_12_WS
+      - BEG_INT_12_GT
+  BEG_INT_19_HOSTS:   # 1 hosts
     values:
-      - alert-system_bgp_05_berylia_org
-      - entry_bgp_05_berylia_org
-      - fw1-bgp-5g_05_berylia_org
+      - sp7_int_beg_05_berylia_org
+      - BEG_INT_19_GT
+  BEG_INT_22_HOSTS:   # 3 hosts
+    values:
+      - beg-power-ws_int_beg_05_berylia_org
+      - ied_int_beg_05_berylia_org
+      - rtu-host_int_beg_05_berylia_org
+      - BEG_INT_22_GT
+  BGP_105_HOSTS:   # 1 hosts
+    values:
       - fw1-bgp_05_berylia_org
+  BGP_20_HOSTS:   # 10 hosts
+    values:
       - hq-gsc01_bgp_05_berylia_org
       - hq-gsc02_bgp_05_berylia_org
       - hq-gsc03_bgp_05_berylia_org
@@ -1406,10 +1419,15 @@ networks:
       - hq-gsc07_bgp_05_berylia_org
       - hq-gsc08_bgp_05_berylia_org
       - hq-gsc09_bgp_05_berylia_org
+      - mcs_bgp_05_berylia_org
+      - BGP_20_GT
+  BGP_5_HOSTS:   # 12 hosts
+    values:
+      - alert-system_bgp_05_berylia_org
+      - entry_bgp_05_berylia_org
       - imagery_bgp_05_berylia_org
       - keycloak_bgp_05_berylia_org
       - lims_bgp_05_berylia_org
-      - mcs_bgp_05_berylia_org
       - nextcloud_bgp_05_berylia_org
       - ns1_bgp_05_berylia_org
       - ns2_bgp_05_berylia_org
@@ -1417,7 +1435,7 @@ networks:
       - whistleblowhub_bgp_05_berylia_org
       - www_bgp_05_berylia_org
       - xroad-securityserver_bgp_05_berylia_org
-      - BGP_GT_OTHER
+      - BGP_5_GT
   BGP_INT_WS:   # 2 workstations
     values:
       - ws4-m365_int_bgp_05_berylia_org
@@ -1426,25 +1444,23 @@ networks:
     values:
       - cctv-ai-monitor_int_bgp_05_berylia_org
       - BGP_INT_WS
-      - BGP_INT_GT_OTHER
-  BGP_SAC_HOSTS:   # 15 hosts
+      - BGP_INT_GT
+  BGP_SAC_14_HOSTS:   # 8 hosts
     values:
-      - fiveg-amf_sac_bgp_05_berylia_org
       - fiveg-ausf_sac_bgp_05_berylia_org
       - fiveg-bsf_sac_bgp_05_berylia_org
       - fiveg-db_sac_bgp_05_berylia_org
       - fiveg-nrf_sac_bgp_05_berylia_org
       - fiveg-nssf_sac_bgp_05_berylia_org
       - fiveg-pcf_sac_bgp_05_berylia_org
-      - fiveg-smf_sac_bgp_05_berylia_org
       - fiveg-udm_sac_bgp_05_berylia_org
       - fiveg-udr_sac_bgp_05_berylia_org
+      - BGP_SAC_14_GT
+  BGP_SAC_8_HOSTS:   # 3 hosts
+    values:
       - fiveg-ue-bgp01_sac_bgp_05_berylia_org
       - fiveg-ue-bgp02_sac_bgp_05_berylia_org
       - fiveg-ue-bgp03_sac_bgp_05_berylia_org
-      - fiveg-upf-bgp_sac_bgp_05_berylia_org
-      - fiveg-webui_sac_bgp_05_berylia_org
-      - BGP_SAC_GT_OTHER
   CORE_HOSTS:   # 1 hosts
     values:
       - arkime_05_berylia_org
@@ -1454,113 +1470,84 @@ networks:
   SINET_HOSTS:   # 1 hosts
     values:
       - SINET_WS
-      - SINET_GT_OTHER
-  BAF_ALL_HOSTS:   # 3 zones
+      - SINET_GT
+  BAF_ALL_HOSTS:   # 6 zones
     values:
-      - BAF_HOSTS
+      - BAF_105_HOSTS
+      - BAF_15_HOSTS
+      - BAF_5_HOSTS
+      - BAF_9_HOSTS
       - BAF_CONFIDENTIAL_HOSTS
       - BAF_INT_HOSTS
-  BEG_ALL_HOSTS:   # 2 zones
+  BEG_ALL_HOSTS:   # 5 zones
     values:
-      - BEG_HOSTS
-      - BEG_INT_HOSTS
-  BGP_ALL_HOSTS:   # 3 zones
+      - BEG_17_HOSTS
+      - BEG_5_HOSTS
+      - BEG_INT_12_HOSTS
+      - BEG_INT_19_HOSTS
+      - BEG_INT_22_HOSTS
+  BGP_ALL_HOSTS:   # 6 zones
     values:
-      - BGP_HOSTS
+      - BGP_105_HOSTS
+      - BGP_20_HOSTS
+      - BGP_5_HOSTS
       - BGP_INT_HOSTS
-      - BGP_SAC_HOSTS
+      - BGP_SAC_14_HOSTS
+      - BGP_SAC_8_HOSTS
 
   # The management heuristic's sources, per ZONE: a segment spans
   # several networks and the management hosts of one are not the
-  # management hosts of another.
-  # 
-  # <ZONE>_GT is the top 3 usable addresses of each subnet, restricted to addresses the
-  # capture actually shows. THIS IS A CONVENTION, NOT AN
-  # OBSERVATION -- nothing in the data says the management hosts
-  # sit there; it is where a previous exercise put them.
-  # 
-  # <ZONE>_GT_OTHER is the opposite kind of claim: green-team
-  # hosts the inventory itself identifies. Fact, not convention.
-  # Where both exist the second is the one to trust, and the gap
-  # between them is how far the convention travelled.
-  BAF_GT:   # 2 observed across 2 subnets
+  # management hosts of another. <ZONE>_GT holds the zone's
+  # green-team hosts as the dataset labels their traffic.
+  BAF_15_GT:   # 2 from Label_src
     values:
-      - address: 10.5.11.254
-      - address: 10.5.15.254
-  BAF_INT_GT:   # 1 observed across 1 subnets
-    values:
-      - address: 10.5.11.254
-  BEG_GT:   # 6 observed across 4 subnets
-    values:
-      - address: 10.5.12.254
-      - address: 10.5.17.254
-      - address: 10.5.19.254
-      - address: 100.97.5.252
-      - address: 100.97.5.253
-      - address: 100.97.5.254
-  BEG_INT_GT:   # 4 observed across 4 subnets
-    values:
-      - address: 10.5.12.254
-      - address: 10.5.18.254
-      - address: 10.5.19.254
-      - address: 10.5.22.254
-  BGP_GT:   # 1 observed across 1 subnets
-    values:
-      - address: 10.5.20.254
-  BGP_INT_GT:   # 1 observed across 1 subnets
-    values:
-      - address: 10.5.13.254
-  BGP_SAC_GT:   # 1 observed across 1 subnets
-    values:
-      - address: 10.5.14.254
-  BAF_GT_OTHER:   # 6 from Label_src
-    values:
-      - address: 10.5.11.250
       - address: 10.5.15.250
+      - address: 2a07:1182:0005:0015:0000:0000:0000:0250
+  BAF_5_GT:   # 2 from Label_src
+    values:
       - address: 100.96.5.60
       - address: 2a07:1182:0005:0010:0000:0000:0000:0060
-      - address: 2a07:1182:0005:0011:0000:0000:0000:0250
-      - address: 2a07:1182:0005:0015:0000:0000:0000:0250
-  BAF_INT_GT_OTHER:   # 2 from Label_src
+  BAF_INT_GT:   # 2 from Label_src
     values:
       - address: 10.5.11.250
       - address: 2a07:1182:0005:0011:0000:0000:0000:0250
-  BEG_GT_OTHER:   # 9 from Label_src
+  BEG_17_GT:   # 2 from Label_src
     values:
-      - address: 10.5.12.250
       - address: 10.5.17.250
-      - address: 10.5.19.250
-      - address: 100.97.5.60
-      - address: 2a07:1182:0005:0012:0000:0000:0000:0250
       - address: 2a07:1182:0005:0017:0000:0000:0000:0250
-      - address: 2a07:1182:0005:0019:0000:0000:0000:0250
+  BEG_5_GT:   # 2 from Label_src
+    values:
+      - address: 100.97.5.60
       - address: 2a07:1182:0005:0020:0000:0000:0000:0060
-      - address: 2a07:1182:0005:0022:0000:0000:0000:0250
-  BEG_INT_GT_OTHER:   # 5 from Label_src
+  BEG_INT_12_GT:   # 2 from Label_src
     values:
       - address: 10.5.12.250
-      - address: 10.5.19.250
-      - address: 10.5.22.250
       - address: 2a07:1182:0005:0012:0000:0000:0000:0250
+  BEG_INT_19_GT:   # 1 from Label_src
+    values:
+      - address: 10.5.19.250
+  BEG_INT_22_GT:   # 2 from Label_src
+    values:
+      - address: 10.5.22.250
       - address: 2a07:1182:0005:0022:0000:0000:0000:0250
-  BGP_GT_OTHER:   # 5 from Label_src
+  BGP_20_GT:   # 2 from Label_src
     values:
       - address: 10.5.20.250
+      - address: 2a07:1182:0005:0f20:0000:0000:0000:0250
+  BGP_5_GT:   # 3 from Label_src
+    values:
       - address: 100.98.5.59
       - address: 2a07:1182:0005:0013:0000:0000:0000:0250
       - address: 2a07:1182:0005:0030:0000:0000:0000:0059
-      - address: 2a07:1182:0005:0f20:0000:0000:0000:0250
-  BGP_INT_GT_OTHER:   # 2 from Label_src
+  BGP_INT_GT:   # 2 from Label_src
     values:
       - address: 10.5.13.250
       - address: 2a07:1182:0005:0013:0000:0000:0000:0250
-  BGP_SAC_GT_OTHER:   # 4 from Label_src
+  BGP_SAC_14_GT:   # 2 from Label_src
     values:
       - address: 10.5.14.250
-      - address: 100.99.5.60
       - address: 2a07:1182:0005:0014:0000:0000:0000:0250
-      - address: 2a07:1182:0005:0040:0000:0000:0000:0060
-  SINET_GT_OTHER:   # 2 from Label_src
+  SINET_GT:   # 2 from Label_src
     values:
       - address: 100.100.5.59
       - address: 2a07:1182:0005:0100:0000:0000:0000:0059
@@ -1569,3 +1556,30 @@ networks:
       - address: 100.96.5.1
       - address: 100.97.5.62
       - address: 100.98.5.60
+  BAF_15_MGMT:   # assumed: d1 and d2, SSH, RDP and VNC flows that got an answer (assumptions.yml)
+    values:
+      - address: 10.5.15.254
+  BAF_INT_MGMT:   # assumed: d1 and d2, SSH, RDP and VNC flows that got an answer (assumptions.yml)
+    values:
+      - address: 10.5.11.254
+  BEG_17_MGMT:   # assumed: d1 and d2, SSH, RDP and VNC flows that got an answer (assumptions.yml)
+    values:
+      - address: 10.5.17.254
+  BEG_INT_12_MGMT:   # assumed: d1 and d2, SSH, RDP and VNC flows that got an answer (assumptions.yml)
+    values:
+      - address: 10.5.12.254
+  BEG_INT_19_MGMT:   # assumed: d1 and d2, SSH, RDP and VNC flows that got an answer (assumptions.yml)
+    values:
+      - address: 10.5.19.254
+  BEG_INT_22_MGMT:   # assumed: d1 and d2, SSH, RDP and VNC flows that got an answer (assumptions.yml)
+    values:
+      - address: 10.5.22.254
+  BGP_20_MGMT:   # assumed: d1 and d2, SSH, RDP and VNC flows that got an answer (assumptions.yml)
+    values:
+      - address: 10.5.20.254
+  BGP_INT_MGMT:   # assumed: d1 and d2, SSH, RDP and VNC flows that got an answer (assumptions.yml)
+    values:
+      - address: 10.5.13.254
+  BGP_SAC_14_MGMT:   # assumed: d1 and d2, SSH, RDP and VNC flows that got an answer (assumptions.yml)
+    values:
+      - address: 10.5.14.254

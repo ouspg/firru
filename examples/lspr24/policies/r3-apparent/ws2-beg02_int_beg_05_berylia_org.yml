@@ -1,6 +1,6 @@
 metadata:
   host: ws2-beg02
-  zone: beg_int
+  zone: beg_int_12
   provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
 filters:
 - header:

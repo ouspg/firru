@@ -3,19 +3,19 @@
 # Source suggestions changed: 1 | Log-drop candidates: 4
 metadata:
   host: ns1
-  zone: bgp
+  zone: bgp_5
 filters:
   - header:
       targets:
         nftables: mixed input DROP
     terms:
 
-# [auto] 1800 flows total | 1800 hits: BGP_GT_OTHER (100.98.5.59, 2a07:1182:5:30::59) | via: SSH/tcp/22
+# [auto] 1800 flows total | 1800 hits: BGP_5_GT (100.98.5.59, 2a07:1182:5:30::59) | via: SSH/tcp/22
       - name: allow-tcp-SSH
         protocol: tcp
         destination-port: SSH
         action: accept
-        source-address: BGP_GT_OTHER  # was: BGP_GT
+        source-address: BGP_5_GT  # was: BGP_5_GT, MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-loopback

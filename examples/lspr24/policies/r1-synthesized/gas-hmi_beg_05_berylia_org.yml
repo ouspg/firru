@@ -1,6 +1,6 @@
 metadata:
   host: gas-hmi
-  zone: beg
+  zone: beg_17
 filters:
   - header:
       targets:
@@ -22,7 +22,9 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BEG_GT
+          - BEG_17_GT
+          - BEG_17_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (next-router-wo) | IPv6 ::/0 (next-router-wo)
       - name: allow-tcp-TCP_3000
         protocol: tcp
@@ -35,7 +37,9 @@ filters:
         destination-port: RDP
         action: accept
         source-address:
-          - BEG_GT
+          - BEG_17_GT
+          - BEG_17_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (python3)
       - name: allow-tcp-TCP_8000
         protocol: tcp

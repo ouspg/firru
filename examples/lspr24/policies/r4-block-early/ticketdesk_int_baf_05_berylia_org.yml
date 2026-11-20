@@ -12,26 +12,26 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 1800 flows total | 1800 hits: BAF_INT_GT_OTHER (10.5.11.250, 2a07:1182:5:11::250) | via: SSH/tcp/22
+# [auto] 1800 flows total | 1800 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) | via: SSH/tcp/22
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
     action: accept
-    source-address: BAF_INT_GT_OTHER      # was: BAF_INT_GT
+    source-address: BAF_INT_GT      # was: BAF_INT_GT, BAF_INT_MGMT, MGMT_HOSTS
 
-# [auto] 3609 flows total | 3609 hits: BAF_INT_GT_OTHER (2a07:1182:5:11::250, 10.5.11.250) | via: HTTP/tcp/80
+# [auto] 3609 flows total | 3609 hits: BAF_INT_GT (2a07:1182:5:11::250, 10.5.11.250) | via: HTTP/tcp/80
   - name: allow-tcp-HTTP
     protocol: tcp
     destination-port: HTTP
     action: accept
-    source-address: BAF_INT_GT_OTHER      # was: ANY
+    source-address: BAF_INT_GT      # was: ANY
 
-# [auto] 3596 flows total | 3596 hits: BAF_INT_GT_OTHER (10.5.11.250, 2a07:1182:5:11::250) | via: HTTPS/tcp/443
+# [auto] 3596 flows total | 3596 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) | via: HTTPS/tcp/443
   - name: allow-tcp-HTTPS
     protocol: tcp
     destination-port: HTTPS
     action: accept
-    source-address: BAF_INT_GT_OTHER      # was: ANY
+    source-address: BAF_INT_GT      # was: ANY
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback

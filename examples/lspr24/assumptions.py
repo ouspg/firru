@@ -7,8 +7,8 @@ assumptions — apply assumptions.yml: everything the case study assumes.
 
 The dataset records listening sockets and traffic. It does not record a host's
 dynamic port range, the Windows services that never changed while syscollector
-watched, or who the blue team's administrators were, and the policies need all
-three. Each is written down in assumptions.yml with its source and reasoning,
+watched, or who administered the hosts beyond the green team it labels, and
+the policies need all three. Each is written down in assumptions.yml with its source and reasoning,
 and this is the only code that turns them into data:
 
   loot-assumed/   a copy of the measured loot (loot-ossec/ is left as it is)
@@ -17,7 +17,10 @@ and this is the only code that turns them into data:
                   listener carries the `inferred` flag and `inferred_from`, the
                   run it came from; an observed listener always wins.
   def/            MGMT_HOSTS defined, and every host's management source set to
-                  it in host_metadata.json.
+                  it in host_metadata.json; with a zone_mgmt section, also
+                  <ZONE>_MGMT, each zone's management entry point. A host's
+                  `zone_mgmt` in host_metadata.json names its zone's, or for a
+                  boundary device those of the subnets it sits in.
 
 With --flows, the Windows fill is checked against the traffic: a filled-in
 port that never answered and an answering port nothing explains are listed,
@@ -150,17 +153,53 @@ def main():
     values = "".join(f"      - address: {ipaddress.ip_address(x)}\n" for x in m["addresses"])
     text = block.sub(f"  MGMT_HOSTS:   # assumed: {m['source']} (assumptions.yml)\n"
                      f"    values:\n{values}", text, count=1)
+
+    # <ZONE>_MGMT: each zone's management entry point, where assumed. A zone
+    # is a subnet, so there is at most one. Written after everything
+    # else in networks.yml, and removed first, so a rerun replaces rather than
+    # repeats them.
+    zm = a.get("zone_mgmt") or {}
+    entry_of = {}                      # (ZONE, /24) -> token
+    text = re.sub(r"^  [A-Z0-9_]+_MGMT:   # assumed:[^\n]*\n    values:\n(?:      - [^\n]*\n)+",
+                  "", text, flags=re.M)
+    for z, x in sorted((zm.get("addresses") or {}).items()):
+        Z, ip = z.upper(), ipaddress.ip_address(x)
+        tok = f"{Z}_MGMT"
+        entry_of[(Z, ipaddress.ip_network(f"{ip}/24", strict=False))] = tok
+        text = text.rstrip("\n") + (f"\n  {tok}:   # assumed: {zm['source']} "
+                                     f"(assumptions.yml)\n    values:\n      - address: {ip}\n")
     nets.write_text(text)
+
+    # Each host's own IPv4 addresses, from the token networks.yml gives it.
+    defined = yaml.safe_load(text)["networks"]
+    host_v4 = {t: [ipaddress.ip_address(v["address"]) for v in (e.get("values") or [])
+                   if "address" in v and "/" not in v["address"] and ":" not in v["address"]]
+               for t, e in defined.items()}
+
     hm_path = pathlib.Path(args.defs) / "host_metadata.json"
     hm = json.loads(hm_path.read_text())
     for token, entry in hm.items():
         if isinstance(entry, dict) and "alias_of" not in entry:
             entry["mgmt"] = "MGMT_HOSTS"
+            z = (entry.get("zone") or "").upper()
+            # A boundary device is in no zone, and names the entry point of
+            # every subnet it sits in; a zone's host names its own zone's.
+            mine = sorted({tok for (Z, net), tok in entry_of.items()
+                           if Z == z or entry.get("boundary")
+                           for addr in host_v4.get(token, ()) if addr in net})
+            entry["zone_mgmt"] = mine or None
+    # Loot names a host by its short label, so synthesis reads the alias's
+    # entry: it has to say what the host's does.
+    for token, entry in hm.items():
+        if isinstance(entry, dict) and entry.get("alias_of") in hm:
+            for k in ("mgmt", "zone_mgmt"):
+                entry[k] = hm[entry["alias_of"]].get(k)
     hm_path.write_text(json.dumps(hm, indent=2, sort_keys=True) + "\n")
 
     print(f"{stats['hosts']} hosts -> {out}: {stats['listeners filled in']} Windows "
           f"listeners filled in on {len(filled)} hosts; MGMT_HOSTS = "
-          f"{len(m['addresses'])} addresses")
+          f"{len(m['addresses'])} addresses; {len(entry_of)} management "
+          f"entry points")
 
     if args.flows and filled:
         check(args.flows, filled, out, pathlib.Path(args.defs), hm, args.window)

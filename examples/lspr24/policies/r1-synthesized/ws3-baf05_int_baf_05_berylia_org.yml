@@ -23,6 +23,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (xrdp) | IPv6 ::/0 (xrdp)
       - name: allow-tcp-RDP
         protocol: tcp
@@ -30,6 +32,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (ntpd), 10.5.11.45/32 (ntpd) | IPv6 2a07:1182:5:11::45/128 (ntpd), ::/0 (ntpd), fe80::250:56ff:fe89/128 (ntpd)
       - name: allow-udp-NTP
         protocol: udp

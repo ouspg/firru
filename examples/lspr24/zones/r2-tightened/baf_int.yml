@@ -106,6 +106,15 @@ filters:
     source-address: ANY
     destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
       ws3-baf05_int_baf_05_berylia_org
+  - name: allow-udp-RDP-shared
+    protocol: udp
+    destination-port: RDP
+    action: accept
+    source-address:
+    - BAF_INT_GT
+    - BAF_INT_MGMT
+    - MGMT_HOSTS
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
   - name: ws1-baf01_int_baf_05_berylia_org-allow-tcp-WINDOWS-WINRM-UNCONFIGURED
     protocol: tcp
     destination-port: WINDOWS-WINRM-UNCONFIGURED
@@ -218,13 +227,6 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: udp
     destination-port: NETBIOS-NS-LEGACY
-  - name: deny-ext-udp-RDP
-    action: deny
-    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: udp
-    destination-port: RDP
   - name: deny-ext-udp-WINDOWS-CDP
     action: deny
     destination-address: ws1-baf01_int_baf_05_berylia_org

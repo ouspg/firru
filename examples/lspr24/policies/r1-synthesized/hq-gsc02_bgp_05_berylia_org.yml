@@ -1,6 +1,6 @@
 metadata:
   host: hq-gsc02
-  zone: bgp
+  zone: bgp_20
 filters:
   - header:
       targets:
@@ -22,7 +22,9 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BGP_GT
+          - BGP_20_GT
+          - BGP_20_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (rigctld)
       - name: allow-tcp-TCP_4532
         protocol: tcp

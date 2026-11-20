@@ -23,6 +23,8 @@ filters:
         action: accept
         source-address:
           - BGP_INT_GT
+          - BGP_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (xrdp) | IPv6 ::/0 (xrdp)
       - name: allow-tcp-RDP
         protocol: tcp
@@ -30,6 +32,8 @@ filters:
         action: accept
         source-address:
           - BGP_INT_GT
+          - BGP_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (avahi-daemon) | IPv6 ::/0 (avahi-daemon)
       - name: allow-udp-MDNS
         protocol: udp

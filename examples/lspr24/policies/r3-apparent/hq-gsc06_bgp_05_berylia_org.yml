@@ -1,6 +1,6 @@
 metadata:
   host: hq-gsc06
-  zone: bgp
+  zone: bgp_20
   provenance: "flows_to_enforced.py \u2014 INFERRED, not a recovered configuration"
 filters:
 - header:

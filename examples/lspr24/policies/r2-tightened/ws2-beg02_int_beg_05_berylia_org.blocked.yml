@@ -5,7 +5,7 @@ blocked:
   - protocol: tcp
     service: WINDOWS-SMB
     src_ip: 2a07:1182:5:12::250
-    src_token: BEG_INT_GT_OTHER
+    src_token: BEG_INT_12_GT
 # 14 hits | reason: port not in policy (50482,50505,50795,51933,59820,62061,62243)
   - protocol: tcp
     service: WINDOWS-RPC-DYNAMIC

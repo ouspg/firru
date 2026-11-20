@@ -1,22 +1,12 @@
 metadata:
-  host: bgp
-  zone: bgp
+  host: bgp_5
+  zone: bgp_5
   hosts:
   - alert-system_bgp_05_berylia_org
   - entry_bgp_05_berylia_org
-  - hq-gsc01_bgp_05_berylia_org
-  - hq-gsc02_bgp_05_berylia_org
-  - hq-gsc03_bgp_05_berylia_org
-  - hq-gsc04_bgp_05_berylia_org
-  - hq-gsc05_bgp_05_berylia_org
-  - hq-gsc06_bgp_05_berylia_org
-  - hq-gsc07_bgp_05_berylia_org
-  - hq-gsc08_bgp_05_berylia_org
-  - hq-gsc09_bgp_05_berylia_org
   - imagery_bgp_05_berylia_org
   - keycloak_bgp_05_berylia_org
   - lims_bgp_05_berylia_org
-  - mcs_bgp_05_berylia_org
   - nextcloud_bgp_05_berylia_org
   - ns1_bgp_05_berylia_org
   - ns2_bgp_05_berylia_org
@@ -36,13 +26,9 @@ filters:
     source-address: ANY
     comment: every one of 3 sources was answered
     destination-address: alert-system_bgp_05_berylia_org entry_bgp_05_berylia_org
-      hq-gsc01_bgp_05_berylia_org hq-gsc02_bgp_05_berylia_org hq-gsc03_bgp_05_berylia_org
-      hq-gsc04_bgp_05_berylia_org hq-gsc05_bgp_05_berylia_org hq-gsc06_bgp_05_berylia_org
-      hq-gsc07_bgp_05_berylia_org hq-gsc08_bgp_05_berylia_org hq-gsc09_bgp_05_berylia_org
       imagery_bgp_05_berylia_org keycloak_bgp_05_berylia_org lims_bgp_05_berylia_org
-      mcs_bgp_05_berylia_org nextcloud_bgp_05_berylia_org ns1_bgp_05_berylia_org ns2_bgp_05_berylia_org
-      visitor_bgp_05_berylia_org whistleblowhub_bgp_05_berylia_org www_bgp_05_berylia_org
-      xroad-securityserver_bgp_05_berylia_org
+      nextcloud_bgp_05_berylia_org ns1_bgp_05_berylia_org ns2_bgp_05_berylia_org visitor_bgp_05_berylia_org
+      whistleblowhub_bgp_05_berylia_org www_bgp_05_berylia_org xroad-securityserver_bgp_05_berylia_org
   - name: allow-tcp-HTTP-shared
     protocol: tcp
     destination-port: HTTP
@@ -50,7 +36,7 @@ filters:
     source-address: ANY
     comment: every one of 5 sources was answered
     destination-address: alert-system_bgp_05_berylia_org entry_bgp_05_berylia_org
-      imagery_bgp_05_berylia_org lims_bgp_05_berylia_org mcs_bgp_05_berylia_org nextcloud_bgp_05_berylia_org
+      imagery_bgp_05_berylia_org lims_bgp_05_berylia_org nextcloud_bgp_05_berylia_org
       visitor_bgp_05_berylia_org whistleblowhub_bgp_05_berylia_org www_bgp_05_berylia_org
   - name: allow-tcp-HTTPS-shared
     protocol: tcp
@@ -60,42 +46,8 @@ filters:
     comment: 56 sources answered, 3 not
     destination-address: alert-system_bgp_05_berylia_org entry_bgp_05_berylia_org
       imagery_bgp_05_berylia_org keycloak_bgp_05_berylia_org lims_bgp_05_berylia_org
-      mcs_bgp_05_berylia_org nextcloud_bgp_05_berylia_org visitor_bgp_05_berylia_org
-      whistleblowhub_bgp_05_berylia_org www_bgp_05_berylia_org xroad-securityserver_bgp_05_berylia_org
-  - name: allow-tcp-VNC-shared
-    protocol: tcp
-    destination-port: VNC
-    action: accept
-    source-address: ANY
-    comment: every one of 5 sources was answered
-    destination-address: hq-gsc01_bgp_05_berylia_org hq-gsc02_bgp_05_berylia_org hq-gsc03_bgp_05_berylia_org
-      hq-gsc04_bgp_05_berylia_org hq-gsc05_bgp_05_berylia_org hq-gsc06_bgp_05_berylia_org
-      hq-gsc07_bgp_05_berylia_org hq-gsc08_bgp_05_berylia_org hq-gsc09_bgp_05_berylia_org
-  - name: allow-tcp-HTTP-ALT-shared
-    protocol: tcp
-    destination-port: HTTP-ALT
-    action: accept
-    source-address: ANY
-    comment: every one of 3 sources was answered
-    destination-address: hq-gsc01_bgp_05_berylia_org hq-gsc02_bgp_05_berylia_org hq-gsc03_bgp_05_berylia_org
-      hq-gsc04_bgp_05_berylia_org hq-gsc05_bgp_05_berylia_org hq-gsc06_bgp_05_berylia_org
-      hq-gsc07_bgp_05_berylia_org hq-gsc08_bgp_05_berylia_org hq-gsc09_bgp_05_berylia_org
-  - name: allow-tcp-TCP_19000-shared
-    protocol: tcp
-    destination-port: TCP_19000
-    action: accept
-    source-address: ANY
-    comment: every one of 1 sources was answered
-    destination-address: hq-gsc01_bgp_05_berylia_org hq-gsc02_bgp_05_berylia_org hq-gsc03_bgp_05_berylia_org
-      hq-gsc04_bgp_05_berylia_org hq-gsc05_bgp_05_berylia_org hq-gsc06_bgp_05_berylia_org
-      hq-gsc07_bgp_05_berylia_org hq-gsc08_bgp_05_berylia_org hq-gsc09_bgp_05_berylia_org
-  - name: hq-gsc08_bgp_05_berylia_org-allow-tcp-TCP_4533
-    protocol: tcp
-    destination-port: TCP_4533
-    action: accept
-    source-address: ANY
-    comment: every one of 1 sources was answered
-    destination-address: hq-gsc08_bgp_05_berylia_org
+      nextcloud_bgp_05_berylia_org visitor_bgp_05_berylia_org whistleblowhub_bgp_05_berylia_org
+      www_bgp_05_berylia_org xroad-securityserver_bgp_05_berylia_org
   - name: lims_bgp_05_berylia_org-allow-tcp-TCP_8888
     protocol: tcp
     destination-port: TCP_8888
@@ -140,8 +92,8 @@ filters:
     destination-address: xroad-securityserver_bgp_05_berylia_org
   - name: drop-ghost-hosts
     action: deny
-    destination-address: bgp
-    comment: 'Ghost host catch-all: drops traffic to IPs in bgp not matched by any
+    destination-address: bgp_5
+    comment: 'Ghost host catch-all: drops traffic to IPs in bgp_5 not matched by any
       allow term above.  All legitimate hosts should appear in policies/pol/ and be
       covered by explicit allow terms.'
   - name: log-accept-ANY

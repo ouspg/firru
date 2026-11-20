@@ -1,40 +1,36 @@
-salt-master_beg_05_berylia_org: d2 against r2-tightened, 4 narrowed terms
-  03-07 08:00-09:00  2 of 4 contradicted
-      tcp-TCP_4505             cuts     23   BEG_GT_OTHER 23
-      tcp-TCP_4506             cuts     23   BEG_GT_OTHER 23
-  03-07 09:00-10:00  4 of 4 contradicted
+salt-master_beg_05_berylia_org: d2 against r2-tightened, 5 narrowed terms
+  03-07 08:00-09:00  1 of 5 contradicted
+      tcp-TCP_4505             cuts     23   BEG_17_GT 23
+  03-07 09:00-10:00  5 of 5 contradicted
       tcp-HTTP                 cuts      5   fw1-beg_05_berylia_org 5
       tcp-HTTPS                cuts      4   fw1-beg_05_berylia_org 4
-      tcp-TCP_4505             cuts    146   BEG_GT_OTHER 132, gas-hmi_beg_05_berylia_org 10, fw1-beg_05_berylia_org 3, +1 more
-      tcp-TCP_4506             cuts    137   BEG_GT_OTHER 132, fw1-beg_05_berylia_org 5
-  03-07 10:00-11:00  2 of 4 contradicted
-      tcp-TCP_4505             cuts    164   BEG_GT_OTHER 138, gas-hmi_beg_05_berylia_org 26
-      tcp-TCP_4506             cuts    137   BEG_GT_OTHER 137
-  03-07 11:00-12:00  2 of 4 contradicted
-      tcp-TCP_4505             cuts    165   BEG_GT_OTHER 139, gas-hmi_beg_05_berylia_org 25, gas-historian_beg_05_berylia_org 1
-      tcp-TCP_4506             cuts    139   BEG_GT_OTHER 139
-  03-07 12:00-13:00  2 of 4 contradicted
-      tcp-TCP_4505             cuts    165   BEG_GT_OTHER 138, gas-hmi_beg_05_berylia_org 26, gas-historian_beg_05_berylia_org 1
-      tcp-TCP_4506             cuts    138   BEG_GT_OTHER 138
-  03-07 13:00-14:00  4 of 4 contradicted
+      tcp-SSH                  cuts     20   MGMT_HOSTS 20
+      tcp-TCP_4505             cuts    146   BEG_17_GT 132, gas-hmi_beg_05_berylia_org 10, fw1-beg_05_berylia_org 3, +1 more
+      tcp-TCP_4506             cuts      5   fw1-beg_05_berylia_org 5
+  03-07 10:00-11:00  2 of 5 contradicted
+      tcp-SSH                  cuts     12   MGMT_HOSTS 12
+      tcp-TCP_4505             cuts    164   BEG_17_GT 138, gas-hmi_beg_05_berylia_org 26
+  03-07 11:00-12:00  1 of 5 contradicted
+      tcp-TCP_4505             cuts    165   BEG_17_GT 139, gas-hmi_beg_05_berylia_org 25, gas-historian_beg_05_berylia_org 1
+  03-07 12:00-13:00  1 of 5 contradicted
+      tcp-TCP_4505             cuts    165   BEG_17_GT 138, gas-hmi_beg_05_berylia_org 26, gas-historian_beg_05_berylia_org 1
+  03-07 13:00-14:00  3 of 5 contradicted
       tcp-HTTP                 cuts      4   fw1-beg_05_berylia_org 4
       tcp-HTTPS                cuts      5   fw1-beg_05_berylia_org 5
-      tcp-TCP_4505             cuts    156   BEG_GT_OTHER 131, gas-hmi_beg_05_berylia_org 25
-      tcp-TCP_4506             cuts    131   BEG_GT_OTHER 131
-  03-07 14:00-15:00  2 of 4 contradicted
-      tcp-TCP_4505             cuts    165   BEG_GT_OTHER 138, gas-hmi_beg_05_berylia_org 26, gas-historian_beg_05_berylia_org 1
-      tcp-TCP_4506             cuts    138   BEG_GT_OTHER 138
-  03-07 15:00-16:00  2 of 4 contradicted
-      tcp-TCP_4505             cuts    164   BEG_GT_OTHER 138, gas-hmi_beg_05_berylia_org 25, gas-historian_beg_05_berylia_org 1
-      tcp-TCP_4506             cuts    139   BEG_GT_OTHER 139
-  03-07 16:00-17:00  2 of 4 contradicted
-      tcp-TCP_4505             cuts    165   BEG_GT_OTHER 139, gas-hmi_beg_05_berylia_org 26
-      tcp-TCP_4506             cuts    138   BEG_GT_OTHER 138
-  03-07 17:00-18:00  2 of 4 contradicted
-      tcp-TCP_4505             cuts     23   gas-hmi_beg_05_berylia_org 17, BEG_GT_OTHER 6
-      tcp-TCP_4506             cuts      6   BEG_GT_OTHER 6
-  cut across d2: 2,480 flows from 4 peers
-      BEG_GT_OTHER                             10/10 hours   2,243 flows   tcp-TCP_4505 tcp-TCP_4506
+      tcp-TCP_4505             cuts    156   BEG_17_GT 131, gas-hmi_beg_05_berylia_org 25
+  03-07 14:00-15:00  2 of 5 contradicted
+      tcp-SSH                  cuts     17   MGMT_HOSTS 17
+      tcp-TCP_4505             cuts    165   BEG_17_GT 138, gas-hmi_beg_05_berylia_org 26, gas-historian_beg_05_berylia_org 1
+  03-07 15:00-16:00  2 of 5 contradicted
+      tcp-SSH                  cuts     13   MGMT_HOSTS 13
+      tcp-TCP_4505             cuts    164   BEG_17_GT 138, gas-hmi_beg_05_berylia_org 25, gas-historian_beg_05_berylia_org 1
+  03-07 16:00-17:00  1 of 5 contradicted
+      tcp-TCP_4505             cuts    165   BEG_17_GT 139, gas-hmi_beg_05_berylia_org 26
+  03-07 17:00-18:00  1 of 5 contradicted
+      tcp-TCP_4505             cuts     23   gas-hmi_beg_05_berylia_org 17, BEG_17_GT 6
+  cut across d2: 1,421 flows from 5 peers
+      BEG_17_GT                                10/10 hours   1,122 flows   tcp-TCP_4505
       gas-hmi_beg_05_berylia_org                9/10 hours     206 flows   tcp-TCP_4505
       gas-historian_beg_05_berylia_org          5/10 hours       5 flows   tcp-TCP_4505
+      MGMT_HOSTS                                4/10 hours      62 flows   tcp-SSH
       fw1-beg_05_berylia_org                    2/10 hours      26 flows   tcp-HTTP tcp-HTTPS tcp-TCP_4505 tcp-TCP_4506

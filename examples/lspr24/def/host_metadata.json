@@ -1,1199 +1,1572 @@
 {
   "access": {
     "alias_of": "access_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "access_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "access_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "adcs-baf": {
     "alias_of": "adcs-baf_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "adcs-baf_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "adcs-beg": {
     "alias_of": "adcs-beg_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "adcs-beg_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "adcs-beg_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "adfs": {
     "alias_of": "adfs_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "adfs_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "adfs_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "alert-system": {
     "alias_of": "alert-system_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "alert-system_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
+  },
+  "alert-system_bgp_05_berylia_org": {
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "arkime": {
     "alias_of": "arkime_05_berylia_org",
     "gt": null,
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "core",
-    "zone": "core"
+    "zone": "core",
+    "zone_mgmt": null
   },
   "arkime_05_berylia_org": {
     "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "core",
-    "zone": "core"
+    "zone": "core",
+    "zone_mgmt": null
   },
   "av": {
     "alias_of": "av_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "av_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "av_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "baf-ws1-conf": {
     "alias_of": "baf-ws1-conf_confidential_baf_05_berylia_org",
     "gt": null,
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_confidential"
+    "zone": "baf_confidential",
+    "zone_mgmt": null
   },
   "baf-ws1-conf_confidential_baf_05_berylia_org": {
     "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_confidential"
+    "zone": "baf_confidential",
+    "zone_mgmt": null
   },
   "baf-ws3-conf": {
     "alias_of": "baf-ws3-conf_confidential_baf_05_berylia_org",
     "gt": null,
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_confidential"
+    "zone": "baf_confidential",
+    "zone_mgmt": null
   },
   "baf-ws3-conf_confidential_baf_05_berylia_org": {
     "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_confidential"
+    "zone": "baf_confidential",
+    "zone_mgmt": null
   },
   "beg-power-ws": {
     "alias_of": "beg-power-ws_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "beg-power-ws_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_22_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_22",
+    "zone_mgmt": [
+      "BEG_INT_22_MGMT"
+    ]
+  },
+  "beg-power-ws_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_22_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_22",
+    "zone_mgmt": [
+      "BEG_INT_22_MGMT"
+    ]
   },
   "borderguard": {
     "alias_of": "borderguard_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "borderguard_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "borderguard_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "c4i-ads": {
     "alias_of": "c4i-ads_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "c4i-ads_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_15_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_15",
+    "zone_mgmt": [
+      "BAF_15_MGMT"
+    ]
+  },
+  "c4i-ads_baf_05_berylia_org": {
+    "gt": "BAF_15_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_15",
+    "zone_mgmt": [
+      "BAF_15_MGMT"
+    ]
   },
   "cctv-ai-monitor": {
     "alias_of": "cctv-ai-monitor_int_bgp_05_berylia_org",
     "gt": "BGP_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_int"
+    "zone": "bgp_int",
+    "zone_mgmt": [
+      "BGP_INT_MGMT"
+    ]
   },
   "cctv-ai-monitor_int_bgp_05_berylia_org": {
     "gt": "BGP_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_int"
+    "zone": "bgp_int",
+    "zone_mgmt": [
+      "BGP_INT_MGMT"
+    ]
   },
   "cloakkey": {
     "alias_of": "cloakkey_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "cloakkey_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "cloakkey_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "code": {
     "alias_of": "code_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "code_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "code_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "cyberdev": {
     "alias_of": "cyberdev_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "cyberdev_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "cyberdev_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "dc1": {
     "alias_of": "dc1_int_beg_05_berylia_org",
     "evidence": "10.5.12.2",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
     "segment": "beg",
     "via": "address",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "dc1_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "dc1_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "dc2": {
     "alias_of": "dc2_int_beg_05_berylia_org",
     "evidence": "10.5.12.3",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
     "segment": "beg",
     "via": "address",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "dc2_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "dc2_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "devops": {
     "alias_of": "devops_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "devops_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "devops_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "elearning": {
     "alias_of": "elearning_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "elearning_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "elearning_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "entry": {
     "alias_of": "entry_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "entry_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
+  },
+  "entry_bgp_05_berylia_org": {
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "files": {
     "alias_of": "files_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "files_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "fiveg-amf": {
     "alias_of": "fiveg-amf_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-amf_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "boundary": true,
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": null,
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-amf_sac_bgp_05_berylia_org": {
+    "boundary": true,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": null,
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-ausf": {
     "alias_of": "fiveg-ausf_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-ausf_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": "BGP_SAC_14_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-ausf_sac_bgp_05_berylia_org": {
+    "gt": "BGP_SAC_14_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-bsf": {
     "alias_of": "fiveg-bsf_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-bsf_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": "BGP_SAC_14_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-bsf_sac_bgp_05_berylia_org": {
+    "gt": "BGP_SAC_14_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-db": {
     "alias_of": "fiveg-db_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-db_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": "BGP_SAC_14_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-db_sac_bgp_05_berylia_org": {
+    "gt": "BGP_SAC_14_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-nrf": {
     "alias_of": "fiveg-nrf_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-nrf_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": "BGP_SAC_14_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-nrf_sac_bgp_05_berylia_org": {
+    "gt": "BGP_SAC_14_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-nssf": {
     "alias_of": "fiveg-nssf_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-nssf_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": "BGP_SAC_14_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-nssf_sac_bgp_05_berylia_org": {
+    "gt": "BGP_SAC_14_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-pcf": {
     "alias_of": "fiveg-pcf_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-pcf_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": "BGP_SAC_14_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-pcf_sac_bgp_05_berylia_org": {
+    "gt": "BGP_SAC_14_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-smf": {
     "alias_of": "fiveg-smf_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-smf_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "boundary": true,
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": null,
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-smf_sac_bgp_05_berylia_org": {
+    "boundary": true,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": null,
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-udm": {
     "alias_of": "fiveg-udm_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-udm_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": "BGP_SAC_14_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-udm_sac_bgp_05_berylia_org": {
+    "gt": "BGP_SAC_14_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-udr": {
     "alias_of": "fiveg-udr_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-udr_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": "BGP_SAC_14_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-udr_sac_bgp_05_berylia_org": {
+    "gt": "BGP_SAC_14_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_14",
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-ue-baf01": {
     "alias_of": "fiveg-ue-baf01_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "fiveg-ue-baf01_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_9",
+    "zone_mgmt": null
+  },
+  "fiveg-ue-baf01_baf_05_berylia_org": {
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_9",
+    "zone_mgmt": null
   },
   "fiveg-ue-baf02": {
     "alias_of": "fiveg-ue-baf02_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "fiveg-ue-baf02_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_9",
+    "zone_mgmt": null
+  },
+  "fiveg-ue-baf02_baf_05_berylia_org": {
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_9",
+    "zone_mgmt": null
   },
   "fiveg-ue-baf03": {
     "alias_of": "fiveg-ue-baf03_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "fiveg-ue-baf03_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_9",
+    "zone_mgmt": null
+  },
+  "fiveg-ue-baf03_baf_05_berylia_org": {
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_9",
+    "zone_mgmt": null
   },
   "fiveg-ue-bgp01": {
     "alias_of": "fiveg-ue-bgp01_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-ue-bgp01_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_8",
+    "zone_mgmt": null
+  },
+  "fiveg-ue-bgp01_sac_bgp_05_berylia_org": {
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_8",
+    "zone_mgmt": null
   },
   "fiveg-ue-bgp02": {
     "alias_of": "fiveg-ue-bgp02_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-ue-bgp02_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_8",
+    "zone_mgmt": null
+  },
+  "fiveg-ue-bgp02_sac_bgp_05_berylia_org": {
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_8",
+    "zone_mgmt": null
   },
   "fiveg-ue-bgp03": {
     "alias_of": "fiveg-ue-bgp03_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-ue-bgp03_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": "bgp_sac_8",
+    "zone_mgmt": null
+  },
+  "fiveg-ue-bgp03_sac_bgp_05_berylia_org": {
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_sac_8",
+    "zone_mgmt": null
   },
   "fiveg-upf-baf": {
     "alias_of": "fiveg-upf-baf_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "fiveg-upf-baf_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "boundary": true,
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": null,
+    "zone_mgmt": null
+  },
+  "fiveg-upf-baf_baf_05_berylia_org": {
+    "boundary": true,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": null,
+    "zone_mgmt": null
   },
   "fiveg-upf-bgp": {
     "alias_of": "fiveg-upf-bgp_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-upf-bgp_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "boundary": true,
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": null,
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-upf-bgp_sac_bgp_05_berylia_org": {
+    "boundary": true,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": null,
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fiveg-webui": {
     "alias_of": "fiveg-webui_sac_bgp_05_berylia_org",
-    "gt": "BGP_SAC_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp_sac"
-  },
-  "fiveg-webui_sac_bgp_05_berylia_org": {
-    "gt": "BGP_SAC_GT",
+    "boundary": true,
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_sac"
+    "zone": null,
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
+  },
+  "fiveg-webui_sac_bgp_05_berylia_org": {
+    "boundary": true,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": null,
+    "zone_mgmt": [
+      "BGP_SAC_14_MGMT"
+    ]
   },
   "fw1-baf": {
     "alias_of": "fw1-baf_5_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "fw1-baf_5_berylia_org": {
-    "gt": "BAF_GT",
+    "boundary": true,
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": null,
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
+  },
+  "fw1-baf_5_berylia_org": {
+    "boundary": true,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": null,
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "fw1-beg": {
     "alias_of": "fw1-beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "fw1-beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "boundary": true,
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": null,
+    "zone_mgmt": [
+      "BEG_17_MGMT",
+      "BEG_INT_12_MGMT",
+      "BEG_INT_19_MGMT"
+    ]
+  },
+  "fw1-beg_05_berylia_org": {
+    "boundary": true,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": null,
+    "zone_mgmt": [
+      "BEG_17_MGMT",
+      "BEG_INT_12_MGMT",
+      "BEG_INT_19_MGMT"
+    ]
   },
   "fw1-bgp": {
     "alias_of": "fw1-bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_105",
+    "zone_mgmt": null
   },
   "fw1-bgp-5g": {
     "alias_of": "fw1-bgp-5g_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
+    "boundary": true,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": null,
+    "zone_mgmt": null
   },
   "fw1-bgp-5g_05_berylia_org": {
-    "gt": "BGP_GT",
+    "boundary": true,
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": null,
+    "zone_mgmt": null
   },
   "fw1-bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_105",
+    "zone_mgmt": null
   },
   "fw2-baf": {
     "alias_of": "fw2-baf_5_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "fw2-baf_5_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_105",
+    "zone_mgmt": null
+  },
+  "fw2-baf_5_berylia_org": {
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_105",
+    "zone_mgmt": null
   },
   "gas-historian": {
     "alias_of": "gas-historian_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "gas-historian_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_17_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_17",
+    "zone_mgmt": [
+      "BEG_17_MGMT"
+    ]
+  },
+  "gas-historian_beg_05_berylia_org": {
+    "gt": "BEG_17_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_17",
+    "zone_mgmt": [
+      "BEG_17_MGMT"
+    ]
   },
   "gas-hmi": {
     "alias_of": "gas-hmi_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "gas-hmi_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_17_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_17",
+    "zone_mgmt": [
+      "BEG_17_MGMT"
+    ]
+  },
+  "gas-hmi_beg_05_berylia_org": {
+    "gt": "BEG_17_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_17",
+    "zone_mgmt": [
+      "BEG_17_MGMT"
+    ]
   },
   "gas-maintenance-terminal": {
     "alias_of": "gas-maintenance-terminal_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "gas-maintenance-terminal_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_17_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_17",
+    "zone_mgmt": [
+      "BEG_17_MGMT"
+    ]
+  },
+  "gas-maintenance-terminal_beg_05_berylia_org": {
+    "gt": "BEG_17_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_17",
+    "zone_mgmt": [
+      "BEG_17_MGMT"
+    ]
   },
   "hq-gsc01": {
     "alias_of": "hq-gsc01_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "hq-gsc01_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "hq-gsc01_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "hq-gsc02": {
     "alias_of": "hq-gsc02_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "hq-gsc02_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "hq-gsc02_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "hq-gsc03": {
     "alias_of": "hq-gsc03_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "hq-gsc03_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "hq-gsc03_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "hq-gsc04": {
     "alias_of": "hq-gsc04_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "hq-gsc04_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "hq-gsc04_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "hq-gsc05": {
     "alias_of": "hq-gsc05_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "hq-gsc05_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "hq-gsc05_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "hq-gsc06": {
     "alias_of": "hq-gsc06_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "hq-gsc06_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "hq-gsc06_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "hq-gsc07": {
     "alias_of": "hq-gsc07_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "hq-gsc07_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "hq-gsc07_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "hq-gsc08": {
     "alias_of": "hq-gsc08_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "hq-gsc08_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "hq-gsc08_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "hq-gsc09": {
     "alias_of": "hq-gsc09_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "hq-gsc09_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "hq-gsc09_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "ied": {
     "alias_of": "ied_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ied_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_22_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_22",
+    "zone_mgmt": [
+      "BEG_INT_22_MGMT"
+    ]
+  },
+  "ied_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_22_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_22",
+    "zone_mgmt": [
+      "BEG_INT_22_MGMT"
+    ]
   },
   "imagery": {
     "alias_of": "imagery_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "imagery_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
+  },
+  "imagery_bgp_05_berylia_org": {
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "incident-report": {
     "alias_of": "incident-report_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "incident-report_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "incident-report_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "inventory": {
     "alias_of": "inventory_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "inventory_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "inventory_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "k8s-control-plane": {
     "alias_of": "k8s-control-plane_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "k8s-control-plane_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "k8s-control-plane_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "k8s-worker01": {
     "alias_of": "k8s-worker01_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "k8s-worker01_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "k8s-worker01_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "k8s-worker02": {
     "alias_of": "k8s-worker02_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "k8s-worker02_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "k8s-worker02_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "k8s-worker03": {
     "alias_of": "k8s-worker03_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "k8s-worker03_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "k8s-worker03_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "k8s-worker04": {
     "alias_of": "k8s-worker04_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "k8s-worker04_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "k8s-worker04_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "keycloak": {
     "alias_of": "keycloak_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "keycloak_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
+  },
+  "keycloak_bgp_05_berylia_org": {
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "lemonldapng": {
     "alias_of": "lemonldapng_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "lemonldapng_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "lemonldapng_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "lims": {
     "alias_of": "lims_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "lims_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
+  },
+  "lims_bgp_05_berylia_org": {
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "mail": {
     "alias_of": "mail_int_baf_05_berylia_org",
     "evidence": "10.5.11.5",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
     "via": "address",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "mail_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "mail_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "maintenance": {
     "alias_of": "maintenance_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "maintenance_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "maintenance_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "map-ads": {
     "alias_of": "map-ads_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "map-ads_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_15_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_15",
+    "zone_mgmt": [
+      "BAF_15_MGMT"
+    ]
+  },
+  "map-ads_baf_05_berylia_org": {
+    "gt": "BAF_15_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_15",
+    "zone_mgmt": [
+      "BAF_15_MGMT"
+    ]
   },
   "mcs": {
     "alias_of": "mcs_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "mcs_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_20_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
+  },
+  "mcs_bgp_05_berylia_org": {
+    "gt": "BGP_20_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_20",
+    "zone_mgmt": [
+      "BGP_20_MGMT"
+    ]
   },
   "news": {
     "alias_of": "news_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "news_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "news_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "nextcloud": {
     "alias_of": "nextcloud_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "nextcloud_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
+  },
+  "nextcloud_bgp_05_berylia_org": {
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "ns": {
     "alias_of": "ns_confidential_baf_05_berylia_org",
     "gt": null,
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_confidential"
+    "zone": "baf_confidential",
+    "zone_mgmt": null
   },
   "ns1": {
     "alias_of": "ns1_bgp_05_berylia_org",
     "evidence": "100.98.5.2",
-    "gt": "BGP_GT",
-    "mgmt": null,
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
     "via": "address",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "ns1_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "ns1_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "ns1_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "ns2": {
     "alias_of": "ns2_bgp_05_berylia_org",
     "evidence": "100.98.5.3",
-    "gt": "BGP_GT",
-    "mgmt": null,
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
     "via": "address",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "ns2_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "ns2_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "ns2_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "ns_confidential_baf_05_berylia_org": {
     "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_confidential"
+    "zone": "baf_confidential",
+    "zone_mgmt": null
   },
   "owncloud": {
     "alias_of": "owncloud_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "owncloud_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "owncloud_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "passengers": {
     "alias_of": "passengers_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "passengers_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "passengers_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "personnel": {
     "alias_of": "personnel_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "personnel_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "personnel_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "rtu": {
     "alias_of": "rtu_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
+    "boundary": true,
+    "gt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": null,
+    "zone_mgmt": [
+      "BEG_INT_22_MGMT"
+    ]
   },
   "rtu-host": {
     "alias_of": "rtu-host_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
+    "gt": "BEG_INT_22_GT",
+    "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_22",
+    "zone_mgmt": [
+      "BEG_INT_22_MGMT"
+    ]
   },
   "rtu-host_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_22_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_22",
+    "zone_mgmt": [
+      "BEG_INT_22_MGMT"
+    ]
   },
   "rtu_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "boundary": true,
+    "gt": null,
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": null,
+    "zone_mgmt": [
+      "BEG_INT_22_MGMT"
+    ]
   },
   "salt-master": {
     "alias_of": "salt-master_beg_05_berylia_org",
-    "gt": "BEG_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg"
-  },
-  "salt-master_beg_05_berylia_org": {
-    "gt": "BEG_GT",
+    "gt": "BEG_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg"
+    "zone": "beg_5",
+    "zone_mgmt": null
+  },
+  "salt-master_beg_05_berylia_org": {
+    "gt": "BEG_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_5",
+    "zone_mgmt": null
   },
   "satviewer": {
     "alias_of": "satviewer_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "satviewer_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "satviewer_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "search": {
     "alias_of": "search_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "search_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "search_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "service-portal": {
     "alias_of": "service-portal_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "service-portal_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "service-portal_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "siem-server": {
     "evidence": "The Wazuh manager, not an agent: it reports itself as agent ...",
@@ -1201,618 +1574,873 @@
     "mgmt": "MGMT_HOSTS",
     "role": "log-collector",
     "via": "asserted",
-    "zone": "core"
+    "zone": "core",
+    "zone_mgmt": null
   },
   "sp": {
     "alias_of": "sp_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "sp7": {
     "alias_of": "sp7_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "sp7_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_19_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_19",
+    "zone_mgmt": [
+      "BEG_INT_19_MGMT"
+    ]
+  },
+  "sp7_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_19_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_19",
+    "zone_mgmt": [
+      "BEG_INT_19_MGMT"
+    ]
   },
   "sp_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "sql": {
     "alias_of": "sql_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "sql_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "tak": {
     "alias_of": "tak_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "tak_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "tak_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "ticketdesk": {
     "alias_of": "ticketdesk_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ticketdesk_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "translator": {
     "alias_of": "translator_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "translator_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "translator_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "vaccination": {
     "alias_of": "vaccination_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "vaccination_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "vaccination_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "visitor": {
     "alias_of": "visitor_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "visitor_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
+  },
+  "visitor_bgp_05_berylia_org": {
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "wap": {
     "alias_of": "wap_baf_05_berylia_org",
-    "gt": "BAF_GT",
-    "mgmt": null,
-    "segment": "baf",
-    "zone": "baf"
-  },
-  "wap_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
+  },
+  "wap_baf_05_berylia_org": {
+    "gt": "BAF_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "baf",
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "whistleblowhub": {
     "alias_of": "whistleblowhub_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "whistleblowhub_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
+  },
+  "whistleblowhub_bgp_05_berylia_org": {
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "ws1-baf01": {
     "alias_of": "ws1-baf01_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-baf01_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-baf02": {
     "alias_of": "ws1-baf02_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-baf02_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-baf03": {
     "alias_of": "ws1-baf03_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-baf03_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-baf04": {
     "alias_of": "ws1-baf04_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-baf04_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-baf05": {
     "alias_of": "ws1-baf05_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-baf05_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws1-beg01": {
     "alias_of": "ws1-beg01_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws1-beg01_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws1-beg01_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws1-beg02": {
     "alias_of": "ws1-beg02_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws1-beg02_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws1-beg02_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws1-beg03": {
     "alias_of": "ws1-beg03_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws1-beg03_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws1-beg03_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws1-beg04": {
     "alias_of": "ws1-beg04_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws1-beg04_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws1-beg04_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws1-beg05": {
     "alias_of": "ws1-beg05_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws1-beg05_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws1-beg05_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws1-m365": {
     "alias_of": "ws1-m365_sinet_05_berylia_org",
-    "gt": null,
-    "mgmt": null,
-    "segment": "sinet",
-    "zone": "sinet"
-  },
-  "ws1-m365_sinet_05_berylia_org": {
-    "gt": null,
+    "gt": "SINET_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "sinet",
-    "zone": "sinet"
+    "zone": "sinet",
+    "zone_mgmt": null
+  },
+  "ws1-m365_sinet_05_berylia_org": {
+    "gt": "SINET_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "sinet",
+    "zone": "sinet",
+    "zone_mgmt": null
   },
   "ws2-baf01": {
     "alias_of": "ws2-baf01_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-baf01_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-baf02": {
     "alias_of": "ws2-baf02_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-baf02_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-baf03": {
     "alias_of": "ws2-baf03_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-baf03_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-baf04": {
     "alias_of": "ws2-baf04_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-baf04_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-baf05": {
     "alias_of": "ws2-baf05_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-baf05_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws2-beg01": {
     "alias_of": "ws2-beg01_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws2-beg01_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws2-beg01_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws2-beg02": {
     "alias_of": "ws2-beg02_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws2-beg02_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws2-beg02_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws2-beg03": {
     "alias_of": "ws2-beg03_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws2-beg03_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws2-beg03_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws2-beg04": {
     "alias_of": "ws2-beg04_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws2-beg04_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws2-beg04_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws2-beg05": {
     "alias_of": "ws2-beg05_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws2-beg05_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws2-beg05_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws3-baf01": {
     "alias_of": "ws3-baf01_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-baf01_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-baf02": {
     "alias_of": "ws3-baf02_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-baf02_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-baf03": {
     "alias_of": "ws3-baf03_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-baf03_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-baf04": {
     "alias_of": "ws3-baf04_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-baf04_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-baf05": {
     "alias_of": "ws3-baf05_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-baf05_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "ws3-beg01": {
     "alias_of": "ws3-beg01_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws3-beg01_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws3-beg01_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws3-beg02": {
     "alias_of": "ws3-beg02_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws3-beg02_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws3-beg02_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws3-beg03": {
     "alias_of": "ws3-beg03_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws3-beg03_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws3-beg03_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws3-beg04": {
     "alias_of": "ws3-beg04_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws3-beg04_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws3-beg04_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws3-beg05": {
     "alias_of": "ws3-beg05_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws3-beg05_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws3-beg05_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws4-beg01": {
     "alias_of": "ws4-beg01_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws4-beg01_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws4-beg01_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws4-beg02": {
     "alias_of": "ws4-beg02_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws4-beg02_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws4-beg02_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws4-beg03": {
     "alias_of": "ws4-beg03_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws4-beg03_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws4-beg03_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws4-beg04": {
     "alias_of": "ws4-beg04_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws4-beg04_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws4-beg04_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws4-beg05": {
     "alias_of": "ws4-beg05_int_beg_05_berylia_org",
-    "gt": "BEG_INT_GT",
-    "mgmt": null,
-    "segment": "beg",
-    "zone": "beg_int"
-  },
-  "ws4-beg05_int_beg_05_berylia_org": {
-    "gt": "BEG_INT_GT",
+    "gt": "BEG_INT_12_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "beg",
-    "zone": "beg_int"
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
+  },
+  "ws4-beg05_int_beg_05_berylia_org": {
+    "gt": "BEG_INT_12_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "beg",
+    "zone": "beg_int_12",
+    "zone_mgmt": [
+      "BEG_INT_12_MGMT"
+    ]
   },
   "ws4-m365": {
     "alias_of": "ws4-m365_int_bgp_05_berylia_org",
     "gt": "BGP_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_int"
+    "zone": "bgp_int",
+    "zone_mgmt": [
+      "BGP_INT_MGMT"
+    ]
   },
   "ws4-m365_int_bgp_05_berylia_org": {
     "gt": "BGP_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_int"
+    "zone": "bgp_int",
+    "zone_mgmt": [
+      "BGP_INT_MGMT"
+    ]
   },
   "ws5-m365": {
     "evidence": "Reports agent.ip 100.100.5.15, an address that appears in no...",
@@ -1820,66 +2448,84 @@
     "mgmt": "MGMT_HOSTS",
     "role": "workstation",
     "via": "asserted",
-    "zone": "beg"
+    "zone": "beg",
+    "zone_mgmt": null
   },
   "ws6-m365": {
     "alias_of": "ws6-m365_int_bgp_05_berylia_org",
     "gt": "BGP_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_int"
+    "zone": "bgp_int",
+    "zone_mgmt": [
+      "BGP_INT_MGMT"
+    ]
   },
   "ws6-m365_int_bgp_05_berylia_org": {
     "gt": "BGP_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp_int"
+    "zone": "bgp_int",
+    "zone_mgmt": [
+      "BGP_INT_MGMT"
+    ]
   },
   "wsus": {
     "alias_of": "wsus_int_baf_05_berylia_org",
     "gt": "BAF_INT_GT",
-    "mgmt": null,
+    "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "wsus_int_baf_05_berylia_org": {
     "gt": "BAF_INT_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf_int"
+    "zone": "baf_int",
+    "zone_mgmt": [
+      "BAF_INT_MGMT"
+    ]
   },
   "www": {
     "alias_of": "www_bgp_05_berylia_org",
     "evidence": "100.98.5.12",
-    "gt": "BGP_GT",
-    "mgmt": null,
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
     "via": "address",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "www_baf_05_berylia_org": {
-    "gt": "BAF_GT",
+    "gt": "BAF_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "baf",
-    "zone": "baf"
+    "zone": "baf_5",
+    "zone_mgmt": null
   },
   "www_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
   },
   "xroad-securityserver": {
     "alias_of": "xroad-securityserver_bgp_05_berylia_org",
-    "gt": "BGP_GT",
-    "mgmt": null,
-    "segment": "bgp",
-    "zone": "bgp"
-  },
-  "xroad-securityserver_bgp_05_berylia_org": {
-    "gt": "BGP_GT",
+    "gt": "BGP_5_GT",
     "mgmt": "MGMT_HOSTS",
     "segment": "bgp",
-    "zone": "bgp"
+    "zone": "bgp_5",
+    "zone_mgmt": null
+  },
+  "xroad-securityserver_bgp_05_berylia_org": {
+    "gt": "BGP_5_GT",
+    "mgmt": "MGMT_HOSTS",
+    "segment": "bgp",
+    "zone": "bgp_5",
+    "zone_mgmt": null
   }
 }

@@ -1,6 +1,6 @@
 metadata:
   host: dc1
-  zone: beg_int
+  zone: beg_int_12
 filters:
   - header:
       targets:
@@ -18,7 +18,9 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 192.168.150.194/32 (dns C:\Windows\system32\dns.exe DNS) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (dns C:\Windows\system32\dns.exe DNS)
       - name: allow-tcp-DNS-TCP
         protocol: tcp
@@ -43,7 +45,7 @@ filters:
         destination-port: NETBIOS-SSN-LEGACY
         action: accept
         source-address:
-          - BEG_INT_HOSTS
+          - BEG_INT_12_HOSTS
 # [auto] IPv4 0.0.0.0/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 ::/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
       - name: allow-tcp-LDAP-TCP
         protocol: tcp
@@ -92,21 +94,27 @@ filters:
         destination-port: RDP
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
       - name: allow-tcp-WINRM-HTTP
         protocol: tcp
         destination-port: WINRM-HTTP
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (Microsoft.ActiveDirectory.WebServices C:\Windows\ADWS\Microsoft.ActiveDirectory.WebServices.exe ADWS) | IPv6 ::/0 (Microsoft.ActiveDirectory.WebServices C:\Windows\ADWS\Microsoft.ActiveDirectory.WebServices.exe ADWS)
       - name: allow-tcp-WINDOWS-AD-ADWS
         protocol: tcp
         destination-port: WINDOWS-AD-ADWS
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (System) | IPv6 ::/0 (System)
       - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
         protocol: tcp
@@ -137,14 +145,14 @@ filters:
         destination-port: NETBIOS-NS-LEGACY
         action: accept
         source-address:
-          - BEG_INT_HOSTS
+          - BEG_INT_12_HOSTS
 # [auto] IPv4 192.168.150.194/32 (System)
       - name: allow-udp-NETBIOS-DGM-LEGACY
         protocol: udp
         destination-port: NETBIOS-DGM-LEGACY
         action: accept
         source-address:
-          - BEG_INT_HOSTS
+          - BEG_INT_12_HOSTS
 # [auto] IPv4 0.0.0.0/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 ::/0 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
       - name: allow-udp-LDAP-UDP
         protocol: udp
@@ -163,7 +171,9 @@ filters:
         destination-port: RDP
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (svchost C:\Windows\system32\svchost.exe Dnscache) | IPv6 ::/0 (svchost C:\Windows\system32\svchost.exe Dnscache)
       - name: allow-udp-MDNS
         protocol: udp

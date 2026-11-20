@@ -3,7 +3,7 @@
 # Source suggestions changed: 3 | Log-drop candidates: 0
 metadata:
   host: lemonldapng
-  zone: beg_int
+  zone: beg_int_12
   variant: 'r4-block-early (learn: flows --window night) — services with no observed
     client are removed, not merely narrowed'
 filters:
@@ -12,26 +12,26 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 1799 flows total | 1799 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
+# [auto] 1799 flows total | 1799 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
     action: accept
-    source-address: BEG_INT_GT_OTHER      # was: BEG_INT_GT
+    source-address: BEG_INT_12_GT      # was: BEG_INT_12_GT, BEG_INT_12_MGMT, MGMT_HOSTS
 
-# [auto] 3611 flows total | 3611 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: HTTP/tcp/80
+# [auto] 3611 flows total | 3611 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: HTTP/tcp/80
   - name: allow-tcp-HTTP
     protocol: tcp
     destination-port: HTTP
     action: accept
-    source-address: BEG_INT_GT_OTHER      # was: ANY
+    source-address: BEG_INT_12_GT      # was: ANY
 
-# [auto] 3598 flows total | 3598 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: HTTPS/tcp/443
+# [auto] 3598 flows total | 3598 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: HTTPS/tcp/443
   - name: allow-tcp-HTTPS
     protocol: tcp
     destination-port: HTTPS
     action: accept
-    source-address: BEG_INT_GT_OTHER      # was: ANY
+    source-address: BEG_INT_12_GT      # was: ANY
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -71,11 +71,11 @@ filters:
     - dc1_int_beg_05_berylia_org
     - dc2_int_beg_05_berylia_org
     action: accept
-# [auto] 50 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250) | 33 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2) | 30 hits: dc2_int_beg_05_berylia_org (2a07:1182:5:12::3)
+# [auto] 50 hits: BEG_INT_12_GT (2a07:1182:5:12::250) | 33 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2) | 30 hits: dc2_int_beg_05_berylia_org (2a07:1182:5:12::3)
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     destination-address:
-    - BEG_INT_GT_OTHER
+    - BEG_INT_12_GT
     - dc1_int_beg_05_berylia_org
     - dc2_int_beg_05_berylia_org
     action: accept

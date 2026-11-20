@@ -3,19 +3,19 @@
 # Source suggestions changed: 6 | Log-drop candidates: 2
 metadata:
   host: k8s-worker01
-  zone: beg
+  zone: beg_5
 filters:
   - header:
       targets:
         nftables: mixed input DROP
     terms:
 
-# [auto] 1800 flows total | 1800 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
+# [auto] 1800 flows total | 1800 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
       - name: allow-tcp-SSH
         protocol: tcp
         destination-port: SSH
         action: accept
-        source-address: BEG_GT_OTHER  # was: BEG_GT
+        source-address: BEG_5_GT  # was: BEG_5_GT, MGMT_HOSTS
 
 # [auto] 977 flows total | 336 hits: k8s-worker02_beg_05_berylia_org (2a07:1182:5:20::32, 100.97.5.32) | 328 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33, 2a07:1182:5:20::33) | 313 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34, 2a07:1182:5:20::34) | via: BGP/tcp/179
       - name: allow-tcp-BGP
@@ -116,7 +116,7 @@ filters:
           - k8s-worker03
           - k8s-worker04
         action: accept
-# [auto] 617 hits: k8s-worker03_beg_05_berylia_org (2a07:1182:5:20::33, fe80::250:56ff:fe89:3811) | 609 hits: k8s-worker04_beg_05_berylia_org (2a07:1182:5:20::34, fe80::250:56ff:fe89:f7d1) | 350 hits: k8s-worker02_beg_05_berylia_org (2a07:1182:5:20::32, fe80::250:56ff:fe89:82f3) | 336 hits: beg (2a07:1182:5:20::1) [never answered] | 127 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 92 hits: BEG_GT_OTHER (2a07:1182:5:20::60) | 6 hits: core (fe80::250:56ff:fe89:aa9f)
+# [auto] 617 hits: k8s-worker03_beg_05_berylia_org (2a07:1182:5:20::33, fe80::250:56ff:fe89:3811) | 609 hits: k8s-worker04_beg_05_berylia_org (2a07:1182:5:20::34, fe80::250:56ff:fe89:f7d1) | 350 hits: k8s-worker02_beg_05_berylia_org (2a07:1182:5:20::32, fe80::250:56ff:fe89:82f3) | 336 hits: beg_5 (2a07:1182:5:20::1) [never answered] | 127 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 92 hits: BEG_5_GT (2a07:1182:5:20::60) | 6 hits: baf_105 (fe80::250:56ff:fe89:aa9f)
       - name: allow-icmpv6-ICMPV6
         protocol: icmpv6
         action: accept
