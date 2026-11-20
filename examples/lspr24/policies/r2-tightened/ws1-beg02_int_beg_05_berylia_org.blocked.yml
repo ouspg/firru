@@ -1,8 +1,0 @@
-# Would-be-blocked flows — review and add to policy if legitimate,
-# or confirm they should be dropped.
-blocked:
-# 1 hits | reason: port not in policy (55298)
-  - protocol: udp
-    service: WINDOWS-RPC-DYNAMIC
-    src_ip: 10.5.12.2
-    src_token: dc1_int_beg_05_berylia_org

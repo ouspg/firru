@@ -75,10 +75,10 @@ firru merge-zones --hosts 'policies/<variant>/*.yml' --defs def/ --outdir zones/
 | `loot-ossec/` | the measured loot, as the archive has it |
 | `loot-assumed/` | the same with `assumptions.yml` applied: what the policies are built from |
 | `policies/r1-synthesized/` | from the sockets: 460 service terms over 59 hosts |
-| `policies/r2-tightened/` | sources narrowed against the night window: 178 terms, each with `# was:`, and beside them `*.blocked.yml` (27 hosts: flows the narrowing would deny); a term nothing matched says `log-drop candidate` |
+| `policies/r2-tightened/` | sources narrowed against the night window: 178 terms, each with `# was:`; a term nothing matched says `log-drop candidate`. What the narrowing would deny is `firru diff` with `--flows` |
 | `policies/r3-apparent/` | INFERRED from traffic: the policy that appears to have been running |
 | `policies/r4-block-early/` | r2 with every service the night window never saw removed: 269 of 460 terms, on 51 hosts |
-| `reports/` | precomputed reports, so the results read without the dataset: `hourly/`, one host's d2 an hour at a time (`make hourly`) |
+| `reports/` | precomputed reports, so the results read without the dataset: `hourly/`, one host's d2 an hour at a time (`make hourly`); `check/`, the night-trained policy against d2's first hour (`make check-live`) |
 | `zones/<variant>/` | each variant merged per network, the form a firewall takes |
 
 Every policy and zone file compiles with Aerleon against `def/`. Files are
@@ -224,6 +224,45 @@ most hours is the window's gap, not noise, and `firru diff -o sh` comments
 out a narrowing it contradicts instead of emitting it. On www the cut is the
 point only for the red-team share; narrowing a public web server to the
 clients of one night closes it to its users.
+
+### The check before a deploy
+
+`make check-live` asks the question to ask before deploying: what would each
+host's policy, trained on the night window, refuse of the first live hour,
+08:00-09:00 on d2? It is `firru tighten --check`, which reads the whole policy
+rather than a change to it, so it also reports traffic to a port no term
+covers. The hourly diffs above cannot show that: they compare two policies,
+and a port neither has a term for is in neither. The results are in
+[`reports/check/`](reports/check/):
+
+| host | refused, 08:00-09:00 | mostly |
+| --- | --- | --- |
+| dc1 (Windows DC) | 1,216 flows, 21 sources | dynamic RPC from the other DC and 14 domain hosts, the organisers' Kerberos and LDAP from the DMZ, and `tcp/134`, the listener nothing explains |
+| k8s-worker01 | 274 flows, 9 sources | the cluster's own traffic: 10249 and IP-in-IP between the nodes, and high ports from the control plane |
+| www | 146 flows, 2 sources | HTTP and HTTPS from the internet: its users |
+| salt-master | 46 flows, 2 sources | the organisers on 4505 and 9999 |
+| gas-hmi (OT) | 41 flows, 2 sources | dynamic RPC from an unnamed host in its subnet and from salt-master |
+
+Each line is a decision for the reviewer before the policy is deployed: a
+term or a source to add, or a connection the policy is right to refuse.
+
+dc1's dynamic RPC is the first kind. A domain member reaches a DC's endpoint
+mapper and is then handed a port from the dynamic range, which no snapshot of
+listening sockets holds, so the loot gives synthesis nothing to write a term
+from. A site states it as a rule instead (`dynamic_rules` in its
+`heuristics.py`, `firru.src_heuristics`): the DC's dynamic range, from the
+domain's members. This example does not, because the capture does not say
+who the members are. The beg DCs' Kerberos and LDAP clients are the
+workstations, mail and the other DC, but also owncloud, which uses both, and
+lemonldapng and k8s-worker02, which bind over LDAP alone. Which of those are
+joined to the domain is a site's to state, and the check shows what leaving it
+unstated costs.
+
+owncloud's LDAP to dc1 is a source to add, and the plainest case
+of what a training window is. owncloud asks dc1 over LDAP 664 times on d1 and
+176 times on d2, and dc1 answers 659 of the 849. It never asks at night, so
+the policy trained on the night has no owncloud in it, and the first live
+hour refuses a client that is there every working day.
 
 ### Block-early
 

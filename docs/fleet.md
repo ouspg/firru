@@ -156,6 +156,22 @@ connections; the walk-through leaves egress open and does not apply them.
 The proposal is written beside the policy, never into it. Note the second line:
 both groups are IPv4 only, so the narrowed term no longer admits IPv6.
 
+A narrowing that would cut traffic the flows show is marked `CONTRADICTED` by
+`diff --flows`, with the flows it would cut, and `-o sh` writes it as a comment
+no grep can run.
+
+Before a policy is deployed, the question is what it would break now: check
+it against the latest traffic, not the window it was tightened on.
+
+```sh
+firru tighten --policy policies/pol/dc1.yml --defs def --flows-file flows.jsonl --check --since -30min
+```
+
+It lists, per source, the flows the policy would refuse: to a port no term
+covers, or from a source a term leaves out. Each is a decision for the
+reviewer: a term or a source to add, or a connection the policy is right to
+refuse.
+
 ## 7. Apply what you accept
 
 ```sh

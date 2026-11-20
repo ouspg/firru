@@ -580,10 +580,6 @@ def build_zones(host_yamls, defs):
     )
 
     for path in sorted(host_yamls):
-        # tighten writes its reports beside the policies it tightened, so a
-        # glob over that directory picks them up; they are not policies.
-        if path.endswith((".blocked.yml", ".dead.yml", ".groups.yml")):
-            continue
         doc = load_yaml(path)
         meta = doc.get("metadata", {})
         host = meta.get("host")

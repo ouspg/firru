@@ -1,0 +1,13 @@
+# policies/r2-tightened/k8s-worker01_beg_05_berylia_org.yml, trained on the night window,
+# checked against d2 08:00 to d2 09:00 (make check-live)
+
+  k8s-worker01_beg_05_berylia_org: WOULD-BE-BLOCKED traffic (aggregated by token):
+      120 hits  tcp/unknown-tcp-10249     src: k8s-worker02_beg_05_berylia_org (100.97.5.32)
+       70 hits  tcp/WINDOWS-RPC-DYNAMIC   src: k8s-control-plane_beg_05_berylia_org (100.97.5.30, 2a07:1182:5:20::30)
+       30 hits  4/ipip                  src: k8s-worker02_beg_05_berylia_org (100.97.5.32)
+       25 hits  4/ipip                  src: k8s-control-plane_beg_05_berylia_org (100.97.5.30)
+       14 hits  tcp/unknown-tcp-36396     src: k8s-control-plane_beg_05_berylia_org (100.97.5.30)
+        7 hits  tcp/unknown-tcp-5246      src: k8s-control-plane_beg_05_berylia_org (100.97.5.30)
+        5 hits  tcp/unknown-tcp-38212     src: k8s-control-plane_beg_05_berylia_org (100.97.5.30)
+        2 hits  tcp/unknown-tcp-14023     src: k8s-control-plane_beg_05_berylia_org (100.97.5.30)
+        1 hits  tcp/K8S-NODEPORT          src: k8s-control-plane_beg_05_berylia_org (100.97.5.30)

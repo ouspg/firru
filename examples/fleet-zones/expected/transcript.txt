@@ -103,9 +103,7 @@ Host: ws3  IPs: ['10.20.3.23', '2001:db8:20:3::17']
   egress:  160 flows across 4 service buckets
 Written: policies/tightened/db1.yml  (2 changed, 1 log-drop candidate)
 Written: policies/tightened/dc1.yml  (4 changed, 19 log-drop candidates)
-Written: policies/tightened/dc1.blocked.yml  (1 would-be-blocked flows)
 Written: policies/tightened/files1.yml  (1 changed, 9 log-drop candidates)
-Written: policies/tightened/files1.blocked.yml  (1 would-be-blocked flows)
 Written: policies/tightened/jump1.yml  (0 changed, 2 log-drop candidates)
 Written: policies/tightened/mail1.yml  (1 changed, 5 log-drop candidates)
 Written: policies/tightened/ns1.yml  (1 changed, 1 log-drop candidate)
