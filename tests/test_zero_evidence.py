@@ -94,7 +94,7 @@ class TestEmission:
         line = [l for l in out.splitlines() if "ISAKMP" in l][0]
         # review: grep 'observed ('  → no match
         assert "observed (" not in line
-        # block-early: grep -v '^#' | grep -v '# widened' → runnable
+        # block-early: grep -v '^#' → runnable
         assert not line.startswith("#") and "# widened" not in line
 
     def test_a_scored_term_is_emitted_commented(self, tmp_path, capsys):
