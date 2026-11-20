@@ -15,7 +15,9 @@ and this is the only code that turns them into data:
                   with metadata.ephemeral and metadata.ephemeral_source set,
                   and Windows hosts filled in from their baseline. A filled-in
                   listener carries the `inferred` flag and `inferred_from`, the
-                  run it came from; an observed listener always wins.
+                  run it came from; an observed listener always wins. One the
+                  baseline bound to its own lab or link-local address is
+                  rebound to the host's (`bind_from` keeps the original).
   def/            MGMT_HOSTS defined, and every host's management source set to
                   it in host_metadata.json; with a zone_mgmt section, also
                   <ZONE>_MGMT, each zone's management entry point. A host's
@@ -58,6 +60,42 @@ def reachable(entry):
 
 def key(entry):
     return entry["protocol"], int(entry["port"])
+
+
+def own_addresses(defs, host):
+    """The loot host's own addresses, by family, from its inventory token:
+    the short label's alias_of, else the label itself. Link-local left out."""
+    nets = (yaml.safe_load((defs / "networks.yml").read_text()) or {}).get("networks", {})
+    hm = json.loads((defs / "host_metadata.json").read_text())
+    token = (hm.get(host) or {}).get("alias_of", host)
+    own = {4: [], 6: []}
+    for v in (nets.get(token) or {}).get("values") or []:
+        try:
+            ip = ipaddress.ip_address(v.get("address", ""))
+        except ValueError:
+            continue
+        if not ip.is_link_local:
+            own[ip.version].append(ip)
+    return own
+
+
+def rebind(e, own):
+    """A baseline listener as it would bind on this host. A baseline run is
+    a stock install on its own lab network, so a listener bound to one of
+    its addresses binds to the same family's addresses here. The lab VM has
+    no global IPv6, so its link-local bind is the listener binding per IPv6
+    address, and it binds to the host's IPv6 addresses. Wildcard and
+    loopback binds are the same on every host."""
+    bind = e.get("bind_address") or ""
+    text = bind.split("/")[0].split("%")[0]
+    try:
+        ip = ipaddress.ip_address(text)
+    except ValueError:
+        return [e]
+    if ip.is_unspecified or ip.is_loopback:
+        return [e]
+    width = 32 if ip.version == 4 else 128
+    return [dict(e, bind_address=f"{mine}/{width}", bind_from=bind) for mine in own[ip.version]]
 
 
 def windows_fill(spec, dyn):
@@ -126,13 +164,18 @@ def main():
         spec = (a["windows"] or {}).get(host)
         if spec:
             seen = {key(e) for e in doc["listen_ports"]}
-            add = []
+            own = own_addresses(pathlib.Path(args.defs), host)
+            add, added = [], set()
             for (proto, port, _), (e, run) in sorted(windows_fill(spec, dyn or {}).items(),
                                                      key=lambda kv: (kv[0][0], kv[0][1], str(kv[0][2]))):
                 if (proto, port) in seen:
                     continue
-                add.append(dict(e, flags=sorted(set(e.get("flags") or []) | {"inferred"}),
-                                inferred_from=run))
+                for r in rebind(e, own):
+                    if (proto, port, r.get("bind_address")) in added:
+                        continue
+                    added.add((proto, port, r.get("bind_address")))
+                    add.append(dict(r, flags=sorted(set(r.get("flags") or []) | {"inferred"}),
+                                    inferred_from=run))
             doc["listen_ports"].extend(add)
             filled[host] = {(e["protocol"], int(e["port"])) for e in add}
             stats["listeners filled in"] += len(add)

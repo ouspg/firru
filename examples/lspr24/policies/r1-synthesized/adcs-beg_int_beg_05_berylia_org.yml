@@ -33,7 +33,7 @@ filters:
         destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
         action: accept
         source-address: ANY
-# [auto] IPv4 192.168.150.173/32 (System)
+# [auto] IPv4 10.5.12.18/32 (System)
       - name: allow-tcp-NETBIOS-SSN-LEGACY
         protocol: tcp
         destination-port: NETBIOS-SSN-LEGACY
@@ -76,14 +76,14 @@ filters:
         destination-port: NTP
         action: accept
         source-address: ANY
-# [auto] IPv4 192.168.150.173/32 (System)
+# [auto] IPv4 10.5.12.18/32 (System)
       - name: allow-udp-NETBIOS-NS-LEGACY
         protocol: udp
         destination-port: NETBIOS-NS-LEGACY
         action: accept
         source-address:
           - BEG_INT_12_HOSTS
-# [auto] IPv4 192.168.150.173/32 (System)
+# [auto] IPv4 10.5.12.18/32 (System)
       - name: allow-udp-NETBIOS-DGM-LEGACY
         protocol: udp
         destination-port: NETBIOS-DGM-LEGACY

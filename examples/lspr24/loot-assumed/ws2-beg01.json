@@ -138,7 +138,8 @@
       "protocol": "tcp"
     },
     {
-      "bind_address": "192.168.150.174/32",
+      "bind_address": "10.5.12.26/32",
+      "bind_from": "192.168.150.174/32",
       "flags": [
         "inferred",
         "specific-ip",
@@ -376,7 +377,8 @@
       "protocol": "udp"
     },
     {
-      "bind_address": "192.168.150.174/32",
+      "bind_address": "10.5.12.26/32",
+      "bind_from": "192.168.150.174/32",
       "flags": [
         "inferred",
         "specific-ip",
@@ -395,7 +397,8 @@
       "protocol": "udp"
     },
     {
-      "bind_address": "192.168.150.174/32",
+      "bind_address": "10.5.12.26/32",
+      "bind_from": "192.168.150.174/32",
       "flags": [
         "inferred",
         "specific-ip",
@@ -414,7 +417,8 @@
       "protocol": "udp"
     },
     {
-      "bind_address": "192.168.150.174/32",
+      "bind_address": "10.5.12.26/32",
+      "bind_from": "192.168.150.174/32",
       "flags": [
         "high-port",
         "inferred",
@@ -435,7 +439,8 @@
       "protocol": "udp"
     },
     {
-      "bind_address": "fe80::20bc:fb4d:fbe9:6cc3%6/128",
+      "bind_address": "2a07:1182:5:12::26/128",
+      "bind_from": "fe80::20bc:fb4d:fbe9:6cc3%6/128",
       "flags": [
         "high-port",
         "inferred",

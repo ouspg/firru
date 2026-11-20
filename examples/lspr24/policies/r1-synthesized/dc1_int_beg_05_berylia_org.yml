@@ -21,7 +21,7 @@ filters:
           - BEG_INT_12_GT
           - BEG_INT_12_MGMT
           - MGMT_HOSTS
-# [auto] IPv4 192.168.150.194/32 (dns C:\Windows\system32\dns.exe DNS) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (dns C:\Windows\system32\dns.exe DNS)
+# [auto] IPv4 10.5.12.2/32 (dns C:\Windows\system32\dns.exe DNS) | IPv6 2a07:1182:5:12::2/128 (dns C:\Windows\system32\dns.exe DNS)
       - name: allow-tcp-DNS-TCP
         protocol: tcp
         destination-port: DNS-TCP
@@ -39,7 +39,7 @@ filters:
         destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
         action: accept
         source-address: ANY
-# [auto] IPv4 192.168.150.194/32 (System)
+# [auto] IPv4 10.5.12.2/32 (System)
       - name: allow-tcp-NETBIOS-SSN-LEGACY
         protocol: tcp
         destination-port: NETBIOS-SSN-LEGACY
@@ -121,13 +121,13 @@ filters:
         destination-port: WINDOWS-WINRM-UNCONFIGURED
         action: accept
         source-address: ANY
-# [auto] IPv4 192.168.150.194/32 (dns C:\Windows\system32\dns.exe DNS) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (dns C:\Windows\system32\dns.exe DNS)
+# [auto] IPv4 10.5.12.2/32 (dns C:\Windows\system32\dns.exe DNS) | IPv6 2a07:1182:5:12::2/128 (dns C:\Windows\system32\dns.exe DNS)
       - name: allow-udp-DNS-UDP
         protocol: udp
         destination-port: DNS-UDP
         action: accept
         source-address: ANY
-# [auto] IPv4 192.168.150.194/32 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
+# [auto] IPv4 10.5.12.2/32 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 2a07:1182:5:12::2/128 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
       - name: allow-udp-KERBEROS-UDP
         protocol: udp
         destination-port: KERBEROS-UDP
@@ -139,14 +139,14 @@ filters:
         destination-port: NTP
         action: accept
         source-address: ANY
-# [auto] IPv4 192.168.150.194/32 (System)
+# [auto] IPv4 10.5.12.2/32 (System)
       - name: allow-udp-NETBIOS-NS-LEGACY
         protocol: udp
         destination-port: NETBIOS-NS-LEGACY
         action: accept
         source-address:
           - BEG_INT_12_HOSTS
-# [auto] IPv4 192.168.150.194/32 (System)
+# [auto] IPv4 10.5.12.2/32 (System)
       - name: allow-udp-NETBIOS-DGM-LEGACY
         protocol: udp
         destination-port: NETBIOS-DGM-LEGACY
@@ -159,7 +159,7 @@ filters:
         destination-port: LDAP-UDP
         action: accept
         source-address: ANY
-# [auto] IPv4 192.168.150.194/32 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 fe80::1c24:6f28:4931:45d9%6/128 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
+# [auto] IPv4 10.5.12.2/32 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs) | IPv6 2a07:1182:5:12::2/128 (lsass C:\Windows\system32\lsass.exe EFS Kdc KeyIso Netlogon NTDS SamSs)
       - name: allow-udp-KERBEROS-KPASSWD-UDP
         protocol: udp
         destination-port: KERBEROS-KPASSWD-UDP
