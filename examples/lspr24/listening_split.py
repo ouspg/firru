@@ -36,6 +36,7 @@ def main():
     con = duckdb.connect()
     con.execute("create table addrs(ip varchar, tok varchar)")
     con.executemany("insert into addrs values (?,?)", list(owner.items()))
+    fe.canon_table(con, repr(args.parquet))
     con.execute("create table svc(tok varchar, port int)")
     con.executemany("insert into svc values (?,?)",
                     sorted({(t, p) for t, s in listen.items() for proto, p in s if proto == "tcp"}))
@@ -44,7 +45,8 @@ def main():
           f."mTimestampStart" ts,
           f."Tot Bwd Pkts" = 0 silent
         from read_parquet({args.parquet!r}) f
-        join addrs a on a.ip = f."DstIP"
+        join canon c on c.raw = f."DstIP"
+        join addrs a on a.ip = c.ip
         left join svc s on s.tok = a.tok and s.port = f."DstPort"
         where f."Protocol" = 6""")
 

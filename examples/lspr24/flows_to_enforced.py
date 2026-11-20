@@ -62,7 +62,7 @@ import sys
 
 import yaml
 
-from lspr24_to_flows import WINDOWS, micros   # firru.toml's windows
+from lspr24_to_flows import WINDOWS, canonical_ip, micros   # firru.toml's windows
 
 
 def inventory(defs):
@@ -75,8 +75,18 @@ def inventory(defs):
             continue
         for v in (spec or {}).get("values", []):
             if isinstance(v, dict) and "address" in v:
-                owner[v["address"]] = token
+                owner[canonical_ip(v["address"])] = token
     return owner, meta
+
+
+def canon_table(con, parquet):
+    """`canon(raw, ip)`: each destination address the dataset spells, and its
+    canonical form. Join the dataset to inventory addresses through it, never
+    on the raw text: LSPR24 writes IPv6 in full and the definitions do not."""
+    raws = [r[0] for r in con.execute(
+        f'select distinct "DstIP" from read_parquet({parquet})').fetchall() if r[0]]
+    con.execute("create table canon(raw varchar, ip varchar)")
+    con.executemany("insert into canon values (?,?)", [(r, canonical_ip(r)) for r in raws])
 
 
 def service_tokens(defs):
@@ -142,6 +152,7 @@ def main():
 
     con.execute("create table addrs(ip varchar, tok varchar)")
     con.executemany("insert into addrs values (?,?)", list(owner.items()))
+    canon_table(con, P)
     con.execute("create table svc(tok varchar, proto varchar, port int)")
     con.executemany("insert into svc values (?,?,?)",
                     [(t, p, n) for t, s in listen.items() for p, n in sorted(s)])
@@ -156,7 +167,8 @@ def main():
         select a.tok, s.proto, s.port, f."SrcIP" src,
                max(case when f."Tot Bwd Pkts" > 0 then 1 else 0 end) answered
           from read_parquet({P}) f
-          join addrs a on a.ip = f."DstIP"
+          join canon c on c.raw = f."DstIP"
+          join addrs a on a.ip = c.ip
           join svc s on s.tok = a.tok and s.port = f."DstPort"
                     and s.proto = (case when f."Protocol" = 6 then 'tcp' else 'udp' end)
          where 1=1 {clause}
