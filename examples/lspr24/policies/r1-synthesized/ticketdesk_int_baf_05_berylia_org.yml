@@ -23,6 +23,8 @@ filters:
         action: accept
         source-address:
           - BAF_INT_GT
+          - BAF_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (apache2) | IPv6 ::/0 (apache2) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
       - name: allow-tcp-HTTP
         protocol: tcp

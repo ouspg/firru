@@ -3,19 +3,19 @@
 # Source suggestions changed: 6 | Log-drop candidates: 2
 metadata:
   host: k8s-worker03
-  zone: beg
+  zone: beg_5
 filters:
   - header:
       targets:
         nftables: mixed input DROP
     terms:
 
-# [auto] 1799 flows total | 1799 hits: BEG_GT_OTHER (2a07:1182:5:20::60, 100.97.5.60) | via: SSH/tcp/22
+# [auto] 1799 flows total | 1799 hits: BEG_5_GT (2a07:1182:5:20::60, 100.97.5.60) | via: SSH/tcp/22
       - name: allow-tcp-SSH
         protocol: tcp
         destination-port: SSH
         action: accept
-        source-address: BEG_GT_OTHER  # was: BEG_GT
+        source-address: BEG_5_GT  # was: BEG_5_GT, MGMT_HOSTS
 
 # [auto] 368 flows total | 368 hits: k8s-worker04_beg_05_berylia_org (2a07:1182:5:20::34, 100.97.5.34) | via: BGP/tcp/179
       - name: allow-tcp-BGP
@@ -110,7 +110,7 @@ filters:
         protocol: '4'
         destination-address: k8s-worker04_beg_05_berylia_org
         action: accept
-# [auto] 590 hits: k8s-worker04_beg_05_berylia_org (2a07:1182:5:20::34, fe80::250:56ff:fe89:f7d1) | 357 hits: k8s-worker02_beg_05_berylia_org (2a07:1182:5:20::32, fe80::250:56ff:fe89:82f3) | 337 hits: k8s-worker01_beg_05_berylia_org (2a07:1182:5:20::31, fe80::250:56ff:fe89:2819) | 32 hits: beg (2a07:1182:5:20::1) [never answered] | 15 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 1 hits: core (fe80::250:56ff:fe89:aa9f)
+# [auto] 590 hits: k8s-worker04_beg_05_berylia_org (2a07:1182:5:20::34, fe80::250:56ff:fe89:f7d1) | 357 hits: k8s-worker02_beg_05_berylia_org (2a07:1182:5:20::32, fe80::250:56ff:fe89:82f3) | 337 hits: k8s-worker01_beg_05_berylia_org (2a07:1182:5:20::31, fe80::250:56ff:fe89:2819) | 32 hits: beg_5 (2a07:1182:5:20::1) [never answered] | 15 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 1 hits: baf_105 (fe80::250:56ff:fe89:aa9f)
       - name: allow-icmpv6-ICMPV6
         protocol: icmpv6
         action: accept

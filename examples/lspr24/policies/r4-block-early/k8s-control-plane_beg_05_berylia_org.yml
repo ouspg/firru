@@ -3,7 +3,7 @@
 # Source suggestions changed: 6 | Log-drop candidates: 4
 metadata:
   host: k8s-control-plane
-  zone: beg
+  zone: beg_5
   variant: 'r4-block-early (learn: flows --window night) — services with no observed
     client are removed, not merely narrowed'
 filters:
@@ -12,12 +12,12 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 1799 flows total | 1799 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
+# [auto] 1799 flows total | 1799 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
     action: accept
-    source-address: BEG_GT_OTHER      # was: BEG_GT
+    source-address: BEG_5_GT      # was: BEG_5_GT, MGMT_HOSTS
 
 # [auto] 1246 flows total | 398 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34, 2a07:1182:5:20::34) | 303 hits: k8s-worker02_beg_05_berylia_org (2a07:1182:5:20::32, 100.97.5.32) | 296 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31, 2a07:1182:5:20::31) | 249 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33, 2a07:1182:5:20::33) | via: BGP/tcp/179
   - name: allow-tcp-BGP
@@ -115,14 +115,14 @@ filters:
     - k8s-worker03
     - k8s-worker04
     action: accept
-# [auto] 343 hits: beg (2a07:1182:5:20::1) [never answered] | 336 hits: BEG_GT_OTHER (2a07:1182:5:20::60) | 306 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 11 hits: core (fe80::250:56ff:fe89:aa9f)
+# [auto] 343 hits: beg_5 (2a07:1182:5:20::1) [never answered] | 336 hits: BEG_5_GT (2a07:1182:5:20::60) | 306 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 11 hits: baf_105 (fe80::250:56ff:fe89:aa9f)
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     destination-address:
     - fw1-beg
-    - BEG_GT_OTHER
-    - beg
-    - core
+    - BEG_5_GT
+    - baf_105
+    - beg_5
     action: accept
 # [auto] 16 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31) | 11 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34)
   - name: allow-tcp-CEPH-OSD

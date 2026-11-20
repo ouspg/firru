@@ -1,6 +1,6 @@
 metadata:
   host: c4i-ads
-  zone: baf
+  zone: baf_15
 filters:
   - header:
       targets:
@@ -21,7 +21,9 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BAF_GT
+          - BAF_15_GT
+          - BAF_15_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 192.168.122.1/32 (dnsmasq)
       - name: allow-tcp-DNS-TCP
         protocol: tcp

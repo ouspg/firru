@@ -1,18 +1,6 @@
 # Would-be-blocked flows — review and add to policy if legitimate,
 # or confirm they should be dropped.
 blocked:
-# 900 hits | reason: src not covered by ['BAF_INT_GT']
-  - protocol: tcp
-    service: RDP
-    src_ip: 10.5.11.250
-    src_token: BAF_INT_GT_OTHER
-    proposed_src: "['BAF_INT_GT']"
-# 900 hits | reason: src not covered by ['BAF_INT_GT']
-  - protocol: tcp
-    service: RDP
-    src_ip: 2a07:1182:5:11::250
-    src_token: BAF_INT_GT_OTHER
-    proposed_src: "['BAF_INT_GT']"
 # 375 hits | reason: port not in policy (6809,6810,6832,6833,6843,6844,6872,6889,6890,6901,6902,7065,7069,7077,7078,7084,7085,7101,7107,7110,7112,7118,7119,7123)
   - protocol: tcp
     service: CEPH-OSD

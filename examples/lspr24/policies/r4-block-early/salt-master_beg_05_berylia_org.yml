@@ -3,7 +3,7 @@
 # Source suggestions changed: 5 | Log-drop candidates: 1
 metadata:
   host: salt-master
-  zone: beg
+  zone: beg_5
   variant: 'r4-block-early (learn: flows --window night) — services with no observed
     client are removed, not merely narrowed'
 filters:
@@ -12,26 +12,26 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 1799 flows total | 1799 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
+# [auto] 1799 flows total | 1799 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
     action: accept
-    source-address: BEG_GT_OTHER      # was: BEG_GT
+    source-address: BEG_5_GT      # was: BEG_5_GT, MGMT_HOSTS
 
-# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: HTTP/tcp/80
+# [auto] 1800 flows total | 1800 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: HTTP/tcp/80
   - name: allow-tcp-HTTP
     protocol: tcp
     destination-port: HTTP
     action: accept
-    source-address: BEG_INT_GT_OTHER      # was: ANY_V4
+    source-address: BEG_INT_12_GT      # was: ANY_V4
 
-# [auto] 1799 flows total | 1799 hits: BEG_INT_GT_OTHER (2a07:1182:5:12::250, 10.5.12.250) | via: HTTPS/tcp/443
+# [auto] 1799 flows total | 1799 hits: BEG_INT_12_GT (2a07:1182:5:12::250, 10.5.12.250) | via: HTTPS/tcp/443
   - name: allow-tcp-HTTPS
     protocol: tcp
     destination-port: HTTPS
     action: accept
-    source-address: BEG_INT_GT_OTHER      # was: ANY_V4
+    source-address: BEG_INT_12_GT      # was: ANY_V4
 
 # [auto] 156 flows total | 156 hits: gas-maintenance-terminal_beg_05_berylia_org (10.5.17.150) | via: TCP_4505/tcp/4505
   - name: allow-tcp-TCP_4505
@@ -41,14 +41,12 @@ filters:
     source-address: gas-maintenance-terminal_beg_05_berylia_org      # was: ANY_V4
 
 # [auto] 457 flows total | 156 hits: gas-maintenance-terminal_beg_05_berylia_org (10.5.17.150) | 151 hits: gas-historian_beg_05_berylia_org (10.5.17.100) | 150 hits: gas-hmi_beg_05_berylia_org (10.5.17.111) | via: TCP_4506/tcp/4506
+# [auto] Note: BEG_17_HOSTS also permits: BEG_17_GT
   - name: allow-tcp-TCP_4506
     protocol: tcp
     destination-port: TCP_4506
     action: accept
-    source-address:      # was: ANY_V4
-    - gas-historian
-    - gas-hmi
-    - gas-maintenance-terminal
+    source-address: BEG_17_HOSTS      # was: ANY_V4
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -83,13 +81,13 @@ filters:
   - name: allow-icmpv6
     action: accept
     protocol: icmpv6
-# [auto] 323 hits: beg (2a07:1182:5:20::1) [never answered] | 100 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 63 hits: BEG_GT_OTHER (2a07:1182:5:20::60)
+# [auto] 323 hits: beg_5 (2a07:1182:5:20::1) [never answered] | 100 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 63 hits: BEG_5_GT (2a07:1182:5:20::60)
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     destination-address:
     - fw1-beg
-    - BEG_GT_OTHER
-    - beg
+    - BEG_5_GT
+    - beg_5
     action: accept
 # [auto] 284 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514

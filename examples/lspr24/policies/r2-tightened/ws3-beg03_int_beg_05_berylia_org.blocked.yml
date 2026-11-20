@@ -5,4 +5,4 @@ blocked:
   - protocol: tcp
     service: WINDOWS-SMB
     src_ip: 2a07:1182:5:12::250
-    src_token: BEG_INT_GT_OTHER
+    src_token: BEG_INT_12_GT

@@ -134,9 +134,11 @@ windows:
   ws2-beg01: *workstation
 
 # --- Management sources -----------------------------------------------------
-# Synthesis names a management term's sources as the zone's green-team token
-# plus MGMT_HOSTS, the blue team's own access. The capture identifies the first
-# (<ZONE>_GT_OTHER, from the organiser label on its traffic) and not the second.
+# Synthesis names a management term's sources as the zone's green-team token,
+# the management entry point of the host's own subnet and MGMT_HOSTS, the blue team's own
+# access. The capture identifies the first (<ZONE>_GT, from the organiser label
+# on its traffic). The other two are assumptions, stated here with what the
+# traffic shows for them.
 
 mgmt_hosts:
   addresses:
@@ -158,3 +160,29 @@ mgmt_hosts:
     inside the zones, which the red-team label does not mark because the
     hosts doing it are the blue team's own. Not management, so the night
     window is the bound.
+
+zone_mgmt:
+  addresses:
+    BAF_15:     10.5.15.254
+    BAF_INT:    10.5.11.254
+    BEG_17:     10.5.17.254
+    BEG_INT_12: 10.5.12.254
+    BEG_INT_19: 10.5.19.254
+    BEG_INT_22: 10.5.22.254
+    BGP_20:     10.5.20.254
+    BGP_INT:    10.5.13.254
+    BGP_SAC_14: 10.5.14.254
+  source: d1 and d2, SSH, RDP and VNC flows that got an answer
+  why: >
+    The top usable address of each internal subnet (.254) opens SSH, RDP and
+    VNC to the hosts behind it: 64,159 answered flows from nine addresses, to
+    up to 28 hosts each, and every one of them to a host in the address's own
+    /24. The inventory names no asset at any of them, and the dataset labels
+    all of their traffic blue team (Label_src=0), so the data shows that they
+    carry management but not who operates them. They do it on both exercise
+    days and never in the night window, which is why the 28 overnight sources
+    above do not include them. 10.5.18.254 is left out: its 2,905 flows are
+    HTTP to one host. No .252 or .253 address sends anything. A zone is a
+    subnet (defs_from_expoid.py), so each zone has at most one entry point and
+    <ZONE>_MGMT holds that one address. A boundary device names the entry
+    point of each subnet it sits in.

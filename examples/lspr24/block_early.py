@@ -38,7 +38,7 @@ from firru.policy import DIR_IN, filter_directions
 from flows_to_enforced import inventory, listeners, service_tokens
 
 # Round-trip, not safe_load: `firru tighten` records its evidence as comments
-# above each term ("900 flows total | 900 hits: BEG_GT_OTHER ... via SSH/tcp/22")
+# above each term ("900 flows total | 900 hits: BEG_GT ... via SSH/tcp/22")
 # and a plain load/dump cycle silently deletes all of it. R4 is the variant a
 # reviewer is most entitled to question, so it is the last place to throw the
 # reasons away.

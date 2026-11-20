@@ -23,6 +23,8 @@ filters:
         action: accept
         source-address:
           - BGP_INT_GT
+          - BGP_INT_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (nginx) | IPv6 ::/0 (nginx) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
       - name: allow-tcp-HTTP
         protocol: tcp

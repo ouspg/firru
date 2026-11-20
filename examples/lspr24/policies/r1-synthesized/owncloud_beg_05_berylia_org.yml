@@ -1,6 +1,6 @@
 metadata:
   host: owncloud
-  zone: beg
+  zone: beg_5
 filters:
   - header:
       targets:
@@ -22,7 +22,8 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BEG_GT
+          - BEG_5_GT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (apache2) | IPv6 ::/0 (apache2) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
       - name: allow-tcp-HTTP
         protocol: tcp
@@ -35,7 +36,7 @@ filters:
         destination-port: NETBIOS-SSN-LEGACY
         action: accept
         source-address:
-          - BEG_HOSTS
+          - BEG_5_HOSTS
 # [auto] IPv4 0.0.0.0/0 (apache2) | IPv6 ::/0 (apache2) | aliases: HTTPS,WINDOWS-HYPERV-REPLICA-HTTPS
       - name: allow-tcp-HTTPS
         protocol: tcp
@@ -60,14 +61,14 @@ filters:
         destination-port: NETBIOS-NS-LEGACY
         action: accept
         source-address:
-          - BEG_HOSTS
+          - BEG_5_HOSTS
 # [auto] IPv4 0.0.0.0/0 (nmbd), 100.97.5.63/32 (nmbd), 100.97.5.8/32 (nmbd)
       - name: allow-udp-NETBIOS-DGM-LEGACY
         protocol: udp
         destination-port: NETBIOS-DGM-LEGACY
         action: accept
         source-address:
-          - BEG_HOSTS
+          - BEG_5_HOSTS
       - name: drop-ANY
         action: deny
         counter: drop-ANY

@@ -1,6 +1,6 @@
 metadata:
   host: maintenance
-  zone: beg
+  zone: beg_5
 filters:
   - header:
       targets:
@@ -22,7 +22,8 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BEG_GT
+          - BEG_5_GT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (nginx) | IPv6 ::/0 (nginx) | aliases: HTTP,WINDOWS-HYPERV-REPLICA-HTTP
       - name: allow-tcp-HTTP
         protocol: tcp

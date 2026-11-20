@@ -3,29 +3,29 @@
 # Source suggestions changed: 2 | Log-drop candidates: 12
 metadata:
   host: adcs-beg
-  zone: beg_int
+  zone: beg_int_12
 filters:
   - header:
       targets:
         windows_advfirewall: in mixed block
     terms:
 
-# [auto] 1800 flows total | 1800 hits: BEG_INT_GT_OTHER (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
+# [auto] 1800 flows total | 1800 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
       - name: allow-tcp-SSH
         protocol: tcp
         destination-port: SSH
         action: accept
-        source-address: BEG_INT_GT_OTHER  # was: BEG_INT_GT
+        source-address: BEG_INT_12_GT  # was: BEG_INT_12_GT, BEG_INT_12_MGMT, MGMT_HOSTS
 
 # [auto] 81 flows total | 12 hits: dc2_int_beg_05_berylia_org (2a07:1182:5:12::3) | 9 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2) | 6 hits: ws1-beg01_int_beg_05_berylia_org (2a07:1182:5:12::21) | 6 hits: ws1-beg02_int_beg_05_berylia_org (2a07:1182:5:12::22) | 6 hits: ws1-beg03_int_beg_05_berylia_org (2a07:1182:5:12::23) | 6 hits: ws1-beg04_int_beg_05_berylia_org (2a07:1182:5:12::24) | 6 hits: ws1-beg05_int_beg_05_berylia_org (2a07:1182:5:12::25) | 6 hits: ws2-beg01_int_beg_05_berylia_org (2a07:1182:5:12::26) | 6 hits: ws2-beg02_int_beg_05_berylia_org (2a07:1182:5:12::27) | 6 hits: ws2-beg03_int_beg_05_berylia_org (2a07:1182:5:12::28) | 6 hits: ws2-beg04_int_beg_05_berylia_org (2a07:1182:5:12::29) | 6 hits: ws2-beg05_int_beg_05_berylia_org (2a07:1182:5:12::2a) | via: WINDOWS-RPC-ENDPOINT-MAPPER/tcp/135
-# [auto] Note: BEG_INT_WS also permits: ws3-beg01_int_beg_05_berylia_org, ws3-beg02_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org, ws4-beg01_int_beg_05_berylia_org, ws4-beg02_int_beg_05_berylia_org, ws4-beg03_int_beg_05_berylia_org, ws4-beg04_int_beg_05_berylia_org, ws4-beg05_int_beg_05_berylia_org
+# [auto] Note: BEG_INT_12_WS also permits: ws3-beg01_int_beg_05_berylia_org, ws3-beg02_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org, ws4-beg01_int_beg_05_berylia_org, ws4-beg02_int_beg_05_berylia_org, ws4-beg03_int_beg_05_berylia_org, ws4-beg04_int_beg_05_berylia_org, ws4-beg05_int_beg_05_berylia_org
 # [auto] seen in flows but outside existing groups — verify group membership or allow explicitly: dc1_int_beg_05_berylia_org, dc2_int_beg_05_berylia_org
       - name: allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
         protocol: tcp
         destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
         action: accept
         source-address:  # was: ANY
-          - BEG_INT_WS
+          - BEG_INT_12_WS
           - dc1_int_beg_05_berylia_org
           - dc2_int_beg_05_berylia_org
 
@@ -52,7 +52,7 @@ filters:
         destination-port: NETBIOS-SSN-LEGACY
         action: accept
         source-address:
-          - BEG_INT_HOSTS
+          - BEG_INT_12_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-SMB
@@ -67,7 +67,9 @@ filters:
         destination-port: RDP
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINRM-HTTP
@@ -75,7 +77,9 @@ filters:
         destination-port: WINRM-HTTP
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-WINDOWS-WINRM-UNCONFIGURED
@@ -97,7 +101,7 @@ filters:
         destination-port: NETBIOS-NS-LEGACY
         action: accept
         source-address:
-          - BEG_INT_HOSTS
+          - BEG_INT_12_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-NETBIOS-DGM-LEGACY
@@ -105,7 +109,7 @@ filters:
         destination-port: NETBIOS-DGM-LEGACY
         action: accept
         source-address:
-          - BEG_INT_HOSTS
+          - BEG_INT_12_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-RDP
@@ -113,7 +117,9 @@ filters:
         destination-port: RDP
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-udp-MDNS
@@ -161,7 +167,7 @@ filters:
       - name: allow-icmpv6-ICMPV6
         protocol: icmpv6
         destination-address:
-          - BEG_INT_WS
+          - BEG_INT_12_WS
           - dc1_int_beg_05_berylia_org
           - dc2_int_beg_05_berylia_org
         action: accept
@@ -227,11 +233,11 @@ filters:
           - dc1_int_beg_05_berylia_org
           - dc2_int_beg_05_berylia_org
         action: accept
-# [auto] 65 hits: beg_int (10.5.12.255) [never answered]
+# [auto] 65 hits: beg_int_12 (10.5.12.255) [never answered]
       - name: allow-udp-NETBIOS-DGM-LEGACY
         protocol: udp
         destination-port: NETBIOS-DGM-LEGACY
-        destination-address: beg_int
+        destination-address: beg_int_12
         action: accept
 # [auto] 46 hits: dc2_int_beg_05_berylia_org (2a07:1182:5:12::3)
       - name: allow-udp-NTP

@@ -17,6 +17,15 @@ filters:
     protocol: icmpv6
     action: accept
     destination-address: cctv-ai-monitor_int_bgp_05_berylia_org ws6-m365_int_bgp_05_berylia_org
+  - name: allow-tcp-SSH-shared
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BGP_INT_GT
+    - BGP_INT_MGMT
+    - MGMT_HOSTS
+    destination-address: cctv-ai-monitor_int_bgp_05_berylia_org ws6-m365_int_bgp_05_berylia_org
   - name: cctv-ai-monitor_int_bgp_05_berylia_org-allow-tcp-HTTP
     protocol: tcp
     destination-port: HTTP
@@ -29,20 +38,15 @@ filters:
     action: accept
     source-address: ANY
     destination-address: cctv-ai-monitor_int_bgp_05_berylia_org
-  - name: deny-ext-tcp-RDP
-    action: deny
-    destination-address: ws6-m365_int_bgp_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
+  - name: ws6-m365_int_bgp_05_berylia_org-allow-tcp-RDP
     protocol: tcp
     destination-port: RDP
-  - name: deny-ext-tcp-SSH
-    action: deny
-    destination-address: cctv-ai-monitor_int_bgp_05_berylia_org ws6-m365_int_bgp_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: SSH
+    action: accept
+    source-address:
+    - BGP_INT_GT
+    - BGP_INT_MGMT
+    - MGMT_HOSTS
+    destination-address: ws6-m365_int_bgp_05_berylia_org
   - name: drop-ghost-hosts
     action: deny
     destination-address: bgp_int

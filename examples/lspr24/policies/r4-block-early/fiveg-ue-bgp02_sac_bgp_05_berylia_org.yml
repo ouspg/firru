@@ -3,7 +3,7 @@
 # Source suggestions changed: 1 | Log-drop candidates: 0
 metadata:
   host: fiveg-ue-bgp02
-  zone: bgp_sac
+  zone: bgp_sac_8
   variant: 'r4-block-early (learn: flows --window night) — services with no observed
     client are removed, not merely narrowed'
 filters:
@@ -12,12 +12,12 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 900 flows total | 900 hits: BGP_INT_GT_OTHER (10.5.13.250) [never answered] | via: SSH/tcp/22
+# [auto] 900 flows total | 900 hits: BGP_INT_GT (10.5.13.250) [never answered] | via: SSH/tcp/22
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
     action: accept
-    source-address: BGP_INT_GT_OTHER      # was: BGP_SAC_GT
+    source-address: BGP_INT_GT      # was: MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback

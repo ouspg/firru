@@ -3,7 +3,7 @@
 # Source suggestions changed: 1 | Log-drop candidates: 6
 metadata:
   host: gas-historian
-  zone: beg
+  zone: beg_17
   variant: 'r4-block-early (learn: flows --window night) — services with no observed
     client are removed, not merely narrowed'
 filters:
@@ -12,12 +12,12 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 1800 flows total | 1800 hits: BEG_GT_OTHER (10.5.17.250, 2a07:1182:5:17::250) | via: SSH/tcp/22
+# [auto] 1800 flows total | 1800 hits: BEG_17_GT (10.5.17.250, 2a07:1182:5:17::250) | via: SSH/tcp/22
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
     action: accept
-    source-address: BEG_GT_OTHER      # was: BEG_GT
+    source-address: BEG_17_GT      # was: BEG_17_GT, BEG_17_MGMT, MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -52,12 +52,12 @@ filters:
   - name: allow-icmpv6
     action: accept
     protocol: icmpv6
-# [auto] 33 hits: beg (2a07:1182:5:17::1) [never answered] | 23 hits: fw1-beg_05_berylia_org (2a07:1182:5:17::61) [never answered]
+# [auto] 33 hits: beg_17 (2a07:1182:5:17::1) [never answered] | 23 hits: fw1-beg_05_berylia_org (2a07:1182:5:17::61) [never answered]
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     destination-address:
     - fw1-beg
-    - beg
+    - beg_17
     action: accept
 # [auto] 283 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514

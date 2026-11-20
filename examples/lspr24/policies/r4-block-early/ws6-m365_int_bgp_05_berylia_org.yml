@@ -12,12 +12,12 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 1799 flows total | 1799 hits: BGP_INT_GT_OTHER (10.5.13.250, 2a07:1182:5:13::250) | via: SSH/tcp/22
+# [auto] 1799 flows total | 1799 hits: BGP_INT_GT (10.5.13.250, 2a07:1182:5:13::250) | via: SSH/tcp/22
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
     action: accept
-    source-address: BGP_INT_GT_OTHER      # was: BGP_INT_GT
+    source-address: BGP_INT_GT      # was: BGP_INT_GT, BGP_INT_MGMT, MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -52,12 +52,12 @@ filters:
   - name: allow-icmpv6
     action: accept
     protocol: icmpv6
-# [auto] 338 hits: bgp_int (2a07:1182:5:13::1) | 155 hits: core (fe80::250:56ff:fe89:cef1)
+# [auto] 338 hits: bgp_int (2a07:1182:5:13::1) | 155 hits: baf_105 (fe80::250:56ff:fe89:cef1)
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     destination-address:
+    - baf_105
     - bgp_int
-    - core
     action: accept
 # [auto] 4501 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514

@@ -1,6 +1,6 @@
 metadata:
   host: ws3-beg05
-  zone: beg_int
+  zone: beg_int_12
 filters:
   - header:
       targets:
@@ -22,14 +22,18 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (xrdp) | IPv6 ::/0 (xrdp)
       - name: allow-tcp-RDP
         protocol: tcp
         destination-port: RDP
         action: accept
         source-address:
-          - BEG_INT_GT
+          - BEG_INT_12_GT
+          - BEG_INT_12_MGMT
+          - MGMT_HOSTS
 # [auto] IPv4 0.0.0.0/0 (ntpd), 10.5.12.35/32 (ntpd) | IPv6 2a07:1182:5:12::35/128 (ntpd), ::/0 (ntpd), fe80::250:56ff:fe89/128 (ntpd)
       - name: allow-udp-NTP
         protocol: udp

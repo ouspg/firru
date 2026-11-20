@@ -1,9 +1,9 @@
 # firru tighten output — review and copy changes to policies/pol/inventory_beg_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:00Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 3 | Log-drop candidates: 3
+# Source suggestions changed: 2 | Log-drop candidates: 3
 metadata:
   host: inventory
-  zone: beg
+  zone: beg_5
   variant: 'r4-block-early (learn: flows --window night) — services with no observed
     client are removed, not merely narrowed'
 filters:
@@ -12,28 +12,19 @@ filters:
       nftables: mixed input DROP
   terms:
 
-# [auto] 1808 flows total | 1799 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | 9 hits: MGMT_HOSTS (100.97.5.62) | via: SSH/tcp/22
-  - name: allow-tcp-SSH
-    protocol: tcp
-    destination-port: SSH
-    action: accept
-    source-address:      # was: BEG_GT
-    - BEG_GT_OTHER
-    - MGMT_HOSTS
-
-# [auto] 3616 flows total | 3616 hits: BEG_GT_OTHER (2a07:1182:5:20::60, 100.97.5.60) | via: HTTP/tcp/80
+# [auto] 3616 flows total | 3616 hits: BEG_5_GT (2a07:1182:5:20::60, 100.97.5.60) | via: HTTP/tcp/80
   - name: allow-tcp-HTTP
     protocol: tcp
     destination-port: HTTP
     action: accept
-    source-address: BEG_GT_OTHER      # was: ANY
+    source-address: BEG_5_GT      # was: ANY
 
-# [auto] 3600 flows total | 3600 hits: BEG_GT_OTHER (100.97.5.60, 2a07:1182:5:20::60) | via: HTTPS/tcp/443
+# [auto] 3600 flows total | 3600 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: HTTPS/tcp/443
   - name: allow-tcp-HTTPS
     protocol: tcp
     destination-port: HTTPS
     action: accept
-    source-address: BEG_GT_OTHER      # was: ANY
+    source-address: BEG_5_GT      # was: ANY
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -49,6 +40,15 @@ filters:
   - name: allow-icmpv6
     protocol: icmpv6
     action: accept
+
+# [auto] 1808 flows total | 1799 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | 9 hits: MGMT_HOSTS (100.97.5.62) | via: SSH/tcp/22
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BEG_5_GT
+    - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: drop-ANY
@@ -68,13 +68,13 @@ filters:
   - name: allow-icmpv6
     action: accept
     protocol: icmpv6
-# [auto] 193 hits: beg (2a07:1182:5:20::1) [never answered] | 130 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 76 hits: BEG_GT_OTHER (2a07:1182:5:20::60)
+# [auto] 193 hits: beg_5 (2a07:1182:5:20::1) [never answered] | 130 hits: fw1-beg_05_berylia_org (2a07:1182:5:20::11) [never answered] | 76 hits: BEG_5_GT (2a07:1182:5:20::60)
   - name: allow-icmpv6-ICMPV6
     protocol: icmpv6
     destination-address:
     - fw1-beg
-    - BEG_GT_OTHER
-    - beg
+    - BEG_5_GT
+    - beg_5
     action: accept
 # [auto] 284 hits: EXTERNAL (100.100.108.30) [never answered]
   - name: allow-tcp-TCP_1514

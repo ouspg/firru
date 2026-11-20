@@ -1,6 +1,6 @@
 metadata:
   host: fiveg-ue-bgp02
-  zone: bgp_sac
+  zone: bgp_sac_8
 filters:
   - header:
       targets:
@@ -22,7 +22,7 @@ filters:
         destination-port: SSH
         action: accept
         source-address:
-          - BGP_SAC_GT
+          - MGMT_HOSTS
       - name: drop-ANY
         action: deny
         counter: drop-ANY

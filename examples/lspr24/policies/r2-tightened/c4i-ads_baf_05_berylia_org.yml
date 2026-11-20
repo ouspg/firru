@@ -3,33 +3,33 @@
 # Source suggestions changed: 3 | Log-drop candidates: 16
 metadata:
   host: c4i-ads
-  zone: baf
+  zone: baf_15
 filters:
   - header:
       targets:
         nftables: mixed input DROP
     terms:
 
-# [auto] 3600 flows total | 3600 hits: BAF_GT_OTHER (10.5.15.250, 2a07:1182:5:15::250) | via: SSH/tcp/22
+# [auto] 3600 flows total | 3600 hits: BAF_15_GT (10.5.15.250, 2a07:1182:5:15::250) | via: SSH/tcp/22
       - name: allow-tcp-SSH
         protocol: tcp
         destination-port: SSH
         action: accept
-        source-address: BAF_GT_OTHER  # was: BAF_GT
+        source-address: BAF_15_GT  # was: BAF_15_GT, BAF_15_MGMT, MGMT_HOSTS
 
-# [auto] 232569 flows total | 232569 hits: baf (10.5.15.33) | via: CEPH-OSD/tcp/7000
+# [auto] 232569 flows total | 232569 hits: baf_15 (10.5.15.33) | via: CEPH-OSD/tcp/7000
       - name: allow-tcp-CEPH-OSD
         protocol: tcp
         destination-port: CEPH-OSD
         action: accept
-        source-address: baf  # was: ANY
+        source-address: baf_15  # was: ANY
 
-# [auto] 389 flows total | 389 hits: baf (10.5.15.35) [never answered] | via: UDP_5000/udp/5000
+# [auto] 389 flows total | 389 hits: baf_15 (10.5.15.35) [never answered] | via: UDP_5000/udp/5000
       - name: allow-udp-UDP_5000
         protocol: udp
         destination-port: UDP_5000
         action: accept
-        source-address: baf  # was: ANY
+        source-address: baf_15  # was: ANY
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-loopback
@@ -176,18 +176,18 @@ filters:
       - name: allow-icmpv6
         action: accept
         protocol: icmpv6
-# [auto] 345 hits: fw1-baf_5_berylia_org (2a07:1182:5:15::1) [never answered] | 284 hits: BAF_GT_OTHER (2a07:1182:5:15::250)
+# [auto] 345 hits: fw1-baf_5_berylia_org (2a07:1182:5:15::1) [never answered] | 284 hits: BAF_15_GT (2a07:1182:5:15::250)
       - name: allow-icmpv6-ICMPV6
         protocol: icmpv6
         destination-address:
           - fw1-baf
-          - BAF_GT_OTHER
+          - BAF_15_GT
         action: accept
-# [auto] 233494 hits: baf (10.5.15.31)
+# [auto] 233494 hits: baf_15 (10.5.15.31)
       - name: allow-tcp-CEPH-OSD
         protocol: tcp
         destination-port: CEPH-OSD
-        destination-address: baf
+        destination-address: baf_15
         action: accept
 # [auto] 2203 hits: map-ads_baf_05_berylia_org (10.5.15.34)
       - name: allow-tcp-HTTP-ALT
@@ -229,11 +229,11 @@ filters:
           (45 hits), 2a10:1fc0:1::34f9:5fcf/128 (45 hits) -- one group per address,
           so no summary narrows it and ANY stays'
         action: accept
-# [auto] 389 hits: baf (10.5.15.31) [never answered]
+# [auto] 389 hits: baf_15 (10.5.15.31) [never answered]
       - name: allow-udp-UDP_5000
         protocol: udp
         destination-port: UDP_5000
-        destination-address: baf
+        destination-address: baf_15
         action: accept
 # [auto] review terms above, then replace with deny-ANY when ready; unnamed ports only this allows: udp/6000 (10 hits, 1 dst) -- name them (firru edit-services add) to get terms
       - name: allow-ANY
