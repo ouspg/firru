@@ -789,7 +789,9 @@ def _emit_sh(old_path, new_path, defs_dir, result, direction=None, swaps=None,
     """Emit runnable firru commands that turn OLD into NEW, one per change,
     each naming its term so `| grep SERVICE | sh` applies a subset. Each line
     carries its class as a trailing comment, so `| grep narrowed | sh` takes
-    every safe tightening and nothing else.
+    every safe tightening and nothing else. A line that must not run by
+    accident (a widening, a change the traffic contradicts, a terminal swap)
+    is itself a comment, so `| sh` on the whole output never widens.
 
     A restricted diff emits restricted commands: the scope that made the
     finding has to travel with the command that acts on it, or running the
@@ -838,6 +840,11 @@ def _emit_sh(old_path, new_path, defs_dir, result, direction=None, swaps=None,
                           f"observed ({rec['keep_hits']} flows), left out never "
                           f"answered: {' '.join(rec['left_out'])}")
                 print(f"# {line}  # widened: would admit {_fmt_silent(silent)}")
+            elif cls == "widened":
+                # It grants peers OLD did not. Review decides that, never a
+                # grep, so it is a comment like every other line that must
+                # not run by accident: `| sh` on the whole output is safe.
+                print(f"# {line}  # widened REVIEW{_ev_tag(evidence, term)}")
             else:
                 print(f"{line}  # {cls}{_ev_tag(evidence, term)}")
     for term, _ in result["cosmetic"]:

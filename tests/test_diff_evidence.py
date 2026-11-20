@@ -359,3 +359,11 @@ def test_cut_peers_are_named_by_the_inventory(tmp_path):
                               "192.0.2.7": 3}), "silent": Counter()}}
     _name_peers(ev, str(d))
     assert ev[1]["cut"] == Counter({"GT1": 7, "10.9.2.2 (NET_MGMT)": 1, "192.0.2.7": 3})
+
+
+def test_a_widening_without_evidence_is_a_comment(tmp_path, capsys):
+    """`| sh` on a whole script must never widen: a widening is for review."""
+    out = _run(tmp_path, [_t("allow-tcp-SSH", "SSH", src="NET_MGMT")],
+               [_t("allow-tcp-SSH", "SSH", src="[NET_MGMT, NET_APP]")], None, capsys=capsys)
+    (line,) = [l for l in out.splitlines() if "set-source" in l]
+    assert line.startswith("# firru set-source ") and line.endswith("# widened REVIEW")

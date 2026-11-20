@@ -10,7 +10,9 @@ them in a single process, with the Naming cache warm across the batch:
 
     firru diff pol.yml tightened.yml --flows w.jsonl -o sh | grep observed | firru mass
     firru mass out/edits/*.sh
-    grep -v '# widened' out/edits/host.sh | firru mass
+
+A widening, a change the traffic contradicts and a terminal swap are emitted
+as comments, so a whole script runs only what is safe to take unreviewed.
 
 The input format is exactly the emitted script: `#` comment lines and blank
 lines are skipped, a trailing `  # tag` on a command is stripped, and a leading
