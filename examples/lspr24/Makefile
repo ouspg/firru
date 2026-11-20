@@ -7,6 +7,8 @@
 #   make ladder         the block-early counterfactual against red-team traffic
 #   make enforced-diff  the synthesized policy against what the network did
 #   make hourly         d2 an hour at a time, for the hosts in reports/hourly/
+#   make check-live     the night-trained policies against d2's first hour, for
+#                       the same hosts, into reports/check/
 #
 # Committed, because regenerating them needs the 7 GB download and the point
 # is that a reader who has not downloaded anything can inspect the output:
@@ -121,8 +123,8 @@ data/flows/.complete: $(LSPR24)
 	python lspr24_to_flows.py $(LSPR24) --store data/flows
 	touch $@
 
-# Narrow each term's sources to what the learn window shows, and report what
-# that would have blocked and which rules never matched. The window is
+# Narrow each term's sources to what the learn window shows, and mark the
+# rules that never matched as log-drop candidates. The window is
 # attack-free, so a source set derived from it is not shaped by the intrusion.
 # No --flows-file: with a window and none named, tighten reads firru.toml's
 # store.
@@ -183,6 +185,23 @@ HOURLY_HOSTS ?= dc1_int_beg_05_berylia_org salt-master_beg_05_berylia_org \
 hourly: flows
 	python3 hourly.py --old policies/r1-synthesized --new policies/r2-tightened \
 	    --window d2 --defs def/ --out reports/hourly/ $(HOURLY_HOSTS)
+
+# The same check for the policy as a whole: what each host's policy, trained
+# on the night window, would refuse of the first hour of live traffic. That
+# is `tighten --check`, the question to ask before a deploy, and its answer
+# includes ports no term covers, which a diff of two policies cannot show.
+LIVE_SINCE ?= d2 08:00
+LIVE_UNTIL ?= d2 09:00
+check-live: flows
+	@mkdir -p reports/check
+	@for h in $(HOURLY_HOSTS); do \
+	  { echo "# policies/r2-tightened/$$h.yml, trained on the $(LEARN) window,"; \
+	    echo "# checked against $(LIVE_SINCE) to $(LIVE_UNTIL) (make check-live)"; \
+	    firru tighten --policy policies/r2-tightened/$$h.yml --defs def/ --check \
+	        --since "$(LIVE_SINCE)" --until "$(LIVE_UNTIL)" 2>/dev/null; \
+	  } > reports/check/$$h.txt; \
+	  echo "reports/check/$$h.txt"; \
+	done
 
 
 # Everything `make all` writes, so that `make clean all` followed by

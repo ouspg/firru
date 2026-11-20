@@ -135,9 +135,6 @@ def main():
     dropped_by_host = collections.Counter()
 
     for path in sorted(pathlib.Path(args.policy).glob("*.yml")):
-        # tighten writes its reports beside the policies; they are R2's.
-        if path.name.endswith((".blocked.yml", ".dead.yml", ".groups.yml")):
-            continue
         with open(path) as fh:
             doc = _rt.load(fh)
         tok = path.stem

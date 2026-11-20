@@ -6,7 +6,9 @@ Reads an aerleon host policy YAML, queries Arkime for actual traffic, and
 produces a tightened policy. Outputs:
 
   policies/tighten/<hostname>.yml        — tightened policy (review + adopt)
-  policies/tighten/<hostname>.blocked.yml — flows observed but blocked by proposal
+
+What the proposal would deny is `firru diff POLICY PROPOSAL --flows`: each
+change tagged by the traffic, and one the traffic contradicts commented out.
 
 Ingress: replaces ANY source-address with observed source tokens where possible.
 Egress:  replaces allow-ANY stub with terms derived from observed destinations.
@@ -1041,40 +1043,6 @@ def build_egress_terms(egress_flows, annotator, defs, dns_store=None, asn_db=Non
 
 
 # ---------------------------------------------------------------------------
-# Blocked YAML builder
-# ---------------------------------------------------------------------------
-
-def build_blocked_yaml(blocked):
-    """Return a CommentedMap YAML doc listing would-be-blocked flows as stubs."""
-    doc = CommentedMap()
-    doc.yaml_set_start_comment(
-        "Would-be-blocked flows — review and add to policy if legitimate,\n"
-        "or confirm they should be dropped."
-    )
-    doc["blocked"] = CommentedSeq()
-
-    for b in blocked:
-        entry = CommentedMap()
-        entry.yaml_set_start_comment(
-            f"{b['hits']} hits | reason: {b['reason']}"
-        )
-        entry["protocol"]    = b["proto"]
-        entry["service"]     = b["svc"]
-        entry["src_ip"]      = b["src_ip"]
-        if b.get("src_token") and b["src_token"] != b["src_ip"]:
-            entry["src_token"] = b["src_token"]
-        # Omitted when no term exists — the reason comment already says so.
-        if b.get("proposed_src") is not None:
-            entry["proposed_src"] = (
-                b["proposed_src"] if isinstance(b["proposed_src"], str)
-                else str(b["proposed_src"])
-            )
-        doc["blocked"].append(entry)
-
-    return doc
-
-
-# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -1556,15 +1524,11 @@ Examples:
       policy["filters"] = new_filters
 
       # ------------------------------------------------------------------
-      # Blocked check
-      # ------------------------------------------------------------------
-      blocked = find_blocked(ingress_flows, list(all_ingress_terms), annotator,
-                             defs, ingress_ports)
-
-      # ------------------------------------------------------------------
       # Dry run summary
       # ------------------------------------------------------------------
       if args.dry_run:
+          blocked = find_blocked(ingress_flows, list(all_ingress_terms), annotator,
+                                 defs, ingress_ports)
           print(f"\n=== {policy_path.name} ===")
           print("--- Tightened source summary ---")
           for t in all_ingress_terms:
@@ -1600,7 +1564,6 @@ Examples:
       # ------------------------------------------------------------------
       stem        = policy_path.stem
       out_policy  = outdir / f"{stem}.yml"
-      out_blocked = outdir / f"{stem}.blocked.yml"
 
       if out_policy.exists() and not args.overwrite:
           print(f"  {stem}: output exists — skipping (use --overwrite)", file=sys.stderr)
@@ -1617,14 +1580,6 @@ Examples:
       print(f"Written: {out_policy}  "
             f"({all_n_changed} changed, {len(all_unused)} log-drop "
             f"candidate{'' if len(all_unused) == 1 else 's'})")
-
-      if blocked:
-          with open(out_blocked, "w") as f:
-              yaml_handler.dump(build_blocked_yaml(blocked), f)
-          print(f"Written: {out_blocked}  ({len(blocked)} would-be-blocked flows)")
-      else:
-          if out_blocked.exists():
-              out_blocked.unlink()
 
     if any_rows is not None:
         report = any_rollup(any_rows, asn_db=asn_db, dns_store=dns_store)

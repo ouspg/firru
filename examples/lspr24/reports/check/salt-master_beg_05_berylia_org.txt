@@ -1,0 +1,6 @@
+# policies/r2-tightened/salt-master_beg_05_berylia_org.yml, trained on the night window,
+# checked against d2 08:00 to d2 09:00 (make check-live)
+
+  salt-master_beg_05_berylia_org: WOULD-BE-BLOCKED traffic (aggregated by token):
+       23 hits  tcp/TCP_4505              src: BEG_17_GT (10.5.17.250, 2a07:1182:5:17::250)
+       23 hits  tcp/unknown-tcp-9999      src: BEG_17_GT (10.5.17.250, 2a07:1182:5:17::250)

@@ -42,7 +42,7 @@ verdict_<name> (allow | deny | no-policy | null for egress/unknown flows):
                                 (e.g. final=policies/pol, nosample=policies/nosample)
   --history-variant NAME=PATH   time-accurate matcher over another path in
                                 --history-repo (e.g. proposed=policies/tighten);
-                                .blocked.yml / .dead.yml / -netns files are skipped.
+                                -netns files are skipped.
 
 The counterfactual verdicts measure exposure ("this flow would have met a
 deny"), not prevented outcomes -- an enforced variant would have changed
@@ -245,15 +245,12 @@ def build_matcher(docs, defs):
     return t4, t6, host_terms
 
 
-# Non-policy artifacts that live beside proposals in a tighten tree.
-SKIP_SUFFIXES = (".blocked.yml", ".dead.yml")
-
 
 def load_matcher_dir(pol_dir, defs):
     docs = []
     for path in sorted(glob.glob(os.path.join(pol_dir, "*.yml"))):
         base = os.path.basename(path)
-        if "-netns" in base or base.endswith(SKIP_SUFFIXES):
+        if "-netns" in base:
             continue
         try:
             docs.append(_load_yaml(open(path)))
@@ -422,7 +419,7 @@ class HistoryMatchers:
             docs = []
             for blob_sha, name in self._list_blobs(self.repo, sha, self.pol_path):
                 base = name.rsplit("/", 1)[-1]
-                if "-netns" in base or base.endswith(SKIP_SUFFIXES):
+                if "-netns" in base:
                     continue
                 try:
                     docs.append(_load_yaml(self.reader.read(blob_sha)))
