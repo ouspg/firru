@@ -27,7 +27,7 @@ filters:
         destination-port: WINDOWS-RPC-ENDPOINT-MAPPER
         action: accept
         source-address: ANY
-# [auto] IPv4 192.168.150.174/32 (System)
+# [auto] IPv4 10.5.11.31/32 (System)
       - name: allow-tcp-NETBIOS-SSN-LEGACY
         protocol: tcp
         destination-port: NETBIOS-SSN-LEGACY
@@ -77,21 +77,21 @@ filters:
         destination-port: NTP
         action: accept
         source-address: ANY
-# [auto] IPv4 192.168.150.174/32 (System)
+# [auto] IPv4 10.5.11.31/32 (System)
       - name: allow-udp-NETBIOS-NS-LEGACY
         protocol: udp
         destination-port: NETBIOS-NS-LEGACY
         action: accept
         source-address:
           - BAF_INT_HOSTS
-# [auto] IPv4 192.168.150.174/32 (System)
+# [auto] IPv4 10.5.11.31/32 (System)
       - name: allow-udp-NETBIOS-DGM-LEGACY
         protocol: udp
         destination-port: NETBIOS-DGM-LEGACY
         action: accept
         source-address:
           - BAF_INT_HOSTS
-# [auto] IPv4 192.168.150.174/32 (svchost C:\WINDOWS\system32\svchost.exe SSDPSRV) | IPv6 fe80::20bc:fb4d:fbe9:6cc3%6/128 (svchost C:\WINDOWS\system32\svchost.exe SSDPSRV)
+# [auto] IPv4 10.5.11.31/32 (svchost C:\WINDOWS\system32\svchost.exe SSDPSRV) | IPv6 2a07:1182:5:11::31/128 (svchost C:\WINDOWS\system32\svchost.exe SSDPSRV)
       - name: deny-udp-SSDP
         protocol: udp
         destination-port: SSDP

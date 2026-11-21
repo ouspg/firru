@@ -35,8 +35,11 @@ import json
 import pathlib
 import re
 
+from lspr24_to_flows import canonical_ip   # as the flow store writes addresses
+
 
 ZONES = ("baf", "beg", "bgp", "sac")
+
 
 
 def segment_of(fqdn):
@@ -156,7 +159,7 @@ def main():
     by_asset = collections.defaultdict(set)
     for fqdn, ip in rows:
         if fqdn and ip:
-            by_asset[fqdn].add(ip)
+            by_asset[fqdn].add(canonical_ip(ip))
 
     out = pathlib.Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -341,7 +344,7 @@ def main():
         sections["BT_VPN"] = MGMTSEC
 
     col, _, want = args.green_label.partition("=")
-    green = {r[0] for r in con.execute(
+    green = {canonical_ip(r[0]) for r in con.execute(
         f'select distinct "SrcIP" from read_parquet({P}) where "{col}" = ?',
         [want or "2"]).fetchall()}
     gt_members = []
