@@ -11,11 +11,14 @@ filters:
     terms:
 
 # [auto] 900 flows total | 900 hits: BGP_INT_GT (10.5.13.250) [never answered] | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: MGMT_HOSTS
       - name: allow-tcp-SSH
         protocol: tcp
         destination-port: SSH
         action: accept
-        source-address: BGP_INT_GT  # was: MGMT_HOSTS
+        source-address:  # was: MGMT_HOSTS
+          - BGP_INT_GT
+          - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged
       - name: allow-loopback

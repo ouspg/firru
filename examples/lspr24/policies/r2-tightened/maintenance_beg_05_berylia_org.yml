@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/maintenance_beg_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:03Z to 2024-03-07T05:59:58Z
-# Source suggestions changed: 3 | Log-drop candidates: 0
+# Source suggestions changed: 2 | Log-drop candidates: 0
 metadata:
   host: maintenance
   zone: beg_5
@@ -9,13 +9,6 @@ filters:
       targets:
         nftables: mixed input DROP
     terms:
-
-# [auto] 1800 flows total | 1800 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
-      - name: allow-tcp-SSH
-        protocol: tcp
-        destination-port: SSH
-        action: accept
-        source-address: BEG_5_GT  # was: BEG_5_GT, MGMT_HOSTS
 
 # [auto] 3612 flows total | 3612 hits: BEG_5_GT (2a07:1182:5:20::60, 100.97.5.60) | via: HTTP/tcp/80
       - name: allow-tcp-HTTP
@@ -45,6 +38,16 @@ filters:
       - name: allow-icmpv6
         protocol: icmpv6
         action: accept
+
+# [auto] 1800 flows total | 1800 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: MGMT_HOSTS
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BEG_5_GT
+          - MGMT_HOSTS
       - name: drop-ANY
         action: deny
         counter: drop-ANY

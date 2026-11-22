@@ -24,6 +24,8 @@ filters:
     source-address:
     - BGP_20_GT
     - BGP_INT_GT
+    - BGP_20_MGMT
+    - MGMT_HOSTS
     destination-address: hq-gsc01_bgp_05_berylia_org hq-gsc02_bgp_05_berylia_org hq-gsc03_bgp_05_berylia_org
       hq-gsc04_bgp_05_berylia_org hq-gsc05_bgp_05_berylia_org hq-gsc06_bgp_05_berylia_org
       hq-gsc07_bgp_05_berylia_org hq-gsc08_bgp_05_berylia_org hq-gsc09_bgp_05_berylia_org

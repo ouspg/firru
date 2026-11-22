@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/visitor_bgp_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:01Z to 2024-03-07T05:59:55Z
-# Source suggestions changed: 3 | Log-drop candidates: 1
+# Source suggestions changed: 2 | Log-drop candidates: 1
 metadata:
   host: visitor
   zone: bgp_5
@@ -11,13 +11,6 @@ filters:
     targets:
       nftables: mixed input DROP
   terms:
-
-# [auto] 1799 flows total | 1799 hits: BGP_5_GT (100.98.5.59, 2a07:1182:5:30::59) | via: SSH/tcp/22
-  - name: allow-tcp-SSH
-    protocol: tcp
-    destination-port: SSH
-    action: accept
-    source-address: BGP_5_GT      # was: BGP_5_GT, MGMT_HOSTS
 
 # [auto] 3611 flows total | 3611 hits: BGP_5_GT (2a07:1182:5:30::59, 100.98.5.59) | via: HTTP/tcp/80
   - name: allow-tcp-HTTP
@@ -47,6 +40,16 @@ filters:
   - name: allow-icmpv6
     protocol: icmpv6
     action: accept
+
+# [auto] 1799 flows total | 1799 hits: BGP_5_GT (100.98.5.59, 2a07:1182:5:30::59) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: MGMT_HOSTS
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BGP_5_GT
+    - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: drop-ANY

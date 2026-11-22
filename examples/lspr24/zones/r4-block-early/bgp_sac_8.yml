@@ -14,7 +14,9 @@ filters:
     protocol: tcp
     destination-port: SSH
     action: accept
-    source-address: BGP_INT_GT
+    source-address:
+    - BGP_INT_GT
+    - MGMT_HOSTS
     destination-address: fiveg-ue-bgp01_sac_bgp_05_berylia_org fiveg-ue-bgp02_sac_bgp_05_berylia_org
       fiveg-ue-bgp03_sac_bgp_05_berylia_org
   - name: allow-icmp-any-shared

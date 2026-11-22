@@ -38,15 +38,19 @@ filters:
     source-address:
     - BEG_5_GT
     - BEG_INT_12_GT
+    - MGMT_HOSTS
     destination-address: owncloud_beg_05_berylia_org
-  - name: inventory_beg_05_berylia_org-allow-tcp-SSH
+  - name: allow-tcp-SSH-from-BEG_5_GT-MGMT_HOSTS-shared
     protocol: tcp
     destination-port: SSH
     action: accept
     source-address:
     - BEG_5_GT
     - MGMT_HOSTS
-    destination-address: inventory_beg_05_berylia_org
+    destination-address: inventory_beg_05_berylia_org k8s-control-plane_beg_05_berylia_org
+      k8s-worker01_beg_05_berylia_org k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org
+      k8s-worker04_beg_05_berylia_org maintenance_beg_05_berylia_org news_beg_05_berylia_org
+      salt-master_beg_05_berylia_org
   - name: k8s-control-plane_beg_05_berylia_org-allow-tcp-K8S-API-SERVER
     protocol: tcp
     destination-port: K8S-API-SERVER
@@ -131,15 +135,6 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: NODE-EXPORTER
-  - name: deny-ext-tcp-SSH
-    action: deny
-    destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org
-      k8s-worker02_beg_05_berylia_org k8s-worker03_beg_05_berylia_org k8s-worker04_beg_05_berylia_org
-      maintenance_beg_05_berylia_org news_beg_05_berylia_org salt-master_beg_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: SSH
   - name: deny-ext-udp-METALLB-MEMBERLIST
     action: deny
     destination-address: k8s-control-plane_beg_05_berylia_org k8s-worker01_beg_05_berylia_org

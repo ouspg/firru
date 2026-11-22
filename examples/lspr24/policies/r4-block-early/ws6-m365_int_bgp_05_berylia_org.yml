@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/ws6-m365_int_bgp_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:01Z to 2024-03-07T05:59:57Z
-# Source suggestions changed: 1 | Log-drop candidates: 2
+# Source suggestions changed: 0 | Log-drop candidates: 2
 metadata:
   host: ws6-m365
   zone: bgp_int
@@ -11,13 +11,6 @@ filters:
     targets:
       nftables: mixed input DROP
   terms:
-
-# [auto] 1799 flows total | 1799 hits: BGP_INT_GT (10.5.13.250, 2a07:1182:5:13::250) | via: SSH/tcp/22
-  - name: allow-tcp-SSH
-    protocol: tcp
-    destination-port: SSH
-    action: accept
-    source-address: BGP_INT_GT      # was: BGP_INT_GT, BGP_INT_MGMT, MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -33,6 +26,17 @@ filters:
   - name: allow-icmpv6
     protocol: icmpv6
     action: accept
+
+# [auto] 1799 flows total | 1799 hits: BGP_INT_GT (10.5.13.250, 2a07:1182:5:13::250) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: BGP_INT_MGMT, MGMT_HOSTS
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BGP_INT_GT
+    - BGP_INT_MGMT
+    - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: drop-ANY

@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/ws3-baf05_int_baf_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:00Z to 2024-03-07T05:59:57Z
-# Source suggestions changed: 2 | Log-drop candidates: 3
+# Source suggestions changed: 0 | Log-drop candidates: 3
 metadata:
   host: ws3-baf05
   zone: baf_int
@@ -11,20 +11,6 @@ filters:
     targets:
       nftables: mixed input DROP
   terms:
-
-# [auto] 2710 flows total | 2710 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) [13 unanswered] | via: SSH/tcp/22
-  - name: allow-tcp-SSH
-    protocol: tcp
-    destination-port: SSH
-    action: accept
-    source-address: BAF_INT_GT      # was: BAF_INT_GT, BAF_INT_MGMT, MGMT_HOSTS
-
-# [auto] 1800 flows total | 1800 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) [6 unanswered] | via: RDP/tcp/3389
-  - name: allow-tcp-RDP
-    protocol: tcp
-    destination-port: RDP
-    action: accept
-    source-address: BAF_INT_GT      # was: BAF_INT_GT, BAF_INT_MGMT, MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-loopback
@@ -40,6 +26,28 @@ filters:
   - name: allow-icmpv6
     protocol: icmpv6
     action: accept
+
+# [auto] 2710 flows total | 2710 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) [13 unanswered] | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: BAF_INT_MGMT, MGMT_HOSTS
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BAF_INT_GT
+    - BAF_INT_MGMT
+    - MGMT_HOSTS
+
+# [auto] 1800 flows total | 1800 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) [6 unanswered] | via: RDP/tcp/3389
+# [auto] kept, declared by the site's heuristics: BAF_INT_MGMT, MGMT_HOSTS
+  - name: allow-tcp-RDP
+    protocol: tcp
+    destination-port: RDP
+    action: accept
+    source-address:
+    - BAF_INT_GT
+    - BAF_INT_MGMT
+    - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: drop-ANY

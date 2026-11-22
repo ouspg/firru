@@ -13,6 +13,7 @@ filters:
   terms:
 
 # [auto] 2700 flows total | 1800 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | 900 hits: BEG_INT_12_GT (10.5.12.250) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: MGMT_HOSTS
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
@@ -20,6 +21,7 @@ filters:
     source-address:      # was: BEG_5_GT, MGMT_HOSTS
     - BEG_5_GT
     - BEG_INT_12_GT
+    - MGMT_HOSTS
 
 # [auto] 3599 flows total | 3599 hits: BEG_5_GT (2a07:1182:5:20::60, 100.97.5.60) | via: HTTP/tcp/80
   - name: allow-tcp-HTTP

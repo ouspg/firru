@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/salt-master_beg_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:01Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 5 | Log-drop candidates: 1
+# Source suggestions changed: 4 | Log-drop candidates: 1
 metadata:
   host: salt-master
   zone: beg_5
@@ -9,13 +9,6 @@ filters:
       targets:
         nftables: mixed input DROP
     terms:
-
-# [auto] 1799 flows total | 1799 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
-      - name: allow-tcp-SSH
-        protocol: tcp
-        destination-port: SSH
-        action: accept
-        source-address: BEG_5_GT  # was: BEG_5_GT, MGMT_HOSTS
 
 # [auto] 1800 flows total | 1800 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: HTTP/tcp/80
       - name: allow-tcp-HTTP
@@ -60,6 +53,16 @@ filters:
       - name: allow-icmpv6
         protocol: icmpv6
         action: accept
+
+# [auto] 1799 flows total | 1799 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: MGMT_HOSTS
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BEG_5_GT
+          - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-TCP_3333

@@ -21,6 +21,35 @@ filters:
     action: accept
     destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
       ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: allow-tcp-SSH-shared
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BAF_INT_GT
+    - BAF_INT_MGMT
+    - MGMT_HOSTS
+    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
+      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
+  - name: allow-tcp-RDP-shared
+    protocol: tcp
+    destination-port: RDP
+    action: accept
+    source-address:
+    - BAF_INT_GT
+    - BAF_INT_MGMT
+    - MGMT_HOSTS
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
+      ws3-baf05_int_baf_05_berylia_org
+  - name: allow-tcp-WINRM-HTTP-shared
+    protocol: tcp
+    destination-port: WINRM-HTTP
+    action: accept
+    source-address:
+    - BAF_INT_GT
+    - BAF_INT_MGMT
+    - MGMT_HOSTS
+    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
   - name: allow-udp-RDP-shared
     protocol: udp
     destination-port: RDP
@@ -44,14 +73,6 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: HTTPS
-  - name: deny-ext-tcp-RDP
-    action: deny
-    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
-      ws3-baf05_int_baf_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: RDP
   - name: deny-ext-tcp-SMTP
     action: deny
     destination-address: mail_int_baf_05_berylia_org
@@ -73,14 +94,6 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: SMTPS
-  - name: deny-ext-tcp-SSH
-    action: deny
-    destination-address: mail_int_baf_05_berylia_org ticketdesk_int_baf_05_berylia_org
-      ws1-baf01_int_baf_05_berylia_org ws3-baf05_int_baf_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: SSH
   - name: deny-ext-tcp-WINDOWS-SMB
     action: deny
     destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
@@ -88,13 +101,6 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: WINDOWS-SMB
-  - name: deny-ext-tcp-WINRM-HTTP
-    action: deny
-    destination-address: mail_int_baf_05_berylia_org ws1-baf01_int_baf_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: WINRM-HTTP
   - name: drop-ghost-hosts
     action: deny
     destination-address: baf_int
