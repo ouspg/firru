@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/adcs-beg_int_beg_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:01Z to 2024-03-07T05:59:46Z
-# Source suggestions changed: 2 | Log-drop candidates: 12
+# Source suggestions changed: 1 | Log-drop candidates: 12
 metadata:
   host: adcs-beg
   zone: beg_int_12
@@ -11,13 +11,6 @@ filters:
     targets:
       windows_advfirewall: in mixed block
   terms:
-
-# [auto] 1800 flows total | 1800 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
-  - name: allow-tcp-SSH
-    protocol: tcp
-    destination-port: SSH
-    action: accept
-    source-address: BEG_INT_12_GT      # was: BEG_INT_12_GT, BEG_INT_12_MGMT, MGMT_HOSTS
 
 # [auto] 81 flows total | 12 hits: dc2_int_beg_05_berylia_org (2a07:1182:5:12::3) | 9 hits: dc1_int_beg_05_berylia_org (2a07:1182:5:12::2) | 6 hits: ws1-beg01_int_beg_05_berylia_org (2a07:1182:5:12::21) | 6 hits: ws1-beg02_int_beg_05_berylia_org (2a07:1182:5:12::22) | 6 hits: ws1-beg03_int_beg_05_berylia_org (2a07:1182:5:12::23) | 6 hits: ws1-beg04_int_beg_05_berylia_org (2a07:1182:5:12::24) | 6 hits: ws1-beg05_int_beg_05_berylia_org (2a07:1182:5:12::25) | 6 hits: ws2-beg01_int_beg_05_berylia_org (2a07:1182:5:12::26) | 6 hits: ws2-beg02_int_beg_05_berylia_org (2a07:1182:5:12::27) | 6 hits: ws2-beg03_int_beg_05_berylia_org (2a07:1182:5:12::28) | 6 hits: ws2-beg04_int_beg_05_berylia_org (2a07:1182:5:12::29) | 6 hits: ws2-beg05_int_beg_05_berylia_org (2a07:1182:5:12::2a) | via: WINDOWS-RPC-ENDPOINT-MAPPER/tcp/135
 # [auto] Note: BEG_INT_12_WS also permits: ws3-beg01_int_beg_05_berylia_org, ws3-beg02_int_beg_05_berylia_org, ws3-beg03_int_beg_05_berylia_org, ws3-beg04_int_beg_05_berylia_org, ws3-beg05_int_beg_05_berylia_org, ws4-beg01_int_beg_05_berylia_org, ws4-beg02_int_beg_05_berylia_org, ws4-beg03_int_beg_05_berylia_org, ws4-beg04_int_beg_05_berylia_org, ws4-beg05_int_beg_05_berylia_org
@@ -40,6 +33,17 @@ filters:
   - name: allow-icmpv6
     protocol: icmpv6
     action: accept
+
+# [auto] 1800 flows total | 1800 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: BEG_INT_12_MGMT, MGMT_HOSTS
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BEG_INT_12_GT
+    - BEG_INT_12_MGMT
+    - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: drop-ANY

@@ -33,14 +33,17 @@ filters:
       imagery_bgp_05_berylia_org keycloak_bgp_05_berylia_org lims_bgp_05_berylia_org
       nextcloud_bgp_05_berylia_org ns1_bgp_05_berylia_org ns2_bgp_05_berylia_org visitor_bgp_05_berylia_org
       whistleblowhub_bgp_05_berylia_org www_bgp_05_berylia_org xroad-securityserver_bgp_05_berylia_org
-  - name: alert-system_bgp_05_berylia_org-allow-tcp-SSH
+  - name: allow-tcp-SSH-shared
     protocol: tcp
     destination-port: SSH
     action: accept
     source-address:
     - BGP_5_GT
     - MGMT_HOSTS
-    destination-address: alert-system_bgp_05_berylia_org
+    destination-address: alert-system_bgp_05_berylia_org entry_bgp_05_berylia_org
+      imagery_bgp_05_berylia_org keycloak_bgp_05_berylia_org lims_bgp_05_berylia_org
+      nextcloud_bgp_05_berylia_org ns1_bgp_05_berylia_org ns2_bgp_05_berylia_org visitor_bgp_05_berylia_org
+      whistleblowhub_bgp_05_berylia_org www_bgp_05_berylia_org xroad-securityserver_bgp_05_berylia_org
   - name: alert-system_bgp_05_berylia_org-allow-tcp-TCP_5001
     protocol: tcp
     destination-port: TCP_5001
@@ -168,16 +171,6 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: HTTPS
-  - name: deny-ext-tcp-SSH
-    action: deny
-    destination-address: entry_bgp_05_berylia_org imagery_bgp_05_berylia_org keycloak_bgp_05_berylia_org
-      lims_bgp_05_berylia_org nextcloud_bgp_05_berylia_org ns1_bgp_05_berylia_org
-      ns2_bgp_05_berylia_org visitor_bgp_05_berylia_org whistleblowhub_bgp_05_berylia_org
-      www_bgp_05_berylia_org xroad-securityserver_bgp_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: SSH
   - name: deny-ext-tcp-TCP_5588
     action: deny
     destination-address: xroad-securityserver_bgp_05_berylia_org

@@ -17,13 +17,15 @@ filters:
     protocol: icmpv6
     action: accept
     destination-address: gas-historian_beg_05_berylia_org gas-hmi_beg_05_berylia_org
-  - name: deny-ext-tcp-SSH
-    action: deny
-    destination-address: gas-historian_beg_05_berylia_org gas-hmi_beg_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
+  - name: allow-tcp-SSH-shared
     protocol: tcp
     destination-port: SSH
+    action: accept
+    source-address:
+    - BEG_17_GT
+    - BEG_17_MGMT
+    - MGMT_HOSTS
+    destination-address: gas-historian_beg_05_berylia_org gas-hmi_beg_05_berylia_org
   - name: deny-ext-tcp-TCP_12349
     action: deny
     destination-address: gas-hmi_beg_05_berylia_org

@@ -313,3 +313,66 @@ def test_a_windows_egress_filter_is_egress(tmp_path):
     assert r.returncode == 0, r.stderr
     blocked = r.stdout.split("--- Would-be-blocked", 1)
     assert len(blocked) == 2 and "134" in blocked[1], r.stdout
+
+
+def test_a_source_the_heuristics_declare_survives_tightening(tmp_path):
+    """MGMT_HOSTS is the site's declared management source for SSH. The
+    window shows only NET_A on SSH, so NET_B, which nothing declares, is
+    narrowed away and MGMT_HOSTS is kept, with the reason in the comment."""
+    import json, textwrap, subprocess, sys
+    d = tmp_path / "def"; d.mkdir()
+    (d / "services.yml").write_text("services:\n  SSH:\n    - {port: 22, protocol: tcp}\n")
+    (d / "networks.yml").write_text(textwrap.dedent("""\
+        networks:
+          h1:
+            values:
+              - address: 10.0.0.5/32
+          NET_A:
+            values:
+              - address: 10.0.0.9/32
+          NET_B:
+            values:
+              - address: 10.0.0.20/32
+          MGMT_HOSTS:
+            values:
+              - address: 10.0.0.50/32
+    """))
+    (d / "heuristics.py").write_text(
+        "MGMT_SERVICES = ['SSH']\n"
+        "def management_sources(metadata):\n"
+        "    return ['MGMT_HOSTS']\n")
+    (d / "host_metadata.json").write_text(json.dumps({"h1": {"zone": "z"}}))
+    pol = tmp_path / "h1.yml"
+    pol.write_text(textwrap.dedent("""\
+        filters:
+          - header:
+              targets:
+                nftables: mixed input DROP
+            terms:
+              - name: allow-tcp-SSH
+                protocol: tcp
+                destination-port: SSH
+                action: accept
+                source-address:
+                  - NET_A
+                  - NET_B
+                  - MGMT_HOSTS
+              - name: drop-ANY
+                action: deny
+        metadata:
+          host: h1
+    """))
+    flows = tmp_path / "f.jsonl"
+    flows.write_text(json.dumps({"protocol": "tcp", "src_ip": "10.0.0.9", "dst_ip": "10.0.0.5",
+                                 "src_port": 40000, "dst_port": 22, "responded": True}) + "\n")
+    out = tmp_path / "out"
+    r = subprocess.run([sys.executable, "-m", "firru.cli.tighten", "--policy", str(pol),
+                        "--defs", str(d), "--flows-file", str(flows), "--outdir", str(out)],
+                       capture_output=True, text=True, cwd=tmp_path)
+    assert r.returncode == 0, r.stderr
+    import yaml
+    text = (out / "h1.yml").read_text()
+    (ssh,) = [t for f in yaml.safe_load(text)["filters"] for t in f["terms"]
+              if t["name"] == "allow-tcp-SSH"]
+    assert ssh["source-address"] == ["NET_A", "MGMT_HOSTS"]
+    assert "kept, declared by the site's heuristics: MGMT_HOSTS" in text

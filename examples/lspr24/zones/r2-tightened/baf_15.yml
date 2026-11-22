@@ -16,6 +16,15 @@ filters:
     protocol: icmpv6
     action: accept
     destination-address: c4i-ads_baf_05_berylia_org
+  - name: c4i-ads_baf_05_berylia_org-allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BAF_15_GT
+    - BAF_15_MGMT
+    - MGMT_HOSTS
+    destination-address: c4i-ads_baf_05_berylia_org
   - name: c4i-ads_baf_05_berylia_org-allow-tcp-DNS-TCP
     protocol: tcp
     destination-port: DNS-TCP
@@ -113,13 +122,6 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: CEPH-OSD
-  - name: deny-ext-tcp-SSH
-    action: deny
-    destination-address: c4i-ads_baf_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: SSH
   - name: deny-ext-udp-UDP_5000
     action: deny
     destination-address: c4i-ads_baf_05_berylia_org

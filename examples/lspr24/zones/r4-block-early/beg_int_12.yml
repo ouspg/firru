@@ -36,6 +36,19 @@ filters:
       ws1-beg02_int_beg_05_berylia_org ws2-beg01_int_beg_05_berylia_org ws2-beg02_int_beg_05_berylia_org
       ws3-beg01_int_beg_05_berylia_org ws3-beg02_int_beg_05_berylia_org ws3-beg03_int_beg_05_berylia_org
       ws3-beg04_int_beg_05_berylia_org ws3-beg05_int_beg_05_berylia_org
+  - name: allow-tcp-SSH-shared
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BEG_INT_12_GT
+    - BEG_INT_12_MGMT
+    - MGMT_HOSTS
+    destination-address: adcs-beg_int_beg_05_berylia_org dc1_int_beg_05_berylia_org
+      dc2_int_beg_05_berylia_org lemonldapng_int_beg_05_berylia_org ws1-beg01_int_beg_05_berylia_org
+      ws1-beg02_int_beg_05_berylia_org ws2-beg01_int_beg_05_berylia_org ws2-beg02_int_beg_05_berylia_org
+      ws3-beg01_int_beg_05_berylia_org ws3-beg02_int_beg_05_berylia_org ws3-beg03_int_beg_05_berylia_org
+      ws3-beg04_int_beg_05_berylia_org ws3-beg05_int_beg_05_berylia_org
   - name: allow-tcp-DNS-TCP-shared
     protocol: tcp
     destination-port: DNS-TCP
@@ -56,7 +69,9 @@ filters:
     protocol: tcp
     destination-port: NETBIOS-SSN-LEGACY
     action: accept
-    source-address: mail_beg_05_berylia_org
+    source-address:
+    - mail_beg_05_berylia_org
+    - BEG_INT_12_HOSTS
     destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
   - name: allow-tcp-LDAP-TCP-shared
     protocol: tcp
@@ -74,6 +89,8 @@ filters:
     source-address:
     - BEG_5_GT
     - BEG_INT_12_GT
+    - BEG_INT_12_MGMT
+    - MGMT_HOSTS
     destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
   - name: allow-udp-DNS-UDP-shared
     protocol: udp
@@ -133,6 +150,28 @@ filters:
     action: accept
     source-address: ANY
     destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org
+  - name: allow-tcp-WINRM-HTTP-shared
+    protocol: tcp
+    destination-port: WINRM-HTTP
+    action: accept
+    source-address:
+    - BEG_INT_12_GT
+    - BEG_INT_12_MGMT
+    - MGMT_HOSTS
+    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org ws1-beg01_int_beg_05_berylia_org
+      ws1-beg02_int_beg_05_berylia_org ws2-beg01_int_beg_05_berylia_org ws2-beg02_int_beg_05_berylia_org
+  - name: allow-tcp-RDP-shared
+    protocol: tcp
+    destination-port: RDP
+    action: accept
+    source-address:
+    - BEG_INT_12_GT
+    - BEG_INT_12_MGMT
+    - MGMT_HOSTS
+    destination-address: ws1-beg01_int_beg_05_berylia_org ws1-beg02_int_beg_05_berylia_org
+      ws2-beg01_int_beg_05_berylia_org ws2-beg02_int_beg_05_berylia_org ws3-beg01_int_beg_05_berylia_org
+      ws3-beg02_int_beg_05_berylia_org ws3-beg03_int_beg_05_berylia_org ws3-beg04_int_beg_05_berylia_org
+      ws3-beg05_int_beg_05_berylia_org
   - name: allow-udp-RDP-shared
     protocol: udp
     destination-port: RDP
@@ -164,27 +203,6 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: LDAPS
-  - name: deny-ext-tcp-RDP
-    action: deny
-    destination-address: ws1-beg01_int_beg_05_berylia_org ws1-beg02_int_beg_05_berylia_org
-      ws2-beg01_int_beg_05_berylia_org ws2-beg02_int_beg_05_berylia_org ws3-beg01_int_beg_05_berylia_org
-      ws3-beg02_int_beg_05_berylia_org ws3-beg03_int_beg_05_berylia_org ws3-beg04_int_beg_05_berylia_org
-      ws3-beg05_int_beg_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: RDP
-  - name: deny-ext-tcp-SSH
-    action: deny
-    destination-address: adcs-beg_int_beg_05_berylia_org dc1_int_beg_05_berylia_org
-      dc2_int_beg_05_berylia_org lemonldapng_int_beg_05_berylia_org ws1-beg01_int_beg_05_berylia_org
-      ws1-beg02_int_beg_05_berylia_org ws2-beg01_int_beg_05_berylia_org ws2-beg02_int_beg_05_berylia_org
-      ws3-beg01_int_beg_05_berylia_org ws3-beg02_int_beg_05_berylia_org ws3-beg03_int_beg_05_berylia_org
-      ws3-beg04_int_beg_05_berylia_org ws3-beg05_int_beg_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: SSH
   - name: deny-ext-tcp-WINDOWS-RPC-ENDPOINT-MAPPER
     action: deny
     destination-address: adcs-beg_int_beg_05_berylia_org
@@ -200,14 +218,6 @@ filters:
       \ traffic observed; host firewall handles intra-zone access"
     protocol: tcp
     destination-port: WINDOWS-SMB
-  - name: deny-ext-tcp-WINRM-HTTP
-    action: deny
-    destination-address: dc1_int_beg_05_berylia_org dc2_int_beg_05_berylia_org ws1-beg01_int_beg_05_berylia_org
-      ws1-beg02_int_beg_05_berylia_org ws2-beg01_int_beg_05_berylia_org ws2-beg02_int_beg_05_berylia_org
-    comment: "intra-zone only \u2014 port is open on host(s) but no legitimate external\
-      \ traffic observed; host firewall handles intra-zone access"
-    protocol: tcp
-    destination-port: WINRM-HTTP
   - name: drop-ghost-hosts
     action: deny
     destination-address: beg_int_12

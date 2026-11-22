@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/mail_int_baf_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:01Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 10 | Log-drop candidates: 20
+# Source suggestions changed: 7 | Log-drop candidates: 20
 metadata:
   host: mail
   zone: baf_int
@@ -11,13 +11,6 @@ filters:
     targets:
       windows_advfirewall: in mixed block
   terms:
-
-# [auto] 2699 flows total | 2699 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) [10 unanswered] | via: SSH/tcp/22
-  - name: allow-tcp-SSH
-    protocol: tcp
-    destination-port: SSH
-    action: accept
-    source-address: BAF_INT_GT      # was: BAF_INT_GT, BAF_INT_MGMT, MGMT_HOSTS
 
 # [auto] 1799 flows total | 1799 hits: BAF_INT_GT (2a07:1182:5:11::250, 10.5.11.250) [4 unanswered] | via: SMTP/tcp/25
   - name: allow-tcp-SMTP
@@ -61,20 +54,6 @@ filters:
     action: accept
     source-address: BAF_INT_GT      # was: ANY
 
-# [auto] 1800 flows total | 1800 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) [5 unanswered] | via: RDP/tcp/3389
-  - name: allow-tcp-RDP
-    protocol: tcp
-    destination-port: RDP
-    action: accept
-    source-address: BAF_INT_GT      # was: BAF_INT_GT, BAF_INT_MGMT, MGMT_HOSTS
-
-# [auto] 1920 flows total | 1920 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) [32 unanswered] | via: WINRM-HTTP/tcp/5985
-  - name: allow-tcp-WINRM-HTTP
-    protocol: tcp
-    destination-port: WINRM-HTTP
-    action: accept
-    source-address: BAF_INT_GT      # was: BAF_INT_GT, BAF_INT_MGMT, MGMT_HOSTS
-
 # [auto] 312 flows total | 279 hits: dc1_int_baf_05_berylia_org (2a07:1182:5:11::2) | 33 hits: dc2_int_baf_05_berylia_org (2a07:1182:5:11::3) | via: WINDOWS-RPC-DYNAMIC/tcp/54205,59047,64034,49563,54105
   - name: allow-icmp
     protocol: icmp
@@ -84,6 +63,37 @@ filters:
   - name: allow-icmpv6
     protocol: icmpv6
     action: accept
+
+# [auto] 2699 flows total | 2699 hits: BAF_INT_GT (10.5.11.250, 2a07:1182:5:11::250) [10 unanswered] | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: BAF_INT_MGMT, MGMT_HOSTS
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BAF_INT_GT
+    - BAF_INT_MGMT
+    - MGMT_HOSTS
+
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+  - name: allow-tcp-RDP
+    protocol: tcp
+    destination-port: RDP
+    action: accept
+    source-address:
+    - BAF_INT_GT
+    - BAF_INT_MGMT
+    - MGMT_HOSTS
+
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+  - name: allow-tcp-WINRM-HTTP
+    protocol: tcp
+    destination-port: WINRM-HTTP
+    action: accept
+    source-address:
+    - BAF_INT_GT
+    - BAF_INT_MGMT
+    - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: allow-udp-RDP

@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/c4i-ads_baf_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:00Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 3 | Log-drop candidates: 16
+# Source suggestions changed: 2 | Log-drop candidates: 16
 metadata:
   host: c4i-ads
   zone: baf_15
@@ -11,13 +11,6 @@ filters:
     targets:
       nftables: mixed input DROP
   terms:
-
-# [auto] 3600 flows total | 3600 hits: BAF_15_GT (10.5.15.250, 2a07:1182:5:15::250) | via: SSH/tcp/22
-  - name: allow-tcp-SSH
-    protocol: tcp
-    destination-port: SSH
-    action: accept
-    source-address: BAF_15_GT      # was: BAF_15_GT, BAF_15_MGMT, MGMT_HOSTS
 
 # [auto] 232569 flows total | 232569 hits: baf_15 (10.5.15.33) | via: CEPH-OSD/tcp/7000
   - name: allow-tcp-CEPH-OSD
@@ -47,6 +40,17 @@ filters:
   - name: allow-icmpv6
     protocol: icmpv6
     action: accept
+
+# [auto] 3600 flows total | 3600 hits: BAF_15_GT (10.5.15.250, 2a07:1182:5:15::250) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: BAF_15_MGMT, MGMT_HOSTS
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BAF_15_GT
+    - BAF_15_MGMT
+    - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: drop-ANY

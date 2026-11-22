@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/ws1-beg02_int_beg_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:01Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 4 | Log-drop candidates: 11
+# Source suggestions changed: 1 | Log-drop candidates: 11
 metadata:
   host: ws1-beg02
   zone: beg_int_12
@@ -12,33 +12,12 @@ filters:
       windows_advfirewall: in mixed block
   terms:
 
-# [auto] 2699 flows total | 2699 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
-  - name: allow-tcp-SSH
-    protocol: tcp
-    destination-port: SSH
-    action: accept
-    source-address: BEG_INT_12_GT      # was: BEG_INT_12_GT, BEG_INT_12_MGMT, MGMT_HOSTS
-
 # [auto] 900 flows total | 900 hits: BEG_INT_12_GT (2a07:1182:5:12::250) | via: WINDOWS-SMB/tcp/445
   - name: allow-tcp-WINDOWS-SMB
     protocol: tcp
     destination-port: WINDOWS-SMB
     action: accept
     source-address: BEG_INT_12_GT      # was: ANY
-
-# [auto] 1800 flows total | 1800 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: RDP/tcp/3389
-  - name: allow-tcp-RDP
-    protocol: tcp
-    destination-port: RDP
-    action: accept
-    source-address: BEG_INT_12_GT      # was: BEG_INT_12_GT, BEG_INT_12_MGMT, MGMT_HOSTS
-
-# [auto] 1799 flows total | 1799 hits: BEG_INT_12_GT (2a07:1182:5:12::250, 10.5.12.250) | via: WINRM-HTTP/tcp/5985
-  - name: allow-tcp-WINRM-HTTP
-    protocol: tcp
-    destination-port: WINRM-HTTP
-    action: accept
-    source-address: BEG_INT_12_GT      # was: BEG_INT_12_GT, BEG_INT_12_MGMT, MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged
   - name: allow-icmp
@@ -49,6 +28,37 @@ filters:
   - name: allow-icmpv6
     protocol: icmpv6
     action: accept
+
+# [auto] 2699 flows total | 2699 hits: BEG_INT_12_GT (10.5.12.250, 2a07:1182:5:12::250) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: BEG_INT_12_MGMT, MGMT_HOSTS
+  - name: allow-tcp-SSH
+    protocol: tcp
+    destination-port: SSH
+    action: accept
+    source-address:
+    - BEG_INT_12_GT
+    - BEG_INT_12_MGMT
+    - MGMT_HOSTS
+
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+  - name: allow-tcp-RDP
+    protocol: tcp
+    destination-port: RDP
+    action: accept
+    source-address:
+    - BEG_INT_12_GT
+    - BEG_INT_12_MGMT
+    - MGMT_HOSTS
+
+# [auto] no flows observed in window — source unchanged; log-drop candidate
+  - name: allow-tcp-WINRM-HTTP
+    protocol: tcp
+    destination-port: WINRM-HTTP
+    action: accept
+    source-address:
+    - BEG_INT_12_GT
+    - BEG_INT_12_MGMT
+    - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
   - name: allow-udp-RDP

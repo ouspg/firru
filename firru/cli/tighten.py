@@ -48,6 +48,7 @@ from firru.arkime import ArkimeAPI, SESSION_FIELDS, process_flow
 from firru.cli.address_summarizer import (_default_asn_db, summarize,
                                           summarize_asn)
 from firru.comments import TAG_AUTO, detached, tagged, set_term_comment, kept_comments_by_term
+from firru.src_heuristics import declared_sources, load_profile
 from firru.flows import Hits
 from firru.policy import DIR_IN, DIR_OUT, filter_directions
 
@@ -753,9 +754,20 @@ def find_blocked(ingress_flows, tightened_terms, annotator, defs, ingress_ports)
 # Ingress tightening
 # ---------------------------------------------------------------------------
 
+def load_host_metadata(defs_dir):
+    """The host metadata synth reads by default, <defs>/host_metadata.json;
+    {} where there is none or it is empty."""
+    path = os.path.join(defs_dir, "host_metadata.json")
+    try:
+        text = Path(path).read_text()
+    except OSError:
+        return {}
+    return json.loads(text) if text.strip() else {}
+
+
 def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=False,
                     ingress_ports=None, dns_store=None, asn_db=None, any_rows=None,
-                    host_token=None):
+                    host_token=None, declared=None):
     """
     Rebuild ingress terms with tightened source-address values.
 
@@ -764,6 +776,10 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
         unused         — list of dicts: accept terms nothing matched in the window,
                          each a log-drop candidate
         n_changed      — how many terms got a new source
+
+    `declared(service)` gives the sources the site's heuristics declare for a
+    service on this host. A term never loses one of those it still has: the
+    traffic narrows what was inferred, review decides what was declared.
     """
     terms         = CommentedSeq()
     unused        = []
@@ -898,6 +914,14 @@ def tighten_ingress(in_filter_terms, ingress_flows, annotator, defs, verbose=Fal
         token_list, excess_note = best_tokens(annotations, annotator.group_members)
 
         old_src = term.get("source-address")
+        old_tokens = [old_src] if isinstance(old_src, str) else list(old_src or [])
+        floor = ([t for t in old_tokens if t in declared(svc)]
+                 if declared and svc and token_list and "ANY" not in token_list else [])
+        kept = [t for t in floor if t not in token_list]
+        if kept:
+            token_list = list(token_list) + kept
+            comment = (f"{comment}\nkept, declared by the site's heuristics: "
+                       f"{', '.join(kept)}")
         was_changed = False
         if token_list:
             new_src = token_list[0] if len(token_list) == 1 else token_list
@@ -1321,6 +1345,10 @@ Examples:
     # ------------------------------------------------------------------
     defs      = naming.Naming(args.defs)
     annotator = PolicyAnnotator(args.defs)
+    # The site's own source policy and host metadata, as synth reads them, so
+    # a declared source survives tightening (declared_sources).
+    profile      = load_profile(args.defs)
+    all_metadata = load_host_metadata(args.defs)
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -1507,10 +1535,13 @@ Examples:
                   any_rows=any_rows, host_token=host_token)
           else:
               in_terms = filt.get("terms", [])
+              host_meta = all_metadata.get(host_token) or {}
               tightened, unused, n_changed = tighten_ingress(
                   in_terms, ingress_flows, annotator, defs, verbose=args.verbose,
                   ingress_ports=ingress_ports, dns_store=dns_store, asn_db=asn_db,
                   any_rows=any_rows, host_token=host_token,
+                  declared=lambda svc, h=host_token, m=host_meta:
+                      declared_sources(h, svc, m, profile),
               )
               all_unused.extend(unused)
               all_n_changed += n_changed

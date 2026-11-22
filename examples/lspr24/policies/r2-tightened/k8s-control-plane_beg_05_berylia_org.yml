@@ -1,6 +1,6 @@
 # firru tighten output — review and copy changes to policies/pol/k8s-control-plane_beg_05_berylia_org.yml
 # Flows: data/flows [--window night: 2024-03-06 17:00Z to 2024-03-07 06:00Z], 2024-03-06T17:00:00Z to 2024-03-07T05:59:59Z
-# Source suggestions changed: 6 | Log-drop candidates: 4
+# Source suggestions changed: 5 | Log-drop candidates: 4
 metadata:
   host: k8s-control-plane
   zone: beg_5
@@ -9,13 +9,6 @@ filters:
       targets:
         nftables: mixed input DROP
     terms:
-
-# [auto] 1799 flows total | 1799 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
-      - name: allow-tcp-SSH
-        protocol: tcp
-        destination-port: SSH
-        action: accept
-        source-address: BEG_5_GT  # was: BEG_5_GT, MGMT_HOSTS
 
 # [auto] 1246 flows total | 398 hits: k8s-worker04_beg_05_berylia_org (100.97.5.34, 2a07:1182:5:20::34) | 303 hits: k8s-worker02_beg_05_berylia_org (2a07:1182:5:20::32, 100.97.5.32) | 296 hits: k8s-worker01_beg_05_berylia_org (100.97.5.31, 2a07:1182:5:20::31) | 249 hits: k8s-worker03_beg_05_berylia_org (100.97.5.33, 2a07:1182:5:20::33) | via: BGP/tcp/179
       - name: allow-tcp-BGP
@@ -78,6 +71,16 @@ filters:
       - name: allow-icmpv6
         protocol: icmpv6
         action: accept
+
+# [auto] 1799 flows total | 1799 hits: BEG_5_GT (100.97.5.60, 2a07:1182:5:20::60) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: MGMT_HOSTS
+      - name: allow-tcp-SSH
+        protocol: tcp
+        destination-port: SSH
+        action: accept
+        source-address:
+          - BEG_5_GT
+          - MGMT_HOSTS
 
 # [auto] no flows observed in window — source unchanged; log-drop candidate
       - name: allow-tcp-ETCD-CLIENT

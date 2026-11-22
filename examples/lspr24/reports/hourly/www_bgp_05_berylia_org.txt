@@ -1,49 +1,45 @@
-www_bgp_05_berylia_org: d2 against r2-tightened, 3 narrowed terms
-  03-07 08:00-09:00  2 of 3 contradicted
+www_bgp_05_berylia_org: d2 against r2-tightened, 2 narrowed terms
+  03-07 08:00-09:00  2 of 2 contradicted
       tcp-HTTP                 cuts     50   2a07:1182:101::204 28, 100.101.0.204 22
       tcp-HTTPS                cuts     96   2a07:1182:101::204 22, 100.101.0.204 21, 100.100.100.9 17, +6 more
-  03-07 09:00-10:00  3 of 3 contradicted
+  03-07 09:00-10:00  2 of 2 contradicted
       tcp-HTTP                 cuts    328   2a07:1182:101::204 185, 100.101.0.204 139, 2a04:80c2:dad1:8cd3:e7e:bcef:683c:c659 [red] 4
       tcp-HTTPS                cuts    447   100.101.0.204 139, 2a07:1182:101::204 138, 100.100.100.9 67, +21 more
-      tcp-SSH                  cuts     20   MGMT_HOSTS 20
-  03-07 10:00-11:00  3 of 3 contradicted
+  03-07 10:00-11:00  2 of 2 contradicted
       tcp-HTTP                 cuts    331   2a07:1182:101::204 192, 100.101.0.204 139
       tcp-HTTPS                cuts    342   100.101.0.204 138, 2a07:1182:101::204 138, 100.100.100.9 20, +14 more
-      tcp-SSH                  cuts     11   MGMT_HOSTS 11
-  03-07 11:00-12:00  2 of 3 contradicted
+  03-07 11:00-12:00  2 of 2 contradicted
       tcp-HTTP                 cuts    333   2a07:1182:101::204 192, 100.101.0.204 141
       tcp-HTTPS                cuts    376   100.101.0.204 139, 2a07:1182:101::204 139, 100.100.100.9 20, +14 more
-  03-07 12:00-13:00  2 of 3 contradicted
+  03-07 12:00-13:00  2 of 2 contradicted
       tcp-HTTP                 cuts    332   2a07:1182:101::204 192, 100.101.0.204 140
       tcp-HTTPS                cuts    341   100.101.0.204 138, 2a07:1182:101::204 138, 100.100.100.9 20, +13 more
-  03-07 13:00-14:00  2 of 3 contradicted
+  03-07 13:00-14:00  2 of 2 contradicted
       tcp-HTTP                 cuts    330   2a07:1182:101::204 190, 100.101.0.204 140
       tcp-HTTPS                cuts    342   100.101.0.204 139, 2a07:1182:101::204 139, 100.100.100.9 20, +15 more
-  03-07 14:00-15:00  3 of 3 contradicted
+  03-07 14:00-15:00  2 of 2 contradicted
       tcp-HTTP                 cuts    330   2a07:1182:101::204 190, 100.101.0.204 140
       tcp-HTTPS                cuts    360   100.101.0.204 138, 2a07:1182:101::204 138, 100.100.100.9 20, +18 more
-      tcp-SSH                  cuts     17   MGMT_HOSTS 17
-  03-07 15:00-16:00  3 of 3 contradicted
+  03-07 15:00-16:00  2 of 2 contradicted
       tcp-HTTP                 cuts    336   2a07:1182:101::204 193, 100.101.0.204 140, 179.51.205.114 [red] 3
       tcp-HTTPS                cuts    331   100.101.0.204 139, 2a07:1182:101::204 139, 100.100.100.9 20, +9 more
-      tcp-SSH                  cuts     23   MGMT_HOSTS 23
-  03-07 16:00-17:00  2 of 3 contradicted
+  03-07 16:00-17:00  2 of 2 contradicted
       tcp-HTTP                 cuts    328   2a07:1182:101::204 190, 100.101.0.204 138
       tcp-HTTPS                cuts    341   100.101.0.204 138, 2a07:1182:101::204 138, 100.100.100.9 20, +13 more
-  03-07 17:00-18:00  2 of 3 contradicted
+  03-07 17:00-18:00  2 of 2 contradicted
       tcp-HTTP                 cuts     18   2a07:1182:101::204 11, 100.101.0.204 7
       tcp-HTTPS                cuts     15   100.101.0.204 7, 2a07:1182:101::204 7, 100.100.100.9 1
-  cut across d2: 5,778 flows from 52 peers, 234 from red team
+  cut across d2: 5,707 flows from 51 peers, 234 from red team
       2a07:1182:101::204                       10/10 hours   2,699 flows   tcp-HTTP tcp-HTTPS
       100.101.0.204                            10/10 hours   2,282 flows   tcp-HTTP tcp-HTTPS
       100.100.100.9                            10/10 hours     225 flows   tcp-HTTPS
       45.92.100.115                             6/10 hours      21 flows   tcp-HTTPS
       128.90.61.70 [red]                        5/10 hours      18 flows   tcp-HTTPS
       23.170.80.141                             5/10 hours      15 flows   tcp-HTTPS
-      MGMT_HOSTS                                4/10 hours      71 flows   tcp-SSH
       198.245.160.167                           4/10 hours      24 flows   tcp-HTTPS
       196.3.73.59                               4/10 hours      15 flows   tcp-HTTPS
       208.103.148.65 [red]                      4/10 hours      15 flows   tcp-HTTPS
       2a07:1182:100:100::133                    4/10 hours      14 flows   tcp-HTTPS
       102.165.190.223                           4/10 hours      12 flows   tcp-HTTPS
-      ... 40 more peers, 367 flows, 19 of them red team
+      167.250.236.118 [red]                     4/10 hours      12 flows   tcp-HTTPS
+      ... 39 more peers, 355 flows, 18 of them red team

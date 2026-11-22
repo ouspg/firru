@@ -13,6 +13,7 @@ filters:
   terms:
 
 # [auto] 3600 flows total | 2700 hits: BGP_20_GT (10.5.20.250, 2a07:1182:5:f20::250) | 900 hits: BGP_INT_GT (10.5.13.250) | via: SSH/tcp/22
+# [auto] kept, declared by the site's heuristics: BGP_20_MGMT, MGMT_HOSTS
   - name: allow-tcp-SSH
     protocol: tcp
     destination-port: SSH
@@ -20,6 +21,8 @@ filters:
     source-address:      # was: BGP_20_GT, BGP_20_MGMT, MGMT_HOSTS
     - BGP_20_GT
     - BGP_INT_GT
+    - BGP_20_MGMT
+    - MGMT_HOSTS
 
 # [auto] 5398 flows total | 1800 hits: BGP_5_GT (100.98.5.59, 2a07:1182:5:30::59) | 1799 hits: BGP_20_GT (2a07:1182:5:f20::250, 10.5.20.250) | 1799 hits: BGP_INT_GT (10.5.13.250, 2a07:1182:5:13::250) | via: HTTPS/tcp/443
   - name: allow-tcp-HTTPS

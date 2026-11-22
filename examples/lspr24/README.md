@@ -75,7 +75,7 @@ firru merge-zones --hosts 'policies/<variant>/*.yml' --defs def/ --outdir zones/
 | `loot-ossec/` | the measured loot, as the archive has it |
 | `loot-assumed/` | the same with `assumptions.yml` applied: what the policies are built from |
 | `policies/r1-synthesized/` | from the sockets: 460 service terms over 59 hosts |
-| `policies/r2-tightened/` | sources narrowed against the night window: 178 terms, each with `# was:`; a term nothing matched says `log-drop candidate`. What the narrowing would deny is `firru diff` with `--flows` |
+| `policies/r2-tightened/` | sources narrowed against the night window: 117 terms, each with `# was:`; a term nothing matched says `log-drop candidate`. What the narrowing would deny is `firru diff` with `--flows` |
 | `policies/r3-apparent/` | INFERRED from traffic: the policy that appears to have been running |
 | `policies/r4-block-early/` | r2 with every service the night window never saw removed: 269 of 460 terms, on 51 hosts |
 | `reports/` | precomputed reports, so the results read without the dataset: `hourly/`, one host's d2 an hour at a time (`make hourly`); `check/`, the night-trained policy against d2's first hour (`make check-live`) |
@@ -181,8 +181,11 @@ Kubernetes worker reads:
 
 ### Tightening, and why most terms keep ANY
 
-Tightening narrowed 178 of the 460 terms, onto the green-team hosts, the
-cluster members and the zone groups the inventory defines. 200 kept `ANY`,
+Tightening narrowed 117 of the 460 terms, onto the green-team hosts, the
+cluster members and the zone groups the inventory defines. It never narrows
+away a source `def/heuristics.py` declares for the service, such as a zone's
+management entry point or its own hosts for NetBIOS: 79 terms keep one the
+night never showed. 200 kept `ANY`,
 and that is the right answer rather than a failure: their clients are the
 exercise's simulated internet, addresses with no asset behind them. An
 address resolves to nothing, so the term stays open; minting a token per
@@ -209,18 +212,19 @@ different kind of miss:
 
 | host | cut on d2 | mostly |
 | --- | --- | --- |
-| dc1 (Windows DC) | 15,572 flows, 9 peers | the organisers every hour on Kerberos and LDAP, from the DMZ (`BEG_5_GT`), the other DC, dc2, in 8 of 10 hours, and SSH from its subnet's management entry point in 5 |
-| salt-master | 1,421 flows, 5 peers | the organisers every hour, and the gas-hmi minion on 4505 in 9 of 10 |
-| k8s-worker01 | 217 flows, 2 peers | the cluster's own control plane, on the kubelet, in 7 of 10 hours |
-| gas-hmi (OT) | 1,199 flows, 1 peer | its subnet's management entry point, on SSH and the HMI's web ports, in 7 of 10 hours |
-| www | 5,778 flows, 52 peers | its users: the internet the night did not show; 234 of the flows are red team |
+| dc1 (Windows DC) | 15,456 flows, 8 peers | the organisers every hour on Kerberos and LDAP, from the DMZ (`BEG_5_GT`), and the other DC, dc2, in 8 of 10 hours |
+| salt-master | 1,359 flows, 4 peers | the organisers every hour, and the gas-hmi minion on 4505 in 9 of 10 |
+| k8s-worker01 | 155 flows, 1 peer | the cluster's own control plane, on the kubelet, in 7 of 10 hours |
+| gas-hmi (OT) | 1,137 flows, 1 peer | its subnet's management entry point, on the HMI's web ports, in 5 of 10 hours |
+| www | 5,707 flows, 51 peers | its users: the internet the night did not show; 234 of the flows are red team |
 
 The night is quiet in a way the day is not: it shows the services' own
 clients, and not the organisers' daytime checks, the second domain
-controller's replication, a control plane's periodic calls or daytime
-administration: SSH from MGMT_HOSTS or a subnet's entry point is cut on all
-five hosts. A peer cut in
-most hours is the window's gap, not noise, and `firru diff -o sh` comments
+controller's replication or a control plane's periodic calls. Daytime
+administration is not among the cuts: SSH from MGMT_HOSTS and the entry
+points is declared, so tightening keeps it whatever the night shows. The
+entry point's other traffic is not, which is why gas-hmi's web ports are
+still cut. A peer cut in most hours is the window's gap, not noise, and `firru diff -o sh` comments
 out a narrowing it contradicts instead of emitting it. On www the cut is the
 point only for the red-team share; narrowing a public web server to the
 clients of one night closes it to its users.

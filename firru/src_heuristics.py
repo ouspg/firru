@@ -152,6 +152,27 @@ def get_suggested_rule(host, service, v4, v6, metadata, profile=None, context=No
     return rule
 
 
+#: Sources that say nothing about who may connect: never a floor.
+_OPEN = {"ANY", "ANY_V4", "ANY_V6"}
+
+
+def declared_sources(host, service, metadata, profile=None):
+    """The sources the site's profile gives `service` on `host`, ANY left
+    out: what the site declares, as opposed to what traffic suggested.
+    Tightening narrows a term to the peers it saw, but never below these,
+    since a source the site declares is review's decision, not a window's."""
+    rules = get_suggested_rule(host, service, True, True, metadata or {}, profile)
+    out = []
+    for r in (rules if isinstance(rules, list) else [rules] if rules else []):
+        if (r.get("action") or "accept") != "accept":
+            continue
+        src = r.get("source")
+        for tok in ([src] if isinstance(src, str) else src or []):
+            if tok not in _OPEN and tok not in out:
+                out.append(tok)
+    return out
+
+
 def get_dynamic_rules(host, entries, metadata, profile=None):
     """[(protocol, owner, listeners, [rule])] for the dynamic-range listeners
     `entries`, grouped by owner, for the owners the profile gives rules."""
