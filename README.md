@@ -125,6 +125,7 @@ one is the site saying "none".
 | file | what | without it |
 |---|---|---|
 | `site/heuristics.py` | who may reach what, as code (`firru/src_heuristics.py` documents each name) | every synthesized source is ANY |
+| `site/policy.py` | what the site decides rather than guesses: who may administer a host (`MGMT_SERVICES`, `management_sources`), read before `heuristics.py` | nothing decided |
 | `site/host_metadata.json` | hosts to zones, OS and roles | synthesis knows no zones |
 
 ## Drift and conformance

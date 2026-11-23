@@ -45,6 +45,11 @@
 # "options" (more Aerleon term keys, e.g. windows-program for a generator that
 # reads it) and, for the second and later rules of a list, a "suffix" for the
 # term name.
+#
+# What the site decides, as opposed to guesses about it, goes in a second
+# file beside it, site/policy.py (optional). MGMT_SERVICES,
+# MGMT_ANY_FALLBACK and management_sources belong there, and are taken from
+# it first (heuristics.py, where older sites have them, second).
 # =============================================================================
 
 import importlib.util
@@ -62,26 +67,32 @@ DEFAULT_LINK_LOCAL_TOKENS = {
 }
 
 PROFILE_FILE = "heuristics.py"
+POLICY_FILE = "policy.py"
 
 
 class Profile:
     """A site's source policy: a profile module's tables and hooks over the
     defaults. `Profile()` is the defaults alone."""
 
-    def __init__(self, module=None, origin=None):
-        def get(name, default):
-            return getattr(module, name, default) if module is not None else default
+    def __init__(self, module=None, origin=None, policy=None, policy_origin=None):
+        def get(name, default, mod=module):
+            return getattr(mod, name, default) if mod is not None else default
 
         self.origin = origin
         self.deny_services = get("DENY_SERVICES", DEFAULT_DENY_SERVICES)
         self.link_local_tokens = get("LINK_LOCAL_TOKENS", DEFAULT_LINK_LOCAL_TOKENS)
-        self.mgmt_services = frozenset(get("MGMT_SERVICES", ()))
-        self.mgmt_any_fallback = frozenset(get("MGMT_ANY_FALLBACK", ()))
+        # Who may administer a host is the site's decision: site/policy.py,
+        # with heuristics.py still read where a site has not moved it.
+        def decided(name, default):
+            return get(name, get(name, default), policy)
+        self.mgmt_services = frozenset(decided("MGMT_SERVICES", ()))
+        self.mgmt_any_fallback = frozenset(decided("MGMT_ANY_FALLBACK", ()))
         self.definitional_sources = get("DEFINITIONAL_SOURCES", {})
-        self.management_sources = get("management_sources", None)
+        self.management_sources = decided("management_sources", None)
         self.rule_hook = get("rule", None)
         self.dynamic_rules = get("dynamic_rules", None)
         self.targets = get("TARGETS", {})
+        self.policy_origin = policy_origin
 
 
 DEFAULT = Profile()
@@ -90,8 +101,9 @@ _loaded = {}
 
 def load_profile(defs_dir):
     """The profile in the project's site/heuristics.py, else in
-    `defs_dir`/heuristics.py (where it lived before site/), or the defaults
-    where there is none. Loaded once per file."""
+    `defs_dir`/heuristics.py (where it lived before site/), with the
+    project's site/policy.py beside it, or the defaults where there is
+    neither. Loaded once per pair of files."""
     from firru.defs_dir import STOCK
     from firru.project import site_path
     path = site_path(PROFILE_FILE, note=False)
@@ -105,16 +117,26 @@ def load_profile(defs_dir):
         site_path(PROFILE_FILE)          # inside a project, say what that costs
     if path is None and defs_dir:
         path = os.path.join(defs_dir, PROFILE_FILE)
-    path = os.path.abspath(path) if path else None
-    if not path or not os.path.isfile(path):
+    path = os.path.abspath(path) if path and os.path.isfile(path) else None
+    policy = site_path(POLICY_FILE, note=False)
+    policy = os.path.abspath(policy) if policy else None
+    if not path and not policy:
         return DEFAULT
-    if path not in _loaded:
-        spec = importlib.util.spec_from_file_location(
-            f"firru_heuristics_{len(_loaded)}", path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        _loaded[path] = Profile(module, origin=path)
-    return _loaded[path]
+    key = (path, policy)
+    if key not in _loaded:
+        _loaded[key] = Profile(_module(path), origin=path,
+                               policy=_module(policy), policy_origin=policy)
+    return _loaded[key]
+
+
+def _module(path):
+    if not path:
+        return None
+    spec = importlib.util.spec_from_file_location(f"firru_site_{len(_loaded)}_"
+                                                  f"{os.path.basename(path)[:-3]}", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 # =============================================================================
