@@ -826,8 +826,9 @@ Examples:
                         help='Output directory for aerleon YAMLs (default: policies/staged/)')
     parser.add_argument('--defs',         '-d', default='def',
                         help='Aerleon definitions directory (default: def/)')
-    parser.add_argument('--meta',         '-m', default='def/host_metadata.json',
-                        help='Host metadata JSON mapping tokens to zone/os (default: def/host_metadata.json)')
+    parser.add_argument('--meta',         '-m', default=None,
+                        help="Host metadata JSON mapping tokens to zone/os (default: the "
+                             "project's site/host_metadata.json, else def/host_metadata.json)")
     parser.add_argument('--keep-ephemeral', action='store_true',
                         help="emit terms for ports in the host's ephemeral range; "
                              "they are client sockets a snapshot caught, not services")
@@ -868,13 +869,24 @@ Examples:
     except (OSError, ValueError) as e:
         parser.error(str(e))
 
+    named = args.meta is not None
+    if not named:
+        from firru.project import site_path
+        legacy = os.path.join(args.defs, 'host_metadata.json')
+        args.meta = (site_path('host_metadata.json', note=not os.path.isfile(legacy))
+                     or legacy)
     try:
         with open(args.meta) as f:
-            all_metadata = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+            text = f.read()
+        all_metadata = json.loads(text) if text.strip() else {}   # empty: none
+        if not named:
+            print(f"Host metadata: {args.meta}", file=sys.stderr)
+    except FileNotFoundError:
         all_metadata = {}
-        if args.meta != 'def/host_metadata.json':
+        if named:
             print(f"Warning: could not load metadata from {args.meta}", file=sys.stderr)
+    except json.JSONDecodeError as e:
+        parser.error(f"{args.meta}: {e}")
 
     import glob as _glob
     json_files = []

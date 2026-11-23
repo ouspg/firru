@@ -109,6 +109,24 @@ Firewall; it reads every directory named `pol` below `--base_directory`, so
 point it at `policies/`, not `policies/pol/`, or it finds nothing and says so
 only in its log.
 
+## A project
+
+A directory with a `firru.toml` is a project, found the way git finds a
+repository: from anywhere below it, or by `$FIRRU_PROJECT`. `firru.toml`
+names the flow store and the time windows (`--window night`), so commands
+run inside it need neither `--flows-file` nor `--since`. `examples/lspr24`
+is one.
+
+Beside it, `site/` holds what the site knows and firru cannot derive. A file
+there is used without a flag, and a flag still names another for one run.
+A missing one is said once per run, with what its absence costs; an empty
+one is the site saying "none".
+
+| file | what | without it |
+|---|---|---|
+| `site/heuristics.py` | who may reach what, as code (`firru/src_heuristics.py` documents each name) | every synthesized source is ANY |
+| `site/host_metadata.json` | hosts to zones, OS and roles | synthesis knows no zones |
+
 ## Drift and conformance
 
 - `firru diff POLICY nft.json` compares a committed policy with the nftables

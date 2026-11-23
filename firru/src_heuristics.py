@@ -89,9 +89,23 @@ _loaded = {}
 
 
 def load_profile(defs_dir):
-    """The profile in `defs_dir`/heuristics.py, or the defaults where there
-    is none. Loaded once per directory."""
-    path = os.path.abspath(os.path.join(defs_dir, PROFILE_FILE)) if defs_dir else None
+    """The profile in the project's site/heuristics.py, else in
+    `defs_dir`/heuristics.py (where it lived before site/), or the defaults
+    where there is none. Loaded once per file."""
+    from firru.defs_dir import STOCK
+    from firru.project import site_path
+    path = site_path(PROFILE_FILE, note=False)
+    if path is None and defs_dir:
+        legacy = os.path.join(defs_dir, PROFILE_FILE)
+        # The stock one is a commented template that sets nothing: inside a
+        # project, having only it is having none.
+        if os.path.isfile(legacy) and os.path.realpath(defs_dir) != os.path.realpath(STOCK):
+            path = legacy
+    if path is None:
+        site_path(PROFILE_FILE)          # inside a project, say what that costs
+    if path is None and defs_dir:
+        path = os.path.join(defs_dir, PROFILE_FILE)
+    path = os.path.abspath(path) if path else None
     if not path or not os.path.isfile(path):
         return DEFAULT
     if path not in _loaded:
