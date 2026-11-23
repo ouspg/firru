@@ -24,7 +24,7 @@ import ipaddress
 
 from firru.cli.edit import _named_peers, _scored_term_names
 from firru.policy import (ANY_PEERS, DIR_IN, DIR_OUT, diff_surface, filter_directions,
-                          peer_families, source_peers)
+                          peer_families, source_peers, term_covers)
 
 
 def _fmt(tokens):
@@ -118,17 +118,33 @@ def _source_line(pol, name, old, new, cls, shown=None):
     return f"# firru set-source {pol} {name} {' '.join(new) or 'ANY'}  # widened REVIEW: {why}"
 
 
-def ingress_lines(pol, original, proposed, defs, unused, declared):
+def _scored_by_site(defs, term, ports):
+    """The first (protocol, port, note) of `ports` the term covers, or None."""
+    for (proto, port), note in ports.items():
+        if term_covers(defs, term, proto, port):
+            return proto, port, note
+    return None
+
+
+def ingress_lines(pol, original, proposed, defs, unused, declared, scored_ports=None):
+    """`scored_ports` is the site's {(protocol, port): note} for the host
+    (src_heuristics.scored_ports): a term covering one is left as it is."""
     old_terms = _terms(original, DIR_IN)
     new_terms = _terms(proposed, DIR_IN)
     scored = _scored_term_names(list(old_terms.values()))
+    by_site = {name: hit for name, t in old_terms.items()
+               if (hit := _scored_by_site(defs, t, scored_ports or {}))}
     lines = []
     for name, old_term in old_terms.items():
         new_term = new_terms.get(name)
         if new_term is None or str(old_term.get("action", "accept")).lower() != "accept":
             continue
         cls = classify(defs, old_term, new_term)
-        if cls:
+        if cls and name in by_site:
+            proto, port, note = by_site[name]
+            lines.append(f"# {name}: {cls} in the proposal, kept: the site scores "
+                         f"{proto}/{port} ({note})  # pinned")
+        elif cls:
             lines.append(_source_line(pol, name, _named_peers(old_term, "source-address"),
                                       _named_peers(new_term, "source-address"), cls,
                                       (_written(old_term), _written(new_term))))
@@ -138,7 +154,11 @@ def ingress_lines(pol, original, proposed, defs, unused, declared):
         if term is None or str(term.get("action", "accept")).lower() != "accept":
             continue
         pinned = [t for t in _named_peers(term, "source-address") if t in declared(u["svc"])]
-        if name in scored:
+        if name in by_site:
+            proto, port, note = by_site[name]
+            lines.append(f"# {name}: no flows in the window, kept: the site scores "
+                         f"{proto}/{port} ({note})  # pinned")
+        elif name in scored:
             lines.append(f"# {name}: no flows in the window, kept: scored  # pinned")
         elif pinned:
             lines.append(f"# {name}: no flows in the window, kept: the site declares "
@@ -163,14 +183,15 @@ def egress_lines(pol, proposal, defs_dir, original, proposed, defs):
     return lines
 
 
-def emit_host(pol, proposal, defs_dir, original, proposed, defs, unused, declared, window):
+def emit_host(pol, proposal, defs_dir, original, proposed, defs, unused, declared, window,
+              scored_ports=None):
     """Print the commands that take `original` (the policy at `pol`) to what
     `proposed` (written to `proposal`) says, for one host."""
     host = (original.get("metadata") or {}).get("host") or pol
     print(f"\n# {host}: {pol}")
     print(f"#   proposal: {proposal}")
     print(f"#   {window}")
-    lines = (ingress_lines(pol, original, proposed, defs, unused, declared)
+    lines = (ingress_lines(pol, original, proposed, defs, unused, declared, scored_ports)
              + egress_lines(pol, proposal, defs_dir, original, proposed, defs))
     for line in lines:
         print(line)

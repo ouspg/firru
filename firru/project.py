@@ -27,7 +27,7 @@ project is copied and shared: `netrc` names the file holding it, which is
 your own (firru.credentials).
 
 Beside it, `site/` holds what the site knows and firru cannot derive:
-heuristics.py, host_metadata.json. A file that is there is
+heuristics.py, policy.py, host_metadata.json. A file that is there is
 used without a flag; a flag still names another for one run. A missing one is
 said once per run where its absence costs something; an empty one is the site
 saying "none" (README.md, "A project").

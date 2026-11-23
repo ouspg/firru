@@ -33,7 +33,6 @@ _ALIASES = {"set-dest": "set-destination", "add-dest": "add-destination",
 # Verbs that map straight to a module main().
 _MODULES = {
     "synth":             "firru.cli.synth",                 # loot JSON -> staged policy YAML
-    "score":             "firru.cli.score",                 # annotate [score] notes
     "propose":           "firru.cli.propose",               # edits from the traffic, as firru commands
     "check":             "firru.cli.check",                 # what a policy refuses, answered or not
     "merge-zones":       "firru.cli.merge_zones",           # per-host -> per-zone policy
@@ -64,7 +63,6 @@ Edit policy YAML:
 
 Produce / transform policy YAML:
   synth        loot JSON -> staged host policy YAML
-  score        annotate [score] "must stay open" notes
   propose      edits from the traffic as tagged firru commands (narrow, deny unexercised);
                the proposals are written to proposals/ (-o yaml: only those)
   check        what a policy refuses of the traffic, answered (would break) or not

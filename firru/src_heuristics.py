@@ -50,7 +50,11 @@
 # What the site decides, as opposed to guesses about it, goes in a second
 # file beside it, site/policy.py (optional). MGMT_SERVICES,
 # MGMT_ANY_FALLBACK and management_sources belong there, and are taken from
-# it first (heuristics.py, where older sites have them, second).
+# it first (heuristics.py, where older sites have them, second). Also:
+#   scored(host, metadata) -> [(protocol, port[, note])] | {(protocol, port): note}
+#       the ports that must stay open on the host, such as what an
+#       availability check scores, read from wherever the site keeps them.
+#       propose never narrows or denies a term covering one.
 # =============================================================================
 
 import importlib.util
@@ -104,6 +108,7 @@ class Profile:
         self.dynamic_rules = get("dynamic_rules", None)
         self.targets = get("TARGETS", {})
         self.policy_origin = policy_origin
+        self.scored = get("scored", None, policy)
 
 
 #: The shipped heuristics.py: what a project without its own gets.
@@ -208,6 +213,29 @@ def declared_sources(host, service, metadata, profile=None):
         for tok in ([src] if isinstance(src, str) else src or []):
             if tok not in _OPEN and tok not in out:
                 out.append(tok)
+    return out
+
+
+def scored_ports(host, metadata, profile=None):
+    """{(protocol, port): note} the site's policy says must stay open on
+    `host`, such as what an availability check scores: {} without a hook.
+    `scored(host, metadata)` may give (protocol, port) or (protocol, port,
+    note) tuples, or such a mapping."""
+    profile = profile or DEFAULT
+    if not profile.scored:
+        return {}
+    got = profile.scored(host, metadata or {}) or {}
+    if isinstance(got, dict):
+        items = [(k[0], k[1], v) for k, v in got.items()]
+    else:
+        items = [tuple(x) + (None,) * (3 - len(x)) for x in got]
+    out = {}
+    for proto, port, note in items:
+        try:
+            out[(str(proto).lower(), int(port))] = note or "scored"
+        except (TypeError, ValueError):
+            raise ValueError(f"{profile.policy_origin}: scored({host!r}) gave "
+                             f"{(proto, port)!r}, not a protocol and a port")
     return out
 
 

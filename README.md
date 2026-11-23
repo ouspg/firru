@@ -126,7 +126,7 @@ one is the site saying "none".
 | file | what | without it |
 |---|---|---|
 | `site/heuristics.py` | who may reach what, as code; start from firru's `def/heuristics.py` (`firru/src_heuristics.py` documents each name) | firru's shipped defaults: SSDP denied, mDNS and LLMNR link-local, everything else ANY |
-| `site/policy.py` | what the site decides rather than guesses: who may administer a host (`MGMT_SERVICES`, `management_sources`), read before `heuristics.py` | nothing decided |
+| `site/policy.py` | what the site decides rather than guesses: who may administer a host (`MGMT_SERVICES`, `management_sources`, read before `heuristics.py`), and the ports that must stay open (`scored(host, metadata)`, read from wherever the site keeps them) | nothing decided |
 | `site/host_metadata.json` | hosts to zones, OS and roles | synthesis knows no zones |
 
 ## Drift and conformance

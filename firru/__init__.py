@@ -16,7 +16,6 @@ Library modules:
 CLI entry points (installed via pyproject.toml):
     firru               The policy-YAML editing core. Verbs:
       firru synth         loot JSON → staged host policy YAML
-      firru score         annotate [score] "must stay open" notes
       firru propose       edits from observed flows, as tagged firru commands
       firru check         what a policy refuses of the traffic, answered or not
       firru merge-zones   per-host policies → per-zone firewall policy

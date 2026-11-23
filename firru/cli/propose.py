@@ -43,7 +43,7 @@ from firru.arkime import ArkimeAPI, SESSION_FIELDS, process_flow
 from firru.cli.address_summarizer import (_default_asn_db, summarize,
                                           summarize_asn)
 from firru.comments import TAG_AUTO, detached, tagged, set_term_comment, kept_comments_by_term
-from firru.src_heuristics import declared_sources, load_profile
+from firru.src_heuristics import declared_sources, load_profile, scored_ports
 from firru.flows import Hits
 from firru.policy import DIR_IN, DIR_OUT, filter_directions
 
@@ -1542,7 +1542,8 @@ Each line ends in its reason, so a posture is a grep:
       if sh:
           from firru.cli.propose_sh import emit_host
           emit_host(str(policy_path), str(out_policy), args.defs, original, policy,
-                    defs, all_unused, declared, window_line(source, span))
+                    defs, all_unused, declared, window_line(source, span),
+                    scored_ports(host_token, host_meta, profile))
       sys.stdout.flush()
 
     if any_rows is not None:

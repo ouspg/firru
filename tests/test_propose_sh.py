@@ -141,3 +141,45 @@ def test_egress_is_always_a_comment(tmp_path):
                        "destination-address: WEB, action: accept}"])
     lines = egress_lines(P, "proposals/h1.yml", "def", old, new, _defs(tmp_path))
     assert lines and all(l.startswith("# firru ") and "egress proposed" in l for l in lines)
+
+
+class TestScoredBySite:
+    """site/policy.py's scored(host, metadata): a term covering a scored port
+    is left as it is, whatever the traffic says."""
+
+    def test_a_narrowing_is_pinned(self, tmp_path):
+        (line,) = ingress_lines(P, _doc(_t("allow-tcp-HTTP", "HTTP")),
+                                _doc(_t("allow-tcp-HTTP", "HTTP", "A")), _defs(tmp_path), [],
+                                lambda svc: [], {("tcp", 80): "Scored: web"})
+        assert line == ("# allow-tcp-HTTP: narrowed in the proposal, kept: the site scores "
+                        "tcp/80 (Scored: web)  # pinned")
+
+    def test_an_unexercised_listener_is_not_denied(self, tmp_path):
+        doc = _doc(_t("allow-tcp-HTTP", "HTTP"))
+        u = [{"name": "allow-tcp-HTTP", "svc": "HTTP", "proto": "tcp", "source": "ANY"}]
+        (line,) = ingress_lines(P, doc, doc, _defs(tmp_path), u, lambda svc: [],
+                                {("tcp", 80): "scored"})
+        assert line.endswith("# pinned") and "set-action" not in line
+
+
+def test_the_hook_takes_tuples_or_a_mapping():
+    from firru.src_heuristics import Profile, scored_ports
+
+    class M:
+        @staticmethod
+        def scored(host, metadata):
+            return [("TCP", "443", "Scored: HTTPS"), ("udp", 53)]
+    p = Profile(policy=M(), policy_origin="policy.py")
+    assert scored_ports("h1", {}, p) == {("tcp", 443): "Scored: HTTPS", ("udp", 53): "scored"}
+    M.scored = staticmethod(lambda h, m: {("tcp", 22): "SSH"})
+    assert scored_ports("h1", {}, Profile(policy=M(), policy_origin="policy.py")) == {("tcp", 22): "SSH"}
+    assert scored_ports("h1", {}, Profile()) == {}
+
+
+def test_heuristics_cannot_score():
+    """What must stay open is a decision: site/policy.py, not a guess."""
+    from firru.src_heuristics import Profile, scored_ports
+
+    class M:
+        scored = staticmethod(lambda h, m: [("tcp", 80)])
+    assert scored_ports("h1", {}, Profile(M(), origin="heuristics.py")) == {}

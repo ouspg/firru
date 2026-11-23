@@ -37,7 +37,7 @@ a leading tag; an untagged line is owned by nobody and is inviolable.
 | tag        | regenerated from        | who writes it            |
 |------------|-------------------------|--------------------------|
 | `[auto]`   | loot / flow store       | any generator            |
-| `[score]`  | `scoring.yml`           | the scoring pass         |
+| `[score]`  | the site's scoring      | the site, or a tool of its own; `rm`, `set-action` and `propose` leave its term alone |
 | *(none)*   | nobody — authored       | a human, in `$EDITOR`    |
 
 History is **not** a tag. "was: ANY" is the pre-change value, which is exactly
