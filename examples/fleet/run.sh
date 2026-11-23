@@ -27,7 +27,7 @@ loot-listeners hosts/ --output loot/
 loot-listeners stock/ --output baselines/
 
 step "3. what the fleet runs beyond stock"
-firru diff --baseline baselines/ loot/ \
+firru loot-diff --baseline baselines/ loot/ \
     --assign 'dc*=win2022-std-desktop-dc-g2' --assign 'win*=win2022-std-desktop-public-g2' \
     --assign '*=ubuntu-24.04.5-server-g1' -o sh > review.sh || true
 cat review.sh

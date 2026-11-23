@@ -455,6 +455,14 @@ class TestLootSide:
              "listen_ports": entries}))
         return str(path)
 
+    def test_two_loots_are_loot_diffs(self, tmp_path):
+        import pytest
+        defs = _defs(tmp_path)
+        a = self._loot(tmp_path, [22], hostname="h1")
+        b = self._loot(tmp_path, [22, 3306], hostname="h2")
+        with pytest.raises(SystemExit, match="loot-diff"):
+            cmd_diff(argparse.Namespace(old=a, new=b, defs=defs, output="human", direction="in"))
+
     def test_a_new_listener_appears_as_added(self, tmp_path, capsys):
         defs = _defs(tmp_path)
         pol = _write(tmp_path, "pol.yml", _pol([_t("allow-tcp-SSH", "SSH"), DROP]))

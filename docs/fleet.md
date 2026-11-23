@@ -50,7 +50,7 @@ A stock install of the same OS and role explains most of what a host listens
 on. Compare each host with one, and read only the difference:
 
 ```sh
-firru diff --baseline baselines/ loot/ \
+firru loot-diff --baseline baselines/ loot/ \
     --assign 'dc*=win2022-std-desktop-dc-g2' \
     --assign 'win*=win2022-std-desktop-public-g2' \
     --assign '*=ubuntu-24.04.5-server-g1'

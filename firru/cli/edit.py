@@ -942,6 +942,13 @@ def _cmd_diff_body(args, defs):
     zp = getattr(args, "zone_prefix", None)
     old_doc, old_unknown = _load_side(args.old, args.defs, zp, allow_ruleset=True)
     new_doc, new_unknown = _load_side(args.new, args.defs, zp, allow_ruleset=True)
+    if all((d.get("metadata") or {}).get("source") == "loot" for d in (old_doc, new_doc)):
+        # Two synthesized loots compare what the heuristics make of each
+        # listener and lose the process and the bind address; loot-diff
+        # compares the listeners themselves. diff needs a policy on one side.
+        raise SystemExit(f"firru diff: {args.old} and {args.new} are both loot: "
+                         f"`firru loot-diff {args.old} {args.new}` compares listeners "
+                         f"(--baseline for a stock install)")
     result = diff_surface(old_doc, new_doc, defs, _direction_arg(args))
     result["kept"] = _reviewed_sources_kept(result, old_doc, new_doc)
     swaps = _terminal_swaps(old_doc, new_doc, _direction_arg(args))
