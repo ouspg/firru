@@ -861,6 +861,8 @@ Examples:
     profile       = load_profile(args.defs)
     if profile.origin:
         print(f"Source policy: {profile.origin}", file=sys.stderr)
+    if profile.policy_origin:
+        print(f"Site policy: {profile.policy_origin}", file=sys.stderr)
     try:
         roles = []
         for spec in args.role:
