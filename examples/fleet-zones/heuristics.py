@@ -5,6 +5,16 @@
 # zone. NetBIOS and the discovery protocols stay inside the host's zone: they
 # are not routed, so the zone's hosts are their only clients by definition.
 
+# Kept from firru's shipped heuristics.py: a site's file is all of its
+# configuration. SSDP (UPnP discovery, udp/1900) has no legitimate inbound
+# use on a server, and mDNS and LLMNR are link-local: a router will not
+# forward them, so neither should a source rule.
+DENY_SERVICES = {"SSDP": "udp"}
+LINK_LOCAL_TOKENS = {
+    "MDNS":  ("MDNS_SOURCES_V4",  "MDNS_SOURCES_V6"),
+    "LLMNR": ("LLMNR_SOURCES_V4", "LLMNR_SOURCES_V6"),
+}
+
 MGMT_SERVICES = ["SSH", "RDP", "WINRM-HTTP", "WINRM-HTTPS"]
 
 

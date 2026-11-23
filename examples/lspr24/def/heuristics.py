@@ -10,6 +10,18 @@
 # (assumptions.yml). None is shared across networks: a segment spans several,
 # and handing one network's management hosts to another is wider than meant.
 
+# Kept from firru's shipped heuristics.py: a site's file is all of its
+# configuration. SSDP (UPnP discovery, udp/1900) has no legitimate inbound
+# use on a server, and mDNS and LLMNR are link-local (224.0.0.251,
+# 224.0.0.252, ff02::fb, ff02::1:3): a router will not forward them, so
+# neither should a source rule.
+DENY_SERVICES = {"SSDP": "udp"}
+LINK_LOCAL_TOKENS = {
+    "MDNS":  ("MDNS_SOURCES_V4",  "MDNS_SOURCES_V6"),
+    "LLMNR": ("LLMNR_SOURCES_V4", "LLMNR_SOURCES_V6"),
+}
+
+
 MGMT_SERVICES = ['SSH', 'RDP', 'WINRM-HTTP', 'WINRM-HTTPS', 'WINDOWS-AD-ADWS']
 
 

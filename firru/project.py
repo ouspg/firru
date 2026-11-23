@@ -143,7 +143,7 @@ SITE = "site"
 #: What a missing site file costs, said once per run inside a project. A file
 #: not listed is never asked for.
 COSTS = {
-    "heuristics.py": "every synthesized source is ANY",
+    "heuristics.py": "firru's shipped defaults (copy it from the stock def/ to edit)",
     "host_metadata.json": "synthesis knows no zones",
 }
 

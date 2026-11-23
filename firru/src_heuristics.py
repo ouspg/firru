@@ -3,9 +3,10 @@
 #
 # The engine. Who may reach a service is site policy, so it lives in a
 # profile: a Python file, `heuristics.py` in the definitions directory, that
-# sets any of the tables and hooks below. Anything it leaves out takes the
-# default here, and with no profile at all every service is ANY except the
-# few whose answer holds anywhere (link-local discovery, SSDP).
+# sets any of the tables and hooks below; anything it leaves out is unset,
+# and a service with no answer is ANY. A project without one gets firru's
+# shipped heuristics.py (the stock def/): the few answers that hold anywhere
+# (link-local discovery, SSDP), and the template to copy into site/ and edit.
 #
 # A profile is code and firru runs it: it belongs to the same project as the
 # definitions beside it.
@@ -53,34 +54,44 @@
 # =============================================================================
 
 import importlib.util
+import itertools
 import os
-
-DEFAULT_DENY_SERVICES = {
-    "SSDP": "udp",   # UPnP discovery — UDP 1900, no legitimate inbound use on servers
-}
-
-# Their multicast groups are link-local (224.0.0.251, 224.0.0.252, ff02::fb,
-# ff02::1:3): a router will not forward them, so neither should a source rule.
-DEFAULT_LINK_LOCAL_TOKENS = {
-    "MDNS":  ("MDNS_SOURCES_V4",  "MDNS_SOURCES_V6"),
-    "LLMNR": ("LLMNR_SOURCES_V4", "LLMNR_SOURCES_V6"),
-}
 
 PROFILE_FILE = "heuristics.py"
 POLICY_FILE = "policy.py"
 
 
+_seq = itertools.count()
+
+
+def _module(path):
+    if not path:
+        return None
+    spec = importlib.util.spec_from_file_location(
+        f"firru_site_{next(_seq)}_{os.path.basename(path)[:-3]}", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def shipped():
+    """firru's shipped heuristics.py (the stock def/): sane defaults, and the
+    template a project copies into site/ and edits."""
+    from firru.defs_dir import STOCK
+    return os.path.join(str(STOCK), PROFILE_FILE)
+
+
 class Profile:
-    """A site's source policy: a profile module's tables and hooks over the
-    defaults. `Profile()` is the defaults alone."""
+    """A site's source policy: its heuristics.py (all of it: nothing is
+    layered underneath) and its policy.py. `Profile()` sets nothing."""
 
     def __init__(self, module=None, origin=None, policy=None, policy_origin=None):
         def get(name, default, mod=module):
             return getattr(mod, name, default) if mod is not None else default
 
         self.origin = origin
-        self.deny_services = get("DENY_SERVICES", DEFAULT_DENY_SERVICES)
-        self.link_local_tokens = get("LINK_LOCAL_TOKENS", DEFAULT_LINK_LOCAL_TOKENS)
+        self.deny_services = get("DENY_SERVICES", {})
+        self.link_local_tokens = get("LINK_LOCAL_TOKENS", {})
         # Who may administer a host is the site's decision: site/policy.py,
         # with heuristics.py still read where a site has not moved it.
         def decided(name, default):
@@ -95,22 +106,22 @@ class Profile:
         self.policy_origin = policy_origin
 
 
-DEFAULT = Profile()
+#: The shipped heuristics.py: what a project without its own gets.
+DEFAULT = Profile(_module(shipped()), origin=shipped())
 _loaded = {}
 
 
 def load_profile(defs_dir):
     """The profile in the project's site/heuristics.py, else in
-    `defs_dir`/heuristics.py (where it lived before site/), with the
-    project's site/policy.py beside it, or the defaults where there is
-    neither. Loaded once per pair of files."""
+    `defs_dir`/heuristics.py (where it lived before site/), else firru's
+    shipped one, with the project's site/policy.py beside it. Whichever is
+    found is all of it. Loaded once per pair of files."""
     from firru.defs_dir import STOCK
     from firru.project import site_path
     path = site_path(PROFILE_FILE, note=False)
     if path is None and defs_dir:
         legacy = os.path.join(defs_dir, PROFILE_FILE)
-        # The stock one is a commented template that sets nothing: inside a
-        # project, having only it is having none.
+        # The stock one is what a project without its own gets anyway.
         if os.path.isfile(legacy) and os.path.realpath(defs_dir) != os.path.realpath(STOCK):
             path = legacy
     if path is None:
@@ -120,23 +131,14 @@ def load_profile(defs_dir):
     path = os.path.abspath(path) if path and os.path.isfile(path) else None
     policy = site_path(POLICY_FILE, note=False)
     policy = os.path.abspath(policy) if policy else None
-    if not path and not policy:
+    if not policy and (not path or path == os.path.abspath(shipped())):
         return DEFAULT
+    path = path or os.path.abspath(shipped())
     key = (path, policy)
     if key not in _loaded:
         _loaded[key] = Profile(_module(path), origin=path,
                                policy=_module(policy), policy_origin=policy)
     return _loaded[key]
-
-
-def _module(path):
-    if not path:
-        return None
-    spec = importlib.util.spec_from_file_location(f"firru_site_{len(_loaded)}_"
-                                                  f"{os.path.basename(path)[:-3]}", path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
 
 
 # =============================================================================
