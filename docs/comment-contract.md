@@ -52,9 +52,9 @@ not write a `[hist]` line; lean on the repo.
 > the term list) are changed only by an explicit, named operation.
 
 This is **not** a feature of one tool. It binds every tool that round-trips a
-human file: `firru synth`, `firru tighten`, and the edit commands (`firru
+human file: `firru synth`, `firru propose`, and the edit commands (`firru
 set-source`, `firru remove-source`, `firru set-action`, `firru add-term`, `firru rm`) alike. A
-generator that rewrites a term's whole comment block — as `tighten` once did,
+generator that rewrites a term's whole comment block — as `tighten` (now `propose`) once did,
 with an unconditional `yaml_set_start_comment` — violates it and silently eats
 intent. The `firru.comments` helper is the shared implementation: it recovers
 each term's non-`[auto]` lines before a rebuild and re-attaches them, hiding
@@ -142,10 +142,10 @@ regenerate the `[auto]` block, copy a verbatim addition term, pull one named
 tightened field. The moment an edit needs a *choice* (keep ANY? is
 DOCKER_INTERNAL right? allow this rogue port?) there is no flag for it: the
 tool tells you where to open `$EDITOR`, not a switch that decides for you.
-Looking and writing are separate: `firru diff` only reports (or prints the
-commands), every write is a command that names what it changes, and
-overriding a scoring note takes its own flag (`firru rm --force`, `firru
-set-action --force`).
+Looking and writing are separate: `firru diff` and `firru propose` only
+report (or print the commands), every write is a command that names what it
+changes, and overriding a scoring note takes its own flag (`firru rm --force`,
+`firru set-action --force`).
 
 If a proposed flag seems to want an argument that encodes a judgment, that is
 the signal to stop and let the editor win.

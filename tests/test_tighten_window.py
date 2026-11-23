@@ -4,7 +4,7 @@ its window, and a later look at the full list should reproduce it."""
 import json
 
 from firru import flows
-from firru.cli.tighten import collect_flows_from_file, collect_flows_multi, window_line
+from firru.cli.propose import collect_flows_from_file, collect_flows_multi, window_line
 
 T0 = 1709748000          # 2024-03-06T18:00:00Z
 

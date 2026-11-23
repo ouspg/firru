@@ -53,7 +53,7 @@ cp -r policies/staged policies/pol            # the review: here, accept all
 
 step "6. traffic, and what it says about the sources"
 python3 "$FIRRU/examples/fleet/make-flows.py" > flows.jsonl
-firru tighten --policy policies/pol/*.yml --defs def --flows-file flows.jsonl --outdir policies/tightened
+firru propose policies/pol/*.yml --defs def --flows-file flows.jsonl -o yaml --outdir policies/tightened
 for h in mon1 win1 web1 dc1; do
   firru diff policies/pol/$h.yml policies/tightened/$h.yml --defs def --flows flows.jsonl || true
 done
@@ -109,8 +109,8 @@ for (host, port, rev, early), n in sorted(rows.items()):
 PY
 
 step "11. and had day 2 been the learning window"
-firru tighten --policy policies/staged/*.yml --defs def --flows-file flows-day2.jsonl \
-    --outdir policies/learned-day2 > /dev/null 2>&1
+firru propose policies/staged/*.yml --defs def --flows-file flows-day2.jsonl \
+    -o yaml --outdir policies/learned-day2 > /dev/null 2>&1
 for h in mon1 win1 dc1; do
   firru diff policies/staged/$h.yml policies/learned-day2/$h.yml --defs def || true
 done

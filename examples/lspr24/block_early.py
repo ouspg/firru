@@ -37,7 +37,7 @@ from lspr24_to_flows import WINDOWS, canonical_ip, flow_rows
 from firru.policy import DIR_IN, filter_directions
 from flows_to_enforced import inventory, listeners, service_tokens
 
-# Round-trip, not safe_load: `firru tighten` records its evidence as comments
+# Round-trip, not safe_load: `firru propose` records its evidence as comments
 # above each term ("900 flows total | 900 hits: BEG_GT ... via SSH/tcp/22")
 # and a plain load/dump cycle silently deletes all of it. R4 is the variant a
 # reviewer is most entitled to question, so it is the last place to throw the
@@ -78,7 +78,7 @@ def evidence(flows, listen, owner, window=None):
     """
     (token, proto, port) that saw at least one inbound flow in the learn window.
 
-    The learn window is the one `firru tighten` read for R2 (--window night,
+    The learn window is the one `firru propose` read for R2 (--window night,
     firru.toml's), so R4 is R2's own evidence with the zero-evidence services
     removed: a service tighten marked "no flows observed" is exactly a service
     this drops. An earlier version re-read the parquet with its own window

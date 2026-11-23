@@ -11,7 +11,7 @@ FQDNs. It is the one public dataset firru can be driven end-to-end on.
     python lspr24_to_flows.py data/lspr24_v2.parquet --window night > night.jsonl
 
 --store writes the flows as the hour-partitioned parquet store zeek-to-flows
-writes, which firru tighten and firru diff read for a window
+writes, which firru propose, check and diff read for a window
 (`--window night`); without it, one JSON object per flow goes to stdout. Both
 have the shape of firru.arkime.process_flow and zeek-to-flows:
 

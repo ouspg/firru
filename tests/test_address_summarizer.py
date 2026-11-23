@@ -79,34 +79,34 @@ class _Ann:
 
 def test_note_is_none_when_every_source_resolves():
     from collections import Counter
-    from firru.cli.tighten import unresolved_note
+    from firru.cli.propose import unresolved_note
     assert unresolved_note(Counter({"10.0.0.1": 3}), _Ann(["10.0.0.1"])) is None
 
 
 def test_private_space_outranks_the_other_verdicts():
     from collections import Counter
-    from firru.cli.tighten import unresolved_note
+    from firru.cli.propose import unresolved_note
     out = unresolved_note(Counter({"10.85.7.176": 400, "10.85.7.177": 5}), _Ann())
     assert "private address space" in out and "inventory" in out
 
 
 def test_a_single_unresolved_source_says_so():
     from collections import Counter
-    from firru.cli.tighten import unresolved_note
+    from firru.cli.propose import unresolved_note
     out = unresolved_note(Counter({"9.9.9.9": 1}), _Ann())
     assert "a single source" in out
 
 
 def test_a_fan_in_is_called_honest_any():
     from collections import Counter
-    from firru.cli.tighten import unresolved_note
+    from firru.cli.propose import unresolved_note
     out = unresolved_note(Counter(dict.fromkeys(FAN_IN, 1)), _Ann())
     assert "ANY stays" in out
 
 
 def test_dns_names_win_when_every_address_has_one():
     from collections import Counter
-    from firru.cli.tighten import unresolved_note
+    from firru.cli.propose import unresolved_note
     store = {"93.184.216.34": "update.example.com", "93.184.216.35": "cdn.example.com"}
     out = unresolved_note(Counter({"93.184.216.34": 9, "93.184.216.35": 2}),
                           _Ann(), dns_store=store, noun="dst")
@@ -118,7 +118,7 @@ def test_structure_needs_a_majority_in_one_group_not_merely_a_collapse():
     # 27 addresses in 22 unrelated networks is a fan-in, not a group. An earlier
     # rule called any collapse structure and got this exactly backwards.
     from collections import Counter
-    from firru.cli.tighten import _verdict
+    from firru.cli.propose import _verdict
     # Genuinely unrelated networks, one address each: no prefix holds a
     # majority however the budget is spent.
     scattered = {f"{a}.12.34.{i}": 1
@@ -174,7 +174,7 @@ def test_group_iteration_matches_row_iteration(tmp_path):
 def test_bucket_flow_honors_the_group_weight():
     from collections import Counter, defaultdict
     from aerleon.lib import naming
-    from firru.cli.tighten import _bucket_flow
+    from firru.cli.propose import _bucket_flow
 
     defs = naming.Naming.__new__(naming.Naming)   # GetPortParents is not needed
     defs.GetPortParents = lambda port, proto: []
@@ -205,7 +205,7 @@ def test_heavy_hitters_name_the_peers_that_carried_the_flows():
 
 def test_the_note_is_a_comment_with_shares():
     from collections import Counter
-    from firru.cli.tighten import heavy_hitter_note
+    from firru.cli.propose import heavy_hitter_note
     out = heavy_hitter_note(Counter(XROAD), _Ann())
     assert out.startswith("heavy hitters among 16 unresolved src (2150 flows): "
                           "100.98.10.6 14.7%, 100.98.12.6 13.0%")
@@ -216,7 +216,7 @@ def test_the_note_is_a_comment_with_shares():
 def test_no_note_when_no_single_address_is_heavy():
     """Forty clients, one flow each: arbitrary prefix slices are not a finding."""
     from collections import Counter
-    from firru.cli.tighten import heavy_hitter_note
+    from firru.cli.propose import heavy_hitter_note
     spread = Counter({f"{net}.{n}": 1 for net in ("192.0.2", "198.51.100", "203.0.113")
                       for n in range(1, 14)})
     assert heavy_hitter_note(spread, _Ann()) is None
@@ -238,5 +238,5 @@ def test_ipv6_walks_its_own_tree():
 
 def test_one_address_is_not_a_note():
     from collections import Counter
-    from firru.cli.tighten import heavy_hitter_note
+    from firru.cli.propose import heavy_hitter_note
     assert heavy_hitter_note(Counter({"9.9.9.9": 1}), _Ann()) is None

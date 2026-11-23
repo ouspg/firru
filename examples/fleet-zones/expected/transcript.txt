@@ -68,50 +68,50 @@ Reading flows from flows.jsonl (single pass, 12 hosts) …
 Host: db1  IPs: ['10.20.2.13', '2001:db8:20:2::d']
   ingress: 507 flows across 2 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/db1.yml  (2 changed, 1 log-drop candidate)
 Host: dc1  IPs: ['10.20.2.10', '2001:db8:20:2::a']
   ingress: 392 flows across 5 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/dc1.yml  (4 changed, 19 log-drop candidates)
 Host: files1  IPs: ['10.20.2.11', '2001:db8:20:2::b']
   ingress: 92 flows across 2 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/files1.yml  (1 changed, 9 log-drop candidates)
 Host: jump1  IPs: ['10.20.9.10', '2001:db8:20:9::a']
   ingress: 0 flows across 0 service buckets
   egress:  24 flows across 2 service buckets
+Written: policies/tightened/jump1.yml  (0 changed, 2 log-drop candidates)
 Host: mail1  IPs: ['10.20.1.11', '2001:db8:20:1::b']
   ingress: 47 flows across 2 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/mail1.yml  (1 changed, 5 log-drop candidates)
 Host: ns1  IPs: ['10.20.1.12', '2001:db8:20:1::c']
   ingress: 187 flows across 2 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/ns1.yml  (1 changed, 1 log-drop candidate)
 Host: print1  IPs: ['10.20.2.12', '2001:db8:20:2::c']
   ingress: 0 flows across 0 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/print1.yml  (0 changed, 10 log-drop candidates)
 Host: smb1  IPs: ['10.20.2.14', '2001:db8:20:2::e']
   ingress: 4 flows across 1 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/smb1.yml  (1 changed, 1 log-drop candidate)
 Host: web1  IPs: ['10.20.1.10', '2001:db8:20:1::a']
   ingress: 408 flows across 3 service buckets
   egress:  500 flows across 1 service buckets
+Written: policies/tightened/web1.yml  (1 changed, 1 log-drop candidate)
 Host: ws1  IPs: ['10.20.3.21', '2001:db8:20:3::15']
   ingress: 0 flows across 0 service buckets
   egress:  160 flows across 4 service buckets
+Written: policies/tightened/ws1.yml  (0 changed, 8 log-drop candidates)
 Host: ws2  IPs: ['10.20.3.22', '2001:db8:20:3::16']
   ingress: 0 flows across 0 service buckets
   egress:  163 flows across 5 service buckets
+Written: policies/tightened/ws2.yml  (0 changed, 1 log-drop candidate)
 Host: ws3  IPs: ['10.20.3.23', '2001:db8:20:3::17']
   ingress: 0 flows across 0 service buckets
   egress:  160 flows across 4 service buckets
-Written: policies/tightened/db1.yml  (2 changed, 1 log-drop candidate)
-Written: policies/tightened/dc1.yml  (4 changed, 19 log-drop candidates)
-Written: policies/tightened/files1.yml  (1 changed, 9 log-drop candidates)
-Written: policies/tightened/jump1.yml  (0 changed, 2 log-drop candidates)
-Written: policies/tightened/mail1.yml  (1 changed, 5 log-drop candidates)
-Written: policies/tightened/ns1.yml  (1 changed, 1 log-drop candidate)
-Written: policies/tightened/print1.yml  (0 changed, 10 log-drop candidates)
-Written: policies/tightened/smb1.yml  (1 changed, 1 log-drop candidate)
-Written: policies/tightened/web1.yml  (1 changed, 1 log-drop candidate)
-Written: policies/tightened/ws1.yml  (0 changed, 8 log-drop candidates)
-Written: policies/tightened/ws2.yml  (0 changed, 1 log-drop candidate)
 Written: policies/tightened/ws3.yml  (0 changed, 3 log-drop candidates)
 dc1:
   narrowed (4) — fewer peers, safe to apply:

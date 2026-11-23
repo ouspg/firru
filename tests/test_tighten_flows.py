@@ -11,7 +11,7 @@ from collections import Counter, defaultdict
 
 import pytest
 
-from firru.cli.tighten import (
+from firru.cli.propose import (
     _bucket_flow,
     _is_broadcast_or_multicast,
     best_tokens,
@@ -307,12 +307,11 @@ def test_a_windows_egress_filter_is_egress(tmp_path):
          "dst_port": 22, "responded": True},
         {"protocol": "tcp", "src_ip": "10.0.0.9", "dst_ip": "10.0.0.5", "src_port": 40001,
          "dst_port": 134, "responded": True}]) + "\n")
-    r = subprocess.run([sys.executable, "-m", "firru.cli.tighten", "--policy", str(pol),
-                        "--defs", str(d), "--flows-file", str(flows), "--dry-run"],
+    r = subprocess.run([sys.executable, "-m", "firru.cli.check", str(pol),
+                        "--defs", str(d), "--flows-file", str(flows)],
                        capture_output=True, text=True)
-    assert r.returncode == 0, r.stderr
-    blocked = r.stdout.split("--- Would-be-blocked", 1)
-    assert len(blocked) == 2 and "134" in blocked[1], r.stdout
+    assert r.returncode == 1, r.stderr          # an answered flow is refused
+    assert "134" in r.stdout and "no term" in r.stdout, r.stdout
 
 
 def test_a_source_the_heuristics_declare_survives_tightening(tmp_path):
@@ -366,7 +365,7 @@ def test_a_source_the_heuristics_declare_survives_tightening(tmp_path):
     flows.write_text(json.dumps({"protocol": "tcp", "src_ip": "10.0.0.9", "dst_ip": "10.0.0.5",
                                  "src_port": 40000, "dst_port": 22, "responded": True}) + "\n")
     out = tmp_path / "out"
-    r = subprocess.run([sys.executable, "-m", "firru.cli.tighten", "--policy", str(pol),
+    r = subprocess.run([sys.executable, "-m", "firru.cli.propose", str(pol), "-o", "yaml",
                         "--defs", str(d), "--flows-file", str(flows), "--outdir", str(out)],
                        capture_output=True, text=True, cwd=tmp_path)
     assert r.returncode == 0, r.stderr

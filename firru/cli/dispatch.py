@@ -34,7 +34,8 @@ _ALIASES = {"set-dest": "set-destination", "add-dest": "add-destination",
 _MODULES = {
     "synth":             "firru.cli.synth",                 # loot JSON -> staged policy YAML
     "score":             "firru.cli.score",                 # annotate [score] notes
-    "tighten":           "firru.cli.tighten",               # tighten sources from flows
+    "propose":           "firru.cli.propose",               # edits from the traffic, as firru commands
+    "check":             "firru.cli.check",                 # what a policy refuses, answered or not
     "merge-zones":       "firru.cli.merge_zones",           # per-host -> per-zone policy
     "annotate-services": "firru.cli.annotate_services",     # refresh [auto] evidence in def/
     "edit-services":     "firru.cli.edit_services",         # add / rm service tokens in def/
@@ -64,7 +65,9 @@ Edit policy YAML:
 Produce / transform policy YAML:
   synth        loot JSON -> staged host policy YAML
   score        annotate [score] "must stay open" notes
-  tighten      tighten sources from observed flows (flows JSONL, or live Arkime)
+  propose      edits from the traffic as tagged firru commands (narrow, deny unexercised);
+               the proposals are written to proposals/ (-o yaml: only those)
+  check        what a policy refuses of the traffic, answered (would break) or not
   merge-zones  per-host policies -> per-zone firewall policy
   stance       where each policy is on log-accept -> log-drop -> drop (read-only; -o json)
 

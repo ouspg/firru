@@ -363,7 +363,7 @@ def _host_flow_index(flows_file, docs, defs, span=None, paths=()):
     definitions know it, since files are named by the inventory token, which is
     unique; metadata.host is the collector's label, which need not be (two
     zones can each have a `www`)."""
-    from firru.cli.tighten import get_host_ips
+    from firru.cli.propose import get_host_ips
     candidates = [pathlib.Path(p).stem for p in paths if p]
     candidates += [(d.get("metadata") or {}).get("host") for d in docs]
     host_token, ips = None, []

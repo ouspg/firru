@@ -11,7 +11,7 @@ from collections import Counter, defaultdict
 import pytest
 
 from firru import flows
-from firru.cli.tighten import _bucket_flow, collect_flows_from_file, summarise_annotations
+from firru.cli.propose import _bucket_flow, collect_flows_from_file, summarise_annotations
 from firru.flows import Hits
 
 

@@ -6,7 +6,7 @@ import textwrap
 
 from ruyaml import YAML
 
-from firru.cli.tighten import tighten_ingress
+from firru.cli.propose import tighten_ingress
 
 
 class StubDefs:

@@ -63,7 +63,7 @@ python3 assumptions.py --loot loot-ossec/ --defs def/ --assumptions assumptions.
 suggest-services --input loot-assumed/ --defs def/ --yaml def/services-observed.yml
 firru synth --input loot-assumed/ --defs def/ --meta def/host_metadata.json \
     --output policies/r1-synthesized/
-firru tighten --policy policies/r1-synthesized --defs def/ \
+firru propose policies/r1-synthesized --defs def/ -o yaml \
     --window night --outdir policies/r2-tightened      # flows: firru.toml's store
 python3 flows_to_enforced.py ... --out policies/r3-apparent/
 python3 block_early.py --flows data/flows/ --window night ... --out policies/r4-block-early/
@@ -202,7 +202,7 @@ naming material in the record is a few hundred SNI and HTTP host headers in
 
 The flows are one store of the whole dataset (`make flows`: 20M flows, 0.4 GB,
 written in about 20 seconds), and each command reads the window it is given,
-by the names in `firru.toml`. Tightening above is `firru tighten --window
+by the names in `firru.toml`. Tightening above is `firru propose --window
 night`. The same store answers the question before a deploy: what would the
 tightened policy have done to traffic it was not tightened on?
 
@@ -234,7 +234,7 @@ clients of one night closes it to its users.
 
 `make check-live` asks the question to ask before deploying: what would each
 host's policy, trained on the night window, refuse of the first live hour,
-08:00-09:00 on d2? It is `firru tighten --check`, which reads the whole policy
+08:00-09:00 on d2? It is `firru check`, which reads the whole policy
 rather than a change to it, so it also reports traffic to a port no term
 covers. The hourly diffs above cannot show that: they compare two policies,
 and a port neither has a term for is in neither. The results are in

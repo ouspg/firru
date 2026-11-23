@@ -20,7 +20,7 @@ def test_help_lists_verbs(monkeypatch, capsys):
     rc = _run([], monkeypatch)
     out = capsys.readouterr().out
     assert rc == 0
-    for verb in ("synth", "score", "tighten", "merge-zones", "diff", "add-term", "set-source",
+    for verb in ("synth", "score", "propose", "check", "merge-zones", "diff", "add-term", "set-source",
                  "remove-source", "set-action", "rm"):
         assert verb in out
 

@@ -135,7 +135,7 @@ domain at work: win1 and the admin workstations using dc1's DNS, Kerberos,
 LDAP, SMB, RPC and time.
 
 ```sh
-firru tighten --policy policies/pol/*.yml --defs def --flows-file flows.jsonl --outdir policies/tightened
+firru propose policies/pol/*.yml --defs def --flows-file flows.jsonl -o yaml --outdir policies/tightened
 firru diff policies/pol/mon1.yml policies/tightened/mon1.yml --defs def --flows flows.jsonl
 ```
 
@@ -164,7 +164,7 @@ Before a policy is deployed, the question is what it would break now: check
 it against the latest traffic, not the window it was tightened on.
 
 ```sh
-firru tighten --policy policies/pol/dc1.yml --defs def --flows-file flows.jsonl --check --since -30min
+firru check policies/pol/dc1.yml --defs def --flows-file flows.jsonl --since -30min
 ```
 
 It lists, per source, the flows the policy would refuse: to a port no term
@@ -284,8 +284,8 @@ services nobody used.
 ## 11. Had day 2 been the learning window
 
 ```sh
-firru tighten --policy policies/staged/*.yml --defs def --flows-file flows-day2.jsonl \
-    --outdir policies/learned-day2
+firru propose policies/staged/*.yml --defs def --flows-file flows-day2.jsonl \
+    -o yaml --outdir policies/learned-day2
 firru diff policies/staged/mon1.yml policies/learned-day2/mon1.yml --defs def
 ```
 
