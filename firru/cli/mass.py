@@ -4,7 +4,7 @@ firru mass — run a stream of firru commands in one process.
 
 The edit scripts firru emits (`firru diff ... -o sh`) are already a list of
 firru commands, one per line. Piping them to `sh` runs each as a cold process,
-paying Python startup and the aerleon import — and, for apply/diff, a fresh
+paying Python startup and the aerleon import — and, for add-term/diff, a fresh
 Naming build — hundreds of times. `firru mass` reads the same lines and runs
 them in a single process, with the Naming cache warm across the batch:
 

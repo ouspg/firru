@@ -22,10 +22,13 @@ import re
 import sys
 
 # Verbs handled by the edit subparser (firru/cli/edit.py).
-_EDIT_VERBS = {"diff", "apply", "set-source", "set-destination", "rm"}
+_EDIT_VERBS = {"diff", "add-term", "set-source", "set-destination", "rm",
+               "add-source", "remove-source", "add-destination",
+               "remove-destination", "set-action"}
 
 # Short names the help offers.
-_ALIASES = {"set-dest": "set-destination"}
+_ALIASES = {"set-dest": "set-destination", "add-dest": "add-destination",
+            "remove-dest": "remove-destination"}
 
 # Verbs that map straight to a module main().
 _MODULES = {
@@ -49,9 +52,12 @@ Usage: firru <command> [args]    (firru <command> --help for details)
 Edit policy YAML:
   diff         preview, or emit runnable commands for, the delta between two policies
                (with --baseline REF LOOT: listeners added to a stock install, = loot-diff)
-  apply        apply a generated delta onto a human policy (three-way merge)
+  add-term     copy a term by name from a proposal or loot (--replace: a rename)
   set-source   set an ingress term's source-address
   set-dest     set an egress term's destination-address (set-destination)
+  remove-source / add-source   narrow or widen an ingress term by the peers named
+               (remove-dest / add-dest for egress)
+  set-action   accept, deny or reject a term (--log)
   rm           remove a term by name
   mass         run a stream of firru commands in one process (| firru mass)
 

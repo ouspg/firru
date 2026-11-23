@@ -20,7 +20,7 @@ CLI entry points (installed via pyproject.toml):
       firru tighten       tighten sources from observed flows (JSONL / Arkime)
       firru merge-zones   per-host policies → per-zone firewall policy
       firru diff          preview / emit-commands for a policy delta
-      firru apply         apply a delta onto a human policy (three-way merge)
+      firru add-term      copy a term by name from a proposal or loot
       firru set-source    set a term's source-address
       firru rm            remove a term
 

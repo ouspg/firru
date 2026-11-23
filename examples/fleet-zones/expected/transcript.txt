@@ -114,14 +114,14 @@ Written: policies/tightened/ws1.yml  (0 changed, 8 log-drop candidates)
 Written: policies/tightened/ws2.yml  (0 changed, 1 log-drop candidate)
 Written: policies/tightened/ws3.yml  (0 changed, 3 log-drop candidates)
 dc1:
-  narrowed (4) — fewer peers, safe to apply (--narrow):
+  narrowed (4) — fewer peers, safe to apply:
     > allow-tcp-KERBEROS-TCP   tcp/88                 source ANY -> CLIENTS_HOSTS  observed (120 flows)
     > allow-tcp-LDAP-TCP       tcp/389                source ANY -> CLIENTS_HOSTS  observed (180 flows)
     > allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135                source ANY -> CLIENTS_HOSTS  observed (30 flows)
     > allow-tcp-WINDOWS-SMB    tcp/445                source ANY -> CLIENTS_HOSTS  observed (60 flows)
   postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
 db1:
-  narrowed (1) — fewer peers, safe to apply (--narrow):
+  narrowed (1) — fewer peers, safe to apply:
     > allow-tcp-POSTGRES       tcp/5432               source ANY -> [web1, ws2]  observed (503 flows)
   postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
 web1:

@@ -141,7 +141,7 @@ firru diff policies/pol/mon1.yml policies/tightened/mon1.yml --defs def --flows 
 
 ```
 mon1:
-  narrowed (1) — fewer peers, safe to apply (--narrow):
+  narrowed (1) — fewer peers, safe to apply:
     > allow-tcp-MUNIN          tcp/4949               source ANY -> MONITORING  observed (288 flows)
   address family (1) — coverage changed:
     # allow-tcp-MUNIN          tcp/4949               v4+v6 -> v4
@@ -291,7 +291,7 @@ firru diff policies/staged/mon1.yml policies/learned-day2/mon1.yml --defs def
 
 ```
 mon1:
-  narrowed (1) — fewer peers, safe to apply (--narrow):
+  narrowed (1) — fewer peers, safe to apply:
     > allow-tcp-MUNIN          tcp/4949               source ANY -> [MONITORING, web1]
 ```
 

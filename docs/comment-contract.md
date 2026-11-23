@@ -53,7 +53,7 @@ not write a `[hist]` line; lean on the repo.
 
 This is **not** a feature of one tool. It binds every tool that round-trips a
 human file: `firru synth`, `firru tighten`, and the edit commands (`firru
-set-source`, `firru apply`, `firru rm`) alike. A
+set-source`, `firru remove-source`, `firru set-action`, `firru add-term`, `firru rm`) alike. A
 generator that rewrites a term's whole comment block — as `tighten` once did,
 with an unconditional `yaml_set_start_comment` — violates it and silently eats
 intent. The `firru.comments` helper is the shared implementation: it recovers
@@ -99,9 +99,9 @@ A diff over two generated policies classifies each port as:
 
 | class                 | example                          | default action                    |
 |-----------------------|----------------------------------|-----------------------------------|
-| added (known svc)     | new listener on a defined port   | apply — copy the term verbatim    |
+| added (known svc)     | new listener on a defined port   | `add-term` — copy the term verbatim |
 | added (unknown port)  | rogue / undefined port           | **alert**, never auto-allow       |
-| removed               | postgres → loopback-only         | annotate; `--prune` opt-in; **scoring vetoes** |
+| removed               | postgres → loopback-only         | annotate; `rm` by name; **scoring vetoes** |
 | modified, enforcement | source ANY → DOCKER_INTERNAL     | advisory — preview old vs new     |
 | modified, cosmetic    | token renamed, process changed   | auto — refresh the `[auto]` line  |
 | unchanged             | —                                | nothing                           |
@@ -143,9 +143,9 @@ tightened field. The moment an edit needs a *choice* (keep ANY? is
 DOCKER_INTERNAL right? allow this rogue port?) there is no flag for it: the
 tool tells you where to open `$EDITOR`, not a switch that decides for you.
 Looking and writing are separate: `firru diff` only reports (or prints the
-commands), `firru apply --dry-run` previews a merge, every write is a command
-that names what it changes, and destructive actions take their own flag
-(`firru apply --prune`, `firru rm --force` for a term with a scoring note).
+commands), every write is a command that names what it changes, and
+overriding a scoring note takes its own flag (`firru rm --force`, `firru
+set-action --force`).
 
 If a proposed flag seems to want an argument that encodes a judgment, that is
 the signal to stop and let the editor win.

@@ -164,11 +164,9 @@ synth warns when the installed Aerleon would compile them unscoped.
 
 Each takes `--help`.
 
-- `firru apply POL --from NEW`: merge a generated policy's changes onto the
-  reviewed one, three-way with `--base OLD`; narrowings with `--narrow`,
-  removals with `--prune`, widenings never.
-- `firru set-source`, `firru set-dest`, `firru rm`: one edit to one term, the
-  commands `firru diff -o sh` writes. `firru mass` runs a stream of them in one
+- `firru remove-source`, `firru add-source`, `firru set-source`, `firru
+  set-action`, `firru add-term`, `firru rm` (and `-dest` for egress): one
+  edit to one term, the commands `firru diff -o sh` writes. `firru mass` runs a stream of them in one
   process.
 - `firru merge-zones`: per-host policies into per-zone policy;
   `aerleon-to-nftables` renders zones as nftables chain fragments.

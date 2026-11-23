@@ -45,7 +45,7 @@ class NetstatParseError(Exception):
     Distinct from an empty result, for the same reason as `ss.SsParseError`: a
     host that genuinely listens on nothing returns `[]`, and a dump that could
     not be parsed is a statement about the collection. Collapsing the two is how
-    `--prune` strips a working host of every rule.
+    `firru apply --prune` once stripped a working host of every rule.
     """
 
 
