@@ -47,8 +47,9 @@ committed, so they can be read without the 7 GB download.
 3. **Synthesize.** `firru synth` writes one Aerleon policy per host. A port it
    cannot name gets a note instead of a term, so nothing is allowed by accident,
    and a known port held by an unexpected process is flagged on its term.
-   Sources are `ANY` unless a profile, `heuristics.py` in your definitions,
-   says who may reach what; `def/heuristics.py` is a commented template.
+   Sources are `ANY` unless the site says who may reach what: its guesses in
+   `site/heuristics.py`, its decisions in `site/policy.py` (see "A project").
+   firru's own `def/heuristics.py` is the template, and the defaults without one.
 4. **Propose.** `firru propose` narrows `ANY` sources to the peers seen in
    traffic and denies, logged, the listeners nothing reached. It prints each
    edit as a firru command ending in its reason, so what to apply is a grep,
