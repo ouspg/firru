@@ -191,8 +191,9 @@ Each takes `--help`.
 The paper evaluates the five stages with Arkime traffic, on Linux and Windows
 hosts. Implemented since, but not yet evaluated: collection of running
 nftables and Windows Firewall rule sets, conformance over Zeek and conntrack
-flows, an enforcement probe (`policy-to-nmap`), the process-mismatch flag, and
-comparison against stock operating system baselines.
+flows, an enforcement probe (`policy-to-nmap`), the process-mismatch flag,
+comparison against stock operating system baselines, and `propose` and `check`,
+which replace the paper's `tighten`.
 
 ## Install
 
