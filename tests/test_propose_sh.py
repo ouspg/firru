@@ -114,7 +114,8 @@ class TestUnexercised:
     def test_declared_is_pinned(self, tmp_path):
         doc = _doc(_t("allow-tcp-HTTP", "HTTP", "A"))
         (line,) = _lines(tmp_path, doc, doc, self.U, declared=lambda svc: ["A"])
-        assert line.startswith("# allow-tcp-HTTP") and line.endswith("# pinned")
+        assert line == (f"# firru set-action {P} allow-tcp-HTTP deny --log  # pinned, denied: "
+                        f"no flows in the window; the site declares A")
 
     def test_scored_is_pinned(self, tmp_path):
         y = YAML()
@@ -131,7 +132,8 @@ class TestUnexercised:
                   - {name: drop-ANY, action: deny}
             """))
         (line,) = _lines(tmp_path, doc, doc, self.U)
-        assert "scored" in line and line.endswith("# pinned")
+        assert line.startswith(f"# firru set-action {P} allow-tcp-HTTP deny --log --force  # pinned")
+        assert line.endswith("its [score] note")
 
 
 def test_egress_is_always_a_comment(tmp_path):
@@ -151,15 +153,24 @@ class TestScoredBySite:
         (line,) = ingress_lines(P, _doc(_t("allow-tcp-HTTP", "HTTP")),
                                 _doc(_t("allow-tcp-HTTP", "HTTP", "A")), _defs(tmp_path), [],
                                 lambda svc: [], {("tcp", 80): "Scored: web"})
-        assert line == ("# allow-tcp-HTTP: narrowed in the proposal, kept: the site scores "
-                        "tcp/80 (Scored: web)  # pinned")
+        assert line == (f"# firru set-source {P} allow-tcp-HTTP A  # pinned, narrowed: "
+                        f"ANY -> [A]; the site scores tcp/80 (Scored: web)")
 
     def test_an_unexercised_listener_is_not_denied(self, tmp_path):
         doc = _doc(_t("allow-tcp-HTTP", "HTTP"))
         u = [{"name": "allow-tcp-HTTP", "svc": "HTTP", "proto": "tcp", "source": "ANY"}]
         (line,) = ingress_lines(P, doc, doc, _defs(tmp_path), u, lambda svc: [],
                                 {("tcp", 80): "scored"})
-        assert line.endswith("# pinned") and "set-action" not in line
+        assert line.startswith("# firru set-action") and "# pinned, denied" in line
+
+    def test_no_posture_grep_takes_a_pin_and_uncommenting_runs_it(self, tmp_path):
+        old = _doc(_t("allow-tcp-HTTP", "HTTP", "[A, B]"))
+        new = _doc(_t("allow-tcp-HTTP", "HTTP", "A"))
+        (line,) = ingress_lines(P, old, new, _defs(tmp_path), [], lambda svc: [],
+                                {("tcp", 80): "scored"})
+        assert "observed" not in line and "unexercised" not in line
+        cmd = line[2:].split("  # ")[0]
+        assert cmd == f"firru remove-source {P} allow-tcp-HTTP B"
 
 
 def test_the_hook_takes_tuples_or_a_mapping():

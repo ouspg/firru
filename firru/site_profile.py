@@ -56,7 +56,8 @@
 #   scored(host, metadata) -> [(protocol, port[, note])] | {(protocol, port): note}
 #       the ports that must stay open on the host, such as what an
 #       availability check scores, read from wherever the site keeps them.
-#       propose never narrows or denies a term covering one.
+#       propose never edits a term covering one by itself: it prints the
+#       edit commented out, tagged pinned, for whoever is sure to take.
 # =============================================================================
 
 import importlib.util

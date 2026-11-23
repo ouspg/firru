@@ -126,46 +126,59 @@ def _scored_by_site(defs, term, ports):
     return None
 
 
+def _pinned(line, reason):
+    """A pinned edit: the command, commented out, then why it is pinned. The
+    reason avoids the posture words (observed, unexercised), so no grep for
+    a posture takes it; dropping the leading `# ` is the deliberate act."""
+    cmd, _, why = line.lstrip("# ").partition("  # ")
+    cls = why.split(":", 1)[0].split()[0] if why else ""
+    detail = why.split(":", 1)[1].strip() if ":" in why else ""
+    return f"# {cmd}  # pinned, {cls}" + (f": {detail}" if detail else "") + f"; {reason}"
+
+
 def ingress_lines(pol, original, proposed, defs, unused, declared, scored_ports=None):
     """`scored_ports` is the site's {(protocol, port): note} for the host
-    (site_profile.scored_ports): a term covering one is left as it is."""
+    (site_profile.scored_ports). A term covering one, or carrying a [score]
+    note, is never edited automatically: its edit is printed commented out,
+    tagged pinned, for whoever is sure to take by hand."""
     old_terms = _terms(original, DIR_IN)
     new_terms = _terms(proposed, DIR_IN)
     scored = _scored_term_names(list(old_terms.values()))
     by_site = {name: hit for name, t in old_terms.items()
                if (hit := _scored_by_site(defs, t, scored_ports or {}))}
+
+    def why_scored(name):
+        if name in by_site:
+            proto, port, note = by_site[name]
+            return f"the site scores {proto}/{port} ({note})"
+        return "its [score] note" if name in scored else None
+
     lines = []
     for name, old_term in old_terms.items():
         new_term = new_terms.get(name)
         if new_term is None or str(old_term.get("action", "accept")).lower() != "accept":
             continue
         cls = classify(defs, old_term, new_term)
-        if cls and name in by_site:
-            proto, port, note = by_site[name]
-            lines.append(f"# {name}: {cls} in the proposal, kept: the site scores "
-                         f"{proto}/{port} ({note})  # pinned")
-        elif cls:
-            lines.append(_source_line(pol, name, _named_peers(old_term, "source-address"),
-                                      _named_peers(new_term, "source-address"), cls,
-                                      (_written(old_term), _written(new_term))))
+        if not cls:
+            continue
+        line = _source_line(pol, name, _named_peers(old_term, "source-address"),
+                            _named_peers(new_term, "source-address"), cls,
+                            (_written(old_term), _written(new_term)))
+        reason = why_scored(name)
+        lines.append(_pinned(line, reason) if reason else line)
     for u in unused:
         name = u["name"]
         term = old_terms.get(name)
         if term is None or str(term.get("action", "accept")).lower() != "accept":
             continue
-        pinned = [t for t in _named_peers(term, "source-address") if t in declared(u["svc"])]
-        if name in by_site:
-            proto, port, note = by_site[name]
-            lines.append(f"# {name}: no flows in the window, kept: the site scores "
-                         f"{proto}/{port} ({note})  # pinned")
-        elif name in scored:
-            lines.append(f"# {name}: no flows in the window, kept: scored  # pinned")
-        elif pinned:
-            lines.append(f"# {name}: no flows in the window, kept: the site declares "
-                         f"{', '.join(pinned)}  # pinned")
-        else:
-            lines.append(f"firru set-action {pol} {name} deny --log  # denied unexercised: "
-                         f"no flows in the window")
+        declared_here = [t for t in _named_peers(term, "source-address")
+                         if t in declared(u["svc"])]
+        force = " --force" if name in scored else ""
+        line = (f"firru set-action {pol} {name} deny --log{force}  # denied unexercised: "
+                f"no flows in the window")
+        reason = why_scored(name) or (
+            f"the site declares {', '.join(declared_here)}" if declared_here else None)
+        lines.append(_pinned(line, reason) if reason else line)
     return lines
 
 

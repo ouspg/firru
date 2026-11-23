@@ -1380,7 +1380,8 @@ Each line ends in its reason, so a posture is a grep:
   denied unexercised    nothing reached the listener in the window
   widened REVIEW        grants peers the policy did not (commented out)
   egress proposed       a term the egress traffic suggests (commented out)
-  pinned                declared by the site or scored; left as it is
+  pinned                declared or scored by the site: the edit, commented out;
+                        drop the `# ` only when sure (grep pinned lists them)
 
   firru propose policies/pol/ --window night | grep observed | sh
   firru propose policies/pol/ --window night | grep -e observed -e unexercised | sh
