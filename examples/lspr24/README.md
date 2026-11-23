@@ -184,7 +184,7 @@ Kubernetes worker reads:
 
 Tightening narrowed 117 of the 460 terms, onto the green-team hosts, the
 cluster members and the zone groups the inventory defines. It never narrows
-away a source `def/heuristics.py` declares for the service, such as a zone's
+away a source `site/` declares for the service, such as a zone's
 management entry point or its own hosts for NetBIOS: 79 terms keep one the
 night never showed. 200 kept `ANY`,
 and that is the right answer rather than a failure: their clients are the
