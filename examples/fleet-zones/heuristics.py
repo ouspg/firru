@@ -1,4 +1,4 @@
-# Source policy for the zoned fleet (firru.src_heuristics reads this file
+# Source policy for the zoned fleet (firru.site_profile reads this file
 # from the definitions directory; see its header for the contract).
 #
 # Administration comes from the jump host and nowhere else, whatever the

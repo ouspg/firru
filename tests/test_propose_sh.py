@@ -163,7 +163,7 @@ class TestScoredBySite:
 
 
 def test_the_hook_takes_tuples_or_a_mapping():
-    from firru.src_heuristics import Profile, scored_ports
+    from firru.site_profile import Profile, scored_ports
 
     class M:
         @staticmethod
@@ -178,7 +178,7 @@ def test_the_hook_takes_tuples_or_a_mapping():
 
 def test_heuristics_cannot_score():
     """What must stay open is a decision: site/policy.py, not a guess."""
-    from firru.src_heuristics import Profile, scored_ports
+    from firru.site_profile import Profile, scored_ports
 
     class M:
         scored = staticmethod(lambda h, m: [("tcp", 80)])

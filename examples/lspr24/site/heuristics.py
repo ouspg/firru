@@ -1,5 +1,5 @@
 # Guesses about who may reach what in the LSPR24 case study: answers true by
-# definition, whatever the site decided (firru.src_heuristics has the
+# definition, whatever the site decided (firru.site_profile has the
 # contract). Who may administer a host is a decision, in site/policy.py.
 
 

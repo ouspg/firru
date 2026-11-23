@@ -43,7 +43,7 @@ from firru.arkime import ArkimeAPI, SESSION_FIELDS, process_flow
 from firru.cli.address_summarizer import (_default_asn_db, summarize,
                                           summarize_asn)
 from firru.comments import TAG_AUTO, detached, tagged, set_term_comment, kept_comments_by_term
-from firru.src_heuristics import declared_sources, load_profile, scored_ports
+from firru.site_profile import declared_sources, load_profile, scored_ports
 from firru.flows import Hits
 from firru.policy import DIR_IN, DIR_OUT, filter_directions
 

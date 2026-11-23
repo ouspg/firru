@@ -1,8 +1,10 @@
 # =============================================================================
-# src_heuristics.py — source suggestions for synthesized terms
+# site_profile.py — what site/ says, as one Profile: heuristics.py (the
+# site's guesses) and policy.py (its decisions), and the source suggestions
+# synthesis and propose take from them.
 #
-# The engine. Who may reach a service is site policy, so it lives in a
-# profile: a Python file, `heuristics.py` in the definitions directory, that
+# Who may reach a service is the site's to say, so it lives in a
+# profile: a Python file, site/heuristics.py (or the definitions directory's), that
 # sets any of the tables and hooks below; anything it leaves out is unset,
 # and a service with no answer is ANY. A project without one gets firru's
 # shipped heuristics.py (the stock def/): the few answers that hold anywhere

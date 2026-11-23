@@ -1,4 +1,4 @@
-# Who may administer a host in the LSPR24 case study (firru.src_heuristics
+# Who may administer a host in the LSPR24 case study (firru.site_profile
 # has the contract). A site writes its decisions here. Nobody in this capture
 # decided anything that firru can read, so the policy is what the case study
 # assumes: each assumption is in assumptions.yml with its source and

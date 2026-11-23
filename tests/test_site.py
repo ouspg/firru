@@ -3,7 +3,7 @@ one is the site saying none (README.md)."""
 
 import pytest
 
-from firru import project, src_heuristics
+from firru import project, site_profile
 from firru.defs_dir import STOCK
 
 
@@ -47,7 +47,7 @@ def test_site_heuristics_win_over_the_definitions_directorys(proj):
     (proj / "def").mkdir()
     (proj / "def" / "heuristics.py").write_text("MGMT_SERVICES = ['OLD']\n")
     (proj / "site" / "heuristics.py").write_text("MGMT_SERVICES = ['SSH']\n")
-    profile = src_heuristics.load_profile(str(proj / "def"))
+    profile = site_profile.load_profile(str(proj / "def"))
     assert profile.mgmt_services == {"SSH"}
     assert profile.origin.endswith("site/heuristics.py")
 
@@ -60,7 +60,7 @@ def test_management_is_read_from_site_policy_first(proj):
         "def management_sources(m):\n    return ['OLD']\n")
     (proj / "site" / "policy.py").write_text(
         "def management_sources(m):\n    return ['MGMT_HOSTS']\n")
-    profile = src_heuristics.load_profile(None)
+    profile = site_profile.load_profile(None)
     assert profile.management_sources({}) == ["MGMT_HOSTS"]
     assert profile.mgmt_services == {"SSH"}
     assert profile.policy_origin.endswith("site/policy.py")
@@ -68,16 +68,16 @@ def test_management_is_read_from_site_policy_first(proj):
 
 def test_a_site_policy_alone_is_a_profile(proj):
     (proj / "site" / "policy.py").write_text("MGMT_SERVICES = ['RDP']\n")
-    assert src_heuristics.load_profile(None).mgmt_services == {"RDP"}
+    assert site_profile.load_profile(None).mgmt_services == {"RDP"}
 
 
 def test_def_heuristics_still_read_where_there_is_no_site_one(proj, capsys):
     (proj / "def").mkdir()
     (proj / "def" / "heuristics.py").write_text("MGMT_SERVICES = ['RDP']\n")
-    assert src_heuristics.load_profile(str(proj / "def")).mgmt_services == {"RDP"}
+    assert site_profile.load_profile(str(proj / "def")).mgmt_services == {"RDP"}
     assert capsys.readouterr().err == ""
 
 
 def test_only_the_stock_template_is_having_none(proj, capsys):
-    src_heuristics.load_profile(str(STOCK))
+    site_profile.load_profile(str(STOCK))
     assert "no site/heuristics.py" in capsys.readouterr().err

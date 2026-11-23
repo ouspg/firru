@@ -21,8 +21,8 @@ import functools
 import os
 import pathlib
 
-from firru import src_heuristics
-from firru.src_heuristics import load_profile
+from firru import site_profile
+from firru.site_profile import load_profile
 
 LSPR24 = pathlib.Path(__file__).parent.parent / "examples" / "lspr24"
 
@@ -38,8 +38,8 @@ def _load():
 
 
 LS = _load()
-get_suggested_source = functools.partial(src_heuristics.get_suggested_source, profile=LS)
-get_suggested_rule = functools.partial(src_heuristics.get_suggested_rule, profile=LS)
+get_suggested_source = functools.partial(site_profile.get_suggested_source, profile=LS)
+get_suggested_rule = functools.partial(site_profile.get_suggested_rule, profile=LS)
 
 CORP_INT = {"zone": "corp_int", "segment": "corp"}
 

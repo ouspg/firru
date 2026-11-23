@@ -5,7 +5,7 @@
 # and edit it. A site's file is all of its configuration; nothing from this
 # one is layered underneath, so keep what you want of the settings below.
 # What the site decides rather than guesses (who may administer a host)
-# goes in site/policy.py. firru/src_heuristics.py documents each name.
+# goes in site/policy.py. firru/site_profile.py documents each name.
 # This file is code, and firru runs it.
 
 # Denied before the drop-ANY rather than given a term.

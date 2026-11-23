@@ -222,7 +222,7 @@ def _load_side(path, defs_dir, zone_prefix=None, allow_ruleset=False):
         # dynamic range is still seen, by owner, in loot-diff --baseline.
         from firru.defs_dir import resolve
         from firru.owners import load_expected, load_owners
-        from firru.src_heuristics import load_profile
+        from firru.site_profile import load_profile
         _, doc, unknown = synth_host(data, cached_naming(defs_dir), all_meta,
                                      fallback_name=_Path(path).stem,
                                      owners=load_owners(defs_dir),

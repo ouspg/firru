@@ -128,7 +128,7 @@ def _scored_by_site(defs, term, ports):
 
 def ingress_lines(pol, original, proposed, defs, unused, declared, scored_ports=None):
     """`scored_ports` is the site's {(protocol, port): note} for the host
-    (src_heuristics.scored_ports): a term covering one is left as it is."""
+    (site_profile.scored_ports): a term covering one is left as it is."""
     old_terms = _terms(original, DIR_IN)
     new_terms = _terms(proposed, DIR_IN)
     scored = _scored_term_names(list(old_terms.values()))

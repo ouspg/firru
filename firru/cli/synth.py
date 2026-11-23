@@ -46,7 +46,7 @@ from firru.ephemeral import (RANGE_TOKEN_FLOOR, ephemeral_for, is_ephemeral,
                              parse_range, range_for_os)
 from firru.owners import load_expected, load_owners, owner_evidence
 from firru.service_naming import choose_token, owner_surprise, token_width
-from firru.src_heuristics import get_dynamic_rules, get_suggested_rule, load_profile
+from firru.site_profile import get_dynamic_rules, get_suggested_rule, load_profile
 from firru.tokens import is_loopback, normalize_token
 from firru.aerleon_caps import check_policy
 from firru.comments import TAG_AUTO, tagged
@@ -692,7 +692,7 @@ def synth_host(data, defs, all_metadata=None, fallback_name=None,
     generating — docs/design.md). `unknown` maps ports with no service token to
     their evidence; they appear in **no term**, so any caller that diffs the
     result must report them rather than let an unnamed listener vanish.
-    `profile` is the source policy (firru.src_heuristics.load_profile).
+    `profile` is the source policy (firru.site_profile.load_profile).
     `role` is (name, terms), a curated role's terms placed before the
     synthesized ones (load_role).
     """

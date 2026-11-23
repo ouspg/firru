@@ -255,7 +255,7 @@ dc1's dynamic RPC is the first kind. A domain member reaches a DC's endpoint
 mapper and is then handed a port from the dynamic range, which no snapshot of
 listening sockets holds, so the loot gives synthesis nothing to write a term
 from. A site states it as a rule instead (`dynamic_rules` in its
-`site/heuristics.py`, `firru.src_heuristics`): the DC's dynamic range, from the
+`site/heuristics.py`, `firru.site_profile`): the DC's dynamic range, from the
 domain's members. This example does not, because the capture does not say
 who the members are. The beg DCs' Kerberos and LDAP clients are the
 workstations, mail and the other DC, but also owncloud, which uses both, and

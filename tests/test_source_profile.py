@@ -5,7 +5,7 @@ what holds on any network.
 
 import textwrap
 
-from firru import src_heuristics as sh
+from firru import site_profile as sh
 from firru.cli.synth import listen_to_term
 
 

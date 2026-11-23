@@ -5,7 +5,7 @@ Library modules:
     firru.tokens       Token normalisation and IP utilities
     firru.ss           Linux ss output parsing
     firru.discovery    Host data discovery (Linux ss / Windows CSV)
-    firru.src_heuristics  Source address suggestion heuristics
+    firru.site_profile  What site/ says: heuristics.py and policy.py as one Profile
     firru.annotator    IP → aerleon token resolution via prefix trees
     firru.arkime       Arkime session API client and flow normalisation
     firru.githist      Git-history blob/tree readers
