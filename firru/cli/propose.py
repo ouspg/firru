@@ -1,34 +1,29 @@
 #!/usr/bin/env python3
 """
-firru tighten — Tighten host firewall policy sources/egress using flow data.
+firru propose — edits to host policies from the traffic.
 
-Reads an aerleon host policy YAML, queries Arkime for actual traffic, and
-produces a tightened policy. Outputs:
+Reads aerleon host policies and their flows (the project's store, a JSONL
+file, or a live Arkime) and proposes, per host:
 
-  policies/tighten/<hostname>.yml        — tightened policy (review + adopt)
+  ingress  each term's sources narrowed to the peers seen; a source the site
+           declares is kept (declared_sources); a listener nothing reached
+           is a log-drop candidate, proposed as a logged deny
+  egress   the allow-ANY stub replaced by terms from the observed destinations
 
-What the proposal would deny is `firru diff POLICY PROPOSAL --flows`: each
-change tagged by the traffic, and one the traffic contradicts commented out.
-
-Ingress: replaces ANY source-address with observed source tokens where possible.
-Egress:  replaces allow-ANY stub with terms derived from observed destinations.
+Each host's proposal is written to the outdir (the project's proposals/) as
+soon as it is read. With -o sh (the default) the edits are printed as firru
+commands, one per line, each ending in its reason (firru.cli.propose_sh), so
+what to apply is a grep. The policies themselves are never written.
 
 When external (SINET/unknown) sources connect alongside internal ones, the
-rule stays as ANY — but the comment shows what was actually observed so a
+rule stays as ANY, but the comment shows what was actually observed so a
 human can make an informed call.
 
-Usage:
-    firru tighten \\
-        --policy  policies/pol/myhost_example_org.yml \\
-        --defs    def/ \\
-        --arkime  http://localhost:8005/api \\
-        --date    48
+    firru propose policies/pol/ --window night | grep observed | sh
+    firru propose policies/pol/web1.yml --arkime http://localhost:8005/api --date 48
 
-    The password comes from ~/.netrc ($NETRC; firru.credentials),
-    or is asked for.
-
-    # Dry-run: print summary only, no files written
-    firru tighten --policy ... --defs ... --arkime ... --dry-run
+`firru check` (firru.cli.check) reads the same flows and reports what a
+policy refuses of them.
 """
 
 import argparse
@@ -48,7 +43,7 @@ from firru.arkime import ArkimeAPI, SESSION_FIELDS, process_flow
 from firru.cli.address_summarizer import (_default_asn_db, summarize,
                                           summarize_asn)
 from firru.comments import TAG_AUTO, detached, tagged, set_term_comment, kept_comments_by_term
-from firru.src_heuristics import declared_sources, load_profile
+from firru.site_profile import declared_sources, load_profile, scored_ports
 from firru.flows import Hits
 from firru.policy import DIR_IN, DIR_OUT, filter_directions
 
@@ -676,6 +671,10 @@ def _blocked_sort_key(b):
             str(b.get("src_ip") or ""), str(b.get("reason") or ""))
 
 
+def _unanswered(ip_counter, ip):
+    return getattr(ip_counter, "unanswered", {}).get(ip, 0)
+
+
 def find_blocked(ingress_flows, tightened_terms, annotator, defs, ingress_ports):
     """
     For each observed ingress (proto, svc) → src_ips,
@@ -722,7 +721,7 @@ def find_blocked(ingress_flows, tightened_terms, annotator, defs, ingress_ports)
                 blocked.append({
                     "proto": proto, "svc": proto_label(svc), "src_ip": ip,
                     "src_token": _annotate_token(ip, annotator),
-                    "hits": hits,
+                    "hits": hits, "unanswered": _unanswered(ip_counter, ip),
                     # No term exists, so there is no proposed source to state;
                     # the reason carries it. Leave the key out rather than
                     # writing a sentinel string into a source-address field.
@@ -742,7 +741,7 @@ def find_blocked(ingress_flows, tightened_terms, annotator, defs, ingress_ports)
                 blocked.append({
                     "proto": proto, "svc": proto_label(svc), "src_ip": ip,
                     "src_token": _annotate_token(ip, annotator),
-                    "hits": hits,
+                    "hits": hits, "unanswered": _unanswered(ip_counter, ip),
                     "proposed_src": shown,
                     "reason": f"src not covered by {shown}",
                 })
@@ -1164,25 +1163,14 @@ def _extent(flows):
     return f", {describe((lo, hi))}" if lo is not None else ""
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Narrow each term's sources to the peers seen in traffic, from a\n"
-                    "flows file (--flows-file) or a live Arkime (--arkime). Proposals are\n"
-                    "written to --outdir, never into the policy.",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  firru tighten --policy policies/pol/myhost_example_org.yml \\
-          --defs def/ --arkime http://arkime:8005/api
+class FlowContext:
+    """What propose and check share: the definitions, the site's profile, the
+    hosts to read and where their flows come from. Built once per run."""
 
-  # Last 24 hours only
-  firru tighten --policy ... --date 24
 
-  # HTTP basic auth instead of digest
-  firru tighten --policy ... --basic-auth
-        """,
-    )
-    parser.add_argument("--policy",   "-p", required=True, nargs='+',
+def add_flow_arguments(parser):
+    """The policies and the flow source, for propose and check alike."""
+    parser.add_argument("policy", nargs="+", metavar="POLICY",
                         help="Host policy YAML(s), directory, or glob pattern")
     parser.add_argument("--defs",     "-d", default="def",
                         help="Aerleon definitions directory (default: def/, else the "
@@ -1190,9 +1178,8 @@ Examples:
     parser.add_argument("--arkime",   "-a", default=None,
                         help="Arkime API base URL, e.g. http://localhost:8005/api")
     parser.add_argument("--flows-file", "-f", default=None,
-                        help="Pre-dumped flows .jsonl file or directory of per-host .flows.jsonl files")
-    parser.add_argument("--dump-flows", action="store_true",
-                        help="Dump per-host flows to <outdir>/<host_token>.flows.jsonl and exit")
+                        help="Flows: a JSONL file, a directory of per-host .flows.jsonl "
+                             "files, or a parquet store (default: the project's store)")
     parser.add_argument("--user",     "-u", default=None,
                         help="Arkime username (default: the netrc entry's, else admin)")
     parser.add_argument("--password", "-P", default=None,
@@ -1205,42 +1192,17 @@ Examples:
                              "the project's [arkime], all of it, since an imported "
                              "capture keeps its own times)")
     parser.add_argument("--start-time", default=None,
-                        help="Start of time range, e.g. 2024-03-01 or Unix epoch")
+                        help="Arkime: start of time range, e.g. 2024-03-01 or Unix epoch")
     parser.add_argument("--stop-time",  default=None,
-                        help="End of time range (default: now)")
-    parser.add_argument("--outdir",   "-o", default=None,
-                        help="Output directory (default: the project's proposals/, "
-                             "else policies/tighten/)")
-    parser.add_argument("--overwrite", action="store_true",
-                        help="Overwrite existing tighten output")
-    parser.add_argument("--dry-run",  action="store_true",
-                        help="Query Arkime and print summary; do not write files")
-    parser.add_argument("--check", action="store_true",
-                        help="Check current policy against flows — report would-be-blocked "
-                             "traffic aggregated by token, do not tighten or write files")
-    parser.add_argument("--any-report", default=None, metavar="PATH",
-                        help="write a fleet rollup of what keeps terms at ANY, "
-                             "ranked by how many terms naming each group would free")
-    # Naming unresolved addresses needs a loot-dns store, which only the name
-    # layer produces; where that is not installed the option is not offered.
-    import importlib.util
-    if importlib.util.find_spec("firru.cli.loot_dns") is not None:
-        parser.add_argument("--dns-store", default=None,
-                            help="loot-dns store JSONL; names unresolved addresses in "
-                                 "the ANY comment, which is where egress pays off")
-    parser.set_defaults(dns_store=None)
-    parser.add_argument("--asn-db", default=None,
-                        help="MaxMind ASN mmdb for grouping unresolved addresses "
-                             "(default $GEOIP_ASN_DB or a local GeoLite2-ASN.mmdb)")
-    parser.add_argument("--verbose", "-v", action="store_true",
-                        help="In via: annotations, show top source hosts per sub-service")
-    from firru.project import add_window_arguments, flows_for
+                        help="Arkime: end of time range (default: now)")
+    from firru.project import add_window_arguments
     add_window_arguments(parser)
-    args = parser.parse_args()
 
-    # A window reads the named flows, or the project's store; against Arkime
-    # it becomes the query's start and stop.
-    from firru.project import find
+
+def open_flows(args, parser, *, need_arkime_auth=True):
+    """Resolve the flow source, the definitions and every host to read.
+    Exits through `parser` on a usage error."""
+    from firru.project import find, flows_for
     try:
         project = find()
     except ValueError as e:
@@ -1268,9 +1230,6 @@ Examples:
         where = args.flows_file if from_project == "store" else args.arkime
         print(f"No window given: reading all of {where}{_extent(args.flows_file) if from_project == 'store' else ''}"
               f" (--window, --since/--until to narrow it)", file=sys.stderr)
-    if args.outdir is None:
-        args.outdir = (os.path.relpath(project.root / "proposals") if project is not None
-                       else "policies/tighten")
     from firru.defs_dir import resolve
     args.defs = resolve(args.defs)
     if window and args.arkime:
@@ -1282,11 +1241,6 @@ Examples:
     elif flows and not args.arkime:
         args.flows_file = flows
 
-    # Both only ever affect a comment, so a missing database is not an error.
-    dns_store = load_dns_store(args.dns_store)
-    asn_db = args.asn_db or _default_asn_db()
-    any_rows = [] if args.any_report else None
-
     if not args.arkime and not args.flows_file:
         print("Either --arkime or --flows-file is required.", file=sys.stderr)
         sys.exit(1)
@@ -1295,32 +1249,19 @@ Examples:
               "or loot-flows writes one (docs/flow-record.md).", file=sys.stderr)
         sys.exit(1)
 
-    if args.dump_flows and not args.arkime:
-        print("--dump-flows requires --arkime.", file=sys.stderr)
-        sys.exit(1)
-
-    # ------------------------------------------------------------------
-    # Credentials (only needed for live Arkime)
-    # ------------------------------------------------------------------
     auth = None
-    if args.arkime:
+    if args.arkime and need_arkime_auth:
         from firru.credentials import http_auth
-        from firru.project import find, service_key
-        project = find()
+        from firru.project import service_key
         try:
             auth = http_auth(args.arkime, args.user, args.password,
                              args.basic_auth or service_key(project, "arkime", "auth") == "basic",
-                             prompt=not args.dry_run,
+                             prompt=True,
                              netrc=service_key(project, "arkime", "netrc"))
         except ValueError as e:
             parser.error(str(e))
 
-    # ------------------------------------------------------------------
-    # Resolve policy file list (glob/dir/explicit/bare-token)
-    # Each entry is (policy_path_or_None, host_token_or_None).
-    # host_token_or_None is only pre-filled for bare tokens; otherwise
-    # it is extracted from the YAML at processing time.
-    # ------------------------------------------------------------------
+    # Policy files: glob, directory, explicit file, or a bare host token.
     import glob as _glob
     host_entries = []  # list of (Path|None, token|None)
     for pat in args.policy:
@@ -1334,35 +1275,31 @@ Examples:
             elif p.exists():
                 host_entries.append((p, None))
             else:
-                # Treat as a bare host token
                 host_entries.append((None, pat))
     if not host_entries:
         print(f"No policy files or host tokens found for: {args.policy}", file=sys.stderr)
         sys.exit(1)
 
-    # ------------------------------------------------------------------
-    # Shared setup (defs, annotator, arkime — once for all policies)
-    # ------------------------------------------------------------------
-    defs      = naming.Naming(args.defs)
-    annotator = PolicyAnnotator(args.defs)
+    ctx = FlowContext()
+    ctx.project      = project
+    ctx.window       = window
+    ctx.window_label = window_label
+    ctx.defs         = naming.Naming(args.defs)
+    ctx.annotator    = PolicyAnnotator(args.defs)
     # The site's own source policy and host metadata, as synth reads them, so
-    # a declared source survives tightening (declared_sources).
-    profile      = load_profile(args.defs)
-    all_metadata = load_host_metadata(args.defs)
-
-    outdir = Path(args.outdir)
-    outdir.mkdir(parents=True, exist_ok=True)
-
-    arkime_client = ArkimeAPI(args.arkime, auth) if args.arkime else None
+    # a declared source survives (declared_sources).
+    ctx.profile      = load_profile(args.defs)
+    ctx.metadata     = load_host_metadata(args.defs)
+    ctx.arkime       = ArkimeAPI(args.arkime, auth) if args.arkime else None
     from firru.flows import is_parquet
-    _flows_is_parquet = bool(args.flows_file) and is_parquet(args.flows_file)
+    parquet = bool(args.flows_file) and is_parquet(args.flows_file)
     # A per-host-file directory (…/<host>.flows.jsonl); a parquet dir is NOT this.
-    flows_dir = (Path(args.flows_file) if args.flows_file and not _flows_is_parquet
-                 and Path(args.flows_file).is_dir() else None)
+    ctx.flows_dir = (Path(args.flows_file) if args.flows_file and not parquet
+                     and Path(args.flows_file).is_dir() else None)
 
     # Resolve every host up front: one shared flows file can then be scanned
     # once for all of them instead of once per host.
-    resolved = []   # (policy_path, policy, host_token, host_ips)
+    ctx.hosts = []   # (policy_path, policy, host_token, host_ips)
     for policy_path, bare_token in host_entries:
         policy = None
         if policy_path is not None:
@@ -1376,83 +1313,158 @@ Examples:
             # metadata.host is the collector's label, which need not be (two
             # zones can each have a `www`). Prefer the token the definitions
             # know.
-            if get_host_ips(policy_path.stem, defs):
+            if get_host_ips(policy_path.stem, ctx.defs):
                 host_token = policy_path.stem
             if not host_token:
                 print(f"{policy_path}: missing metadata.host — skipping", file=sys.stderr)
                 continue
         else:
             host_token = bare_token
-        resolved.append((policy_path, policy, host_token, get_host_ips(host_token, defs)))
+        ctx.hosts.append((policy_path, policy, host_token, get_host_ips(host_token, ctx.defs)))
+    return ctx
 
-    prescanned = None
-    spans = {}
-    if args.flows_file and not flows_dir and not args.dump_flows:
+
+def prescan(ctx, args):
+    """One pass over a shared flows file for every host; None otherwise."""
+    ctx.prescanned, ctx.spans = None, {}
+    if args.flows_file and not ctx.flows_dir:
         print(f"Reading flows from {args.flows_file} (single pass, "
-              f"{len(resolved)} hosts) …", file=sys.stderr)
-        prescanned = collect_flows_multi(
+              f"{len(ctx.hosts)} hosts) …", file=sys.stderr)
+        ctx.prescanned = collect_flows_multi(
             args.flows_file,
-            {tok: ips for _, _, tok, ips in resolved if ips},
-            defs, spans=spans, window=window)
+            {tok: ips for _, _, tok, ips in ctx.hosts if ips},
+            ctx.defs, spans=ctx.spans, window=ctx.window)
 
-    for policy_path, policy, host_token, host_ips in resolved:
+
+def host_flows(ctx, args, host_token, host_ips):
+    """(span, source, ingress, egress, ingress_ports, egress_ports) for one
+    host, or None when its per-host flows file is missing."""
+    if ctx.flows_dir:
+        flows_file = ctx.flows_dir / f"{host_token}.flows.jsonl"
+        if not flows_file.exists():
+            print(f"  No flows file for {host_token} ({flows_file}) — skipping", file=sys.stderr)
+            return None
+        print(f"Reading flows from {flows_file} …", file=sys.stderr)
+        span = [None, None]
+        return (span, str(flows_file),
+                *collect_flows_from_file(str(flows_file), host_ips, ctx.defs, span=span))
+    if ctx.prescanned is not None:
+        source = args.flows_file
+        if ctx.window_label:
+            source = f"{source} [{ctx.window_label}]"
+        empty = (defaultdict(Hits), defaultdict(Hits),
+                 defaultdict(Counter), defaultdict(Counter))
+        return (ctx.spans.get(host_token), source, *ctx.prescanned.get(host_token, empty))
+    window = (f"{args.start_time}-{args.stop_time or 'now'}" if args.start_time
+              else "all of it" if args.date == "-1" else f"{args.date}h")
+    print(f"Querying Arkime ({window}) …", file=sys.stderr)
+    span = [None, None]
+    return (span, f"Arkime ({window})",
+            *collect_flows(ctx.arkime, host_ips, ctx.defs, args.date, args.start_time,
+                           args.stop_time, span=span))
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="firru propose",
+        description="Propose edits to host policies from the traffic: narrow each "
+                    "term's sources to the peers seen, deny the listeners nothing "
+                    "reached (logged), and propose egress terms. Each host's proposal "
+                    "is written to --outdir as soon as it is read; with -o sh (the "
+                    "default) the edits are also printed as firru commands, one per "
+                    "line, each tagged with its reason. The policies are not changed.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Each line ends in its reason, so a posture is a grep:
+  narrowed observed     the traffic shows fewer peers; safe to apply
+  denied unexercised    nothing reached the listener in the window
+  widened REVIEW        grants peers the policy did not (commented out)
+  egress proposed       a term the egress traffic suggests (commented out)
+  pinned                declared or scored by the site: the edit, commented out;
+                        drop the `# ` only when sure (grep pinned lists them)
+
+  firru propose policies/pol/ --window night | grep observed | sh
+  firru propose policies/pol/ --window night | grep -e observed -e unexercised | sh
+  firru propose policies/pol/ --window night -o yaml      # the proposals only
+        """,
+    )
+    add_flow_arguments(parser)
+    parser.add_argument("-o", "--output", choices=["sh", "yaml"], default="sh",
+                        help="sh (default): the edits as tagged firru commands on stdout, "
+                             "and the proposals written; yaml: the proposals only")
+    parser.add_argument("--outdir", default=None,
+                        help="Where the proposals go (default: the project's proposals/, "
+                             "else proposals/)")
+    parser.add_argument("--dump-flows", action="store_true",
+                        help="Arkime: write each host's flows to <outdir>/<host>.flows.jsonl "
+                             "and exit")
+    parser.add_argument("--any-report", default=None, metavar="PATH",
+                        help="write a fleet rollup of what keeps terms at ANY, "
+                             "ranked by how many terms naming each group would free")
+    # Naming unresolved addresses needs a loot-dns store, which only the name
+    # layer produces; where that is not installed the option is not offered.
+    import importlib.util
+    if importlib.util.find_spec("firru.cli.loot_dns") is not None:
+        parser.add_argument("--dns-store", default=None,
+                            help="loot-dns store JSONL; names unresolved addresses in "
+                                 "the ANY comment, which is where egress pays off")
+    parser.set_defaults(dns_store=None)
+    parser.add_argument("--asn-db", default=None,
+                        help="MaxMind ASN mmdb for grouping unresolved addresses "
+                             "(default $GEOIP_ASN_DB or a local GeoLite2-ASN.mmdb)")
+    parser.add_argument("--verbose", "-v", action="store_true",
+                        help="In via: annotations, show top source hosts per sub-service")
+    args = parser.parse_args()
+
+    ctx = open_flows(args, parser)
+    if args.dump_flows and not args.arkime:
+        print("--dump-flows requires --arkime.", file=sys.stderr)
+        sys.exit(1)
+    if args.outdir is None:
+        args.outdir = (os.path.relpath(ctx.project.root / "proposals")
+                       if ctx.project is not None else "proposals")
+    outdir = Path(args.outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+
+    # Both only ever affect a comment, so a missing database is not an error.
+    dns_store = load_dns_store(args.dns_store)
+    asn_db = args.asn_db or _default_asn_db()
+    any_rows = [] if args.any_report else None
+    sh = args.output == "sh"
+    if not args.dump_flows:
+        prescan(ctx, args)
+    else:
+        ctx.prescanned = None
+    defs, annotator, profile = ctx.defs, ctx.annotator, ctx.profile
+    if sh:
+        print(f"# firru propose -o sh: {' '.join(args.policy)}")
+        print(f"#   proposals: {args.outdir}/ (each line's file)")
+
+    for policy_path, policy, host_token, host_ips in ctx.hosts:
       if not host_ips:
-        print(f"Warning: no IPs found for {host_token} in defs — egress/blocked will be empty",
+        print(f"Warning: no IPs found for {host_token} in defs — egress will be empty",
               file=sys.stderr)
 
       print(f"Host: {host_token}  IPs: {host_ips or '(none in defs)'}", file=sys.stderr)
 
-      # ------------------------------------------------------------------
-      # Collect flows
-      # ------------------------------------------------------------------
-      if flows_dir:
-          flows_file = flows_dir / f"{host_token}.flows.jsonl"
-          if not flows_file.exists():
-              print(f"  No flows file for {host_token} ({flows_file}) — skipping", file=sys.stderr)
-              continue
-          print(f"Reading flows from {flows_file} …", file=sys.stderr)
-          span, source = [None, None], str(flows_file)
-          ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(str(flows_file), host_ips, defs, span=span)
-      elif prescanned is not None:
-          span, source = spans.get(host_token), args.flows_file
-          if window_label:
-              source = f"{source} [{window_label}]"
-          empty = (defaultdict(Hits), defaultdict(Hits),
-                   defaultdict(Counter), defaultdict(Counter))
-          ingress_flows, egress_flows, ingress_ports, egress_ports = \
-              prescanned.get(host_token, empty)
-      elif args.flows_file:
-          print(f"Reading flows from {args.flows_file} …", file=sys.stderr)
-          span, source = [None, None], args.flows_file
-          if window_label:
-              source = f"{source} [{window_label}]"
-          ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows_from_file(
-              args.flows_file, host_ips, defs, span=span, window=window)
-      else:
-          window = (f"{args.start_time}-{args.stop_time or 'now'}" if args.start_time
-                    else "all of it" if args.date == "-1" else f"{args.date}h")
-          print(f"Querying Arkime ({window}) …", file=sys.stderr)
-          span, source = [None, None], f"Arkime ({window})"
-          ingress_flows, egress_flows, ingress_ports, egress_ports = collect_flows(arkime_client, host_ips, defs,
-                                                      args.date, args.start_time, args.stop_time,
-                                                      span=span)
-
-      # ------------------------------------------------------------------
-      # --dump-flows: write raw flows and move on
-      # ------------------------------------------------------------------
       if args.dump_flows:
           out_flows = outdir / f"{host_token}.flows.jsonl"
           ip_filter = " || ".join(f"ip == {ip}" for ip in host_ips)
           time_kwargs = dict(date=args.date, start_time=args.start_time, stop_time=args.stop_time)
           written = 0
           with open(out_flows, 'w') as fh:
-              for raw in arkime_client.search(ip_filter, fields=SESSION_FIELDS, **time_kwargs):
+              for raw in ctx.arkime.search(ip_filter, fields=SESSION_FIELDS, **time_kwargs):
                   flow = process_flow(raw)
                   if flow:
                       fh.write(json.dumps(flow) + '\n')
                       written += 1
-          print(f"Written: {out_flows}  ({written} flows)")
+          print(f"Written: {out_flows}  ({written} flows)", file=sys.stderr)
           continue
+
+      got = host_flows(ctx, args, host_token, host_ips)
+      if got is None:
+          continue
+      span, source, ingress_flows, egress_flows, ingress_ports, egress_ports = got
 
       total_in  = sum(sum(c.values()) for c in ingress_flows.values())
       total_out = sum(sum(c.values()) for c in egress_flows.values())
@@ -1461,48 +1473,8 @@ Examples:
       print(f"  egress:  {total_out} flows across {len(egress_flows)} service buckets",
             file=sys.stderr)
 
-      # ------------------------------------------------------------------
-      # Bare token with no policy — only dump-flows makes sense (handled above)
-      # ------------------------------------------------------------------
       if policy is None:
           print(f"  {host_token}: no policy file — use --dump-flows to collect flows", file=sys.stderr)
-          continue
-
-      # ------------------------------------------------------------------
-      # --check: verify current policy doesn't over-block observed flows
-      # ------------------------------------------------------------------
-      if args.check:
-          current_terms = []
-          for filt in policy.get("filters", []):
-              # Membership, not "not egress": an unstated direction is neither
-              # half, and must not be checked as if it were ingress.
-              if DIR_IN in filter_directions(filt):
-                  current_terms.extend(
-                      t for t in filt.get("terms", [])
-                      if t.get("action", "accept").lower() not in ("deny", "drop", "reject")
-                  )
-          blocked = find_blocked(ingress_flows, current_terms, annotator,
-                                  defs, ingress_ports)
-
-          if not blocked:
-              print(f"  {host_token}: no over-blocking detected")
-          else:
-              # Aggregate by (proto, svc, token) not by IP
-              agg = defaultdict(lambda: {"hits": 0, "ips": set()})
-              for b in blocked:
-                  ann = annotator.annotate_ip(b["src_ip"])
-                  tok = (ann.get("host") or
-                         (ann["parents"][0] if ann.get("parents") else b["src_ip"]))
-                  key = (b["proto"], b["svc"], tok)
-                  agg[key]["hits"] += b["hits"]
-                  agg[key]["ips"].add(b["src_ip"])
-
-              print(f"\n  {host_token}: WOULD-BE-BLOCKED traffic (aggregated by token):")
-              for (proto, svc, tok), data in sorted(agg.items(),
-                      key=lambda x: -x[1]["hits"]):
-                  ips = ", ".join(sorted(data["ips"]))
-                  src = f"{tok} ({ips})" if ips != tok else tok
-                  print(f"    {data['hits']:5d} hits  {proto}/{svc:20s}  src: {src}")
           continue
 
       # ------------------------------------------------------------------
@@ -1511,11 +1483,12 @@ Examples:
       all_unused        = []
       all_n_changed     = 0
       new_filters = CommentedSeq()
-      all_ingress_terms = CommentedSeq()
+      host_meta = ctx.metadata.get(host_token) or {}
+      declared = (lambda svc, h=host_token, m=host_meta:
+                  declared_sources(h, svc, m, profile))
 
       for filt in policy.get("filters", []):
           header  = filt.get("header", {})
-          targets = header.get("targets", {})
           # The direction as the policy states it, for every target: "output"
           # is nftables' word and Windows says "out", so a substring test made
           # every Windows egress filter an ingress one (its allow-ANY then read
@@ -1534,74 +1507,30 @@ Examples:
                   dns_store=dns_store, asn_db=asn_db,
                   any_rows=any_rows, host_token=host_token)
           else:
-              in_terms = filt.get("terms", [])
-              host_meta = all_metadata.get(host_token) or {}
               tightened, unused, n_changed = tighten_ingress(
-                  in_terms, ingress_flows, annotator, defs, verbose=args.verbose,
+                  filt.get("terms", []), ingress_flows, annotator, defs,
+                  verbose=args.verbose,
                   ingress_ports=ingress_ports, dns_store=dns_store, asn_db=asn_db,
-                  any_rows=any_rows, host_token=host_token,
-                  declared=lambda svc, h=host_token, m=host_meta:
-                      declared_sources(h, svc, m, profile),
+                  any_rows=any_rows, host_token=host_token, declared=declared,
               )
               all_unused.extend(unused)
               all_n_changed += n_changed
               new_filt["terms"] = tightened
-              for t in tightened:
-                  if t.get("action", "accept").lower() not in ("deny", "drop", "reject"):
-                      all_ingress_terms.append(t)
 
           new_filters.append(new_filt)
 
+      original = None
+      if sh:
+          with open(policy_path) as f:
+              original = yaml_handler.load(f)
       policy["filters"] = new_filters
 
       # ------------------------------------------------------------------
-      # Dry run summary
+      # Write the proposal: visible as soon as it exists
       # ------------------------------------------------------------------
-      if args.dry_run:
-          blocked = find_blocked(ingress_flows, list(all_ingress_terms), annotator,
-                                 defs, ingress_ports)
-          print(f"\n=== {policy_path.name} ===")
-          print("--- Tightened source summary ---")
-          for t in all_ingress_terms:
-              src = t.get("source-address", "ANY")
-              print(f"  {t.get('protocol')}/{t.get('destination-port') or '':20s}  src: {src}")
-          print(f"\n--- Egress terms ---")
-          for filt in policy.get("filters", []):
-              targets = filt.get("header", {}).get("targets", {})
-              if filter_directions(filt) == {DIR_OUT}:
-                  for t in filt.get("terms", []):
-                      if t.get("action", "deny").lower() not in ("deny", "drop"):
-                          print(f"  {t.get('protocol')}/{t.get('destination-port') or '':20s}"
-                                f"  dst: {t.get('destination-address', 'ANY')}")
-          if blocked:
-              print(f"\n--- Would-be-blocked ({len(blocked)} flows) ---")
-              for b in blocked[:20]:
-                  src = b["src_ip"]
-                  if b.get("src_token"):
-                      src = f"{b['src_token']} ({b['src_ip']})"
-                  print(f"  {b['hits']:5d} hits  {b['proto']}/{b['svc']:20s}  "
-                        f"src {src:50s}  {b['reason']}")
-              if len(blocked) > 20:
-                  print(f"  … and {len(blocked)-20} more")
-          if all_unused:
-              print(f"\n--- Log-drop candidates, no flows in the window ({len(all_unused)}) ---")
-              for d in all_unused:
-                  name = f"  [{d['name']}]" if d["name"] else ""
-                  print(f"  {d['proto']}/{d['svc']:20s}  src: {d['source']}{name}")
-          continue
-
-      # ------------------------------------------------------------------
-      # Write outputs
-      # ------------------------------------------------------------------
-      stem        = policy_path.stem
-      out_policy  = outdir / f"{stem}.yml"
-
-      if out_policy.exists() and not args.overwrite:
-          print(f"  {stem}: output exists — skipping (use --overwrite)", file=sys.stderr)
-          continue
-
+      out_policy = outdir / f"{policy_path.stem}.yml"
       policy.yaml_set_start_comment(
-          f"firru tighten output — review and copy changes to policies/pol/{policy_path.name}\n"
+          f"firru propose output — review and copy changes to {policy_path}\n"
           f"{window_line(source, span)}\n"
           f"Source suggestions changed: {all_n_changed} | "
           f"Log-drop candidates: {len(all_unused)}"
@@ -1610,7 +1539,13 @@ Examples:
           yaml_handler.dump(policy, f)
       print(f"Written: {out_policy}  "
             f"({all_n_changed} changed, {len(all_unused)} log-drop "
-            f"candidate{'' if len(all_unused) == 1 else 's'})")
+            f"candidate{'' if len(all_unused) == 1 else 's'})", file=sys.stderr)
+      if sh:
+          from firru.cli.propose_sh import emit_host
+          emit_host(str(policy_path), str(out_policy), args.defs, original, policy,
+                    defs, all_unused, declared, window_line(source, span),
+                    scored_ports(host_token, host_meta, profile))
+      sys.stdout.flush()
 
     if any_rows is not None:
         report = any_rollup(any_rows, asn_db=asn_db, dns_store=dns_store)

@@ -1,11 +1,14 @@
 # =============================================================================
-# src_heuristics.py — source suggestions for synthesized terms
+# site_profile.py — what site/ says, as one Profile: heuristics.py (the
+# site's guesses) and policy.py (its decisions), and the source suggestions
+# synthesis and propose take from them.
 #
-# The engine. Who may reach a service is site policy, so it lives in a
-# profile: a Python file, `heuristics.py` in the definitions directory, that
-# sets any of the tables and hooks below. Anything it leaves out takes the
-# default here, and with no profile at all every service is ANY except the
-# few whose answer holds anywhere (link-local discovery, SSDP).
+# Who may reach a service is the site's to say, so it lives in a
+# profile: a Python file, site/heuristics.py (or the definitions directory's), that
+# sets any of the tables and hooks below; anything it leaves out is unset,
+# and a service with no answer is ANY. A project without one gets firru's
+# shipped heuristics.py (the stock def/): the few answers that hold anywhere
+# (link-local discovery, SSDP), and the template to copy into site/ and edit.
 #
 # A profile is code and firru runs it: it belongs to the same project as the
 # definitions beside it.
@@ -45,62 +48,105 @@
 # "options" (more Aerleon term keys, e.g. windows-program for a generator that
 # reads it) and, for the second and later rules of a list, a "suffix" for the
 # term name.
+#
+# What the site decides, as opposed to guesses about it, goes in a second
+# file beside it, site/policy.py (optional). MGMT_SERVICES,
+# MGMT_ANY_FALLBACK and management_sources belong there, and are taken from
+# it first (heuristics.py, where older sites have them, second). Also:
+#   scored(host, metadata) -> [(protocol, port[, note])] | {(protocol, port): note}
+#       the ports that must stay open on the host, such as what an
+#       availability check scores, read from wherever the site keeps them.
+#       propose never edits a term covering one by itself: it prints the
+#       edit commented out, tagged pinned, for whoever is sure to take.
 # =============================================================================
 
 import importlib.util
+import itertools
 import os
 
-DEFAULT_DENY_SERVICES = {
-    "SSDP": "udp",   # UPnP discovery — UDP 1900, no legitimate inbound use on servers
-}
-
-# Their multicast groups are link-local (224.0.0.251, 224.0.0.252, ff02::fb,
-# ff02::1:3): a router will not forward them, so neither should a source rule.
-DEFAULT_LINK_LOCAL_TOKENS = {
-    "MDNS":  ("MDNS_SOURCES_V4",  "MDNS_SOURCES_V6"),
-    "LLMNR": ("LLMNR_SOURCES_V4", "LLMNR_SOURCES_V6"),
-}
-
 PROFILE_FILE = "heuristics.py"
+POLICY_FILE = "policy.py"
+
+
+_seq = itertools.count()
+
+
+def _module(path):
+    if not path:
+        return None
+    spec = importlib.util.spec_from_file_location(
+        f"firru_site_{next(_seq)}_{os.path.basename(path)[:-3]}", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def shipped():
+    """firru's shipped heuristics.py (the stock def/): sane defaults, and the
+    template a project copies into site/ and edits."""
+    from firru.defs_dir import STOCK
+    return os.path.join(str(STOCK), PROFILE_FILE)
 
 
 class Profile:
-    """A site's source policy: a profile module's tables and hooks over the
-    defaults. `Profile()` is the defaults alone."""
+    """A site's source policy: its heuristics.py (all of it: nothing is
+    layered underneath) and its policy.py. `Profile()` sets nothing."""
 
-    def __init__(self, module=None, origin=None):
-        def get(name, default):
-            return getattr(module, name, default) if module is not None else default
+    def __init__(self, module=None, origin=None, policy=None, policy_origin=None):
+        def get(name, default, mod=module):
+            return getattr(mod, name, default) if mod is not None else default
 
         self.origin = origin
-        self.deny_services = get("DENY_SERVICES", DEFAULT_DENY_SERVICES)
-        self.link_local_tokens = get("LINK_LOCAL_TOKENS", DEFAULT_LINK_LOCAL_TOKENS)
-        self.mgmt_services = frozenset(get("MGMT_SERVICES", ()))
-        self.mgmt_any_fallback = frozenset(get("MGMT_ANY_FALLBACK", ()))
+        self.deny_services = get("DENY_SERVICES", {})
+        self.link_local_tokens = get("LINK_LOCAL_TOKENS", {})
+        # Who may administer a host is the site's decision: site/policy.py,
+        # with heuristics.py still read where a site has not moved it.
+        def decided(name, default):
+            return get(name, get(name, default), policy)
+        self.mgmt_services = frozenset(decided("MGMT_SERVICES", ()))
+        self.mgmt_any_fallback = frozenset(decided("MGMT_ANY_FALLBACK", ()))
         self.definitional_sources = get("DEFINITIONAL_SOURCES", {})
-        self.management_sources = get("management_sources", None)
+        self.management_sources = decided("management_sources", None)
         self.rule_hook = get("rule", None)
         self.dynamic_rules = get("dynamic_rules", None)
         self.targets = get("TARGETS", {})
+        self.policy_origin = policy_origin
+        self.scored = get("scored", None, policy)
 
 
-DEFAULT = Profile()
+#: The shipped heuristics.py: what a project without its own gets.
+DEFAULT = Profile(_module(shipped()), origin=shipped())
 _loaded = {}
 
 
 def load_profile(defs_dir):
-    """The profile in `defs_dir`/heuristics.py, or the defaults where there
-    is none. Loaded once per directory."""
-    path = os.path.abspath(os.path.join(defs_dir, PROFILE_FILE)) if defs_dir else None
-    if not path or not os.path.isfile(path):
+    """The profile in the project's site/heuristics.py, else in
+    `defs_dir`/heuristics.py (where it lived before site/), else firru's
+    shipped one, with the project's site/policy.py beside it. Whichever is
+    found is all of it. Loaded once per pair of files."""
+    from firru.defs_dir import STOCK
+    from firru.project import site_path
+    path = site_path(PROFILE_FILE, note=False)
+    if path is None and defs_dir:
+        legacy = os.path.join(defs_dir, PROFILE_FILE)
+        # The stock one is what a project without its own gets anyway.
+        if os.path.isfile(legacy) and os.path.realpath(defs_dir) != os.path.realpath(STOCK):
+            path = legacy
+    if path is None:
+        site_path(PROFILE_FILE)          # inside a project, say what that costs
+    if path is None and defs_dir:
+        path = os.path.join(defs_dir, PROFILE_FILE)
+    path = os.path.abspath(path) if path and os.path.isfile(path) else None
+    policy = site_path(POLICY_FILE, note=False)
+    policy = os.path.abspath(policy) if policy else None
+    if not policy and (not path or path == os.path.abspath(shipped())):
         return DEFAULT
-    if path not in _loaded:
-        spec = importlib.util.spec_from_file_location(
-            f"firru_heuristics_{len(_loaded)}", path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        _loaded[path] = Profile(module, origin=path)
-    return _loaded[path]
+    path = path or os.path.abspath(shipped())
+    key = (path, policy)
+    if key not in _loaded:
+        _loaded[key] = Profile(_module(path), origin=path,
+                               policy=_module(policy), policy_origin=policy)
+    return _loaded[key]
 
 
 # =============================================================================
@@ -170,6 +216,29 @@ def declared_sources(host, service, metadata, profile=None):
         for tok in ([src] if isinstance(src, str) else src or []):
             if tok not in _OPEN and tok not in out:
                 out.append(tok)
+    return out
+
+
+def scored_ports(host, metadata, profile=None):
+    """{(protocol, port): note} the site's policy says must stay open on
+    `host`, such as what an availability check scores: {} without a hook.
+    `scored(host, metadata)` may give (protocol, port) or (protocol, port,
+    note) tuples, or such a mapping."""
+    profile = profile or DEFAULT
+    if not profile.scored:
+        return {}
+    got = profile.scored(host, metadata or {}) or {}
+    if isinstance(got, dict):
+        items = [(k[0], k[1], v) for k, v in got.items()]
+    else:
+        items = [tuple(x) + (None,) * (3 - len(x)) for x in got]
+    out = {}
+    for proto, port, note in items:
+        try:
+            out[(str(proto).lower(), int(port))] = note or "scored"
+        except (TypeError, ValueError):
+            raise ValueError(f"{profile.policy_origin}: scored({host!r}) gave "
+                             f"{(proto, port)!r}, not a protocol and a port")
     return out
 
 

@@ -367,8 +367,8 @@ def port_surface(doc, defs, direction=None):
 
     ``direction`` restricts the surface to one side. A generator that speaks
     only one side produces a document with only that filter, and an unrestricted
-    diff reads the absent side as wholly removed — which, with ``--prune``,
-    deletes it.
+    diff reads the absent side as wholly removed, and every removal it emits
+    would delete it.
     """
     surface = {}
     for d, term in iter_accept_terms(doc, direction):

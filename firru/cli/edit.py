@@ -1,40 +1,38 @@
 #!/usr/bin/env python3
 """
-firru — apply deterministic, regenerable edits to a human-edited policy.
+firru — deterministic edits to a human-edited policy.
 
 firru is the surgical counterpart to opening the file in $EDITOR: it
 automates only edits that are mechanical, preserving human intent and honoring
 the comment contract (docs/comment-contract.md). Judgment calls are reported,
 not decided.
 
-The apply model is a three-way merge, in the vocabulary of git/patch:
+Each verb is one class of change, and edits only what it names, so a line
+holds on a policy edited by hand since it was written:
 
-    OLD  (--base)   previous generated policy — the merge base
-    NEW  (--from)   freshly generated policy  — the incoming side
-    POL  (target)   the human-edited working file, edited in place
-
-    firru diff  OLD NEW --defs def            # preview (read-only)
-    firru diff  OLD NEW -o sh                 # emit runnable commands
-    firru apply POL --from NEW --base OLD      # apply the delta onto POL
-    firru apply POL --from NEW --base OLD -n   # dry run
-    firru set-source POL allow-tcp-HTTP NET_APP NET_MGMT
-    firru set-destination POL allow-egress-https DNS_CDN_GOOGLE
-    firru rm POL allow-tcp-legacy
+    firru diff  OLD NEW --defs def                # preview (read-only)
+    firru diff  OLD NEW -o sh                     # each change as a command
+    firru remove-source POL TERM PEER...          # narrow
+    firru set-source POL TERM PEER... | ANY       # narrow from ANY, or set outright
+    firru add-source POL TERM PEER...             # widen
+    firru set-action POL TERM deny --log          # deny, keep the term
+    firru add-term POL TERM... --from NEW         # copy a term from a policy or loot
+    firru add-term POL TERM --from NEW --replace OLD   # a rename, same ports
+    firru rm POL TERM
+    (-destination / -dest for egress)
 
 Ingress and egress are the same relation with the peer-set on the other side, so
 both live in one policy and both diff the same way. Direction is part of surface
 identity: tcp/443 inbound and tcp/443 outbound are two rows, each compared
 against its own peer field, and each edited by its own verb.
 
-Additions and cosmetic renames are applied. Narrowings — a peer-set that shrank
-to a subset of what it already allowed, which is what a tighten pass produces —
-need --narrow. Removals need --prune (and any scored port vetoes its own
-removal). Widenings are never applied: a term that grants somebody it did not
-grant before may be undoing a deliberate human decision, so it is emitted as a
-`set-source` / `set-destination` command for you to run (or grep) selectively:
+`diff -o sh` ends each line in its class, so a subset is a grep. A line that
+grants somebody what they did not have (a widening, a change the traffic
+contradicts, a terminal swap) is itself a comment, so `| sh` on the whole
+output never widens:
 
-    firru diff pol.yml tightened.yml -o sh | grep HTTP | sh
-    firru diff pol.yml tightened.yml -o sh | grep narrowed | sh
+    firru diff pol.yml proposal.yml -o sh | grep HTTP | sh
+    firru diff pol.yml proposal.yml -o sh | grep narrowed | sh
 
 Either side may be JSON instead of YAML, and the shape picks the comparison:
 loot-listeners output is synthesized in memory (observed x intended), and an
@@ -47,13 +45,10 @@ in the same six classes as every other diff.
 
 One change sits outside the classes entirely: the terminal. A filter ending in
 an open `allow-ANY` versus one ending in `log-drop-egress-ANY` is the
-enforcement decision for the host, so the swap is emitted only as a *comment*
-(`# firru rm … && firru apply … --only log-drop-egress-ANY`) — no pipe or grep
-takes it by accident, and `apply` adopts a terminal only when `--only` names
-it:
+enforcement decision for the host, so the swap is emitted only as a *comment*:
 
     firru rm pol.yml allow-ANY
-    firru apply pol.yml --from egress.yml --only log-drop-egress-ANY --direction out
+    firru add-term pol.yml log-drop-egress-ANY --from egress.yml --direction out
 """
 
 import argparse
@@ -89,8 +84,6 @@ from firru.policy import (
     term_ports,
     term_surface_keys,
 )
-from firru.scoring import load_scoring
-from firru.cli.score import annotate_policy
 
 yaml_handler = YAML()
 yaml_handler.indent(mapping=2, sequence=4, offset=2)
@@ -166,7 +159,7 @@ def _load_ruleset(path, data, defs_dir, zone_prefix):
 
 
 def _load_side(path, defs_dir, zone_prefix=None, allow_ruleset=False):
-    """A diff/apply side as a policy doc: YAML as-is, JSON converted in memory.
+    """A diff/add-term side as a policy doc: YAML as-is, JSON converted in memory.
 
     Two JSON shapes are accepted and they land in different cells of the matrix
     (docs/design.md). A normalized listener JSON (loot-listeners output, holding
@@ -177,7 +170,7 @@ def _load_side(path, defs_dir, zone_prefix=None, allow_ruleset=False):
     nft-to-aerleon, so `firru diff pol.yml nft.json` compares what was committed
     against what the host is actually running — compiled × enforced.
 
-    A ruleset is refused as an `apply` source, and the refusal is the point:
+    A ruleset is refused as an `add-term` source, and the refusal is the point:
     folding the running firewall back into pol/ documents the world instead of
     intending it, which is the failure mode the pipeline exists to reverse.
     Drift is a finding to review, never a patch to take.
@@ -198,11 +191,11 @@ def _load_side(path, defs_dir, zone_prefix=None, allow_ruleset=False):
         from firru.cli.winfw_to_aerleon import is_winfw
         if is_winfw(data):
             # Windows Firewall from loot-host.ps1: enforced state like nft.json,
-            # under the same refusal as a source to apply from.
+            # under the same refusal as a source to copy from.
             if not allow_ruleset:
                 raise SystemExit(
                     f"{path}: a Windows Firewall ruleset is enforced state, not a source to "
-                    f"apply from — read the drift with `firru diff POL {path}` and edit the "
+                    f"copy from — read the drift with `firru diff POL {path}` and edit the "
                     f"policy deliberately")
             from firru.cli.winfw_to_aerleon import convert as _winfw_convert
             doc, stats = _winfw_convert(data, cached_naming(defs_dir))
@@ -213,7 +206,7 @@ def _load_side(path, defs_dir, zone_prefix=None, allow_ruleset=False):
         if isinstance(data, dict) and "nftables" in data:
             if not allow_ruleset:
                 raise SystemExit(
-                    f"{path}: an nft ruleset is enforced state, not a source to apply "
+                    f"{path}: an nft ruleset is enforced state, not a source to copy "
                     f"from — read the drift with `firru diff POL {path}` and edit the "
                     f"policy deliberately")
             return _load_ruleset(path, data, defs_dir, zone_prefix), None
@@ -229,7 +222,7 @@ def _load_side(path, defs_dir, zone_prefix=None, allow_ruleset=False):
         # dynamic range is still seen, by owner, in loot-diff --baseline.
         from firru.defs_dir import resolve
         from firru.owners import load_expected, load_owners
-        from firru.src_heuristics import load_profile
+        from firru.site_profile import load_profile
         _, doc, unknown = synth_host(data, cached_naming(defs_dir), all_meta,
                                      fallback_name=_Path(path).stem,
                                      owners=load_owners(defs_dir),
@@ -370,7 +363,7 @@ def _host_flow_index(flows_file, docs, defs, span=None, paths=()):
     definitions know it, since files are named by the inventory token, which is
     unique; metadata.host is the collector's label, which need not be (two
     zones can each have a `www`)."""
-    from firru.cli.tighten import get_host_ips
+    from firru.cli.propose import get_host_ips
     candidates = [pathlib.Path(p).stem for p in paths if p]
     candidates += [(d.get("metadata") or {}).get("host") for d in docs]
     host_token, ips = None, []
@@ -639,22 +632,6 @@ def _sides(filt, direction=None):
     return sorted(dirs & {direction}) if direction else sorted(dirs)
 
 
-def _pol_locate(pol, defs, direction=None):
-    """Map every surface key POL admits to the (filt, term) covering it.
-
-    Keyed by direction as well as port: without it, a narrowing on an egress
-    term locates the ingress term at the same port and rewrites that one.
-    """
-    loc = {}
-    for filt in pol.get("filters", []):
-        for d in _sides(filt, direction):
-            for term in filt.get("terms", []):
-                if _is_accept(term):
-                    for key in term_surface_keys(defs, term, d):
-                        loc[key] = (filt, term)
-    return loc
-
-
 def _clone_term(seq, idx):
     """Copy term seq[idx] with its full preceding comment block carried over."""
     nt = CommentedMap()
@@ -721,33 +698,6 @@ def _pol_filter_for(pol, output):
     return None
 
 
-def _collect_additions(new_doc, defs, to_add, only):
-    """Clone the NEW terms covering `to_add` ports. -> [(output, term, ports)]."""
-    out = []
-    for filt in new_doc.get("filters", []):
-        terms = filt.get("terms", [])
-        for direction in _sides(filt):
-            for idx, term in enumerate(terms):
-                if not _is_accept(term):
-                    continue
-                if only and term.get("name") not in only:
-                    continue
-                hit = term_surface_keys(defs, term, direction) & to_add
-                if hit:
-                    out.append((direction == DIR_OUT,
-                                _clone_term(terms, idx), sorted(hit)))
-    return out
-
-
-def _scoring_vetoes(term, host_scoring, defs):
-    """True if any scored (proto,port) falls inside `term` — it must stay open."""
-    return any(term_covers(defs, term, proto, port) for (proto, port) in host_scoring)
-
-
-# ---------------------------------------------------------------------------
-# diff
-# ---------------------------------------------------------------------------
-
 def _file_header(path, limit=4):
     """The leading comment lines of a policy file, without their '#': where a
     generated proposal says what made it (tighten writes its flow window
@@ -806,9 +756,9 @@ def _emit_sh(old_path, new_path, defs_dir, result, direction=None, swaps=None,
         print(f"# The swap is the enforcement decision for this host, so it is commented "
               f"out: no grep takes it by accident.")
         print(f"# firru rm {old_path} {open_name} && "
-              f"firru apply {old_path} --from {new_path} --only {term_name}{d}  # terminal")
+              f"firru add-term {old_path} {term_name} --from {new_path}{d}  # terminal")
     for term, _ in result["added"]:
-        line = f"firru apply {old_path} --from {new_path} --only {term.get('name')}{d}"
+        line = f"firru add-term {old_path} {term.get('name')} --from {new_path}{d}"
         silent = _ev_silent(evidence, term)
         if silent:
             print(f"# {line}  # widened: would admit {_fmt_silent(silent)}")
@@ -847,8 +797,10 @@ def _emit_sh(old_path, new_path, defs_dir, result, direction=None, swaps=None,
                 print(f"# {line}  # widened REVIEW{_ev_tag(evidence, term)}")
             else:
                 print(f"{line}  # {cls}{_ev_tag(evidence, term)}")
-    for term, _ in result["cosmetic"]:
-        print(f"firru apply {old_path} --from {new_path} --only {term.get('name')}{d}  # cosmetic")
+    for term, ports in result["cosmetic"]:
+        old_name = result["_old"][ports[0]].get("name")
+        print(f"firru add-term {old_path} {term.get('name')} --from {new_path} "
+              f"--replace {old_name}{d}  # cosmetic")
     for term, _ in result["removed"]:
         cut = _ev_cut(evidence, term)
         if cut:
@@ -916,7 +868,7 @@ def _print_diff(name, result, swaps=None, evidence=None, zero_evidence=None):
             print(f"    + {term.get('name',''):24s} {_fmt_ports(ports):22s} "
                   f"{_peer_word(d)} {_fmt_peers(term, d)}")
     if narrowed:
-        print(f"  narrowed ({len(narrowed)}) — fewer peers, safe to apply (--narrow):")
+        print(f"  narrowed ({len(narrowed)}) — fewer peers, safe to apply:")
         for term, ports in narrowed:
             d = ports[0][0]
             cut = _ev_cut(evidence, term)
@@ -938,7 +890,7 @@ def _print_diff(name, result, swaps=None, evidence=None, zero_evidence=None):
             fam = lambda f: "+".join(f"v{x}" for x in sorted(f)) or "none"
             print(f"    # {term.get('name',''):24s} {_fmt_ports(ports):22s} {fam(old_fam)} -> {fam(new_fam)}")
     if removed:
-        print(f"  removed ({len(removed)}) — no longer observed, advisory (scoring vetoes):")
+        print(f"  removed ({len(removed)}) — no longer observed, advisory (rm vetoes a scored term):")
         for term, ports in removed:
             cut = _ev_cut(evidence, term)
             note = (f"  !! CONTRADICTED: cuts {_fmt_cut(cut)}" if cut
@@ -990,6 +942,13 @@ def _cmd_diff_body(args, defs):
     zp = getattr(args, "zone_prefix", None)
     old_doc, old_unknown = _load_side(args.old, args.defs, zp, allow_ruleset=True)
     new_doc, new_unknown = _load_side(args.new, args.defs, zp, allow_ruleset=True)
+    if all((d.get("metadata") or {}).get("source") == "loot" for d in (old_doc, new_doc)):
+        # Two synthesized loots compare what the heuristics make of each
+        # listener and lose the process and the bind address; loot-diff
+        # compares the listeners themselves. diff needs a policy on one side.
+        raise SystemExit(f"firru diff: {args.old} and {args.new} are both loot: "
+                         f"`firru loot-diff {args.old} {args.new}` compares listeners "
+                         f"(--baseline for a stock install)")
     result = diff_surface(old_doc, new_doc, defs, _direction_arg(args))
     result["kept"] = _reviewed_sources_kept(result, old_doc, new_doc)
     swaps = _terminal_swaps(old_doc, new_doc, _direction_arg(args))
@@ -1048,212 +1007,87 @@ def _cmd_diff_body(args, defs):
 
 
 # ---------------------------------------------------------------------------
-# apply
+# add-term
 # ---------------------------------------------------------------------------
 
-def cmd_apply(args):
+def _find_term(doc, name, direction=None):
+    """(filter, index, term, side) of the term called `name`, on `direction`'s
+    side when given; None when there is none."""
+    for filt in doc.get("filters", []):
+        terms = filt.get("terms", [])
+        for side in _sides(filt, direction):
+            for idx, term in enumerate(terms):
+                if term.get("name") == name:
+                    return filt, idx, term, side
+    return None
+
+
+def cmd_add_term(args):
+    """Copy terms by name from another policy (or loot) into POL, before its
+    terminal, carrying their comments. With --replace OLD, the one term takes
+    OLD's place: a rename or regroup with the same ports, edited in place so
+    OLD's comments stay. Adding a term grants something, so the lines firru
+    emits for it are reviewed, not grepped."""
     defs = cached_naming(args.defs)
+    direction = _direction_arg(args)
     pol = _load(args.pol)
     new_doc, from_unknown = _load_side(args.from_, args.defs)
-    base_doc = _load_side(args.base, args.defs)[0] if args.base else None
-    only = set(args.only) if args.only else None
-
-    direction = _direction_arg(args)
-    new_surf = port_surface(new_doc, defs, direction)
-    pol_surf = port_surface(pol, defs, direction)
-    base_surf = port_surface(base_doc, defs, direction) if base_doc else None
-
-    diff = diff_surface(base_doc if base_doc else pol, new_doc, defs, direction)
-
-    scoring_index = load_scoring(args.scoring) if args.scoring else {}
-    host = (pol.get("metadata") or {}).get("host")
-    host_scoring = scoring_index.get(host, {})
-
-    # Additions: ports NEW gained since the baseline that POL still lacks.
-    machine_added = set(new_surf) - set(base_surf) if base_surf is not None else set(new_surf)
-    to_add = {pp for pp in machine_added if pp not in pol_surf}
-    additions = _collect_additions(new_doc, defs, to_add, only)
-
-    # Terminals: a non-accept catch-all adopted by name, and only by name.
-    # It has no row in the surface, so it can never arrive mechanically; the
-    # swap from an open end to a logged drop is the enforcement decision.
-    terminals = []
-    if only:
-        have = {t.get("name") for f in pol.get("filters", [])
-                for t in f.get("terms", [])}
-        for filt in new_doc.get("filters", []):
-            terms = filt.get("terms", [])
-            for d in _sides(filt, direction):
-                for idx, term in enumerate(terms):
-                    if (term.get("name") in only and not _is_accept(term)
-                            and _is_catch_all(term) and term.get("name") not in have):
-                        terminals.append((d == DIR_OUT, _clone_term(terms, idx)))
-
-    # Cosmetic: same enforcement, renamed/regrouped — safe to propagate, but
-    # only while the POL term's own resolved surface is unchanged. A single-port
-    # term whose port was folded into a *group* token classifies as cosmetic at
-    # that port, yet copying the group token onto it would widen the term to
-    # every port the group holds. That case is the addition's job (the group
-    # term arrives whole, with its evidence); the old term is left for --prune.
-    pol_loc = _pol_locate(pol, defs, direction)
-    cosmetic = []
-    for new_term, ports in diff["cosmetic"]:
-        if only and new_term.get("name") not in only:
+    if args.replace and len(args.terms) != 1:
+        print("--replace takes the place of one term: name one", file=sys.stderr)
+        return 1
+    wrote = False
+    for name in args.terms:
+        found = _find_term(new_doc, name, direction)
+        if found is None:
+            print(f"term {name!r} not found in {args.from_}", file=sys.stderr)
+            return 1
+        filt, idx, term, side = found
+        if args.replace:
+            old = _find_term(pol, args.replace, side)
+            if old is None:
+                print(f"term {args.replace!r} not found in {args.pol}", file=sys.stderr)
+                return 1
+            old_term = old[2]
+            # A port folded into a group token reads as cosmetic at that port,
+            # yet the group's token on the old term would widen it to every
+            # port the group holds. A rename keeps the ports, or is not one.
+            if term_ports(defs, old_term) != term_ports(defs, term):
+                print(f"{args.pol}: {args.replace} and {name} cover different ports: "
+                      f"not a rename. firru add-term {args.pol} {name} --from "
+                      f"{args.from_}, then decide on {args.replace}", file=sys.stderr)
+                return 1
+            old_term["name"] = term.get("name")
+            if "destination-port" in term:
+                old_term["destination-port"] = term.get("destination-port")
+            print(f"{args.pol}: {args.replace} -> {name}  (rename)")
+            wrote = True
             continue
-        loc = pol_loc.get(ports[0])
-        if loc and term_ports(defs, loc[1]) == term_ports(defs, new_term):
-            cosmetic.append((loc[1], new_term))
-
-    # Narrowings: only with --narrow. Safe by construction (every surviving peer
-    # was already allowed), but still an enforcement change, so it is opt-in.
-    narrowings = []
-    for new_term, ports in diff["narrowed"]:
-        if only and new_term.get("name") not in only:
+        if _find_term(pol, name, side) is not None:
+            print(f"{args.pol}: already has {name}", file=sys.stderr)
             continue
-        loc = pol_loc.get(ports[0])
-        if loc:
-            narrowings.append((loc[1], new_term, ports[0][0]))
-
-    # Removals: only with --prune, and never a scored port.
-    prunes, vetoed = [], []
-    for old_term, ports in diff["removed"]:
-        if only and old_term.get("name") not in only:
-            continue
-        loc = pol_loc.get(ports[0])
-        if not loc:
-            continue
-        if _scoring_vetoes(old_term, host_scoring, defs):
-            vetoed.append((loc[0], loc[1]))
-        elif args.prune:
-            prunes.append((loc[0], loc[1]))
-
-    # A floor under --prune. The generated side going empty is what a failed
-    # collection looks like from here: a host whose ss dump could not be parsed
-    # used to synthesize to a policy with nothing in it, and every committed
-    # term then read as `removed`. Applying that is how a working host loses its
-    # whole ruleset because a parser met an ss version it did not know. Absence
-    # of evidence arrives here as an empty NEW side and must never be read as
-    # evidence of absence.
-    #
-    # The floor is deliberately not a --force flag. Decommissioning a host for
-    # real is rare, deliberate, and already expressible term by term with
-    # --only, so the safe path is the one that already exists.
-    # `--only` is exempt: naming the terms is the deliberate act the floor
-    # exists to require, so blocking it would leave no way to decommission a
-    # host and would contradict the advice in the message below.
-    if args.prune and prunes and not only:
-        pol_accepts = sum(1 for f in (pol.get("filters") or [])
-                          for t in (f.get("terms") or []) if is_accept_term(t))
-        new_accepts = sum(1 for f in (new_doc.get("filters") or [])
-                          for t in (f.get("terms") or []) if is_accept_term(t))
-        reason = None
-        if new_accepts == 0 and pol_accepts > 0:
-            reason = (f"{args.from_} has no accept terms at all while {args.pol} "
-                      f"has {pol_accepts}. That is the shape of a collection "
-                      f"failure, not of a host that stopped listening")
-        elif len(prunes) >= pol_accepts > 0:
-            reason = (f"this would prune all {pol_accepts} accept term(s) and "
-                      f"leave {args.pol} with none")
-        if reason:
-            print(f"{host or args.pol}: refusing to prune — {reason}. Check the "
-                  f"collection first; if the host really is being decommissioned, "
-                  f"remove the terms by name with --only.", file=sys.stderr)
-            return 2
-
-    narrow = getattr(args, "narrow", False)
-    applied_narrow = narrowings if narrow else []
-    name = host or args.pol
-    tag = "(dry run) " if args.dry_run else ""
-    print(f"{name}: {tag}{len(additions)} addition(s), {len(cosmetic)} rename(s), "
-          f"{len(applied_narrow)} narrowing(s), {len(prunes)} prune(s), "
-          f"{len(diff['widened'])} widening(s)"
-          + (f", {len(terminals)} terminal(s)" if terminals else ""))
-
-    for _, term, ports in additions:
-        print(f"  + {term.get('name',''):24s} {_fmt_ports(ports)}")
-    for pol_term, new_term in cosmetic:
-        print(f"  ~ {pol_term.get('name')} -> {new_term.get('name')}  (rename)")
-    for pol_term, new_term, direction in applied_narrow:
-        print(f"  > {pol_term.get('name'):24s} {_peer_word(direction)} -> "
-              f"{_fmt_peers(new_term, direction)}")
-    for _, term in prunes:
-        print(f"  - {term.get('name')}  (prune)")
-    for filt, term in vetoed:
-        print(f"  = {term.get('name')}  (removal vetoed by scoring — kept)")
+        target = _pol_filter_for(pol, side == DIR_OUT)
+        if target is None:
+            print(f"{args.pol}: no {'output' if side == DIR_OUT else 'input'} filter "
+                  f"for {name!r}", file=sys.stderr)
+            return 1
+        terms = target.setdefault("terms", [])
+        clone = _clone_term(filt["terms"], idx)
+        # Before any open catch-all accept too, so a terminal from NEW is live
+        # whichever order its rm and this run in; the shadowed accept is then
+        # dead and named for removal.
+        _insert_before_terminal(terms, clone)
+        wrote = True
+        dead = None
+        if not _is_accept(clone) and _is_catch_all(clone):
+            i = terms.index(clone)
+            dead = next((t for t in terms[i + 1:] if _is_accept(t) and _is_catch_all(t)), None)
+        print(f"{args.pol}: + {name}"
+              + (f"  (terminal: {dead.get('name')!r} is now dead; firru rm {args.pol} "
+                 f"{dead.get('name')})" if dead else ""))
     if from_unknown:
         _report_undefined(from_unknown, args.defs, sh=False)
-    if diff["widened"]:
-        print("  advisory — these grant new peers; run to apply, or grep a subset:")
-        for term, ports in diff["widened"]:
-            direction = ports[0][0]
-            old_name = diff["_old"][ports[0]].get("name")
-            print(f"      firru {_peer_verb(direction)} {args.pol} {old_name} "
-                  f"{' '.join(_term_peer_tokens(term, direction))} --defs {args.defs}")
-    if not narrow and narrowings:
-        print(f"  ({len(narrowings)} narrowing(s) available, need --narrow)")
-    if not args.prune and diff["removed"]:
-        print("  (removals shown above need --prune)")
-
-    if args.dry_run:
-        print("  (dry run — POL unchanged)")
-        return 0
-    if not (additions or cosmetic or applied_narrow or prunes or terminals
-            or args.scoring):
-        print("  nothing to apply")
-        return 0
-
-    for output, term, _ in additions:
-        target = _pol_filter_for(pol, output)
-        if target is None:
-            print(f"  ! no {'output' if output else 'input'} filter for {term.get('name')!r} — skipped",
-                  file=sys.stderr)
-            continue
-        _insert_before_terminal(target.setdefault("terms", []), term)
-
-    for output, term in terminals:
-        target = _pol_filter_for(pol, output)
-        if target is None:
-            print(f"  ! no {'output' if output else 'input'} filter for {term.get('name')!r} — skipped",
-                  file=sys.stderr)
-            continue
-        terms = target.setdefault("terms", [])
-        # Before any open catch-all accept, so the terminal is live whichever
-        # order the rm and the apply run in; the shadowed accept is then dead
-        # and named for removal.
-        _insert_before_terminal(terms, term)
-        i = terms.index(term)
-        for t in terms[i + 1:]:
-            if _is_accept(t) and _is_catch_all(t):
-                print(f"  * {term.get('name')}  (terminal — {t.get('name')!r} is now dead; "
-                      f"firru rm {args.pol} {t.get('name')})")
-                break
-        else:
-            print(f"  * {term.get('name')}  (terminal)")
-
-    for pol_term, new_term in cosmetic:
-        pol_term["name"] = new_term.get("name")
-        if "destination-port" in new_term:
-            pol_term["destination-port"] = new_term.get("destination-port")
-
-    for pol_term, new_term, direction in applied_narrow:
-        field = peer_field(direction)
-        peers = new_term.get(field)
-        if normalize_source(peers) == "ANY":
-            toks = []
-        elif isinstance(peers, (list, tuple)):
-            toks = list(peers)
-        else:
-            toks = [peers]
-        _set_peer_value(pol_term, field, toks)
-
-    for filt, term in prunes:
-        filt["terms"].remove(term)
-
-    if args.scoring:
-        annotate_policy(pol, scoring_index, defs)
-
-    _write(args.pol, pol)
-    print(f"  wrote {args.pol}")
+    if wrote:
+        _write(args.pol, pol)
     return 0
 
 
@@ -1364,6 +1198,159 @@ def cmd_set_destination(args):
     return _cmd_set_peers(args, DIR_OUT)
 
 
+# ---------------------------------------------------------------------------
+# add-source / remove-source / set-action
+# ---------------------------------------------------------------------------
+# The verb is the class of change: remove narrows, add widens. A line edits
+# only the peers it names, so lines apply in any order, one at a time, and
+# onto a policy edited by hand since they were written, without undoing
+# what they do not name.
+
+def _peer_term(args, verb):
+    """(doc, term, field, direction) for an add/remove verb, or an exit code.
+    The verb says which field it edits; the term's filter must agree."""
+    pol = _load(args.pol)
+    filt, _, term = _term_by_name(pol, args.term)
+    if term is None:
+        print(f"term {args.term!r} not found in {args.pol}", file=sys.stderr)
+        return 1
+    direction = filter_direction(filt)
+    if direction is None:
+        print(f"{args.term!r} sits in a filter that states no direction "
+              f"({', '.join(target_names(filt)) or 'no target'}); firru cannot "
+              f"tell which peer field applies", file=sys.stderr)
+        return 1
+    want = DIR_OUT if verb.endswith("destination") else DIR_IN
+    if direction != want:
+        other = verb.replace("source", "destination") if want == DIR_IN \
+            else verb.replace("destination", "source")
+        print(f"{args.term!r} is {'an egress' if direction == DIR_OUT else 'an ingress'} "
+              f"term; use firru {other}", file=sys.stderr)
+        return 1
+    return pol, term, peer_field(direction), direction
+
+
+def _named_peers(term, field):
+    """The peers a term names; [] when it is ANY."""
+    return [t for t in _src_tokens(term.get(field)) if str(t).upper() != "ANY"]
+
+
+def _cmd_remove_peers(args, verb):
+    got = _peer_term(args, verb)
+    if isinstance(got, int):
+        return got
+    pol, term, field, direction = got
+    have = _named_peers(term, field)
+    if not have:
+        print(f"{args.pol}: {args.term} {_peer_word(direction)} is ANY: nothing to "
+              f"remove from; firru {_peer_verb(direction)} narrows it", file=sys.stderr)
+        return 1
+    drop = set(args.peers)
+    gone = [p for p in args.peers if p not in have]
+    for p in gone:
+        print(f"{args.pol}: {args.term} has no {p} (already removed)", file=sys.stderr)
+    keep = [t for t in have if t not in drop]
+    if keep == have:
+        return 0
+    if keep:
+        _set_peer_value(term, field, keep)
+        _write(args.pol, pol)
+        print(f"{args.pol}: {args.term} {_peer_word(direction)} -> {_fmt_src(term.get(field))}")
+        return 0
+    # Nobody is left. An empty peer list is ANY in Aerleon, the opposite of
+    # what removing the last one means, so the term denies instead, logged:
+    # what it refuses stays visible.
+    _set_peer_value(term, field, [])
+    term["action"] = "deny"
+    _set_logging(term, True)
+    _write(args.pol, pol)
+    print(f"{args.pol}: {args.term} -> deny, logged (its last {_peer_word(direction)} removed)")
+    return 0
+
+
+def _cmd_add_peers(args, verb):
+    got = _peer_term(args, verb)
+    if isinstance(got, int):
+        return got
+    pol, term, field, direction = got
+    have = _named_peers(term, field)
+    if not have:
+        print(f"{args.pol}: {args.term} {_peer_word(direction)} is already ANY", file=sys.stderr)
+        return 0
+    new = [p for p in args.peers if p not in have]
+    if not new:
+        return 0
+    _set_peer_value(term, field, have + new)
+    _write(args.pol, pol)
+    print(f"{args.pol}: {args.term} {_peer_word(direction)} -> {_fmt_src(term.get(field))}")
+    return 0
+
+
+def cmd_remove_source(args):
+    return _cmd_remove_peers(args, "remove-source")
+
+
+def cmd_remove_destination(args):
+    return _cmd_remove_peers(args, "remove-destination")
+
+
+def cmd_add_source(args):
+    return _cmd_add_peers(args, "add-source")
+
+
+def cmd_add_destination(args):
+    return _cmd_add_peers(args, "add-destination")
+
+
+ACTIONS = ("accept", "deny", "reject")
+
+
+def _set_logging(term, on):
+    """Logging beside the action, not appended: a term's last key carries
+    the comment that trails it, and a key after it would sit below that."""
+    if not on:
+        term.pop("logging", None)
+        return
+    if "logging" in term:
+        term["logging"] = True
+        return
+    keys = list(term.keys())
+    at = keys.index("action") + 1 if "action" in keys else len(keys)
+    term.insert(at, "logging", True)
+    # A comment after the action line now follows the logging line instead.
+    slots = term.ca.items.get("action")
+    if slots and len(slots) > 2 and slots[2] is not None:
+        term.ca.items.setdefault("logging", [None, None, None, None])[2] = slots[2]
+        slots[2] = None
+
+
+def cmd_set_action(args):
+    """Set a term's action; --log turns logging on, --no-log off. A deny
+    keeps the term, so what it refuses can be logged, and the next synthesis
+    finds the port decided rather than proposing it again."""
+    pol = _load(args.pol)
+    _, _, term = _term_by_name(pol, args.term)
+    if term is None:
+        print(f"term {args.term!r} not found in {args.pol}", file=sys.stderr)
+        return 1
+    if args.action != "accept" and not args.force \
+            and args.term in _scored_term_names(_filter_terms(pol, args.term)):
+        print(f"{args.pol}: kept {args.term} (scored — do not block; --force to override)")
+        return 0
+    term["action"] = args.action
+    if args.log is not None:
+        _set_logging(term, args.log)
+    _write(args.pol, pol)
+    logged = ", logged" if term.get("logging") else ""
+    print(f"{args.pol}: {args.term} -> {args.action}{logged}")
+    return 0
+
+
+def _filter_terms(pol, name):
+    filt, _, _ = _term_by_name(pol, name)
+    return filt.get("terms", []) if filt is not None else []
+
+
 # Markers of a human "must stay open" decision. Today scoring lives in these
 # inviolable comments (docs/comment-contract.md); TODO(scoring-file): read a
 # machine-readable environment file instead — it is authoritative and changes
@@ -1466,30 +1453,22 @@ def main():
     add_window_arguments(p_diff)
     p_diff.set_defaults(func=cmd_diff)
 
-    p_apply = sub.add_parser("apply", help="Apply the machine delta onto a human policy",
-                             description="Merge what a generated policy (--from NEW) changed onto "
-                                         "the reviewed policy POL, three-way when --base OLD is the "
-                                         "generated policy POL was reviewed from. Narrowings need "
-                                         "--narrow and removals --prune; widenings are never applied.")
-    p_apply.add_argument("pol", metavar="POL", help="Human-edited policy to edit in place")
-    p_apply.add_argument("--from", dest="from_", metavar="NEW", required=True,
-                         help="Incoming generated policy to pull changes from")
-    p_apply.add_argument("--base", metavar="OLD", default=None,
-                         help="Baseline generated policy for a three-way apply")
-    p_apply.add_argument("--only", action="append", metavar="TERM",
-                         help="Restrict to the named term(s); repeatable")
-    p_apply.add_argument("--narrow", action="store_true",
-                         help="Apply narrowings — sources that shrank to a subset of what "
-                              "was already allowed. Widenings are never applied.")
-    p_apply.add_argument("--prune", action="store_true",
-                         help="Remove terms no longer observed (scored ports veto their own removal)")
-    p_apply.add_argument("--scoring", "-s", default=None,
-                         help="Scoring YAML: veto prunes and re-annotate [score]")
-    p_apply.add_argument("--defs", "-d", default="def", help="Aerleon definitions directory")
-    p_apply.add_argument("--direction", choices=["in", "out", "both"], default="both",
-                        help="Restrict to one side of the policy. Use --direction out\n                             with a generator that proposes only egress: otherwise the\n                             absent ingress filter reads as wholly removed.")
-    p_apply.add_argument("--dry-run", "-n", action="store_true", help="Preview; do not write POL")
-    p_apply.set_defaults(func=cmd_apply)
+    p_add = sub.add_parser("add-term", help="Copy terms by name from another policy or loot",
+                           description="Copy each TERM from NEW (a policy, or loot synthesized "
+                                       "in memory) into POL, before its terminal, with its "
+                                       "comments. A term POL has is left alone. With --replace "
+                                       "OLD, the term takes OLD's place: a rename with the same "
+                                       "ports, so OLD's comments stay.")
+    p_add.add_argument("pol", metavar="POL", help="Policy YAML to edit in place")
+    p_add.add_argument("terms", metavar="TERM", nargs="+", help="Term name(s) in NEW")
+    p_add.add_argument("--from", dest="from_", metavar="NEW", required=True,
+                       help="Policy or loot to copy from")
+    p_add.add_argument("--replace", metavar="OLD", default=None,
+                       help="Rename OLD to TERM in place (same ports, same enforcement)")
+    p_add.add_argument("--defs", "-d", default="def", help="Aerleon definitions directory")
+    p_add.add_argument("--direction", choices=["in", "out", "both"], default="both",
+                       help="Take TERM from this side of NEW only")
+    p_add.set_defaults(func=cmd_add_term)
 
     p_set = sub.add_parser("set-source",
                            help="Set an ingress term's source-address (ANY = unrestricted)",
@@ -1510,6 +1489,41 @@ def main():
     p_setd.add_argument("peers", metavar="DST", nargs="+", help="Destination token(s), or ANY")
     p_setd.add_argument("--defs", "-d", default="def")  # accepted for emit-sh symmetry; unused
     p_setd.set_defaults(func=cmd_set_destination)
+
+    for verb, word, func in (
+            ("add-source", "Add sources to", cmd_add_source),
+            ("remove-source", "Remove sources from", cmd_remove_source),
+            ("add-destination", "Add destinations to", cmd_add_destination),
+            ("remove-destination", "Remove destinations from", cmd_remove_destination)):
+        side = "ingress" if verb.endswith("source") else "egress"
+        p = sub.add_parser(verb, help=f"{word} an {side} term",
+                           description=f"{word} {side} term TERM in POL, in place, keeping "
+                                       "its comments. Only the named peers change, so the "
+                                       "line holds on a policy edited since it was written."
+                                       + (" Removing the last one makes the term a logged "
+                                          "deny: an empty list would be ANY."
+                                          if verb.startswith("remove") else
+                                          " A term that is ANY stays ANY."))
+        p.add_argument("pol", metavar="POL", help="Policy YAML to edit in place")
+        p.add_argument("term", metavar="TERM", help="Term name")
+        p.add_argument("peers", metavar="PEER", nargs="+", help="Token(s)")
+        p.add_argument("--defs", "-d", default="def")  # accepted for emit-sh symmetry; unused
+        p.set_defaults(func=func)
+
+    p_act = sub.add_parser("set-action", help="Set a term's action (accept, deny, reject)",
+                           description="Set the action of term TERM in POL, in place. A term "
+                                       "carrying a [score] note is not denied unless --force.")
+    p_act.add_argument("pol", metavar="POL", help="Policy YAML to edit in place")
+    p_act.add_argument("term", metavar="TERM", help="Term name")
+    p_act.add_argument("action", choices=ACTIONS)
+    p_act.add_argument("--log", dest="log", action="store_true", default=None,
+                       help="Log what the term matches")
+    p_act.add_argument("--no-log", dest="log", action="store_false",
+                       help="Stop logging what the term matches")
+    p_act.add_argument("--force", action="store_true",
+                       help="Deny even a term carrying a scoring / 'do not block' comment")
+    p_act.add_argument("--defs", "-d", default="def")  # accepted for emit-sh symmetry; unused
+    p_act.set_defaults(func=cmd_set_action)
 
     p_rm = sub.add_parser("rm", help="Remove a term by name",
                           description="Remove term TERM from POL, in place. A term carrying a "

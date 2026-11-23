@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "firru"
-version = "1.1.0"
+version = "1.2.0"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{ name = "Pekka Pietikäinen" }]
@@ -39,8 +39,8 @@ asn = ["geoip2"]
 lspr24 = ["pyarrow", "duckdb>=1.1"]
 
 [project.scripts]
-# firru — the policy-YAML editing core (verbs: diff apply set-source rm
-# synth score tighten merge-zones); see firru.cli.dispatch
+# firru — synth, propose, check, diff and the edit verbs (remove-source,
+# add-source, set-source, set-action, add-term, rm); see firru.cli.dispatch
 firru                       = "firru.cli.dispatch:main"
 # acquisition (ss/pcap/live -> JSON)
 loot-listeners              = "firru.cli.loot_listeners:main"

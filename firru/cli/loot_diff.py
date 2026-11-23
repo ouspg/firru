@@ -29,8 +29,8 @@ Against a baseline instead of an earlier run:
     loot-diff --baseline baselines/ exec/ --assign 'dc*=win2022-dc' --assign '*=win2022'
 
     # a stock install by name, from a firru-os-baselines checkout
-    # ($FIRRU_BASELINES, else ~/firru-os-baselines); also `firru diff --baseline`
-    firru diff --baseline win2022-dc hosts/dc01/
+    # ($FIRRU_BASELINES, else ~/firru-os-baselines)
+    firru loot-diff --baseline win2022-dc hosts/dc01/
     loot-diff --baseline list
 
     # what synthesis should see: the loot less what the baseline explains,

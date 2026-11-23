@@ -1,12 +1,28 @@
 # Source policy: who may reach each synthesized service.
 #
-# firru synth reads heuristics.py from the definitions directory. This one
-# sets nothing, so every service gets ANY except link-local discovery (mDNS,
-# LLMNR) and SSDP (denied). Copy it into your project's def/ and uncomment
-# what your inventory supports; firru/src_heuristics.py documents each name.
+# firru's defaults, used as they are by a project without its own
+# site/heuristics.py, and the template for one: copy this file into site/
+# and edit it. A site's file is all of its configuration; nothing from this
+# one is layered underneath, so keep what you want of the settings below.
+# What the site decides rather than guesses (who may administer a host)
+# goes in site/policy.py. firru/site_profile.py documents each name.
 # This file is code, and firru runs it.
 
-# Management services take their sources from management_sources().
+# Denied before the drop-ANY rather than given a term.
+DENY_SERVICES = {
+    "SSDP": "udp",   # UPnP discovery, udp/1900: no legitimate inbound use on servers
+}
+
+# Their multicast groups are link-local (224.0.0.251, 224.0.0.252, ff02::fb,
+# ff02::1:3): a router will not forward them, so neither should a source rule.
+LINK_LOCAL_TOKENS = {
+    "MDNS":  ("MDNS_SOURCES_V4",  "MDNS_SOURCES_V6"),
+    "LLMNR": ("LLMNR_SOURCES_V4", "LLMNR_SOURCES_V6"),
+}
+
+# Management services take their sources from management_sources(). Who
+# may administer a host is a decision, so these belong in site/policy.py;
+# here they still work for a site that has not moved them.
 # MGMT_SERVICES = ["SSH", "RDP", "WINRM-HTTP", "WINRM-HTTPS"]
 #
 # def management_sources(metadata):

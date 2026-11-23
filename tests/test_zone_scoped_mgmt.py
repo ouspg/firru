@@ -12,25 +12,41 @@ A management term names two different parties and neither contains the other:
 <ZONE>_GT is the green team's hosts in that network, MGMT_HOSTS is the blue
 team's own access.
 
-These are the Locked Shields case study's source policy
-(examples/lspr24/def/heuristics.py), loaded the way synthesis loads it.
+These are the Locked Shields case study's management policy
+(examples/lspr24/site/policy.py, beside site/heuristics.py), loaded the way
+synthesis loads them.
 """
 
 import functools
+import os
 import pathlib
 
-from firru import src_heuristics
-from firru.src_heuristics import load_profile
+from firru import site_profile
+from firru.site_profile import load_profile
 
-LS = load_profile(str(pathlib.Path(__file__).parent.parent / "examples" / "lspr24" / "def"))
-get_suggested_source = functools.partial(src_heuristics.get_suggested_source, profile=LS)
-get_suggested_rule = functools.partial(src_heuristics.get_suggested_rule, profile=LS)
+LSPR24 = pathlib.Path(__file__).parent.parent / "examples" / "lspr24"
+
+
+def _load():
+    # site/ is found from the working directory, as for any firru command.
+    cwd = os.getcwd()
+    os.chdir(LSPR24)
+    try:
+        return load_profile(str(LSPR24 / "def"))
+    finally:
+        os.chdir(cwd)
+
+
+LS = _load()
+get_suggested_source = functools.partial(site_profile.get_suggested_source, profile=LS)
+get_suggested_rule = functools.partial(site_profile.get_suggested_rule, profile=LS)
 
 CORP_INT = {"zone": "corp_int", "segment": "corp"}
 
 
 def test_the_profile_was_found():
-    assert LS.origin and LS.origin.endswith("heuristics.py")
+    assert LS.origin and LS.origin.endswith("site/heuristics.py")
+    assert LS.policy_origin and LS.policy_origin.endswith("site/policy.py")
 
 
 def test_ssh_takes_the_zone_band():

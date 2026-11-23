@@ -22,16 +22,19 @@ import re
 import sys
 
 # Verbs handled by the edit subparser (firru/cli/edit.py).
-_EDIT_VERBS = {"diff", "apply", "set-source", "set-destination", "rm"}
+_EDIT_VERBS = {"diff", "add-term", "set-source", "set-destination", "rm",
+               "add-source", "remove-source", "add-destination",
+               "remove-destination", "set-action"}
 
 # Short names the help offers.
-_ALIASES = {"set-dest": "set-destination"}
+_ALIASES = {"set-dest": "set-destination", "add-dest": "add-destination",
+            "remove-dest": "remove-destination"}
 
 # Verbs that map straight to a module main().
 _MODULES = {
     "synth":             "firru.cli.synth",                 # loot JSON -> staged policy YAML
-    "score":             "firru.cli.score",                 # annotate [score] notes
-    "tighten":           "firru.cli.tighten",               # tighten sources from flows
+    "propose":           "firru.cli.propose",               # edits from the traffic, as firru commands
+    "check":             "firru.cli.check",                 # what a policy refuses, answered or not
     "merge-zones":       "firru.cli.merge_zones",           # per-host -> per-zone policy
     "annotate-services": "firru.cli.annotate_services",     # refresh [auto] evidence in def/
     "edit-services":     "firru.cli.edit_services",         # add / rm service tokens in def/
@@ -46,27 +49,36 @@ firru — network policy YAML toolkit
 
 Usage: firru <command> [args]    (firru <command> --help for details)
 
-Edit policy YAML:
-  diff         preview, or emit runnable commands for, the delta between two policies
-               (with --baseline REF LOOT: listeners added to a stock install, = loot-diff)
-  apply        apply a generated delta onto a human policy (three-way merge)
-  set-source   set an ingress term's source-address
-  set-dest     set an egress term's destination-address (set-destination)
+Propose (writes new files, never a reviewed policy):
+  synth        loot JSON -> staged host policy YAML
+  propose      edits from the traffic as tagged firru commands (narrow, deny unexercised);
+               the proposals are written to proposals/ (-o yaml: only those)
+  merge-zones  per-host policies -> per-zone firewall policy
+
+Edit a policy (one class of change per verb, only what it names):
+  remove-source / add-source   narrow or widen an ingress term by the peers named
+               (remove-dest / add-dest for egress)
+  set-source   set an ingress term's source-address (set-dest for egress)
+  set-action   accept, deny or reject a term (--log)
+  add-term     copy a term by name from a proposal or loot (--replace: a rename)
   rm           remove a term by name
   mass         run a stream of firru commands in one process (| firru mass)
 
-Produce / transform policy YAML:
-  synth        loot JSON -> staged host policy YAML
-  score        annotate [score] "must stay open" notes
-  tighten      tighten sources from observed flows (flows JSONL, or live Arkime)
-  merge-zones  per-host policies -> per-zone firewall policy
-  stance       where each policy is on log-accept -> log-drop -> drop (read-only; -o json)
-
-Compare loot:
+Compare and check (read-only):
+  diff         a policy against another state term by term: a policy, loot (a stock
+               baseline too) or a firewall dump; --flows: what the traffic says of each
+               change; -o sh: the edits. Two loots: loot-diff
+  check        what a policy refuses of the traffic, answered (would break) or not
+  stance       where each policy is on log-accept -> log-drop -> drop (-o json)
   loot-diff    listeners opened/closed between two loots, or against a stock
                baseline: firru loot-diff --baseline win2022-dc LOOT (list: --baseline list)
   audit        one host against its running firewall, a baseline and its policy;
                -o sh emits the policy fixes (firru audit LOOT --policy POL -o sh)
+  buddy-probe  intra-zone enforcement canary as a bash /dev/tcp script
+
+Flows:
+  flows-to-parquet  build the partitioned parquet flow store (hourly)
+  parquet-to-jsonl  read the parquet flow store back out as JSONL (inverse)
 
 Maintain definitions:
   annotate-services  refresh the [auto] observed-evidence note on service tokens
@@ -125,11 +137,7 @@ def dispatch_argv(argv):
 
     saved = sys.argv
     try:
-        # `firru diff --baseline REF NEW`: loot against a stock install. The
-        # policy diff has no --baseline, so the flag says which diff is meant.
         sub = _ALIASES.get(sub, sub)
-        if sub == "diff" and any(a in ("--baseline", "--closest") or a.startswith(("--baseline=", "--closest=")) for a in rest):
-            sub = "loot-diff"
         if sub in _EDIT_VERBS:
             from firru.cli import edit
             sys.argv = ["firru", sub, *rest]

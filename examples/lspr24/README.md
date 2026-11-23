@@ -63,7 +63,7 @@ python3 assumptions.py --loot loot-ossec/ --defs def/ --assumptions assumptions.
 suggest-services --input loot-assumed/ --defs def/ --yaml def/services-observed.yml
 firru synth --input loot-assumed/ --defs def/ --meta def/host_metadata.json \
     --output policies/r1-synthesized/
-firru tighten --policy policies/r1-synthesized --defs def/ \
+firru propose policies/r1-synthesized --defs def/ -o yaml \
     --window night --outdir policies/r2-tightened      # flows: firru.toml's store
 python3 flows_to_enforced.py ... --out policies/r3-apparent/
 python3 block_early.py --flows data/flows/ --window night ... --out policies/r4-block-early/
@@ -72,6 +72,7 @@ firru merge-zones --hosts 'policies/<variant>/*.yml' --defs def/ --outdir zones/
 
 | directory | what it holds |
 | --- | --- |
+| `site/` | `policy.py`, who may administer a host, and `heuristics.py`, what holds by definition; firru commands run here find both |
 | `loot-ossec/` | the measured loot, as the archive has it |
 | `loot-assumed/` | the same with `assumptions.yml` applied: what the policies are built from |
 | `policies/r1-synthesized/` | from the sockets: 460 service terms over 59 hosts |
@@ -201,7 +202,7 @@ naming material in the record is a few hundred SNI and HTTP host headers in
 
 The flows are one store of the whole dataset (`make flows`: 20M flows, 0.4 GB,
 written in about 20 seconds), and each command reads the window it is given,
-by the names in `firru.toml`. Tightening above is `firru tighten --window
+by the names in `firru.toml`. Tightening above is `firru propose --window
 night`. The same store answers the question before a deploy: what would the
 tightened policy have done to traffic it was not tightened on?
 
@@ -233,7 +234,7 @@ clients of one night closes it to its users.
 
 `make check-live` asks the question to ask before deploying: what would each
 host's policy, trained on the night window, refuse of the first live hour,
-08:00-09:00 on d2? It is `firru tighten --check`, which reads the whole policy
+08:00-09:00 on d2? It is `firru check`, which reads the whole policy
 rather than a change to it, so it also reports traffic to a port no term
 covers. The hourly diffs above cannot show that: they compare two policies,
 and a port neither has a term for is in neither. The results are in
@@ -254,7 +255,7 @@ dc1's dynamic RPC is the first kind. A domain member reaches a DC's endpoint
 mapper and is then handed a port from the dynamic range, which no snapshot of
 listening sockets holds, so the loot gives synthesis nothing to write a term
 from. A site states it as a rule instead (`dynamic_rules` in its
-`heuristics.py`, `firru.src_heuristics`): the DC's dynamic range, from the
+`site/heuristics.py`, `firru.site_profile`): the DC's dynamic range, from the
 domain's members. This example does not, because the capture does not say
 who the members are. The beg DCs' Kerberos and LDAP clients are the
 workstations, mail and the other DC, but also owncloud, which uses both, and
@@ -319,13 +320,21 @@ counterfactual cannot score it.
 
 ## Assumptions, and why each holds
 
-Everything here is derived from the two dataset files, except what two
-hand-written files say, each entry with its source and reasoning:
-`identity-assertions.yml` (which loot file is which host, where the data does
-not settle it) and `assumptions.yml` (everything else). `assumptions.py` is the
-only code that turns the second into data, and it leaves the measured loot
-alone: `loot-ossec/` is what the archive says, `loot-assumed/` is that with the
-assumptions applied, and the policies are built from the latter.
+Everything here is derived from the two dataset files, except what the
+hand-written files say. Two of them hold what the data leaves open, each
+entry with its source and reasoning: `identity-assertions.yml` (which loot
+file is which host, where the data does not settle it) and `assumptions.yml`
+(everything else). `assumptions.py` is the only code that turns the second
+into data, and it leaves the measured loot alone: `loot-ossec/` is what the
+archive says, `loot-assumed/` is that with the assumptions applied, and the
+policies are built from the latter.
+
+The other hand-written files are configuration and add no facts.
+`site/policy.py` says who may administer a host. It names the green team
+that the dataset labels and the two sources that `assumptions.yml` defines,
+where a real site would write its own decision. `site/heuristics.py` holds what
+is true by definition, and `def/services-site.yml` names the one service that
+is this site's own.
 
 | assumption | where | why it holds |
 | --- | --- | --- |
@@ -335,7 +344,8 @@ assumptions applied, and the policies are built from the latter.
 | The Windows services syscollector never saw change | `windows` in `assumptions.yml`; `inferred` and `inferred_from` on each filled-in listener | Each Windows host is the stock install of its role (DC, CA, Exchange member, domain workstation) plus the layers its traffic shows (OpenSSH, RDP, WinRM), each measured on its own. A listener the stock install bound to its own lab address is bound to the host's addresses instead, both families, since the baseline's addresses say nothing about this network. `assumptions.py --flows` checks it: every port that answered overnight is explained except one: `tcp/134` on both domain controllers, which the green-team checker opens about once a minute (Zeek `RSTO`: the handshake completed, then the checker reset it). Something listened there that neither the loot nor any baseline knows; it is left unexplained rather than assumed, so the policies deny it and tighten's would-block report shows it. |
 | The blue team's own management sources | `mgmt_hosts` in `assumptions.yml`, MGMT_HOSTS in `def/networks.yml` | Of the 28 sources answered on SSH or RDP overnight, 25 are the green team, which the inventory names; the interior ones reach 26 hosts each on both, administration as well as scoring. The other three: the DMZ firewall's own address (administration through its NAT) and two exterior addresses. Over all windows 173 internal sources reached SSH or RDP: users and lateral movement inside the zones, not management. |
 | Each subnet's management entry point | `zone_mgmt` in `assumptions.yml`; `<ZONE>_MGMT`, or `<ZONE>_<n>_MGMT` where a zone has several, in `def/networks.yml` | The top address of each internal subnet opens SSH, RDP and VNC to the hosts in that subnet and nowhere else, on both days and never at night: 64,159 answered flows from nine addresses, all labelled blue team. No asset is named at any of them, so the data shows that they carry management, not who operates them. |
-| Who may administer a host | `def/heuristics.py` | The administrators the traffic shows, per zone: SSH, RDP and WinRM from the zone's green-team hosts, the management entry point of the host's own subnet and MGMT_HOSTS. NetBIOS and WS-Discovery come from the zone's own hosts, since neither has a reason to cross a zone. |
+| Who may administer a host | `site/policy.py` | The administrators the traffic shows, per zone: SSH, RDP and WinRM from the zone's green-team hosts, the management entry point of the host's own subnet and MGMT_HOSTS. A site writes this as a decision; here it is assumed, from the two rows above. |
+| What holds by definition | `site/heuristics.py` | NetBIOS and WS-Discovery come from the zone's own hosts, since neither has a reason to cross a zone; SSDP is denied and mDNS and LLMNR stay link-local, as in firru's shipped file. |
 | Who the green team is | `<ZONE>_GT` in `def/networks.yml` | The dataset labels organiser traffic (`Label_src=2`). Used to *name* those hosts, never to score a policy. |
 | This site's own services | `def/services-site.yml` | One: Keycloak's cluster transport on udp/46655, seen on the keycloak host and nowhere else. |
 | Ports nobody named | `def/services-observed.yml` | Named by a stock-install baseline or firru's curated table where one covers the port; otherwise `TCP_<port>`, with the process and host as the evidence, so the claim is visibly weaker than a registry name. |

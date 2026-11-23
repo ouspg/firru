@@ -38,21 +38,21 @@ Reading flows from flows.jsonl (single pass, 4 hosts) …
 Host: dc1  IPs: ['192.168.150.194']
   ingress: 315 flows across 8 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/dc1.yml  (8 changed, 15 log-drop candidates)
 Host: mon1  IPs: ['192.168.150.169']
   ingress: 288 flows across 1 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/mon1.yml  (1 changed, 1 log-drop candidate)
 Host: web1  IPs: ['192.168.150.126']
   ingress: 434 flows across 1 service buckets
   egress:  0 flows across 0 service buckets
+Written: policies/tightened/web1.yml  (0 changed, 1 log-drop candidate)
 Host: win1  IPs: ['192.168.150.184']
   ingress: 16 flows across 1 service buckets
   egress:  105 flows across 8 service buckets
-Written: policies/tightened/dc1.yml  (8 changed, 15 log-drop candidates)
-Written: policies/tightened/mon1.yml  (1 changed, 1 log-drop candidate)
-Written: policies/tightened/web1.yml  (0 changed, 1 log-drop candidate)
 Written: policies/tightened/win1.yml  (1 changed, 10 log-drop candidates)
 mon1:
-  narrowed (1) — fewer peers, safe to apply (--narrow):
+  narrowed (1) — fewer peers, safe to apply:
     > allow-tcp-MUNIN          tcp/4949               source ANY -> MONITORING  observed (288 flows)
   address family (1) — coverage changed:
     # allow-tcp-MUNIN          tcp/4949               v4+v6 -> v4
@@ -67,14 +67,14 @@ win1:
     + allow-udp-KERBEROS-UDP   out udp/88             dest dc1
     + allow-udp-LDAP-UDP       out udp/389            dest dc1
     + allow-udp-NTP            out udp/123            dest dc1
-  narrowed (1) — fewer peers, safe to apply (--narrow):
+  narrowed (1) — fewer peers, safe to apply:
     > allow-tcp-SSH            tcp/22                 source ANY -> ADMIN  observed (16 flows)
   address family (1) — coverage changed:
     # allow-tcp-SSH            tcp/22                 v4+v6 -> v4
   postures: review-then-deploy takes `observed` only; block-early also takes `unexercised` and drops zero-evidence listeners (no data == can deny, log-drop as the net). CONTRADICTED and widenings are never runnable.
 web1: no surface changes
 dc1:
-  narrowed (8) — fewer peers, safe to apply (--narrow):
+  narrowed (8) — fewer peers, safe to apply:
     > allow-tcp-KERBEROS-TCP   tcp/88                 source ANY -> [ADMIN, win1]  observed (36 flows)
     > allow-tcp-LDAP-TCP       tcp/389                source ANY -> [ADMIN, win1]  observed (30 flows)
     > allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135                source ANY -> [ADMIN, win1]  observed (9 flows)
@@ -190,7 +190,7 @@ hosts/dc1/loot-host/firewall.json:
     # FileServer-ServerManager-DCOM-TCP-In tcp/135                v4 -> v4+v6
     # FileServer-ServerManager-SMB-TCP-In tcp/445                v4 -> v4+v6
     # W32Time-NTP-UDP-In       udp/123                v4 -> v4+v6
-  removed (3) — no longer observed, advisory (scoring vetoes):
+  removed (3) — no longer observed, advisory (rm vetoes a scored term):
     - allow-tcp-WINDOWS-RPC-HTTPS tcp/593
     - allow-tcp-WINDOWS-WINRM-UNCONFIGURED tcp/47001
     - allow-udp-LLMNR          tcp/5355
@@ -238,7 +238,7 @@ hosts/win1/loot-host/firewall.json:
     + NVS-FrameServer-In-UDP-NoScope udp/5000-5020          source ANY
   widened (1) — grants new peers, REVIEW:
     ! {0F3D1B78-933E-42BE-9548-AFDEC12D0013} udp/5353               source [MDNS_SOURCES_V4, MDNS_SOURCES_V6] -> ANY
-  removed (9) — no longer observed, advisory (scoring vetoes):
+  removed (9) — no longer observed, advisory (rm vetoes a scored term):
     - allow-tcp-NETBIOS-SSN-LEGACY tcp/139
     - allow-tcp-SSH            tcp/22
     - allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135
@@ -300,7 +300,7 @@ win1      22   200  deny      deny
 
 == 11. and had day 2 been the learning window
 mon1:
-  narrowed (1) — fewer peers, safe to apply (--narrow):
+  narrowed (1) — fewer peers, safe to apply:
     > allow-tcp-MUNIN          tcp/4949               source ANY -> [MONITORING, web1]
   address family (1) — coverage changed:
     # allow-tcp-MUNIN          tcp/4949               v4+v6 -> v4
@@ -315,7 +315,7 @@ win1:
     + allow-udp-LDAP-UDP       out udp/389            dest dc1
     + allow-udp-NTP            out udp/123            dest dc1
 dc1:
-  narrowed (9) — fewer peers, safe to apply (--narrow):
+  narrowed (9) — fewer peers, safe to apply:
     > allow-tcp-KERBEROS-TCP   tcp/88                 source ANY -> [ADMIN, win1]
     > allow-tcp-LDAP-TCP       tcp/389                source ANY -> [ADMIN, web1, win1]
     > allow-tcp-WINDOWS-RPC-ENDPOINT-MAPPER tcp/135                source ANY -> [ADMIN, win1]

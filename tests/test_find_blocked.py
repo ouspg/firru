@@ -9,7 +9,7 @@ import pytest
 from aerleon.lib import naming
 
 from firru.annotator import PolicyAnnotator
-from firru.cli.tighten import find_blocked
+from firru.cli.propose import find_blocked
 
 
 @pytest.fixture

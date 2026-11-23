@@ -74,7 +74,7 @@ def test_baseline_by_name_from_records_and_by_path(tmp_path, monkeypatch, capsys
     (host / 'loot-host' / 'connections.csv').write_text(
         WIN_CONN.format(port=88) + '"0.0.0.0","8080","0.0.0.0","0","Listen","4","TCP"\n')
     delta = tmp_path / 'delta.json'
-    assert dispatch.dispatch_argv(['diff', '--baseline', 'windows-2022-dc', str(host),
+    assert dispatch.dispatch_argv(['loot-diff', '--baseline', 'windows-2022-dc', str(host),
                                    '--json', str(delta), '-q']) == 0
     assert '8080' in delta.read_text()
     assert 'win2022-std-desktop-dc-g2.json.gz' in capsys.readouterr().err
@@ -95,7 +95,7 @@ def test_closest_reads_shipped_records(tmp_path, monkeypatch):
     monkeypatch.setenv('FIRRU_BASELINES', str(out))
     host = _run(tmp_path / 'loot', 'dc01', 88)
     delta = tmp_path / 'delta.json'
-    assert dispatch.dispatch_argv(['diff', '--closest', str(host), '--json', str(delta), '-q']) == 0
+    assert dispatch.dispatch_argv(['loot-diff', '--closest', str(host), '--json', str(delta), '-q']) == 0
     assert 'win2022-std-desktop-dc-g2' in delta.read_text()
 
 
@@ -111,7 +111,7 @@ def test_closest_layer_bound_to_loopback_reports_widened(tmp_path, monkeypatch):
     (host / 'loot-host' / 'connections.csv').write_text(
         WIN_CONN.format(port=88) + '"0.0.0.0","5432","0.0.0.0","0","Listen","9","TCP"\n')
     delta = tmp_path / 'delta.json'
-    assert dispatch.dispatch_argv(['diff', '--closest', str(host), '--json', str(delta), '-q']) == 0
+    assert dispatch.dispatch_argv(['loot-diff', '--closest', str(host), '--json', str(delta), '-q']) == 0
     r = json.loads(delta.read_text())
     c = next(iter(r['changes'].values()))
     assert '+postgresql-server-g1' in next(iter(r['assigned'].values()))

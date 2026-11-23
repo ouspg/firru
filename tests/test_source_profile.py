@@ -5,7 +5,7 @@ what holds on any network.
 
 import textwrap
 
-from firru import src_heuristics as sh
+from firru import site_profile as sh
 from firru.cli.synth import listen_to_term
 
 
@@ -70,12 +70,21 @@ def test_the_rule_hook_can_drop_a_term(tmp_path):
     assert listen_to_term("h", "tcp", 23, ["TELNET"], [entry()], {}, profile=p) is None
 
 
-def test_the_stock_template_changes_nothing():
+def test_the_stock_file_sets_only_what_holds_anywhere():
     from firru.defs_dir import STOCK
     p = sh.load_profile(str(STOCK))
-    assert p.origin  # it is there to copy
+    assert p.deny_services == {"SSDP": "udp"}
+    assert set(p.link_local_tokens) == {"MDNS", "LLMNR"}
     assert not p.mgmt_services and not p.definitional_sources
     assert p.management_sources is None and p.rule_hook is None
+
+
+def test_a_site_file_is_all_of_its_configuration(tmp_path):
+    """Nothing from the shipped file is layered underneath: a site that
+    wants the SSDP deny keeps it in its own file."""
+    p = write_profile(tmp_path, 'MGMT_SERVICES = ["SSH"]\n')
+    assert p.deny_services == {} and p.link_local_tokens == {}
+    assert sh.DEFAULT.deny_services == {"SSDP": "udp"}
 
 
 def test_the_stock_template_examples_work_uncommented(tmp_path):

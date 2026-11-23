@@ -46,7 +46,7 @@ cp -r policies/staged policies/pol            # the review: here, accept all
 
 step "5. traffic, and what tighten makes of it"
 python3 "$EX/make-flows.py" > flows.jsonl
-firru tighten --policy policies/pol/*.yml --defs def --flows-file flows.jsonl --outdir policies/tightened
+firru propose policies/pol/*.yml --defs def --flows-file flows.jsonl -o yaml --outdir policies/tightened
 for h in dc1 db1 web1; do
   firru diff policies/pol/$h.yml policies/tightened/$h.yml --defs def --flows flows.jsonl || true
 done

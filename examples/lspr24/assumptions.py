@@ -23,6 +23,7 @@ and this is the only code that turns them into data:
                   <ZONE>_MGMT, each zone's management entry point. A host's
                   `zone_mgmt` in host_metadata.json names its zone's, or for a
                   boundary device those of the subnets it sits in.
+                  site/policy.py names these as the management sources.
 
 With --flows, the Windows fill is checked against the traffic: a filled-in
 port that never answered and an answering port nothing explains are listed,

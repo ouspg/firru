@@ -49,10 +49,14 @@ committed, so they can be read without the 7 GB download.
    and a known port held by an unexpected process is flagged on its term.
    Sources are `ANY` unless a profile, `heuristics.py` in your definitions,
    says who may reach what; `def/heuristics.py` is a commented template.
-4. **Tighten.** `firru tighten` narrows `ANY` sources to the peers seen in
-   traffic. Its proposals are written beside the reviewed policy, never into it.
-5. **Validate.** `firru diff` shows what a proposal changes and, given flows,
-   which of them it would block. `aerleon-to-bpf` compiles a policy into one
+4. **Propose.** `firru propose` narrows `ANY` sources to the peers seen in
+   traffic and denies, logged, the listeners nothing reached. It prints each
+   edit as a firru command ending in its reason, so what to apply is a grep,
+   and writes the proposals beside the reviewed policy, never into it.
+5. **Validate.** `firru check` shows what a policy refuses of the traffic,
+   and which of that the host answered, which is what would break. `firru
+   diff` shows what a proposal changes and, given flows, which of them it
+   would block. `aerleon-to-bpf` compiles a policy into one
    BPF filter per term, so a single matching packet flags a violation.
 
 A person reviews and commits every change. `firru diff -o sh` writes the change
@@ -90,12 +94,9 @@ firru synth --input loot/*.json --defs def --output policies/staged/
 # review policies/staged/, commit what you accept to policies/pol/; flows from
 # the collector's conntrack snapshot, or from Zeek or Arkime (below), then
 loot-conntrack hosts/web1/loot-host/conntrack > flows.jsonl
-firru tighten --policy policies/pol/*.yml --defs def \
-    --flows-file flows.jsonl --outdir policies/tightened/
-firru diff policies/pol/web1.yml policies/tightened/web1.yml \
-    --defs def --flows flows.jsonl
-firru diff policies/pol/web1.yml policies/tightened/web1.yml \
-    --defs def -o sh | grep narrowed | sh
+firru propose policies/pol/*.yml --defs def --flows-file flows.jsonl \
+    --outdir policies/tightened/ | grep observed | sh
+firru check policies/pol/web1.yml --defs def --flows-file flows.jsonl
 
 # compile what is committed
 aclgen --base_directory policies --definitions_directory def --output_directory out/
@@ -108,6 +109,25 @@ entry, and the base networks generated policies name), and add your own
 Firewall; it reads every directory named `pol` below `--base_directory`, so
 point it at `policies/`, not `policies/pol/`, or it finds nothing and says so
 only in its log.
+
+## A project
+
+A directory with a `firru.toml` is a project, found the way git finds a
+repository: from anywhere below it, or by `$FIRRU_PROJECT`. `firru.toml`
+names the flow store and the time windows (`--window night`), so commands
+run inside it need neither `--flows-file` nor `--since`. `examples/lspr24`
+is one.
+
+Beside it, `site/` holds what the site knows and firru cannot derive. A file
+there is used without a flag, and a flag still names another for one run.
+A missing one is said once per run, with what its absence costs; an empty
+one is the site saying "none".
+
+| file | what | without it |
+|---|---|---|
+| `site/heuristics.py` | who may reach what, as code; start from firru's `def/heuristics.py` (`firru/site_profile.py` documents each name) | firru's shipped defaults: SSDP denied, mDNS and LLMNR link-local, everything else ANY |
+| `site/policy.py` | what the site decides rather than guesses: who may administer a host (`MGMT_SERVICES`, `management_sources`, read before `heuristics.py`), and the ports that must stay open (`scored(host, metadata)`, read from wherever the site keeps them) | nothing decided |
+| `site/host_metadata.json` | hosts to zones, OS and roles | synthesis knows no zones |
 
 ## Drift and conformance
 
@@ -145,11 +165,10 @@ synth warns when the installed Aerleon would compile them unscoped.
 
 Each takes `--help`.
 
-- `firru apply POL --from NEW`: merge a generated policy's changes onto the
-  reviewed one, three-way with `--base OLD`; narrowings with `--narrow`,
-  removals with `--prune`, widenings never.
-- `firru set-source`, `firru set-dest`, `firru rm`: one edit to one term, the
-  commands `firru diff -o sh` writes. `firru mass` runs a stream of them in one
+- `firru remove-source`, `firru add-source`, `firru set-source`, `firru
+  set-action`, `firru add-term`, `firru rm` (and `-dest` for egress): one
+  edit to one term, the commands `firru propose` and `firru diff -o sh`
+  write. `firru mass` runs a stream of them in one
   process.
 - `firru merge-zones`: per-host policies into per-zone policy;
   `aerleon-to-nftables` renders zones as nftables chain fragments.
@@ -165,15 +184,16 @@ Each takes `--help`.
   the case study's inputs (`examples/lspr24/`).
 - `scripts/conn-audit.sh`, `scripts/conn-audit.ps1`: which process connected
   where, collected beside `loot-host/`. Nothing in firru 1.0 reads it yet;
-  `firru tighten` builds egress terms from flows.
+  `firru propose` builds egress terms from flows.
 
 ## Status
 
 The paper evaluates the five stages with Arkime traffic, on Linux and Windows
 hosts. Implemented since, but not yet evaluated: collection of running
 nftables and Windows Firewall rule sets, conformance over Zeek and conntrack
-flows, an enforcement probe (`policy-to-nmap`), the process-mismatch flag, and
-comparison against stock operating system baselines.
+flows, an enforcement probe (`policy-to-nmap`), the process-mismatch flag,
+comparison against stock operating system baselines, and `propose` and `check`,
+which replace the paper's `tighten`.
 
 ## Install
 

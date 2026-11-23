@@ -50,7 +50,7 @@ A stock install of the same OS and role explains most of what a host listens
 on. Compare each host with one, and read only the difference:
 
 ```sh
-firru diff --baseline baselines/ loot/ \
+firru loot-diff --baseline baselines/ loot/ \
     --assign 'dc*=win2022-std-desktop-dc-g2' \
     --assign 'win*=win2022-std-desktop-public-g2' \
     --assign '*=ubuntu-24.04.5-server-g1'
@@ -135,13 +135,13 @@ domain at work: win1 and the admin workstations using dc1's DNS, Kerberos,
 LDAP, SMB, RPC and time.
 
 ```sh
-firru tighten --policy policies/pol/*.yml --defs def --flows-file flows.jsonl --outdir policies/tightened
+firru propose policies/pol/*.yml --defs def --flows-file flows.jsonl -o yaml --outdir policies/tightened
 firru diff policies/pol/mon1.yml policies/tightened/mon1.yml --defs def --flows flows.jsonl
 ```
 
 ```
 mon1:
-  narrowed (1) — fewer peers, safe to apply (--narrow):
+  narrowed (1) — fewer peers, safe to apply:
     > allow-tcp-MUNIN          tcp/4949               source ANY -> MONITORING  observed (288 flows)
   address family (1) — coverage changed:
     # allow-tcp-MUNIN          tcp/4949               v4+v6 -> v4
@@ -164,7 +164,7 @@ Before a policy is deployed, the question is what it would break now: check
 it against the latest traffic, not the window it was tightened on.
 
 ```sh
-firru tighten --policy policies/pol/dc1.yml --defs def --flows-file flows.jsonl --check --since -30min
+firru check policies/pol/dc1.yml --defs def --flows-file flows.jsonl --since -30min
 ```
 
 It lists, per source, the flows the policy would refuse: to a port no term
@@ -284,14 +284,14 @@ services nobody used.
 ## 11. Had day 2 been the learning window
 
 ```sh
-firru tighten --policy policies/staged/*.yml --defs def --flows-file flows-day2.jsonl \
-    --outdir policies/learned-day2
+firru propose policies/staged/*.yml --defs def --flows-file flows-day2.jsonl \
+    -o yaml --outdir policies/learned-day2
 firru diff policies/staged/mon1.yml policies/learned-day2/mon1.yml --defs def
 ```
 
 ```
 mon1:
-  narrowed (1) — fewer peers, safe to apply (--narrow):
+  narrowed (1) — fewer peers, safe to apply:
     > allow-tcp-MUNIN          tcp/4949               source ANY -> [MONITORING, web1]
 ```
 

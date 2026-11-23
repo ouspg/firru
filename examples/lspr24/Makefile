@@ -92,7 +92,7 @@ fetch:
 	done
 
 # Everything committed is reproduced by this from the two dataset files plus
-# the two hand-written ones, identity-assertions.yml and assumptions.yml.
+# the hand-written ones: identity-assertions.yml, assumptions.yml and site/.
 all: defs loot-ossec identity assumptions services policies tighten block-early enforced merged
 
 
@@ -126,11 +126,11 @@ data/flows/.complete: $(LSPR24)
 # Narrow each term's sources to what the learn window shows, and mark the
 # rules that never matched as log-drop candidates. The window is
 # attack-free, so a source set derived from it is not shaped by the intrusion.
-# No --flows-file: with a window and none named, tighten reads firru.toml's
+# No --flows-file: with a window and none named, propose reads firru.toml's
 # store.
 tighten: flows
-	firru tighten --policy policies/r1-synthesized --defs def/ \
-	    --window $(LEARN) --outdir policies/r2-tightened --overwrite
+	firru propose policies/r1-synthesized --defs def/ -o yaml \
+	    --window $(LEARN) --outdir policies/r2-tightened
 
 # Reconstruct the policy that appears to have been running, from the listening
 # table plus which flows got an answer, and diff it against what the sockets
@@ -188,7 +188,7 @@ hourly: flows
 
 # The same check for the policy as a whole: what each host's policy, trained
 # on the night window, would refuse of the first hour of live traffic. That
-# is `tighten --check`, the question to ask before a deploy, and its answer
+# is `firru check`, the question to ask before a deploy, and its answer
 # includes ports no term covers, which a diff of two policies cannot show.
 LIVE_SINCE ?= d2 08:00
 LIVE_UNTIL ?= d2 09:00
@@ -197,7 +197,7 @@ check-live: flows
 	@for h in $(HOURLY_HOSTS); do \
 	  { echo "# policies/r2-tightened/$$h.yml, trained on the $(LEARN) window,"; \
 	    echo "# checked against $(LIVE_SINCE) to $(LIVE_UNTIL) (make check-live)"; \
-	    firru tighten --policy policies/r2-tightened/$$h.yml --defs def/ --check \
+	    firru check policies/r2-tightened/$$h.yml --defs def/ \
 	        --since "$(LIVE_SINCE)" --until "$(LIVE_UNTIL)" 2>/dev/null; \
 	  } > reports/check/$$h.txt; \
 	  echo "reports/check/$$h.txt"; \
@@ -207,8 +207,8 @@ check-live: flows
 # Everything `make all` writes, so that `make clean all` followed by
 # `git status` shows nothing: the committed outputs are exactly what the two
 # dataset files and the hand-written inputs (assumptions.yml,
-# identity-assertions.yml, def/services-site.yml) produce. The datasets
-# themselves are kept.
+# identity-assertions.yml, def/services-site.yml, site/) produce. The
+# datasets themselves are kept.
 clean:
 	rm -rf $(MEASURED)/ $(LOOT)/ policies/ zones/ data/flows/ loot-synth/
 	rm -f def/networks.yml def/host_metadata.json def/services-observed.yml \

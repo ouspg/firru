@@ -1,4 +1,4 @@
-"""--baseline REF: named stock installs, raw loot on either side, and the firru diff route."""
+"""--baseline REF: named stock installs, raw loot on either side."""
 import json
 from pathlib import Path
 
@@ -69,7 +69,7 @@ def test_a_run_directory_is_one_host_named_after_the_run(tmp_path):
         ['win2022-std-desktop-dc-r1']
 
 
-def test_firru_diff_baseline_name_against_raw_loot(tmp_path, monkeypatch, capsys):
+def test_a_baseline_name_against_raw_loot(tmp_path, monkeypatch, capsys):
     base = tmp_path / 'baselines'
     _run(base, 'win2022-std-desktop-dc-r1', 88)
     host = _run(tmp_path / 'loot', 'dc01', 88)
@@ -77,7 +77,7 @@ def test_firru_diff_baseline_name_against_raw_loot(tmp_path, monkeypatch, capsys
         WIN_CONN.format(port=88) + '"0.0.0.0","8080","0.0.0.0","0","Listen","4","TCP"\n')
     monkeypatch.setenv('FIRRU_BASELINES', str(base))
     out_json = tmp_path / 'delta.json'
-    rc = dispatch.dispatch_argv(['diff', '--baseline', 'windows-2022-dc', str(host),
+    rc = dispatch.dispatch_argv(['loot-diff', '--baseline', 'windows-2022-dc', str(host),
                                  '--json', str(out_json), '-q'])
     assert rc == 0
     delta = json.loads(out_json.read_text())

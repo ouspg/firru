@@ -46,7 +46,7 @@ from firru.ephemeral import (RANGE_TOKEN_FLOOR, ephemeral_for, is_ephemeral,
                              parse_range, range_for_os)
 from firru.owners import load_expected, load_owners, owner_evidence
 from firru.service_naming import choose_token, owner_surprise, token_width
-from firru.src_heuristics import get_dynamic_rules, get_suggested_rule, load_profile
+from firru.site_profile import get_dynamic_rules, get_suggested_rule, load_profile
 from firru.tokens import is_loopback, normalize_token
 from firru.aerleon_caps import check_policy
 from firru.comments import TAG_AUTO, tagged
@@ -692,7 +692,7 @@ def synth_host(data, defs, all_metadata=None, fallback_name=None,
     generating — docs/design.md). `unknown` maps ports with no service token to
     their evidence; they appear in **no term**, so any caller that diffs the
     result must report them rather than let an unnamed listener vanish.
-    `profile` is the source policy (firru.src_heuristics.load_profile).
+    `profile` is the source policy (firru.site_profile.load_profile).
     `role` is (name, terms), a curated role's terms placed before the
     synthesized ones (load_role).
     """
@@ -826,8 +826,9 @@ Examples:
                         help='Output directory for aerleon YAMLs (default: policies/staged/)')
     parser.add_argument('--defs',         '-d', default='def',
                         help='Aerleon definitions directory (default: def/)')
-    parser.add_argument('--meta',         '-m', default='def/host_metadata.json',
-                        help='Host metadata JSON mapping tokens to zone/os (default: def/host_metadata.json)')
+    parser.add_argument('--meta',         '-m', default=None,
+                        help="Host metadata JSON mapping tokens to zone/os (default: the "
+                             "project's site/host_metadata.json, else def/host_metadata.json)")
     parser.add_argument('--keep-ephemeral', action='store_true',
                         help="emit terms for ports in the host's ephemeral range; "
                              "they are client sockets a snapshot caught, not services")
@@ -860,6 +861,8 @@ Examples:
     profile       = load_profile(args.defs)
     if profile.origin:
         print(f"Source policy: {profile.origin}", file=sys.stderr)
+    if profile.policy_origin:
+        print(f"Site policy: {profile.policy_origin}", file=sys.stderr)
     try:
         roles = []
         for spec in args.role:
@@ -868,13 +871,24 @@ Examples:
     except (OSError, ValueError) as e:
         parser.error(str(e))
 
+    named = args.meta is not None
+    if not named:
+        from firru.project import site_path
+        legacy = os.path.join(args.defs, 'host_metadata.json')
+        args.meta = (site_path('host_metadata.json', note=not os.path.isfile(legacy))
+                     or legacy)
     try:
         with open(args.meta) as f:
-            all_metadata = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+            text = f.read()
+        all_metadata = json.loads(text) if text.strip() else {}   # empty: none
+        if not named:
+            print(f"Host metadata: {args.meta}", file=sys.stderr)
+    except FileNotFoundError:
         all_metadata = {}
-        if args.meta != 'def/host_metadata.json':
+        if named:
             print(f"Warning: could not load metadata from {args.meta}", file=sys.stderr)
+    except json.JSONDecodeError as e:
+        parser.error(f"{args.meta}: {e}")
 
     import glob as _glob
     json_files = []

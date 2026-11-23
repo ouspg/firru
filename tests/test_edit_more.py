@@ -4,7 +4,7 @@ import textwrap
 from aerleon.lib import naming
 from ruyaml import YAML
 
-from firru.cli.edit import cmd_apply, cmd_set_source, cmd_rm, cmd_diff
+from firru.cli.edit import cmd_add_term, cmd_set_source, cmd_rm, cmd_diff
 
 
 def _defs(tmp_path):
@@ -57,49 +57,19 @@ def _read(path):
         return f.read()
 
 
-def _apply_args(tmp_path, pol, new, base=None, **kw):
-    kw.setdefault("only", None)
-    kw.setdefault("prune", False)
-    kw.setdefault("scoring", None)
-    kw.setdefault("dry_run", False)
-    return argparse.Namespace(pol=pol, from_=new, base=base, defs=_defs(tmp_path), **kw)
+def _add(pol, new, defs, *terms, direction="both", replace=None):
+    return cmd_add_term(argparse.Namespace(pol=pol, from_=new, terms=list(terms),
+                                           replace=replace, defs=defs, direction=direction))
 
 
-class TestPrune:
-    def _setup(self, tmp_path):
-        pol = _write(tmp_path, "pol.yml", _pol([_t("allow-tcp-SSH", "SSH"), _t("allow-tcp-HTTP", "HTTP"), DROP]))
-        base = _write(tmp_path, "base.yml", _pol([_t("allow-tcp-SSH", "SSH"), _t("allow-tcp-HTTP", "HTTP")]))
-        new = _write(tmp_path, "new.yml", _pol([_t("allow-tcp-SSH", "SSH")]))
-        return pol, base, new
-
-    def test_prune_removes(self, tmp_path):
-        pol, base, new = self._setup(tmp_path)
-        cmd_apply(_apply_args(tmp_path, pol, new, base, prune=True))
-        assert "allow-tcp-HTTP" not in _read(pol)
-
-    def test_no_prune_keeps(self, tmp_path):
-        pol, base, new = self._setup(tmp_path)
-        cmd_apply(_apply_args(tmp_path, pol, new, base, prune=False))
-        assert "allow-tcp-HTTP" in _read(pol)
-
-    def test_scoring_vetoes_prune(self, tmp_path):
-        pol, base, new = self._setup(tmp_path)
-        scoring = _write(tmp_path, "s.yml", "H1:\n  - {proto: tcp, port: 80, note: keep}\n")
-        cmd_apply(_apply_args(tmp_path, pol, new, base, prune=True, scoring=scoring))
-        assert "allow-tcp-HTTP" in _read(pol)  # vetoed → kept
-
-
-class TestCosmetic:
-    def test_rename_propagates(self, tmp_path):
+class TestRename:
+    def test_replace_renames_in_place(self, tmp_path):
         pol = _write(tmp_path, "pol.yml", _pol([_t("allow-tcp-HTTP", "HTTP"), DROP]))
-        base = _write(tmp_path, "base.yml", _pol([_t("allow-tcp-HTTP", "HTTP")]))
         new = _write(tmp_path, "new.yml", _pol([_t("allow-tcp-HXXP", "HXXP")]))
-        cmd_apply(_apply_args(tmp_path, pol, new, base))
+        assert _add(pol, new, _defs(tmp_path), "allow-tcp-HXXP", replace="allow-tcp-HTTP") == 0
         doc = YAML().load(_read(pol))
         names = [t.get("name") for t in doc["filters"][0]["terms"]]
-        assert "allow-tcp-HXXP" in names and "allow-tcp-HTTP" not in names
-        hxxp = next(t for t in doc["filters"][0]["terms"] if t.get("name") == "allow-tcp-HXXP")
-        assert hxxp["destination-port"] == "HXXP"
+        assert names == ["allow-tcp-HXXP", "drop-ANY"]
 
 
 class TestSetSource:
@@ -141,7 +111,7 @@ class TestEmitSh:
         assert rc == 1
         out = capsys.readouterr().out
         assert f"firru set-source {old} allow-tcp-SSH NET_MGMT" in out        # enforcement
-        assert f"firru apply {old} --from {new} --only allow-tcp-MYSQL" in out  # addition
+        assert f"firru add-term {old} allow-tcp-MYSQL --from {new}" in out    # addition
         assert f"firru rm {old} allow-tcp-HTTP" in out                       # removal
         # every uncommented line is a runnable firru command, greppable by
         # service; commented lines are the terminal swap, deliberate-only
@@ -268,27 +238,10 @@ class TestEmitShDirections:
         assert rc == 0
 
 
-class TestApplyDirections:
-    def test_a_narrowing_lands_in_the_egress_filter(self, tmp_path, capsys):
-        ingress = [_t("allow-tcp-HTTP", "HTTP", src="NET_MGMT"), DROP]
-        pol = _write(tmp_path, "pol.yml", _merged_pol(
-            ingress, [_et("allow-egress-HTTP", "HTTP"), DROP]))
-        new = _write(tmp_path, "new.yml", _merged_pol(
-            ingress, [_et("allow-egress-HTTP", "HTTP", dst="LOOPBACK"), DROP]))
-        cmd_apply(argparse.Namespace(pol=pol, from_=new, base=None, only=None,
-                                    narrow=True, prune=False, scoring=None,
-                                    defs=_defs(tmp_path), dry_run=False))
-        doc = YAML().load(_read(pol))
-        assert doc["filters"][1]["terms"][0]["destination-address"] == "LOOPBACK"
-        # the ingress term at the same port keeps its own peers untouched
-        assert doc["filters"][0]["terms"][0]["source-address"] == "NET_MGMT"
-        assert "destination-address" not in doc["filters"][0]["terms"][0]
-
-
 class TestDirectionScope:
     """A generator that proposes only egress emits a document with only that
     filter. Unscoped, the diff reads the absent ingress filter as wholly
-    removed, and --prune then deletes the ingress policy."""
+    removed."""
 
     def _pair(self, tmp_path):
         pol = _write(tmp_path, "pol.yml", _merged_pol(
@@ -315,20 +268,12 @@ class TestDirectionScope:
         assert not res["removed"]
         assert [t.get("name") for t, _ in res["narrowed"]] == ["allow-egress-HTTP"]
 
-    def test_prune_scoped_out_does_not_delete_the_ingress_policy(self, tmp_path):
-        pol, new = self._pair(tmp_path)
-        cmd_apply(argparse.Namespace(pol=pol, from_=new, base=None, only=None,
-                                     narrow=False, prune=True, scoring=None,
-                                     defs=_defs(tmp_path), dry_run=False,
-                                     direction="out"))
-        assert "allow-tcp-SSH" in _read(pol)
-
     def test_the_emitted_command_carries_the_scope(self, tmp_path, capsys):
         pol, new = self._pair(tmp_path)
         cmd_diff(argparse.Namespace(old=pol, new=new, defs=_defs(tmp_path),
                                     output="sh", direction="out"))
         for line in capsys.readouterr().out.strip().splitlines():
-            if " apply " in line:
+            if " add-term " in line:
                 assert "--direction out" in line
 
 
@@ -345,10 +290,7 @@ class TestTerminalInsertion:
         new = _write(tmp_path, "new.yml", _merged_pol(
             [_t("allow-tcp-SSH", "SSH", src="NET_MGMT"), DROP],
             [_et("allow-egress-HTTP", "HTTP", dst="LOOPBACK"), self.ANY_ACCEPT]))
-        cmd_apply(argparse.Namespace(pol=pol, from_=new, base=None, only=None,
-                                     narrow=False, prune=False, scoring=None,
-                                     defs=_defs(tmp_path), dry_run=False,
-                                     direction="out"))
+        _add(pol, new, _defs(tmp_path), "allow-egress-HTTP", direction="out")
         names = [t["name"] for t in YAML().load(_read(pol))["filters"][1]["terms"]]
         assert names == ["allow-egress-HTTP", "allow-ANY"]
 
@@ -361,10 +303,7 @@ class TestTerminalInsertion:
         new = _write(tmp_path, "new.yml", _merged_pol(
             [_t("allow-tcp-SSH", "SSH", src="NET_MGMT"), DROP],
             [_et("allow-egress-HTTP", "HTTP", dst="LOOPBACK"), self.ANY_ACCEPT]))
-        cmd_apply(argparse.Namespace(pol=pol, from_=new, base=None, only=None,
-                                     narrow=False, prune=False, scoring=None,
-                                     defs=_defs(tmp_path), dry_run=False,
-                                     direction="out"))
+        _add(pol, new, _defs(tmp_path), "allow-egress-HTTP", direction="out")
         names = [t["name"] for t in YAML().load(_read(pol))["filters"][1]["terms"]]
         assert names == ["allow-icmp", "allow-egress-HTTP", "allow-ANY"]
 
@@ -394,7 +333,7 @@ class TestTerminalSwap:
         swap = [l for l in out.splitlines() if "log-drop-egress-ANY" in l and "firru" in l]
         assert swap and all(l.startswith("#") for l in swap)
         assert f"firru rm {pol} allow-ANY" in swap[-1]
-        assert "--only log-drop-egress-ANY" in swap[-1]
+        assert f"firru add-term {pol} log-drop-egress-ANY --from {new}" in swap[-1]
 
     def test_no_uncommented_line_touches_the_terminal(self, tmp_path, capsys):
         # `| sh` and every grep subset must pass over the swap.
@@ -421,17 +360,10 @@ class TestTerminalSwap:
         assert "terminal" not in capsys.readouterr().out
 
     def _apply(self, pol, new, tmp_path, only):
-        return cmd_apply(argparse.Namespace(
-            pol=pol, from_=new, base=None, only=only, narrow=False, prune=False,
-            scoring=None, defs=_defs(tmp_path), dry_run=False, direction="out"))
-
-    def test_apply_never_adopts_a_terminal_mechanically(self, tmp_path):
-        pol, new = self._pair(tmp_path)
-        self._apply(pol, new, tmp_path, only=None)
-        assert "log-drop-egress-ANY" not in _read(pol)
+        return _add(pol, new, _defs(tmp_path), *only, direction="out")
 
     def test_the_commented_command_performs_the_swap(self, tmp_path):
-        # rm allow-ANY && apply --only log-drop-egress-ANY, as emitted.
+        # rm allow-ANY && add-term log-drop-egress-ANY, as emitted.
         pol, new = self._pair(tmp_path)
         cmd_rm(argparse.Namespace(pol=pol, term="allow-ANY"))
         self._apply(pol, new, tmp_path, only=["log-drop-egress-ANY"])
@@ -453,8 +385,8 @@ class TestTerminalSwap:
 class TestRegroupIsNotARename:
     """A port folded into a group token classifies as cosmetic *at that port*,
     but copying the group token onto the old single-port term would widen it to
-    the whole group. The group term arrives as an addition; the old term stays
-    (for --prune to retire later)."""
+    the whole group. --replace refuses it; the group term can arrive as an
+    addition, and the old term is a decision of its own."""
 
     def _docs(self, tmp_path):
         d = tmp_path / "def"
@@ -472,25 +404,33 @@ class TestRegroupIsNotARename:
         new = _write(tmp_path, "new.yml", _pol([_t("allow-tcp-appgroup", "APPGROUP"), DROP]))
         return str(d), pol, new
 
-    def test_apply_does_not_widen_the_old_term(self, tmp_path):
+    def test_replace_refuses_to_widen_the_old_term(self, tmp_path, capsys):
         defs, pol, new = self._docs(tmp_path)
-        cmd_apply(argparse.Namespace(pol=pol, from_=new, base=None, only=None,
-                                     narrow=False, prune=False, scoring=None,
-                                     defs=defs, dry_run=False, direction=None))
+        before = _read(pol)
+        assert _add(pol, new, defs, "allow-tcp-appgroup", replace="allow-tcp-TCP_5000") == 1
+        assert "not a rename" in capsys.readouterr().err
+        assert _read(pol) == before
+
+    def test_the_group_term_can_still_arrive_as_an_addition(self, tmp_path):
+        defs, pol, new = self._docs(tmp_path)
+        _add(pol, new, defs, "allow-tcp-appgroup")
         doc = YAML().load(_read(pol))
         terms = {t["name"]: t for t in doc["filters"][0]["terms"]}
         assert terms["allow-tcp-TCP_5000"]["destination-port"] == "TCP_5000"
         assert terms["allow-tcp-appgroup"]["destination-port"] == "APPGROUP"
 
-    def test_a_true_rename_still_propagates(self, tmp_path):
+    def test_the_diff_emits_a_true_rename_as_replace(self, tmp_path, capsys):
         # HXXP covers exactly HTTP's surface, so the rename is surface-preserving.
         defs = _defs(tmp_path)
         pol = _write(tmp_path, "pol.yml", _pol([_t("allow-tcp-HTTP", "HTTP"), DROP]))
         new = _write(tmp_path, "new.yml", _pol([_t("allow-tcp-HXXP", "HXXP"), DROP]))
-        cmd_apply(argparse.Namespace(pol=pol, from_=new, base=None, only=None,
-                                     narrow=False, prune=False, scoring=None,
-                                     defs=defs, dry_run=False, direction=None))
-        assert "allow-tcp-HXXP" in _read(pol)
+        cmd_diff(argparse.Namespace(old=pol, new=new, defs=defs, output="sh", direction="both"))
+        (line,) = [l for l in capsys.readouterr().out.splitlines() if "cosmetic" in l]
+        assert line.startswith(f"firru add-term {pol} allow-tcp-HXXP --from {new} "
+                               f"--replace allow-tcp-HTTP")
+        parts = line.split("  #")[0].split()
+        assert _add(pol, new, defs, parts[3], replace=parts[parts.index("--replace") + 1]) == 0
+        assert "allow-tcp-HXXP" in _read(pol) and "allow-tcp-HTTP" not in _read(pol)
 
 
 class TestLootSide:
@@ -514,6 +454,14 @@ class TestLootSide:
             {"metadata": {"hostname": hostname, "os": "linux"},
              "listen_ports": entries}))
         return str(path)
+
+    def test_two_loots_are_loot_diffs(self, tmp_path):
+        import pytest
+        defs = _defs(tmp_path)
+        a = self._loot(tmp_path, [22], hostname="h1")
+        b = self._loot(tmp_path, [22, 3306], hostname="h2")
+        with pytest.raises(SystemExit, match="loot-diff"):
+            cmd_diff(argparse.Namespace(old=a, new=b, defs=defs, output="human", direction="in"))
 
     def test_a_new_listener_appears_as_added(self, tmp_path, capsys):
         defs = _defs(tmp_path)
@@ -570,23 +518,26 @@ class TestLootSide:
                 assert line.startswith("#")
                 assert "edit-services add" in line
 
-    def test_apply_from_loot_adds_the_listener(self, tmp_path):
+    def test_add_term_from_loot_adds_the_listener(self, tmp_path, capsys):
         defs = _defs(tmp_path)
         pol = _write(tmp_path, "pol.yml", _pol([_t("allow-tcp-SSH", "SSH"), DROP]))
         loot = self._loot(tmp_path, [22, 3306])
-        cmd_apply(argparse.Namespace(pol=pol, from_=loot, base=None, only=None,
-                                     narrow=False, prune=False, scoring=None,
-                                     defs=defs, dry_run=False, direction="in"))
+        cmd_diff(argparse.Namespace(old=pol, new=loot, defs=defs, output="sh", direction="in"))
+        (line,) = [l for l in capsys.readouterr().out.splitlines() if l.endswith("# added")
+                   or "# added" in l]
+        assert line.startswith(f"firru add-term {pol} ")
+        assert _add(pol, loot, defs, line.split()[3], direction="in") == 0
         assert "MYSQL" in _read(pol)
 
     def test_a_matching_snapshot_diffs_clean_of_additions(self, tmp_path, capsys):
         defs = _defs(tmp_path)
         loot = self._loot(tmp_path, [22])
         # generate, then diff the generation against its own source snapshot
-        cmd_apply(argparse.Namespace(pol=_write(tmp_path, "pol.yml", _pol([DROP])),
-                                     from_=loot, base=None, only=None,
-                                     narrow=False, prune=False, scoring=None,
-                                     defs=defs, dry_run=False, direction="in"))
+        pol = _write(tmp_path, "pol.yml", _pol([DROP]))
+        cmd_diff(argparse.Namespace(old=pol, new=loot, defs=defs, output="sh", direction="in"))
+        for line in capsys.readouterr().out.splitlines():
+            if line.startswith("firru add-term"):
+                _add(pol, loot, defs, line.split()[3], direction="in")
         capsys.readouterr()
         rc = cmd_diff(argparse.Namespace(old=str(tmp_path / "pol.yml"), new=loot,
                                          defs=defs, output="human", direction="in"))

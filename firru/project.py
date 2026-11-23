@@ -25,10 +25,17 @@ machine's (firru.times). Windows are named once here and used by name:
 `--window night`, `--since "night 23:00"`. A password never goes here, since a
 project is copied and shared: `netrc` names the file holding it, which is
 your own (firru.credentials).
+
+Beside it, `site/` holds what the site knows and firru cannot derive:
+heuristics.py, policy.py, host_metadata.json. A file that is there is
+used without a flag; a flag still names another for one run. A missing one is
+said once per run where its absence costs something; an empty one is the site
+saying "none" (README.md, "A project").
 """
 
 import os
 import pathlib
+import sys
 import tomllib
 from datetime import timezone
 
@@ -124,6 +131,40 @@ def find(start=None):
     for d in (here, *here.parents):
         if (d / MARKER).is_file():
             return load(d)
+    return None
+
+
+# ---------------------------------------------------------------------------
+# site/: what the site knows and firru cannot derive
+# ---------------------------------------------------------------------------
+
+SITE = "site"
+
+#: What a missing site file costs, said once per run inside a project. A file
+#: not listed is never asked for.
+COSTS = {
+    "heuristics.py": "firru's shipped defaults (copy it from the stock def/ to edit)",
+    "host_metadata.json": "synthesis knows no zones",
+}
+
+_noted = set()
+
+
+def site_path(name, project=None, *, note=True):
+    """The project's site/<name> as a path relative to the working directory,
+    when it exists. Otherwise None, and inside a project, once per run, a
+    line saying what its absence costs. An empty file exists: that is the
+    site saying "none", and firru goes quiet. `project` defaults to find()."""
+    project = project if project is not None else find()
+    if project is None:
+        return None
+    p = project.root / SITE / name
+    if p.exists():
+        return os.path.relpath(p)
+    if note and name in COSTS and name not in _noted:
+        _noted.add(name)
+        print(f"firru: no {SITE}/{name} in {project.root}: {COSTS[name]} "
+              f"(an empty file says none)", file=sys.stderr)
     return None
 
 

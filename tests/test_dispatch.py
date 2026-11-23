@@ -20,7 +20,8 @@ def test_help_lists_verbs(monkeypatch, capsys):
     rc = _run([], monkeypatch)
     out = capsys.readouterr().out
     assert rc == 0
-    for verb in ("synth", "score", "tighten", "merge-zones", "diff", "apply", "set-source", "rm"):
+    for verb in ("synth", "propose", "check", "merge-zones", "diff", "add-term", "set-source",
+                 "remove-source", "set-action", "rm"):
         assert verb in out
 
 
@@ -45,14 +46,14 @@ def test_edit_verb_delegates_to_edit(monkeypatch):
 
 
 def test_module_verb_delegates(monkeypatch):
-    """`firru score …` reaches score.main with argv rewritten."""
+    """`firru check …` reaches check.main with argv rewritten."""
     seen = {}
 
     def fake_main():
         seen["argv"] = list(sys.argv)
         return 0
 
-    monkeypatch.setattr("firru.cli.score.main", fake_main)
-    rc = _run(["score", "--scoring", "s.yml", "pol/"], monkeypatch)
+    monkeypatch.setattr("firru.cli.check.main", fake_main)
+    rc = _run(["check", "--window", "night", "pol/"], monkeypatch)
     assert rc == 0
-    assert seen["argv"] == ["firru score", "--scoring", "s.yml", "pol/"]
+    assert seen["argv"] == ["firru check", "--window", "night", "pol/"]

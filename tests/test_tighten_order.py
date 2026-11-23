@@ -2,7 +2,7 @@
 same flows must give the same text whatever order they arrived in."""
 from collections import Counter
 
-from firru.cli.tighten import _blocked_sort_key, summarise_annotations
+from firru.cli.propose import _blocked_sort_key, summarise_annotations
 
 
 class _Ann:

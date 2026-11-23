@@ -4,7 +4,7 @@
 #   ANY, ANY_V4, ANY_V6  every address (a term firru could not narrow)
 #   LOOPBACK             the host itself
 #   MDNS_SOURCES_*, LLMNR_SOURCES_*  where link-local name resolution comes
-#                        from: firru.src_heuristics scopes mDNS and LLMNR
+#                        from: firru.site_profile scopes mDNS and LLMNR
 #                        terms to these instead of ANY
 networks:
   ANY_V4:

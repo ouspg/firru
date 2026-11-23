@@ -15,7 +15,7 @@ explain is short, and that short list is what a person has to look at.
 2. **Diff the fleet against its baselines**, one baseline per role:
 
    ```
-   firru diff --baseline baselines/ loot/ -o sh \
+   firru loot-diff --baseline baselines/ loot/ -o sh \
        --assign 'dc*=win2022-dc' --assign 'mail*=win2022-exchange' \
        --assign 'ws*=win11' --assign '*=win2022' > review.sh
    ```

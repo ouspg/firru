@@ -6,7 +6,7 @@ is typed by the source that regenerates it. A leading ``[tag]`` marks a
 machine-owned line; an untagged line is human-authored and inviolable.
 
     # [auto]  regenerated from loot / flow observations
-    # [score] regenerated from scoring.yml
+    # [score] a must-stay-open note: rm, set-action and propose leave the term
     # (untagged) authored by a human — never rewritten by a tool
 
 A generator rewrites only its own tag's lines and carries every other line
